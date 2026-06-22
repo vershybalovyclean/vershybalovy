@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rezerwacja terminu — Vershy Property Care</title>
+  <meta name="description" content="Wybierz dogodny termin sprzątania. Bez opłat na tym etapie — potwierdzamy przez WhatsApp lub telefon.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#1d4ed8;--blue2:#2563eb;--blue3:#3b82f6;--blue-pale:#eff6ff;--blue-light:#dbeafe;
+      --green:#16a34a;--green2:#22c55e;--green-pale:#f0fdf4;--green-light:#dcfce7;
+      --yellow:#f59e0b;--yellow-pale:#fef3c7;--red:#ef4444;--red-pale:#fee2e2;
+      --off:#f8fafc;--gray:#64748b;--gray2:#94a3b8;--brd:#e2e8f0;
+      --text:#1e293b;--text2:#334155;--text3:#475569;
+      --shadow:0 2px 16px rgba(30,64,175,.09);--shadow-md:0 8px 32px rgba(30,64,175,.15);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:#fff;min-height:100vh}
+    h1,h2,h3,h4{font-family:'Montserrat','Inter',sans-serif}
+
+    .bk-header{background:#fff;border-bottom:1px solid var(--brd);box-shadow:0 1px 8px rgba(0,0,0,.06)}
+    .bk-header-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+    .bk-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+    .bk-brand-mark{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--blue3));color:#fff;display:grid;place-items:center;font-weight:900;font-family:Montserrat;font-size:20px}
+    .bk-brand strong{font-family:Montserrat;font-size:15px;font-weight:900;color:var(--blue);display:block}
+    .bk-brand small{font-size:10px;color:var(--gray);display:block}
+    .bk-header-phone{color:var(--blue2);font-weight:700;font-size:14px;text-decoration:none}
+    .bk-header-right{display:flex;align-items:center;gap:16px}
+    .bk-langs{display:flex;gap:6px}
+    .bk-lb{background:transparent;border:1.5px solid var(--brd);color:var(--gray);padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;letter-spacing:.5px}
+    .bk-lb.on,.bk-lb:hover{background:var(--blue-pale);border-color:var(--blue2);color:var(--blue2)}
+
+    .bk-form-error{display:none;margin-top:14px;background:var(--red-pale);border:1.5px solid #fecaca;border-radius:10px;padding:11px 14px;font-size:13px;color:#b91c1c;font-weight:600;text-align:center}
+    .bk-form-error.show{display:block}
+
+    .bk-radio-group{display:flex;gap:8px;flex-wrap:wrap}
+    .bk-radio-opt{display:flex;align-items:flex-start;gap:7px;border:1.5px solid var(--brd);border-radius:9px;padding:7px 11px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text2);transition:.15s;flex:1 1 120px;min-width:0;line-height:1.3}
+    .bk-radio-opt:hover{border-color:var(--blue2);background:var(--blue-pale)}
+    .bk-radio-opt input{accent-color:var(--blue2);width:14px;height:14px;min-width:14px;flex-shrink:0;margin-top:2px}
+    .bk-radio-opt span{min-width:0;overflow-wrap:break-word}
+    .bk-radio-opt.checked{border-color:var(--blue2);background:var(--blue-pale);color:var(--blue)}
+
+    .bk-note{margin-top:2px;background:var(--blue-pale);border:1.5px solid var(--blue-light);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--blue);line-height:1.5}
+    .bk-note.hidden{display:none}
+
+    .bk-check-row{display:flex;align-items:flex-start;gap:8px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;min-width:0}
+    .bk-check-row input{accent-color:var(--green2);width:15px;height:15px;min-width:15px;flex-shrink:0;margin-top:2px}
+    .bk-check-row span{min-width:0;overflow-wrap:break-word}
+
+    .bk-hero{background:linear-gradient(135deg,var(--blue-pale) 0%,#fff 55%,var(--green-pale) 100%);padding:56px 24px 40px;text-align:center}
+    .bk-badge{display:inline-block;background:var(--blue-light);color:var(--blue2);border:1px solid rgba(37,99,235,.2);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:.8px;margin-bottom:18px}
+    .bk-hero h1{font-size:clamp(26px,4vw,42px);font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
+    .bk-spark{display:inline-block;animation:spark 2s ease-in-out infinite}
+    @keyframes spark{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(15deg) scale(1.15)}}
+    .bk-hero h2{font-size:clamp(16px,2vw,20px);color:var(--text3);font-weight:500;margin-bottom:14px}
+    .bk-sub{color:var(--text3);font-size:15px;max-width:560px;margin:0 auto 18px}
+    .bk-sub strong{color:var(--green)}
+    .bk-trust-mini{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--text3);font-weight:500}
+
+    .bk-main{padding:40px 24px 80px;background:var(--off)}
+    .bk-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+    @media(max-width:900px){.bk-grid{grid-template-columns:1fr}}
+    .bk-left{display:flex;flex-direction:column;gap:20px}
+
+    .bk-card{background:#fff;border:1.5px solid var(--brd);border-radius:14px;padding:24px;box-shadow:var(--shadow)}
+    .bk-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+    .bk-card-head h3,.bk-card-title{font-size:17px;font-weight:800;color:var(--text)}
+    .bk-card-title{margin-bottom:14px}
+    .bk-month-nav{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:var(--text2)}
+    .bk-month-nav button{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--brd);background:#fff;cursor:pointer;font-size:18px;color:var(--blue2);font-weight:700}
+    .bk-month-nav button:hover{background:var(--blue-pale);border-color:var(--blue2)}
+    .bk-month-nav span{min-width:140px;text-align:center;text-transform:capitalize}
+
+    .bk-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text3);margin-bottom:14px;padding:10px 12px;background:var(--off);border-radius:10px}
+    .bk-legend span{display:flex;align-items:center;gap:6px}
+    .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .dot-green{background:var(--green2)}.dot-yellow{background:var(--yellow)}.dot-red{background:var(--red)}.dot-bonus{background:linear-gradient(135deg,#a78bfa,#ec4899)}
+
+    .bk-weekrow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+    .bk-weekrow div{text-align:center;font-size:11px;font-weight:700;color:var(--gray);padding:6px 0}
+    .bk-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .bk-day{position:relative;aspect-ratio:1;border:1.5px solid var(--brd);border-radius:10px;background:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:600;color:var(--text);padding:4px;transition:.15s;font-family:inherit;font-size:14px}
+    .bk-day.empty{visibility:hidden;border:none}
+    .bk-day:not(:disabled):hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--blue2)}
+    .bk-day.status-high{background:var(--green-pale);border-color:var(--green-light)}
+    .bk-day.status-low{background:var(--yellow-pale);border-color:#fde68a}
+    .bk-day.status-none{background:var(--red-pale);border-color:#fecaca;color:var(--gray2);cursor:not-allowed;opacity:.6}
+    .bk-day.selected{background:var(--blue2)!important;border-color:var(--blue)!important;color:#fff;box-shadow:0 4px 18px rgba(37,99,235,.4)}
+    .bk-day.has-bonus::after{content:"";position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#ec4899)}
+    .day-num{font-size:15px;font-weight:700}
+    .day-bonus{font-size:8px;font-weight:700;color:var(--blue);margin-top:2px;line-height:1.1;text-align:center}
+    .bk-day.selected .day-bonus{color:#fff}
+
+    .bk-slide{animation:slide .35s ease-out}
+    @keyframes slide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+    .bk-slots{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    @media(max-width:520px){.bk-slots{grid-template-columns:1fr}}
+    .bk-slot{position:relative;background:#fff;border:1.5px solid var(--brd);border-radius:12px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:12px;font-family:inherit;transition:.15s;text-align:left}
+    .bk-slot:hover{border-color:var(--blue2);background:var(--blue-pale);transform:translateY(-1px)}
+    .bk-slot.active{border-color:var(--blue2);background:var(--blue-pale);box-shadow:0 4px 16px rgba(37,99,235,.2)}
+    .slot-ico{font-size:22px}
+    .slot-lbl{font-weight:700;font-size:14px;color:var(--text)}
+    .slot-tag{position:absolute;top:-8px;right:10px;background:var(--green2);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px}
+
+    .bk-bonus-banner{margin-top:16px;background:linear-gradient(135deg,#fdf4ff,#fce7f3);border:1.5px solid #f9a8d4;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px;font-size:14px;color:#9d174d}
+    .bk-bonus-banner strong{font-weight:800}
+
+    .bk-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:520px){.bk-form-grid{grid-template-columns:1fr}}
+    .fg{display:flex;flex-direction:column;gap:6px;min-width:0}
+    .fg.full{grid-column:1/-1}
+    .fg label{font-size:13px;font-weight:600;color:var(--text2)}
+    .fg .opt{font-weight:400;color:var(--gray)}
+    .fg input,.fg textarea{background:#fff;border:1.5px solid var(--brd);border-radius:10px;padding:11px 13px;font-family:inherit;font-size:14px;color:var(--text);outline:none;transition:.15s;width:100%}
+    .fg input:focus,.fg textarea:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    .fg textarea{min-height:80px;resize:vertical}
+
+    .bk-cta{margin-top:18px;width:100%;background:var(--green2);color:#fff;font-weight:800;font-size:15px;font-family:Montserrat,inherit;border:none;padding:15px;border-radius:50px;cursor:pointer;box-shadow:0 4px 18px rgba(34,197,94,.4);transition:.2s}
+    .bk-cta:hover:not(:disabled){background:var(--green);transform:translateY(-2px)}
+    .bk-cta:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+    .bk-cta-sub{text-align:center;margin-top:8px;font-size:12px;color:var(--gray)}
+
+    .bk-steps{background:#fff;border:1.5px solid var(--brd);border-radius:14px;padding:20px 24px;box-shadow:var(--shadow)}
+    .bk-steps h4{font-size:14px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+    .bk-steps ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    @media(max-width:520px){.bk-steps ol{grid-template-columns:1fr}}
+    .bk-steps li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text2);font-weight:500}
+    .bk-steps li span{font-size:18px}
+
+    .bk-right{position:sticky;top:20px}
+    @media(max-width:900px){.bk-right{position:static}}
+    .bk-order{background:#fff;border:1.5px solid var(--brd);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-md)}
+    .bk-order-head{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;padding:16px 20px;font-family:Montserrat;font-weight:800;font-size:15px}
+    .bk-order-rows{list-style:none;padding:16px 20px;margin:0;display:flex;flex-direction:column;gap:0}
+    .bk-order-rows li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--brd);font-size:14px}
+    .bk-order-rows li:last-child{border-bottom:none}
+    .bk-order-rows li span{color:var(--text3)}
+    .bk-order-rows li strong{color:var(--text);font-weight:700;text-align:right}
+    .bk-order-total{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:var(--blue-pale);border-top:2px solid var(--blue-light);border-bottom:2px solid var(--blue-light)}
+    .bk-order-total span{font-weight:700;color:var(--text2)}
+    .bk-order-total strong{font-size:22px;color:var(--blue);font-family:Montserrat;font-weight:900}
+    .bk-edit{display:block;margin:14px 20px 0;text-align:center;padding:10px;border:1.5px solid var(--brd);border-radius:10px;color:var(--blue2);font-weight:600;font-size:13px;text-decoration:none;transition:.15s}
+    .bk-edit:hover{background:var(--blue-pale);border-color:var(--blue2)}
+    .bk-order-foot{padding:16px 20px 20px;display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text3)}
+
+    .bk-nudge{position:fixed;bottom:20px;right:20px;left:20px;max-width:380px;margin-left:auto;background:#fff;border:1.5px solid var(--green-light);border-radius:14px;padding:16px;box-shadow:0 10px 40px rgba(0,0,0,.2);display:flex;gap:12px;align-items:center;z-index:50;animation:slide .35s ease-out}
+    .bk-nudge-ico{font-size:28px}
+    .bk-nudge strong{display:block;font-size:14px;color:var(--text)}
+    .bk-nudge p{font-size:12px;color:var(--gray);margin:2px 0 0}
+    .bk-nudge-btn{background:#25d366;color:#fff;font-weight:700;font-size:13px;padding:10px 14px;border-radius:50px;text-decoration:none;white-space:nowrap}
+    .bk-nudge-x{position:absolute;top:6px;right:8px;background:none;border:none;font-size:20px;color:var(--gray);cursor:pointer;line-height:1}
+
+    .bk-success-wrap{padding:60px 24px;background:var(--off);min-height:60vh;display:grid;place-items:center}
+    .bk-success{max-width:560px;background:#fff;border-radius:18px;padding:40px 32px;text-align:center;box-shadow:var(--shadow-md);border:1.5px solid var(--green-light)}
+    .bk-success-ico{font-size:64px;margin-bottom:12px}
+    .bk-success h2{font-size:26px;font-weight:900;margin-bottom:10px}
+    .bk-success p{color:var(--text3);font-size:15px;line-height:1.6;margin-bottom:24px}
+    .bk-success-recap{background:var(--blue-pale);border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;text-align:left}
+    .bk-success-recap div{display:flex;justify-content:space-between;align-items:center;font-size:14px;text-transform:capitalize}
+    .bk-success-recap span{color:var(--text3)}
+    .bk-success-recap strong{color:var(--text);font-weight:700}
+    .bk-wa-btn{display:inline-block;background:#25d366;color:#fff;font-weight:800;padding:13px 28px;border-radius:50px;text-decoration:none;box-shadow:0 4px 18px rgba(37,211,102,.4)}
+
+    .hidden{display:none!important}
+  </style>
+</head>
+<body>
+  <div class="bk-root">
+    <header class="bk-header">
+      <div class="bk-header-in">
+        <a href="/" class="bk-brand">
+          <span class="bk-brand-mark">V</span>
+          <span>
+            <strong>Vershy</strong>
+            <small>Property Care</small>
+          </span>
+        </a>
+        <div class="bk-header-right">
+          <div class="bk-langs">
+            <button class="bk-lb on" id="bkLbPl" onclick="SL('pl')">PL</button>
+            <button class="bk-lb" id="bkLbUk" onclick="SL('uk')">UA</button>
+            <button class="bk-lb" id="bkLbEn" onclick="SL('en')">EN</button>
+          </div>
+          <a href="tel:+48514363538" class="bk-header-phone">📞 +48 514 363 538</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="bk-hero">
+      <span class="bk-badge" id="t-badge">KROK 3 z 3 — REZERWACJA</span>
+      <h1 id="t-h1">Twoja wycena jest gotowa <span class="bk-spark">✨</span></h1>
+      <h2 id="t-h2">Został już tylko wybór terminu.</h2>
+      <p class="bk-sub" id="t-sub">Termin rezerwujemy dopiero po potwierdzeniu — <strong>bez opłat na tym etapie</strong>.</p>
+      <div class="bk-trust-mini">
+        <span id="t-trust1">✔ bez ukrytych dopłat</span>
+        <span id="t-trust2">✔ własne środki w cenie</span>
+        <span id="t-trust3">✔ możliwość zmiany terminu</span>
+      </div>
+    </section>
+
+    <!-- FORM VIEW -->
+    <section class="bk-main" id="formView">
+      <div class="bk-grid">
+        <div class="bk-left">
+          <div class="bk-card">
+            <div class="bk-card-head">
+              <h3 id="t-cal-title">📅 Wybierz dzień</h3>
+              <div class="bk-month-nav">
+                <button id="prevMonth" aria-label="Poprzedni miesiąc">‹</button>
+                <span id="monthLabel">Miesiąc 2024</span>
+                <button id="nextMonth" aria-label="Następny miesiąc">›</button>
+              </div>
+            </div>
+
+            <div class="bk-legend">
+              <span><i class="dot dot-green"></i> <span id="t-leg1">Duża dostępność</span></span>
+              <span><i class="dot dot-yellow"></i> <span id="t-leg2">Ostatnie miejsca</span></span>
+              <span><i class="dot dot-red"></i> <span id="t-leg3">Brak miejsc</span></span>
+              <span><i class="dot dot-bonus"></i> <span id="t-leg4">Lepsza cena / bonus</span></span>
+            </div>
+
+            <div class="bk-weekrow" id="weekRow">
+              <div>Pn</div><div>Wt</div><div>Śr</div><div>Cz</div><div>Pt</div><div>So</div><div>Nd</div>
+            </div>
+            <div class="bk-days" id="calendarDays"></div>
+          </div>
+
+          <div class="bk-card bk-slide" id="timeSlotCard">
+            <h3 class="bk-card-title" id="timeSlotTitle">⏰ Wybierz godzinę</h3>
+            <div class="bk-slots" id="slotsContainer"></div>
+            <div class="bk-bonus-banner hidden" id="bonusBanner">
+              🎁 <strong id="t-bonus-main">Wybrany termin obejmuje bonus tygodnia</strong>
+            </div>
+          </div>
+
+          <form class="bk-card bk-slide" id="bookingForm">
+            <h3 class="bk-card-title" id="t-form-title">📝 Twoje dane</h3>
+            <div class="bk-form-grid">
+              <div class="fg full">
+                <label id="t-lbl-name">Imię i nazwisko *</label>
+                <input required id="formName" placeholder="Anna Kowalska" />
+              </div>
+              <div class="fg">
+                <label id="t-lbl-phone">Telefon *</label>
+                <input required type="tel" id="formPhone" placeholder="+48 600 000 000" />
+              </div>
+              <div class="fg">
+                <label id="t-lbl-email">E-mail <span class="opt" id="t-opt1">(opcjonalnie)</span></label>
+                <input type="email" id="formEmail" placeholder="anna@example.com" />
+              </div>
+
+              <div class="fg full">
+                <label id="t-lbl-street">Ulica i numer domu *</label>
+                <input required id="formStreet" placeholder="ul. Floriańska 1" />
+              </div>
+              <div class="fg">
+                <label id="t-lbl-apt">Numer mieszkania <span class="opt" id="t-opt-apt">(jeśli nie dom jednorodzinny)</span></label>
+                <input id="formApt" placeholder="np. 5" />
+              </div>
+              <div class="fg">
+                <label id="t-lbl-postal">Kod pocztowy *</label>
+                <input required id="formPostal" placeholder="30-001" />
+              </div>
+              <div class="fg full">
+                <label id="t-lbl-city">Miejscowość *</label>
+                <input required id="formCity" placeholder="Kraków" />
+              </div>
+
+              <div class="fg full">
+                <label id="t-lbl-freq">Częstotliwość sprzątania</label>
+                <div class="bk-radio-group" id="freqGroup">
+                  <label class="bk-radio-opt checked"><input type="radio" name="freq" value="once" checked> <span id="t-freq-once">Jednorazowo</span></label>
+                  <label class="bk-radio-opt"><input type="radio" name="freq" value="regular"> <span id="t-freq-regular">Stała współpraca (abonament)</span></label>
+                </div>
+                <div class="bk-note hidden" id="freqNote"></div>
+              </div>
+
+              <div class="fg full">
+                <label id="t-lbl-payment">Sposób płatności *</label>
+                <div class="bk-radio-group" id="paymentGroup">
+                  <label class="bk-radio-opt"><input type="radio" name="payment" value="transfer"> <span id="t-pay-transfer">Przelew na konto</span></label>
+                  <label class="bk-radio-opt"><input type="radio" name="payment" value="blik"> <span id="t-pay-blik">BLIK</span></label>
+                  <label class="bk-radio-opt"><input type="radio" name="payment" value="cash"> <span id="t-pay-cash">Płatność gotówką</span></label>
+                </div>
+              </div>
+
+              <div class="fg full">
+                <label class="bk-check-row"><input type="checkbox" id="formInvoice"> <span id="t-invoice-label">Chcę otrzymać fakturę</span></label>
+              </div>
+
+              <div class="fg full">
+                <label id="t-lbl-notes">Uwagi <span class="opt" id="t-opt2">(opcjonalnie)</span></label>
+                <textarea id="formNotes" placeholder="Kod do bramy, zwierzęta, dodatkowe info..."></textarea>
+              </div>
+            </div>
+
+            <button type="submit" id="submitBtn" disabled class="bk-cta">🟢 <span id="t-submit-txt">Rezerwuję ten termin</span></button>
+            <p class="bk-cta-sub" id="t-cta-sub">Potwierdzimy szczegóły przez WhatsApp lub telefon</p>
+            <div class="bk-form-error" id="formError"></div>
+          </form>
+
+          <div class="bk-steps">
+            <h4 id="t-steps-title">Co dalej?</h4>
+            <ol>
+              <li><span>1️⃣</span> <span id="t-step1">Wybierasz termin</span></li>
+              <li><span>2️⃣</span> <span id="t-step2">Potwierdzamy rezerwację</span></li>
+              <li><span>3️⃣</span> <span id="t-step3">Przyjeżdżamy z własnymi środkami</span></li>
+              <li><span>4️⃣</span> <span id="t-step4">Gotowe ✨</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <aside class="bk-right">
+          <div class="bk-order">
+            <div class="bk-order-head" id="t-order-head">Twoje zamówienie</div>
+            <ul class="bk-order-rows" id="orderRows"></ul>
+            <div class="bk-order-total">
+              <span id="t-order-total-lbl">💰 Razem</span>
+              <strong id="orderTotal">— zł</strong>
+            </div>
+            <a href="/#kalkulator" class="bk-edit" id="t-edit">✏️ Edytuj zamówienie</a>
+            <div class="bk-order-foot">
+              <div id="t-foot1">✔ bez ukrytych dopłat</div>
+              <div id="t-foot2">✔ własne środki w cenie</div>
+              <div id="t-foot3">✔ możliwość zmiany terminu</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- SUCCESS VIEW -->
+    <section class="bk-success-wrap hidden" id="successView">
+      <div class="bk-success">
+        <div class="bk-success-ico">✅</div>
+        <h2 id="successName">Dziękujemy!</h2>
+        <p id="t-success-p">Twoja prośba o rezerwację została wysłana. Skontaktujemy się z Tobą w ciągu <strong>15 minut</strong> przez WhatsApp lub telefon, żeby potwierdzić szczegóły.</p>
+        <div class="bk-success-recap">
+          <div><span id="t-recap-date">📅 Termin</span><strong id="recapDate"></strong></div>
+          <div><span id="t-recap-time">⏰ Godzina</span><strong id="recapTime"></strong></div>
+          <div><span id="t-recap-phone">📞 Telefon</span><strong id="recapPhone"></strong></div>
+        </div>
+        <a class="bk-wa-btn" id="t-wa-btn" href="https://wa.me/48514363538" target="_blank" rel="noreferrer">💬 Otwórz WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- WHATSAPP NUDGE -->
+    <div class="bk-nudge hidden" id="whatsappNudge" role="dialog">
+      <button class="bk-nudge-x" id="closeNudge" aria-label="Zamknij">×</button>
+      <div class="bk-nudge-ico">💬</div>
+      <div>
+        <strong id="t-nudge-title">Nie widzisz wygodnego terminu?</strong>
+        <p id="t-nudge-p">Napisz do nas — pomożemy znaleźć dogodną datę.</p>
+      </div>
+      <a class="bk-nudge-btn" id="t-nudge-btn" href="https://wa.me/48514363538" target="_blank" rel="noreferrer">WhatsApp →</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const MONTHS = {
+        pl: ["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"],
+        uk: ["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"],
+        en: ["January","February","March","April","May","June","July","August","September","October","November","December"]
+      };
+      const WEEKDAYS = {
+        pl: ["Pn","Wt","Śr","Cz","Pt","So","Nd"],
+        uk: ["Пн","Вт","Ср","Чт","Пт","Сб","Нд"],
+        en: ["Mo","Tu","We","Th","Fr","Sa","Su"]
+      };
+      const LOCALE = { pl: "pl-PL", uk: "uk-UA", en: "en-GB" };
+      const BONUS_TUE = { pl: "Bonus do sprzątania", uk: "Бонус до прибирання", en: "Cleaning bonus" };
+      const BONUS_WED = { pl: "−5%", uk: "−5%", en: "−5%" };
+
+      const TIME_SLOTS = [
+        { id: "morning", icon: "☀️", label: "08:00–10:00", tag: { pl:"", uk:"", en:"" } },
+        { id: "midday", icon: "🌤", label: "10:00–13:00", tag: { pl:"Najczęściej wybierany", uk:"Найчастіше обирають", en:"Most popular" } },
+        { id: "afternoon", icon: "🌇", label: "13:00–16:00", tag: { pl:"Polecamy", uk:"Радимо", en:"Recommended" } },
+        { id: "evening", icon: "🌙", label: "16:00–18:00", tag: { pl:"", uk:"", en:"" } },
+      ];
+
+      const TX = {
+        pl: {
+          badge: "KROK 3 z 3 — REZERWACJA",
+          h1: "Twoja wycena jest gotowa",
+          h2: "Został już tylko wybór terminu.",
+          sub: 'Termin rezerwujemy dopiero po potwierdzeniu — <strong>bez opłat na tym etapie</strong>.',
+          trust1: "✔ bez ukrytych dopłat", trust2: "✔ własne środki w cenie", trust3: "✔ możliwość zmiany terminu",
+          calTitle: "📅 Wybierz dzień", prevAria: "Poprzedni miesiąc", nextAria: "Następny miesiąc",
+          leg1: "Duża dostępność", leg2: "Ostatnie miejsca", leg3: "Brak miejsc", leg4: "Lepsza cena / bonus",
+          slotsBase: "⏰ Wybierz godzinę — ", slotsDefault: "⏰ Wybierz godzinę",
+          bonusMain: "Wybrany termin obejmuje bonus tygodnia",
+          formTitle: "📝 Twoje dane", lblName: "Imię i nazwisko *", lblPhone: "Telefon *", lblEmail: "E-mail",
+          lblNotes: "Uwagi", opt: "(opcjonalnie)",
+          lblStreet: "Ulica i numer domu *", lblApt: "Numer mieszkania", optApt: "(jeśli nie dom jednorodzinny)",
+          lblPostal: "Kod pocztowy *", lblCity: "Miejscowość *",
+          lblFreq: "Częstotliwość sprzątania", freqRegular: "Stała współpraca (abonament)",
+          freqNote: "Przy stałej współpracy płatność za cały miesiąc pobierana jest przy pierwszym sprzątaniu.",
+          lblPayment: "Sposób płatności *", payTransfer: "Przelew na konto", payBlik: "BLIK", payCash: "Płatność gotówką",
+          invoiceLabel: "Chcę otrzymać fakturę",
+          phName: "Anna Kowalska", phPhone: "+48 600 000 000", phEmail: "anna@example.com",
+          phStreet: "ul. Floriańska 1", phApt: "np. 5", phPostal: "30-001", phCity: "Kraków",
+          phNotes: "Kod do bramy, zwierzęta, dodatkowe info...",
+          submitTxt: "Rezerwuję ten termin", submitSending: "Wysyłanie...",
+          ctaSub: "Potwierdzimy szczegóły przez WhatsApp lub telefon",
+          errMsg: "Błąd wysyłania. Spróbuj ponownie lub zadzwoń: +48 514 363 538",
+          stepsTitle: "Co dalej?", step1: "Wybierasz termin", step2: "Potwierdzamy rezerwację",
+          step3: "Przyjeżdżamy z własnymi środkami", step4: "Gotowe ✨",
+          orderHead: "Twoje zamówienie", ordService: "🏠 Usługa", ordArea: "📏 Powierzchnia",
+          ordFreq: "📅 Częstotliwość", ordExtras: "💎 Dodatki", ordTotal: "💰 Razem", freqOnce: "Jednorazowo",
+          editTxt: "✏️ Edytuj zamówienie",
+          successThanks: "Dziękujemy", successDefault: "Dziękujemy!",
+          successP: 'Twoja prośba o rezerwację została wysłana. Skontaktujemy się z Tobą w ciągu <strong>15 minut</strong> przez WhatsApp lub telefon, żeby potwierdzić szczegóły.',
+          recapDate: "📅 Termin", recapTime: "⏰ Godzina", recapPhone: "📞 Telefon", waBtn: "💬 Otwórz WhatsApp",
+          nudgeTitle: "Nie widzisz wygodnego terminu?", nudgeP: "Napisz do nas — pomożemy znaleźć dogodną datę.",
+          nudgeBtn: "WhatsApp →", closeAria: "Zamknij"
+        },
+        uk: {
+          badge: "КРОК 3 з 3 — БРОНЮВАННЯ",
+          h1: "Твоя оцінка вартості готова",
+          h2: "Залишилось тільки обрати дату.",
+          sub: 'Дату бронюємо лише після підтвердження — <strong>без оплати на цьому етапі</strong>.',
+          trust1: "✔ без прихованих доплат", trust2: "✔ власні засоби включені в ціну", trust3: "✔ можливість зміни дати",
+          calTitle: "📅 Оберіть день", prevAria: "Попередній місяць", nextAria: "Наступний місяць",
+          leg1: "Висока доступність", leg2: "Останні місця", leg3: "Немає місць", leg4: "Краща ціна / бонус",
+          slotsBase: "⏰ Оберіть час — ", slotsDefault: "⏰ Оберіть час",
+          bonusMain: "Обрана дата включає бонус тижня",
+          formTitle: "📝 Ваші дані", lblName: "Ім'я та прізвище *", lblPhone: "Телефон *", lblEmail: "E-mail",
+          lblNotes: "Коментар", opt: "(необов'язково)",
+          lblStreet: "Вулиця та номер будинку *", lblApt: "Номер квартири", optApt: "(якщо не приватний будинок)",
+          lblPostal: "Поштовий індекс *", lblCity: "Населений пункт *",
+          lblFreq: "Частота прибирання", freqRegular: "Постійна співпраця (абонемент)",
+          freqNote: "При постійній співпраці оплата за весь місяць здійснюється під час першого прибирання.",
+          lblPayment: "Спосіб оплати *", payTransfer: "Банківський переказ", payBlik: "BLIK", payCash: "Оплата готівкою",
+          invoiceLabel: "Хочу отримати рахунок-фактуру (faktura)",
+          phName: "Олена Коваль", phPhone: "+48 600 000 000", phEmail: "olena@example.com",
+          phStreet: "вул. Флоріанська 1", phApt: "напр. 5", phPostal: "30-001", phCity: "Краків",
+          phNotes: "Код від брами, тварини, додаткова інформація...",
+          submitTxt: "Бронюю цю дату", submitSending: "Надсилання...",
+          ctaSub: "Підтвердимо деталі через WhatsApp або телефон",
+          errMsg: "Помилка надсилання. Спробуй ще раз або зателефонуй: +48 514 363 538",
+          stepsTitle: "Що далі?", step1: "Обираєш дату", step2: "Підтверджуємо бронювання",
+          step3: "Приїжджаємо з власними засобами", step4: "Готово ✨",
+          orderHead: "Твоє замовлення", ordService: "🏠 Послуга", ordArea: "📏 Площа",
+          ordFreq: "📅 Частота", ordExtras: "💎 Додатково", ordTotal: "💰 Разом", freqOnce: "Одноразово",
+          editTxt: "✏️ Редагувати замовлення",
+          successThanks: "Дякуємо", successDefault: "Дякуємо!",
+          successP: "Твоя заявка на бронювання надіслана. Зв'яжемося з тобою протягом <strong>15 хвилин</strong> через WhatsApp або телефон, щоб підтвердити деталі.",
+          recapDate: "📅 Дата", recapTime: "⏰ Час", recapPhone: "📞 Телефон", waBtn: "💬 Відкрити WhatsApp",
+          nudgeTitle: "Не бачиш зручної дати?", nudgeP: "Напиши нам — допоможемо знайти зручну дату.",
+          nudgeBtn: "WhatsApp →", closeAria: "Закрити"
+        },
+        en: {
+          badge: "STEP 3 OF 3 — BOOKING",
+          h1: "Your quote is ready",
+          h2: "All that's left is picking a date.",
+          sub: 'We confirm the date only after you agree — <strong>no payment at this stage</strong>.',
+          trust1: "✔ no hidden fees", trust2: "✔ our own supplies included", trust3: "✔ date can be changed",
+          calTitle: "📅 Choose a day", prevAria: "Previous month", nextAria: "Next month",
+          leg1: "High availability", leg2: "Few slots left", leg3: "No slots", leg4: "Better price / bonus",
+          slotsBase: "⏰ Choose a time — ", slotsDefault: "⏰ Choose a time",
+          bonusMain: "This date includes a weekly bonus",
+          formTitle: "📝 Your details", lblName: "Full name *", lblPhone: "Phone *", lblEmail: "E-mail",
+          lblNotes: "Notes", opt: "(optional)",
+          lblStreet: "Street and house number *", lblApt: "Apartment number", optApt: "(if not a detached house)",
+          lblPostal: "Postal code *", lblCity: "City *",
+          lblFreq: "Cleaning frequency", freqRegular: "Recurring (subscription)",
+          freqNote: "For recurring cleaning, payment for the whole month is collected at the first visit.",
+          lblPayment: "Payment method *", payTransfer: "Bank transfer", payBlik: "BLIK", payCash: "Cash payment",
+          invoiceLabel: "I'd like to receive an invoice (faktura)",
+          phName: "Anna Smith", phPhone: "+48 600 000 000", phEmail: "anna@example.com",
+          phStreet: "Floriańska St 1", phApt: "e.g. 5", phPostal: "30-001", phCity: "Kraków",
+          phNotes: "Gate code, pets, extra info...",
+          submitTxt: "Book this slot", submitSending: "Sending...",
+          ctaSub: "We'll confirm the details via WhatsApp or phone",
+          errMsg: "Sending failed. Please try again or call: +48 514 363 538",
+          stepsTitle: "What's next?", step1: "You pick a date", step2: "We confirm the booking",
+          step3: "We arrive with our own supplies", step4: "Done ✨",
+          orderHead: "Your order", ordService: "🏠 Service", ordArea: "📏 Area",
+          ordFreq: "📅 Frequency", ordExtras: "💎 Extras", ordTotal: "💰 Total", freqOnce: "One-time",
+          editTxt: "✏️ Edit order",
+          successThanks: "Thank you", successDefault: "Thank you!",
+          successP: "Your booking request has been sent. We'll contact you within <strong>15 minutes</strong> via WhatsApp or phone to confirm the details.",
+          recapDate: "📅 Date", recapTime: "⏰ Time", recapPhone: "📞 Phone", waBtn: "💬 Open WhatsApp",
+          nudgeTitle: "Can't find a convenient slot?", nudgeP: "Message us — we'll help find a good date.",
+          nudgeBtn: "WhatsApp →", closeAria: "Close"
+        }
+      };
+
+      let lang = 'pl';
+      function t(key){ return (TX[lang] && TX[lang][key] !== undefined) ? TX[lang][key] : TX.pl[key]; }
+
+      let viewYear, viewMonth, selectedDate = null, selectedSlot = null;
+      let inactivityTimer = null;
+      let orderData = null;
+
+      const now = new Date();
+      viewYear = now.getFullYear();
+      viewMonth = now.getMonth();
+
+      const els = {
+        monthLabel: document.getElementById('monthLabel'),
+        calendarDays: document.getElementById('calendarDays'),
+        weekRow: document.getElementById('weekRow'),
+        prevMonth: document.getElementById('prevMonth'),
+        nextMonth: document.getElementById('nextMonth'),
+        timeSlotCard: document.getElementById('timeSlotCard'),
+        timeSlotTitle: document.getElementById('timeSlotTitle'),
+        slotsContainer: document.getElementById('slotsContainer'),
+        bonusBanner: document.getElementById('bonusBanner'),
+        bookingForm: document.getElementById('bookingForm'),
+        submitBtn: document.getElementById('submitBtn'),
+        submitTxt: document.getElementById('t-submit-txt'),
+        formError: document.getElementById('formError'),
+        formName: document.getElementById('formName'),
+        formPhone: document.getElementById('formPhone'),
+        formEmail: document.getElementById('formEmail'),
+        formStreet: document.getElementById('formStreet'),
+        formApt: document.getElementById('formApt'),
+        formPostal: document.getElementById('formPostal'),
+        formCity: document.getElementById('formCity'),
+        formInvoice: document.getElementById('formInvoice'),
+        freqNote: document.getElementById('freqNote'),
+        freqRadios: document.querySelectorAll('input[name="freq"]'),
+        paymentRadios: document.querySelectorAll('input[name="payment"]'),
+        formNotes: document.getElementById('formNotes'),
+        formView: document.getElementById('formView'),
+        successView: document.getElementById('successView'),
+        successName: document.getElementById('successName'),
+        recapDate: document.getElementById('recapDate'),
+        recapTime: document.getElementById('recapTime'),
+        recapPhone: document.getElementById('recapPhone'),
+        whatsappNudge: document.getElementById('whatsappNudge'),
+        closeNudge: document.getElementById('closeNudge'),
+        orderRows: document.getElementById('orderRows'),
+        orderTotal: document.getElementById('orderTotal'),
+      };
+
+      // ===== ORDER DATA FROM URL PARAMS =====
+      const DEFAULT_ORDER = { service: 'Sprzątanie szczegółowe', area: '72', extras: 'piekarnik + okna', price: '867' };
+      function readOrderFromURL(){
+        const p = new URLSearchParams(window.location.search);
+        const hasAny = p.has('service') || p.has('price') || p.has('area');
+        if(!hasAny) return Object.assign({}, DEFAULT_ORDER);
+        return {
+          service: p.get('service') || '',
+          area: p.get('area') || '',
+          extras: p.get('extras') || '',
+          price: p.get('price') || ''
+        };
+      }
+      function applyURLPrefill(){
+        const p = new URLSearchParams(window.location.search);
+        const phone = p.get('phone');
+        if(phone && els.formPhone) els.formPhone.value = phone;
+        const urlLang = p.get('lang');
+        if(urlLang && TX[urlLang]) lang = urlLang;
+      }
+
+      let selectedFreq = 'once';
+
+      function renderOrder(){
+        if(!orderData) return;
+        const rows = [];
+        if(orderData.service) rows.push(['ordService', orderData.service]);
+        if(orderData.area) rows.push(['ordArea', orderData.area + ' m²']);
+        rows.push(['ordFreq', selectedFreq === 'regular' ? t('freqRegular') : t('freqOnce')]);
+        if(orderData.extras) rows.push(['ordExtras', orderData.extras]);
+        els.orderRows.innerHTML = rows.map(function(r){
+          return '<li><span>'+t(r[0])+'</span><strong>'+r[1]+'</strong></li>';
+        }).join('');
+        els.orderTotal.textContent = orderData.price ? (orderData.price + ' zł') : '— zł';
+      }
+
+      // ===== LANGUAGE SWITCH =====
+      const PLAIN_IDS = {
+        't-badge':'badge','t-h1':'h1','t-h2':'h2','t-trust1':'trust1','t-trust2':'trust2','t-trust3':'trust3',
+        't-cal-title':'calTitle','t-leg1':'leg1','t-leg2':'leg2','t-leg3':'leg3','t-leg4':'leg4',
+        't-bonus-main':'bonusMain','t-form-title':'formTitle',
+        't-opt1':'opt','t-opt2':'opt','t-opt-apt':'optApt','t-submit-txt':'submitTxt','t-cta-sub':'ctaSub',
+        't-steps-title':'stepsTitle','t-step1':'step1','t-step2':'step2','t-step3':'step3','t-step4':'step4',
+        't-order-head':'orderHead','t-order-total-lbl':'ordTotal','t-edit':'editTxt',
+        't-recap-date':'recapDate','t-recap-time':'recapTime','t-recap-phone':'recapPhone','t-wa-btn':'waBtn',
+        't-nudge-title':'nudgeTitle','t-nudge-p':'nudgeP','t-nudge-btn':'nudgeBtn',
+        't-lbl-street':'lblStreet','t-lbl-postal':'lblPostal','t-lbl-city':'lblCity',
+        't-lbl-freq':'lblFreq','t-lbl-payment':'lblPayment',
+        't-freq-once':'freqOnce','t-freq-regular':'freqRegular',
+        't-pay-transfer':'payTransfer','t-pay-blik':'payBlik','t-pay-cash':'payCash',
+        't-invoice-label':'invoiceLabel'
+      };
+
+      function SL(l){
+        lang = l;
+        document.documentElement.lang = l;
+        document.getElementById('bkLbPl').classList.toggle('on', l==='pl');
+        document.getElementById('bkLbUk').classList.toggle('on', l==='uk');
+        document.getElementById('bkLbEn').classList.toggle('on', l==='en');
+
+        Object.keys(PLAIN_IDS).forEach(function(id){
+          const el = document.getElementById(id);
+          if(el) el.textContent = t(PLAIN_IDS[id]);
+        });
+
+        document.getElementById('t-sub').innerHTML = t('sub');
+        document.getElementById('t-success-p').innerHTML = t('successP');
+
+        document.getElementById('t-lbl-name').childNodes[0].textContent = t('lblName') + ' ';
+        document.getElementById('t-lbl-phone').childNodes[0].textContent = t('lblPhone') + ' ';
+        document.getElementById('t-lbl-email').childNodes[0].textContent = t('lblEmail') + ' ';
+        document.getElementById('t-lbl-apt').childNodes[0].textContent = t('lblApt') + ' ';
+        document.getElementById('t-lbl-notes').childNodes[0].textContent = t('lblNotes') + ' ';
+
+        els.formName.placeholder = t('phName');
+        els.formPhone.placeholder = t('phPhone');
+        els.formEmail.placeholder = t('phEmail');
+        els.formStreet.placeholder = t('phStreet');
+        els.formApt.placeholder = t('phApt');
+        els.formPostal.placeholder = t('phPostal');
+        els.formCity.placeholder = t('phCity');
+        els.formNotes.placeholder = t('phNotes');
+
+        els.freqNote.textContent = t('freqNote');
+
+        els.prevMonth.setAttribute('aria-label', t('prevAria'));
+        els.nextMonth.setAttribute('aria-label', t('nextAria'));
+        els.closeNudge.setAttribute('aria-label', t('closeAria'));
+
+        if(!els.submitBtn.disabled || els.submitBtn.textContent.indexOf('⏳') === -1){
+          els.submitTxt.textContent = t('submitTxt');
+        }
+
+        renderWeekRow();
+        renderCalendar();
+        renderSlots();
+        renderOrder();
+      }
+
+      function renderWeekRow(){
+        els.weekRow.innerHTML = WEEKDAYS[lang].map(function(d){ return '<div>'+d+'</div>'; }).join('');
+      }
+
+      function buildMonth(year, month) {
+        const first = new Date(year, month, 1);
+        const startWeekday = (first.getDay() + 6) % 7;
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const cells = [];
+        for (let i = 0; i < startWeekday; i++) cells.push({ empty: true });
+        const today = new Date(); today.setHours(0,0,0,0);
+        for (let d = 1; d <= daysInMonth; d++) {
+          const date = new Date(year, month, d);
+          const dow = date.getDay();
+          let status = "high";
+          if (date < today || dow === 0) status = "none";
+          else if (dow === 5 || dow === 6) status = "low";
+          else if (dow === 1) status = "low";
+          let bonus = undefined;
+          if (status !== "none") {
+            if (dow === 2) bonus = BONUS_TUE[lang];
+            else if (dow === 3) bonus = BONUS_WED[lang];
+          }
+          cells.push({ date, status, bonus, day: d, dow });
+        }
+        return cells;
+      }
+
+      function renderCalendar() {
+        els.monthLabel.textContent = MONTHS[lang][viewMonth] + " " + viewYear;
+        const cells = buildMonth(viewYear, viewMonth);
+        els.calendarDays.innerHTML = '';
+        cells.forEach((c) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'bk-day';
+          if (c.empty) {
+            btn.classList.add('empty');
+            els.calendarDays.appendChild(btn);
+            return;
+          }
+          btn.classList.add('status-' + c.status);
+          if (selectedDate && c.date.toDateString() === selectedDate.toDateString()) {
+            btn.classList.add('selected');
+          }
+          if (c.bonus) btn.classList.add('has-bonus');
+          if (c.status === 'none') btn.disabled = true;
+
+          btn.innerHTML = '<span class="day-num">' + c.day + '</span>' +
+            (c.bonus ? '<span class="day-bonus">✨ ' + c.bonus + '</span>' : '');
+
+          btn.addEventListener('click', () => {
+            selectedDate = c.date;
+            selectedSlot = null;
+            hideNudge();
+            startInactivityTimer();
+            renderCalendar();
+            renderSlots();
+            checkForm();
+          });
+          els.calendarDays.appendChild(btn);
+        });
+      }
+
+      function renderSlots() {
+        const hasDate = !!selectedDate;
+        const dow = hasDate ? selectedDate.getDay() : null;
+        const hasBonus = hasDate && (dow === 2 || dow === 3);
+        els.timeSlotTitle.textContent = hasDate
+          ? t('slotsBase') + selectedDate.toLocaleDateString(LOCALE[lang], { weekday: "long", day: "numeric", month: "long" })
+          : t('slotsDefault');
+        els.slotsContainer.innerHTML = '';
+        TIME_SLOTS.forEach(s => {
+          const tagText = s.tag[lang] || '';
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'bk-slot' + (selectedSlot === s.id ? ' active' : '');
+          btn.innerHTML = '<span class="slot-ico">' + s.icon + '</span>' +
+            '<span class="slot-lbl">' + s.label + '</span>' +
+            (tagText ? '<span class="slot-tag">' + tagText + '</span>' : '');
+          btn.addEventListener('click', () => {
+            selectedSlot = s.id;
+            hideNudge();
+            startInactivityTimer();
+            renderSlots();
+            checkForm();
+          });
+          els.slotsContainer.appendChild(btn);
+        });
+        els.bonusBanner.classList.toggle('hidden', !hasBonus);
+      }
+
+      function showCard(el) { el.classList.remove('hidden'); }
+      function hideCard(el) { el.classList.add('hidden'); }
+
+      function checkForm() {
+        const paymentChosen = Array.from(els.paymentRadios).some(r => r.checked);
+        const ok = selectedDate && selectedSlot && els.formName.value.trim() && els.formPhone.value.trim() &&
+          els.formStreet.value.trim() && els.formPostal.value.trim() && els.formCity.value.trim() && paymentChosen;
+        els.submitBtn.disabled = !ok;
+      }
+
+      ['input','change'].forEach(evt => {
+        [els.formName, els.formPhone, els.formEmail, els.formStreet, els.formApt, els.formPostal, els.formCity, els.formNotes].forEach(el => {
+          el.addEventListener(evt, () => { hideNudge(); startInactivityTimer(); checkForm(); });
+        });
+      });
+
+      function wireRadioGroup(radios){
+        radios.forEach(r => {
+          r.addEventListener('change', () => {
+            radios.forEach(rr => rr.closest('.bk-radio-opt').classList.toggle('checked', rr.checked));
+            hideNudge(); startInactivityTimer(); checkForm();
+          });
+        });
+      }
+      wireRadioGroup(els.paymentRadios);
+      wireRadioGroup(els.freqRadios);
+
+      els.freqRadios.forEach(r => {
+        r.addEventListener('change', () => {
+          selectedFreq = r.value === 'regular' ? 'regular' : 'once';
+          els.freqNote.classList.toggle('hidden', selectedFreq !== 'regular');
+          renderOrder();
+        });
+      });
+
+      els.prevMonth.addEventListener('click', () => {
+        const d = new Date(viewYear, viewMonth - 1, 1);
+        const tt = new Date(); tt.setDate(1); tt.setHours(0,0,0,0);
+        if (d < tt) return;
+        viewYear = d.getFullYear(); viewMonth = d.getMonth();
+        renderCalendar();
+      });
+
+      els.nextMonth.addEventListener('click', () => {
+        const d = new Date(viewYear, viewMonth + 1, 1);
+        viewYear = d.getFullYear(); viewMonth = d.getMonth();
+        renderCalendar();
+      });
+
+      function showFormError(msg){
+        els.formError.textContent = msg;
+        els.formError.classList.add('show');
+      }
+      function hideFormError(){
+        els.formError.classList.remove('show');
+      }
+
+      els.bookingForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!selectedDate || !selectedSlot) return;
+        hideFormError();
+
+        const slotObj = TIME_SLOTS.find(s => s.id === selectedSlot);
+        const slotLabel = slotObj ? slotObj.label : '';
+        const dateLabel = selectedDate.toLocaleDateString(LOCALE[lang], { weekday: "long", day: "numeric", month: "long" });
+
+        const name = els.formName.value.trim();
+        const phone = els.formPhone.value.trim();
+        const email = els.formEmail.value.trim();
+        const street = els.formStreet.value.trim();
+        const apt = els.formApt.value.trim();
+        const postal = els.formPostal.value.trim();
+        const city = els.formCity.value.trim();
+        const notes = els.formNotes.value.trim();
+        const wantsInvoice = els.formInvoice.checked;
+        const paymentEl = Array.from(els.paymentRadios).find(r => r.checked);
+        const paymentMap = { transfer: t('payTransfer'), blik: t('payBlik'), cash: t('payCash') };
+        const paymentLabel = paymentEl ? (paymentMap[paymentEl.value] || paymentEl.value) : '';
+        const freqLabel = selectedFreq === 'regular' ? t('freqRegular') : t('freqOnce');
+
+        const fullAddress = street + (apt ? ('/' + apt) : '') + ', ' + postal + ' ' + city;
+
+        let comment = 'REZERWACJA TERMINU (kalendarz)\n';
+        if(orderData && orderData.service) comment += 'Usługa: ' + orderData.service + (orderData.area ? ' (' + orderData.area + ' m²)' : '') + '\n';
+        if(orderData && orderData.extras) comment += 'Dodatki: ' + orderData.extras + '\n';
+        if(orderData && orderData.price) comment += 'Szacunkowa cena: ' + orderData.price + ' zł\n';
+        comment += 'Częstotliwość: ' + freqLabel + '\n';
+        if(selectedFreq === 'regular') comment += '(Płatność za cały miesiąc przy pierwszym sprzątaniu)\n';
+        comment += 'Data: ' + dateLabel + '\n';
+        comment += 'Godzina: ' + slotLabel + '\n';
+        comment += 'Adres: ' + fullAddress + '\n';
+        comment += 'Sposób płatności: ' + paymentLabel + '\n';
+        comment += 'Faktura: ' + (wantsInvoice ? 'TAK' : 'nie') + '\n';
+        if(email) comment += 'E-mail: ' + email + '\n';
+        if(notes) comment += 'Uwagi: ' + notes;
+
+        els.submitBtn.disabled = true;
+        els.submitTxt.textContent = t('submitSending');
+
+        fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            phone: phone,
+            service: (orderData && orderData.service) ? orderData.service : 'Rezerwacja terminu',
+            comment: comment
+          })
+        })
+        .then(r => r.json())
+        .then(() => {
+          els.successName.textContent = t('successThanks') + ', ' + (name.split(' ')[0] || '') + '!';
+          els.recapDate.textContent = dateLabel;
+          els.recapTime.textContent = slotLabel;
+          els.recapPhone.textContent = phone;
+          hideCard(els.formView);
+          showCard(els.successView);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch(() => {
+          showFormError(t('errMsg'));
+          els.submitBtn.disabled = false;
+          els.submitTxt.textContent = t('submitTxt');
+        });
+      });
+
+      function showNudge() {
+        if (selectedDate || els.successView.classList.contains('hidden') === false) return;
+        els.whatsappNudge.classList.remove('hidden');
+      }
+      function hideNudge() {
+        els.whatsappNudge.classList.add('hidden');
+        if (inactivityTimer) clearTimeout(inactivityTimer);
+      }
+      function startInactivityTimer() {
+        if (inactivityTimer) clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(showNudge, 60000);
+      }
+
+      els.closeNudge.addEventListener('click', hideNudge);
+
+      // expose SL globally for the lang buttons
+      window.SL = SL;
+
+      // init
+      orderData = readOrderFromURL();
+      applyURLPrefill();
+      SL(lang);
+      startInactivityTimer();
+    })();
+  </script>
+</body>
+</html>
