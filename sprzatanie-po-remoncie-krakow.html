@@ -886,8 +886,20 @@ function SL(l) {
 applyTranslations('pl');
 </script>
 
+<script>
+window.addEventListener('load', function(){
+  var hash = window.location.hash.replace('#','');
+  if(['bez','z'].indexOf(hash)!==-1){
+    var btn = document.getElementById('tab-'+hash);
+    if(btn) setTier(hash, btn);
+    var m2 = parseFloat(vpcGetParam('m2'));
+    if(m2>0) vpcSelectByArea('#calc-rows .calc-row','.calc-lbl','.calc-row-hdr','.calc-inp', m2);
+  }
+});
+</script>
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/booking.js"></script>
+<script src="assets/js/quote-prefill.js"></script>
 </body>
 </html>
