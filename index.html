@@ -663,11 +663,6 @@ var cformEl=document.getElementById("cform");if(cformEl)cformEl.addEventListener
  });
 });
 
-function toggleNav(){document.getElementById("hn").classList.toggle("open");}
-window.addEventListener('scroll',function(){var n=document.getElementById('hn');if(n&&n.classList.contains('open'))n.classList.remove('open');},{passive:true});
-var hnLinks=document.querySelectorAll("#hn a");if(hnLinks)hnLinks.forEach(function(a){
- a.addEventListener("click",function(){var hn=document.getElementById("hn");if(hn)hn.classList.remove("open");});
-});
 window.addEventListener("scroll",function(){
  var sy=window.scrollY;
  document.getElementById("btt").classList.toggle("show",sy>400);
@@ -1902,23 +1897,7 @@ observeFI();
   <span id="cta-txt">Zadzwoń</span>
 </a>
 
-<script>
-// ── CONVERSION TRACKING ─────────────────────────────────────
-function trackPhoneClick(phone) {
-  if(typeof gtag === 'undefined') return;
-  gtag('event', 'phone_call', {
-    'event_category': 'contact',
-    'event_label': phone || 'phone_click',
-    'value': 1
-  });
-}
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('a[href^="tel:"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      trackPhoneClick(this.href.replace('tel:', ''));
-    });
-  });
-});
-</script>
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/analytics.js"></script>
 </body>
 </html>
