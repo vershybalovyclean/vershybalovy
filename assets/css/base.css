@@ -889,14 +889,14 @@ footer{background:#e0f2fe;color:var(--text);padding:48px 28px 24px}
 .hero-calc .qsv-sub{color:rgba(255,255,255,.7);text-shadow:0 1px 6px rgba(0,0,0,.35);font-size:11.5px;font-weight:500}
 
 .hero-calc-box{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;justify-content:center}
-.hero-calc-field{flex:1;min-width:220px;text-align:left}
+.hero-calc-field{flex:1;min-width:260px;text-align:left}
 .hero-calc-field label{display:block;font-size:14px;font-weight:700;color:#fff;
   text-shadow:0 1px 6px rgba(0,0,0,.35);margin-bottom:8px}
 .hero-calc-input{width:100%;background:#fff;border:none;border-radius:50px;
   padding:19px 26px;font-size:17px;font-weight:700;color:var(--text);outline:none;
   box-shadow:0 8px 24px rgba(0,0,0,.22);transition:.2s}
 .hero-calc-input:focus{box-shadow:0 0 0 4px rgba(37,99,235,.35),0 8px 24px rgba(0,0,0,.22)}
-.hero-calc-select-wrap{position:relative;flex:1.5;min-width:260px}
+.hero-calc-select-wrap{position:relative;flex:1;min-width:260px}
 .hero-calc-select-btn{width:100%;display:flex;align-items:center;justify-content:space-between;
   gap:12px;background:#fff;border:none;border-radius:50px;padding:19px 12px 19px 26px;
   font-size:17px;font-weight:700;color:var(--text);cursor:pointer;
