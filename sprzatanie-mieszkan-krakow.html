@@ -139,6 +139,7 @@ function acSelectZone(tabId, zoneKey, price, label) {
 
 
 function acFixed(tabId, idx, price) {
+  var wasActive = acActive[tabId] === idx;
   // Deactivate zone rows (if any)
   ['zone-0','zone-1','zone-2'].forEach(function(zk) {
     var r = document.getElementById('acr-'+tabId+'-'+zk);
@@ -148,6 +149,22 @@ function acFixed(tabId, idx, price) {
   for(var i=0;i<6;i++) {
     var r2 = document.getElementById('acr-'+tabId+'-'+i);
     if(r2) r2.classList.remove('active');
+  }
+  if(wasActive) {
+    // Clicking the already-selected tier again clears the selection
+    acActive[tabId] = undefined;
+    acM2[tabId] = 0;
+    acPrice[tabId] = 0;
+    orderState.currentTab = tabId;
+    orderState.price = 0;
+    orderState.m2 = 0;
+    if(typeof tabPrices !== 'undefined') {
+      var _kc = {wspomagajace:'wsp',generalne:'gen',szczegolowe:'szc'}[tabId];
+      if(_kc) tabPrices[_kc] = 0;
+    }
+    updateSidebar();
+    if(typeof checkConflict === 'function') checkConflict();
+    return;
   }
   // Activate selected fixed row
   var row = document.getElementById('acr-'+tabId+'-'+idx);
@@ -1996,7 +2013,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="sec-lbl" id="addons-lbl">Na życzenie</div>
     <h2 class="sec-title" id="addons-h2">Usługi <em>dodatkowe</em></h2>
     <p class="sec-sub" id="addons-sub">Kliknij usługę aby ją wybrać — na końcu wyślij wybór razem z zamówieniem</p>
-    <div class="add-grid fi">
+    <div class="add-grid">
       <!-- OKNA -->
       <div class="add-col" style="grid-column:1/-1">
         <div class="add-col-head"><div class="add-circle" style="background:#e0f2fe">🪟</div>
