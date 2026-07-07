@@ -113,7 +113,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <a href="/sprzatanie-po-remoncie-krakow" id="hn2">🏗️ Po remoncie</a>
     <a href="/sprzatanie-po-wyprowadzce-krakow" id="hn3">🏠 Po wyjeździe</a>
     <a href="/mycie-okien" id="hn4">🪟 Mycie okien</a>
-    <a href="#kalkulator" class="hdr-cta" id="hn5">📋 Wyceń online</a>
+    <a href="#wycena" class="hdr-cta" id="hn5">📋 Wyceń online</a>
   </nav>
 </header>
 
@@ -129,31 +129,29 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <h1 id="hh1">Sprzątanie w <em>Krakowie</em> i Małopolsce</h1>
       <p class="hero-sub" id="hp">Premium Cleaning & Property Services — bezpłatna wycena w 1 minutę.</p>
     </div>
+    <div class="fi hero-calc">
+      <span id="wycena" style="position:relative;top:-90px;display:block"></span>
+      <div class="qsv-head">
+        <div class="qsv-title" id="qsv-title">Wybierz usługę</div>
+        <div class="qsv-sub" id="qsv-sub">Podaj metraż, wybierz rodzaj sprzątania i sprawdź cenę</div>
+      </div>
+      <div class="hero-calc-box">
+        <div class="hero-calc-field">
+          <label for="qsv-m2" id="qsv-m2-label">📐 Metraż</label>
+          <input type="number" id="qsv-m2" class="hero-calc-input" min="1" placeholder="np. 55 m²" oninput="renderQsv()">
+        </div>
+        <div class="hero-calc-field hero-calc-select-wrap">
+          <label id="qsv-select-lbl">🧹 Rodzaj sprzątania</label>
+          <button type="button" class="hero-calc-select-btn" id="qsv-select-btn" onclick="toggleQsvMenu()">
+            <span id="qsv-select-current">Wybierz usługę</span>
+            <span class="hero-calc-burger"><span></span><span></span><span></span></span>
+          </button>
+          <div class="hero-calc-menu" id="qsv-grid"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
-
-<div class="hero-calc-outer wrap" id="kalkulator">
-  <div class="fi hero-calc">
-    <div class="qsv-head">
-      <div class="qsv-title" id="qsv-title">Wybierz usługę</div>
-      <div class="qsv-sub" id="qsv-sub">Podaj metraż, wybierz rodzaj sprzątania i sprawdź cenę</div>
-    </div>
-    <div class="hero-calc-box">
-      <div class="hero-calc-field">
-        <label for="qsv-m2" id="qsv-m2-label">📐 Metraż</label>
-        <input type="number" id="qsv-m2" class="hero-calc-input" min="1" placeholder="np. 55 m²" oninput="renderQsv()">
-      </div>
-      <div class="hero-calc-field hero-calc-select-wrap">
-        <label id="qsv-select-lbl">🧹 Rodzaj sprzątania</label>
-        <button type="button" class="hero-calc-select-btn" id="qsv-select-btn" onclick="toggleQsvMenu()">
-          <span id="qsv-select-current">Wybierz usługę</span>
-          <span class="hero-calc-burger"><span></span><span></span><span></span></span>
-        </button>
-        <div class="hero-calc-menu" id="qsv-grid"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- TRUST -->
 <div class="trust">
@@ -196,7 +194,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <div class="pet-banner-badge">🐾 <span id="pb-badge">Bezpieczne dla zwierząt</span></div>
       <div class="pet-banner-title" id="pb-title">Masz psa lub kota?<br>Żaden problem!</div>
       <div class="pet-banner-text" id="pb-text">Sprzątamy z miłością do Twojego pupila. Bezpieczna, ekologiczna chemia — zero stresu dla zwierząt i Twojej rodziny.</div>
-      <a href="#kalkulator" class="pet-banner-btn" id="pb-btn">Zarezerwuj termin →</a>
+      <a href="#wycena" class="pet-banner-btn" id="pb-btn">Zarezerwuj termin →</a>
     </div>
   </div>
 </section>
@@ -1738,13 +1736,21 @@ function toggleQsvMenu(force) {
   var btn = document.getElementById('qsv-select-btn');
   if(!menu || !btn) return;
   var open = typeof force === 'boolean' ? force : !menu.classList.contains('open');
+  if(open){
+    var r = btn.getBoundingClientRect();
+    menu.style.top = (r.bottom + 8) + 'px';
+    menu.style.left = r.left + 'px';
+    menu.style.width = r.width + 'px';
+  }
   menu.classList.toggle('open', open);
   btn.classList.toggle('open', open);
 }
 document.addEventListener('click', function(e){
   var wrap = document.querySelector('.hero-calc-select-wrap');
-  if(wrap && !wrap.contains(e.target)) toggleQsvMenu(false);
+  if(wrap && !wrap.contains(e.target) && e.target.id!=='qsv-grid' && !document.getElementById('qsv-grid').contains(e.target)) toggleQsvMenu(false);
 });
+window.addEventListener('scroll', function(){ toggleQsvMenu(false); }, {passive:true});
+window.addEventListener('resize', function(){ toggleQsvMenu(false); });
 
 // ===== REVIEWS =====
 var REVIEWS_KEY = 'vershy_reviews_v2';
