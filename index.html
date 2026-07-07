@@ -129,19 +129,31 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <h1 id="hh1">Sprzątanie w <em>Krakowie</em> i Małopolsce</h1>
       <p class="hero-sub" id="hp">Premium Cleaning & Property Services — bezpłatna wycena w 1 minutę.</p>
     </div>
-    <div class="fi hero-calc" id="kalkulator">
-      <div class="qsv-head">
-        <div class="qsv-title" id="qsv-title">Wybierz usługę</div>
-        <div class="qsv-sub" id="qsv-sub">Podaj metraż i kliknij kartę, aby zobaczyć cenę i zarezerwować termin</div>
-      </div>
-      <div class="hero-calc-m2">
-        <label for="qsv-m2" id="qsv-m2-label">Metraż (m²)</label>
-        <input type="number" id="qsv-m2" class="ac-inp" min="1" placeholder="np. 55" oninput="renderQsv()" style="text-align:center">
-      </div>
-      <div class="qsv-grid" id="qsv-grid"></div>
-    </div>
   </div>
 </section>
+
+<div class="hero-calc-outer wrap" id="kalkulator">
+  <div class="fi hero-calc">
+    <div class="qsv-head">
+      <div class="qsv-title" id="qsv-title">Wybierz usługę</div>
+      <div class="qsv-sub" id="qsv-sub">Podaj metraż, wybierz rodzaj sprzątania i sprawdź cenę</div>
+    </div>
+    <div class="hero-calc-box">
+      <div class="hero-calc-field">
+        <label for="qsv-m2" id="qsv-m2-label">📐 Metraż</label>
+        <input type="number" id="qsv-m2" class="hero-calc-input" min="1" placeholder="np. 55 m²" oninput="renderQsv()">
+      </div>
+      <div class="hero-calc-field hero-calc-select-wrap">
+        <label id="qsv-select-lbl">🧹 Rodzaj sprzątania</label>
+        <button type="button" class="hero-calc-select-btn" id="qsv-select-btn" onclick="toggleQsvMenu()">
+          <span id="qsv-select-current">Wybierz usługę</span>
+          <span class="hero-calc-burger"><span></span><span></span><span></span></span>
+        </button>
+        <div class="hero-calc-menu" id="qsv-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- TRUST -->
 <div class="trust">
@@ -1713,16 +1725,26 @@ function renderQsv() {
     var base = hashIdx===-1 ? L.link : L.link.slice(0,hashIdx);
     var hash = hashIdx===-1 ? '' : L.link.slice(hashIdx);
     var href = (m2>0 && base) ? base+'?m2='+m2+hash : L.link;
-    return '<a href="'+href+'" class="qsv-card">'+
-      '<img src="'+s.img+'" alt="'+L.name+'" loading="eager">'+
-      '<span class="qsv-card-arrow">→</span>'+
-      '<div class="qsv-card-body">'+
-      '<span class="qsv-card-icon">'+s.icon+'</span>'+
-      '<div class="qsv-card-title">'+L.name+'</div>'+
-      '<div class="qsv-card-price">'+L.price+'</div>'+
-      '</div></a>';
+    return '<a href="'+href+'" class="hero-calc-menu-item">'+
+      '<span class="hero-calc-menu-icon">'+s.icon+'</span>'+
+      '<span class="hero-calc-menu-text">'+L.name+'</span>'+
+      '<span class="hero-calc-menu-price">'+L.price+'</span>'+
+      '</a>';
   }).join('');
 }
+
+function toggleQsvMenu(force) {
+  var menu = document.getElementById('qsv-grid');
+  var btn = document.getElementById('qsv-select-btn');
+  if(!menu || !btn) return;
+  var open = typeof force === 'boolean' ? force : !menu.classList.contains('open');
+  menu.classList.toggle('open', open);
+  btn.classList.toggle('open', open);
+}
+document.addEventListener('click', function(e){
+  var wrap = document.querySelector('.hero-calc-select-wrap');
+  if(wrap && !wrap.contains(e.target)) toggleQsvMenu(false);
+});
 
 // ===== REVIEWS =====
 var REVIEWS_KEY = 'vershy_reviews_v2';
