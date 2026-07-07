@@ -153,7 +153,11 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <section class="qsv-wrap" id="kalkulator" style="background:linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 50%,#f0f9ff 100%);position:relative;z-index:1">
   <div class="qsv-head fi">
     <div class="qsv-title" id="qsv-title">Wybierz usługę</div>
-    <div class="qsv-sub" id="qsv-sub">Kliknij kartę, aby zobaczyć ceny i zarezerwować termin</div>
+    <div class="qsv-sub" id="qsv-sub">Podaj metraż i kliknij kartę, aby zobaczyć cenę i zarezerwować termin</div>
+  </div>
+  <div class="fi" style="max-width:320px;margin:0 auto 24px;text-align:center">
+    <label for="qsv-m2" style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px" id="qsv-m2-label">Metraż (m²)</label>
+    <input type="number" id="qsv-m2" class="ac-inp" min="1" placeholder="np. 55" oninput="renderQsv()" style="text-align:center">
   </div>
   <div class="qsv-grid fi" id="qsv-grid"></div>
 
@@ -1666,12 +1670,18 @@ var SRV_SHORT = [
   {icon:'🔬',cc:'c3',img:'https://images.unsplash.com/photo-1721825170838-9747d16c4255?w=500&q=80',pl:{name:'Sprzątanie szczegółowe',desc:'Najgłębszy poziom czystości — wszystko z generalnego + parowanie grzejników, usuwanie kamienia.',price:'od 617 zł',link:'/sprzatanie-mieszkan-krakow#szczegolowe'},
    uk:{name:'Детальне прибирання',desc:'Найглибший рівень чистоти — все з генерального + парова обробка радіаторів, видалення накипу.',price:'від 617 zł',link:'/sprzatanie-mieszkan-krakow#szczegolowe'},
    en:{name:'Deep cleaning',desc:'Deepest level of cleanliness — everything in general + steam radiators, limescale removal.',price:'from 617 zł',link:'#kontakt'}},
-  {icon:'🏗️',cc:'c4',img:'https://images.unsplash.com/photo-1721395290083-895bf53d6178?w=500&q=80',pl:{name:'Sprzątanie po remoncie',desc:'Specjalistyczne czyszczenie budowlane — kurz, fugi, farba, gruz. Dokumentacja fotograficzna.',price:'od 949 zł',link:'/sprzatanie-po-remoncie-krakow'},
-   uk:{name:'Прибирання після ремонту',desc:'Спеціалізоване будівельне чищення — пил, затирка, фарба, сміття. Фотодокументація.',price:'від 949 zł',link:'/sprzatanie-po-remoncie-krakow'},
-   en:{name:'Post-renovation cleaning',desc:'Specialist construction clean — dust, grout, paint, debris. Photo documentation.',price:'from 949 zł',link:'/sprzatanie-po-remoncie-krakow'}},
-  {icon:'🏠',cc:'c5',img:'https://images.unsplash.com/photo-1780147343308-7ede77816ee6?w=500&q=80',pl:{name:'Sprzątanie po wyjeździe',desc:'Przygotowanie pod nowy najem lub sprzedaż — zwrot kaucji, dokumentacja, realizacja 24h.',price:'od 787 zł',link:'/sprzatanie-po-wyprowadzce-krakow'},
-   uk:{name:'Прибирання після виїзду',desc:'Підготовка під новий найм або продаж — повернення застави, документація, виконання за 24 год.',price:'від 787 zł',link:'/sprzatanie-po-wyprowadzce-krakow'},
-   en:{name:'Post-checkout cleaning',desc:'Preparation for new rental or sale — deposit return, documentation, delivery within 24h.',price:'from 787 zł',link:'/sprzatanie-po-wyprowadzce-krakow'}},
+  {icon:'🏗️',cc:'c4',img:'https://images.unsplash.com/photo-1721395290083-895bf53d6178?w=500&q=80',pl:{name:'Po remoncie — z meblami',desc:'Specjalistyczne czyszczenie budowlane w umeblowanym wnętrzu — kurz, fugi, farba, gruz.',price:'od 1050 zł',link:'/sprzatanie-po-remoncie-krakow#z'},
+   uk:{name:'Після ремонту — з меблями',desc:'Спеціалізоване будівельне чищення в умебльованому приміщенні — пил, затирка, фарба, сміття.',price:'від 1050 zł',link:'/sprzatanie-po-remoncie-krakow#z'},
+   en:{name:'Post-renovation — furnished',desc:'Specialist construction clean in a furnished space — dust, grout, paint, debris.',price:'from 1050 zł',link:'#kontakt'}},
+  {icon:'🏗️',cc:'c4',img:'https://images.unsplash.com/photo-1721395290083-895bf53d6178?w=500&q=80',pl:{name:'Po remoncie — bez mebli',desc:'Specjalistyczne czyszczenie budowlane w pustym wnętrzu — kurz, fugi, farba, gruz.',price:'od 830 zł',link:'/sprzatanie-po-remoncie-krakow#bez'},
+   uk:{name:'Після ремонту — без меблів',desc:'Спеціалізоване будівельне чищення в порожньому приміщенні — пил, затирка, фарба, сміття.',price:'від 830 zł',link:'/sprzatanie-po-remoncie-krakow#bez'},
+   en:{name:'Post-renovation — empty',desc:'Specialist construction clean in an empty space — dust, grout, paint, debris.',price:'from 830 zł',link:'#kontakt'}},
+  {icon:'🏠',cc:'c5',img:'https://images.unsplash.com/photo-1780147343308-7ede77816ee6?w=500&q=80',pl:{name:'Po wyjeździe — z meblami',desc:'Przygotowanie umeblowanego mieszkania pod nowy najem lub sprzedaż — zwrot kaucji, realizacja 24h.',price:'od 950 zł',link:'/sprzatanie-po-wyprowadzce-krakow#zmeb'},
+   uk:{name:'Після виїзду — з меблями',desc:'Підготовка умебльованої квартири під новий найм або продаж — повернення застави, виконання за 24 год.',price:'від 950 zł',link:'/sprzatanie-po-wyprowadzce-krakow#zmeb'},
+   en:{name:'Post-checkout — furnished',desc:'Preparing a furnished flat for new rental or sale — deposit return, delivery within 24h.',price:'from 950 zł',link:'#kontakt'}},
+  {icon:'🏠',cc:'c5',img:'https://images.unsplash.com/photo-1780147343308-7ede77816ee6?w=500&q=80',pl:{name:'Po wyjeździe — bez mebli',desc:'Przygotowanie pustego mieszkania pod nowy najem lub sprzedaż — zwrot kaucji, realizacja 24h.',price:'od 750 zł',link:'/sprzatanie-po-wyprowadzce-krakow#bezmeb'},
+   uk:{name:'Після виїзду — без меблів',desc:'Підготовка порожньої квартири під новий найм або продаж — повернення застави, виконання за 24 год.',price:'від 750 zł',link:'/sprzatanie-po-wyprowadzce-krakow#bezmeb'},
+   en:{name:'Post-checkout — empty',desc:'Preparing an empty flat for new rental or sale — deposit return, delivery within 24h.',price:'from 750 zł',link:'#kontakt'}},
   {icon:'🪟',cc:'c6',img:'https://images.unsplash.com/photo-1536509814050-49f492a201b4?w=500&q=80',pl:{name:'Mycie okien',desc:'Sezonowe i zimowe mycie okien z obu stron — ramy, parapety, uszczelki. Rabat -10% do 30.09.',price:'od 25 zł/m²',link:'/mycie-okien'},
    uk:{name:'Миття вікон',desc:'Сезонне та зимове миття вікон з обох сторін — рами, підвіконня, ущільнювачі. Знижка -10% до 30.09.',price:'від 25 zł/m²',link:'/mycie-okien'},
    en:{name:'Window cleaning',desc:'Seasonal and winter window cleaning both sides — frames, sills, seals. -10% discount until 30.09.',price:'from 25 zł/m²',link:'/mycie-okien'}}
@@ -1698,9 +1708,15 @@ function renderSrvShort() {
 function renderQsv() {
   var g = document.getElementById('qsv-grid');
   if(!g) return;
+  var m2El = document.getElementById('qsv-m2');
+  var m2 = m2El ? parseFloat(m2El.value) : 0;
   g.innerHTML = SRV_SHORT.map(function(s) {
     var L = s[lang]||s.pl;
-    return '<a href="'+L.link+'" class="qsv-card">'+
+    var hashIdx = L.link.indexOf('#');
+    var base = hashIdx===-1 ? L.link : L.link.slice(0,hashIdx);
+    var hash = hashIdx===-1 ? '' : L.link.slice(hashIdx);
+    var href = (m2>0 && base) ? base+'?m2='+m2+hash : L.link;
+    return '<a href="'+href+'" class="qsv-card">'+
       '<img src="'+s.img+'" alt="'+L.name+'" loading="eager">'+
       '<span class="qsv-card-arrow">→</span>'+
       '<div class="qsv-card-body">'+
