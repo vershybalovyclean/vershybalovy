@@ -829,8 +829,19 @@ var pf=document.getElementById('pageform');
 if(pf) pf.addEventListener('submit',function(e){e.preventDefault();var name=document.getElementById('pf-name'),phone=document.getElementById('pf-phone');if(!name.value.trim()){name.style.borderColor='#ef4444';return;}if(!phone.value.trim()){phone.style.borderColor='#ef4444';return;}var btn=document.getElementById('pf-btn');btn.disabled=true;btn.textContent='⏳ Wysyłanie...';fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name.value.trim(),phone:phone.value.trim(),service:document.getElementById('pf-service').value,comment:document.getElementById('pf-comment').value.trim()+' [strona: po-wyprowadzce]'})}).then(function(){btn.textContent='✅ Wysłano!';btn.style.background='#16a34a';e.target.reset();var t=document.getElementById('toast');t.textContent='Dziękujemy! Oddzwonimy wkrótce 🎉';t.classList.add('show');setTimeout(function(){t.classList.remove('show');},5000);}).catch(function(){btn.disabled=false;btn.textContent='📩 Otrzymaj wycenę';alert('Błąd. Zadzwoń: +48 514 363 538');});});
 </script>
 
+<script>
+window.addEventListener('load', function(){
+  var hash = window.location.hash.replace('#','');
+  if(['zmeb','bezmeb'].indexOf(hash)!==-1){
+    switchPriceTab(hash);
+    var m2 = parseFloat(vpcGetParam('m2'));
+    if(m2>0) vpcSelectByArea('#pcontent-'+hash+' .ac-row','.ac-lbl','.ac-row-hdr','.ac-inp', m2);
+  }
+});
+</script>
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/booking.js"></script>
+<script src="assets/js/quote-prefill.js"></script>
 </body>
 </html>
