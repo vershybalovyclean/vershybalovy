@@ -2411,7 +2411,15 @@ function showTab(id, btn) {
   // Re-render calculator for this tab
   if(typeof renderAreaCalc === 'function') renderAreaCalc(id);
 }
-window.addEventListener('load',function(){var hash=window.location.hash.replace('#','');if(['wspomagajace','generalne','szczegolowe'].indexOf(hash)!==-1){var btn=document.querySelector('[onclick*="'+hash+'"]');if(btn)showTab(hash,btn);}}); 
+window.addEventListener('load',function(){
+  var hash=window.location.hash.replace('#','');
+  if(['wspomagajace','generalne','szczegolowe'].indexOf(hash)!==-1){
+    var btn=document.querySelector('[onclick*="'+hash+'"]');
+    if(btn)showTab(hash,btn);
+    var m2=parseFloat(vpcGetParam('m2'));
+    if(m2>0) vpcSelectByArea('#tc-'+hash+' .ac-row','.ac-lbl','.ac-row-hdr','.ac-inp', m2);
+  }
+});
 function toggleFaq(el){el.parentNode.classList.toggle('open');}
 
 // ===== ADDITIONAL SERVICES CHECKBOXES =====
@@ -2681,5 +2689,6 @@ function addonsToForm() {
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/booking.js"></script>
+<script src="assets/js/quote-prefill.js"></script>
 </body>
 </html>
