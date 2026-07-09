@@ -1,0 +1,89 @@
+/* ─── HERO ─── */
+.hero-pp{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#1d4ed8 100%);
+  padding:32px 28px;text-align:center;position:relative;overflow:hidden;
+  min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.hero-pp .hero-badge{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)}
+.hero-pp .hero-sub{color:rgba(255,255,255,.85)}
+.hero-pp h1{color:#fff}
+.hero-pp h1 em{color:#fbbf24}
+
+/* ─── HOW IT WORKS ─── */
+.pp-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1100px;margin:0 auto}
+@media(max-width:900px){.pp-steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.pp-steps{grid-template-columns:1fr}}
+.pp-step{background:#fff;border:1.5px solid var(--brd);border-radius:var(--r);padding:24px 20px;
+  text-align:center;box-shadow:var(--shadow);position:relative}
+.pp-step-num{width:34px;height:34px;border-radius:50%;background:var(--blue2);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;margin:0 auto 12px}
+.pp-step-icon{font-size:28px;margin-bottom:10px;display:block}
+.pp-step-title{font-size:14.5px;font-weight:800;color:var(--text);margin-bottom:6px;font-family:'Montserrat',sans-serif}
+.pp-step-desc{font-size:12.5px;color:var(--gray);line-height:1.55}
+
+/* ─── BENEFITS ─── */
+.pp-benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:0 auto}
+@media(max-width:900px){.pp-benefits-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.pp-benefits-grid{grid-template-columns:1fr}}
+.pp-benefit-card{background:#fff;border:1.5px solid var(--brd);border-radius:var(--r);padding:22px 20px;box-shadow:var(--shadow)}
+.pp-benefit-icon{font-size:26px;margin-bottom:10px;display:block}
+.pp-benefit-title{font-size:14.5px;font-weight:800;color:var(--text);margin-bottom:6px;font-family:'Montserrat',sans-serif}
+.pp-benefit-text{font-size:13px;color:var(--text3);line-height:1.6}
+
+/* ─── PERSONAS (who is this for) ─── */
+.pp-persona-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1100px;margin:0 auto}
+@media(max-width:900px){.pp-persona-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.pp-persona-grid{grid-template-columns:1fr}}
+.pp-persona-card{background:var(--blue-pale);border:1.5px solid var(--blue-light);border-radius:var(--r);
+  padding:20px 18px;text-align:center}
+.pp-persona-icon{font-size:30px;margin-bottom:10px;display:block}
+.pp-persona-title{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:6px;font-family:'Montserrat',sans-serif}
+.pp-persona-text{font-size:12px;color:var(--text3);line-height:1.55}
+
+/* ─── FORM CARDS (signup + order) ─── */
+.pp-form-card{background:#fff;border:1.5px solid var(--brd);border-radius:var(--r);
+  padding:32px;box-shadow:var(--shadow);max-width:640px;margin:0 auto;text-align:left}
+.pp-field{margin-bottom:18px}
+.pp-field:last-of-type{margin-bottom:0}
+.pp-field-lbl{font-size:13px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+.pp-input,.pp-select{width:100%;border:1.5px solid var(--brd);border-radius:12px;padding:13px 14px;
+  font-size:14px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:.2s;background:#fff}
+.pp-input:focus,.pp-select:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.pp-code-input{font-family:'Montserrat',sans-serif;font-weight:800;font-size:16px;letter-spacing:1px;
+  text-transform:uppercase;color:var(--blue2);border-color:var(--blue-light);background:var(--blue-pale)}
+.pp-code-hint{font-size:11.5px;color:var(--gray);margin-top:6px}
+.pp-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:480px){.pp-row2{grid-template-columns:1fr}}
+.pp-submit-btn{display:block;width:100%;margin-top:6px;padding:15px;border-radius:50px;
+  background:var(--blue2);color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;
+  text-align:center;transition:.2s;font-family:'Montserrat',sans-serif}
+.pp-submit-btn:hover{background:var(--blue);transform:translateY(-1px)}
+.pp-submit-btn.green{background:var(--green2)}
+.pp-submit-btn.green:hover{background:var(--green)}
+.pp-form-note{text-align:center;margin-top:12px;font-size:12px;color:var(--gray)}
+
+/* ─── THANK YOU PANEL ─── */
+.pp-thanks{display:none;text-align:center;padding:20px 4px 4px}
+.pp-thanks.show{display:block}
+.pp-thanks-icon{font-size:42px;margin-bottom:12px}
+.pp-thanks-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:8px}
+.pp-thanks-text{font-size:13.5px;color:var(--text3);line-height:1.6;margin-bottom:6px}
+.pp-thanks-code{display:inline-block;background:var(--blue-pale);color:var(--blue2);font-weight:800;
+  font-family:'Montserrat',sans-serif;letter-spacing:1px;padding:6px 14px;border-radius:8px;margin:8px 0}
+
+/* ─── FAQ (local copy, matches site pattern) ─── */
+.faq{display:flex;flex-direction:column;gap:12px;max-width:760px;margin:0 auto}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s;padding:0 20px;
+  font-size:14px;color:var(--text3);line-height:1.7}
+.faq-arrow{transition:transform .3s;color:var(--blue2);font-size:18px}
+.faq-item{background:#fff;border:1.5px solid var(--brd);border-radius:var(--r);overflow:hidden}
+.faq-item.open .faq-a{max-height:400px;padding:0 20px 16px}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-q{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;
+  align-items:center;font-weight:700;font-size:14px;color:var(--text)}
+.faq-q:hover{background:var(--blue-pale)}
+
+/* ─── FINAL CTA ─── */
+.pp-final-cta{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#1d4ed8 100%);
+  padding:48px 28px;text-align:center;color:#fff;border-radius:var(--r);max-width:1100px;margin:0 auto}
+.pp-final-cta h2{font-family:'Montserrat',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:900;margin-bottom:10px}
+.pp-final-cta p{color:rgba(255,255,255,.85);font-size:14px;margin-bottom:20px;max-width:560px;margin-left:auto;margin-right:auto}
+.pp-final-cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
