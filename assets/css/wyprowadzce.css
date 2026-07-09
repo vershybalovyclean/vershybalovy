@@ -4,6 +4,13 @@
 
 .ac-combo-note{font-size:11px;color:var(--gray);margin-top:6px;display:block}
 
+/* Disable the decorative bottom fade-overlay here — it used to extend 40px below this
+   section and, once the gap above the combo banner was tightened, painted over its title */
+#extras-section::after{content:none}
+/* Same issue on the other side: this section's top fade-overlay extended 40px upward
+   and painted over the bottom of the combo banner above it */
+#scope-section::before{content:none}
+
 .ac-combo-standalone{padding:14px 18px;background:var(--green-pale);border:1px solid var(--green-light);border-radius:12px;text-align:center}
 
 .ac-combo-text{font-size:13px;color:var(--text2);line-height:1.5}
@@ -193,8 +200,6 @@
 
 .hdr-back:hover{color:var(--blue2);border-color:var(--blue2);background:var(--blue-pale)}
 
-.hdr-logo img{width:72px;height:auto;display:block}
-
 .hdr-nav a.active{color:var(--blue2);background:var(--blue-pale)}
 
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--blue-light);
@@ -202,7 +207,7 @@
   padding:5px 16px;font-size:11px;font-weight:700;letter-spacing:.8px;
   text-transform:uppercase;margin-bottom:20px}
 
-.hero-wyjazd{background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#047857 100%);padding:20px 28px 16px;text-align:center;position:relative;overflow:hidden}
+.hero-wyjazd{background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#047857 100%);padding:32px 28px;text-align:center;position:relative;overflow:hidden;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 
 .hero-wyjazd .hero-badge{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)}
 
@@ -373,6 +378,7 @@ body.has-order{padding-bottom:76px}
   .order-sidebar{display:none !important}
   .mobile-order-bar.show{display:block}
   body.has-order{padding-bottom:72px}
+  .bleed-fix{margin:0 -16px!important}
 }
 
 @media(max-width:600px){

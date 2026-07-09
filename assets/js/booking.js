@@ -7,6 +7,7 @@
   var bk_selectedSlot = null;
   var bk_selectedPayment = null;
   var bk_invoiceOn = false;
+  var bk_partnerOn = false;
   var bk_viewYear, bk_viewMonth;
 
   var now = new Date();
@@ -22,7 +23,11 @@
       formTitle:'📝 Twoje dane',lblName:'Imię i nazwisko *',lblPhone:'Telefon *',lblEmail:'E-mail',
       lblStreet:'Ulica i numer domu *',lblApt:'Numer mieszkania',lblPostal:'Kod pocztowy *',lblCity:'Miejscowość *',
       lblPayment:'Sposób płatności *',payTransfer:'Przelew na konto',payBlik:'BLIK',payCash:'Płatność gotówką',
-      invoiceLabel:'Chcę otrzymać fakturę',lblNotes:'Uwagi',opt:'(opcjonalnie)',
+      invoiceLabel:'Chcę otrzymać fakturę',
+      partnerLabel:'Zamówienie w ramach programu partnerskiego',
+      lblPartnerCode:'Kod partnera *',partnerCodeHint:'Format: VC- i 4 cyfry, np. VC-4821.',
+      recapPartner:'🤝 Kod partnera',
+      lblNotes:'Uwagi',opt:'(opcjonalnie)',
       phName:'Anna Kowalska',phPhone:'+48 600 000 000',phEmail:'anna@example.com',
       phStreet:'ul. Floriańska 1',phApt:'np. 5',phPostal:'30-001',phCity:'Kraków',
       phNotes:'Kod do bramy, zwierzęta, dodatkowe info...',
@@ -45,7 +50,11 @@
       formTitle:'📝 Ваші дані',lblName:"Ім'я та прізвище *",lblPhone:'Телефон *',lblEmail:'E-mail',
       lblStreet:'Вулиця та номер будинку *',lblApt:'Номер квартири',lblPostal:'Поштовий індекс *',lblCity:'Населений пункт *',
       lblPayment:'Спосіб оплати *',payTransfer:'Банківський переказ',payBlik:'BLIK',payCash:'Оплата готівкою',
-      invoiceLabel:'Хочу отримати рахунок-фактуру',lblNotes:'Коментар',opt:"(необов'язково)",
+      invoiceLabel:'Хочу отримати рахунок-фактуру',
+      partnerLabel:'Замовлення в рамках партнерської програми',
+      lblPartnerCode:'Код партнера *',partnerCodeHint:'Формат: VC- і 4 цифри, напр. VC-4821.',
+      recapPartner:'🤝 Код партнера',
+      lblNotes:'Коментар',opt:"(необов'язково)",
       phName:'Олена Коваль',phPhone:'+48 600 000 000',phEmail:'olena@example.com',
       phStreet:'вул. Флоріанська 1',phApt:'напр. 5',phPostal:'30-001',phCity:'Краків',
       phNotes:'Код від брами, тварини, додаткова інформація...',
@@ -68,7 +77,11 @@
       formTitle:'📝 Your details',lblName:'Full name *',lblPhone:'Phone *',lblEmail:'E-mail',
       lblStreet:'Street and house number *',lblApt:'Apartment number',lblPostal:'Postal code *',lblCity:'City *',
       lblPayment:'Payment method *',payTransfer:'Bank transfer',payBlik:'BLIK',payCash:'Cash payment',
-      invoiceLabel:"I'd like an invoice",lblNotes:'Notes',opt:'(optional)',
+      invoiceLabel:"I'd like an invoice",
+      partnerLabel:'Order under the partner program',
+      lblPartnerCode:'Partner code *',partnerCodeHint:'Format: VC- plus 4 digits, e.g. VC-4821.',
+      recapPartner:'🤝 Partner code',
+      lblNotes:'Notes',opt:'(optional)',
       phName:'Anna Smith',phPhone:'+48 600 000 000',phEmail:'anna@example.com',
       phStreet:'Floriańska St 1',phApt:'e.g. 5',phPostal:'30-001',phCity:'Kraków',
       phNotes:'Gate code, pets, extra info...',
@@ -256,12 +269,18 @@
 
   /* ─── FORM CHECK ───────────────────────────────────── */
   function bk_checkForm(){
+    var partnerOk = true;
+    if(bk_partnerOn){
+      var codeEl = document.getElementById('bk-partner-code');
+      partnerOk = !!(codeEl && /^VC-\d{4}$/.test(codeEl.value));
+    }
     var ok = bk_selectedDate && bk_selectedSlot && bk_selectedPayment
       && document.getElementById('bk-name').value.trim()
       && document.getElementById('bk-phone').value.trim()
       && document.getElementById('bk-street').value.trim()
       && document.getElementById('bk-postal').value.trim()
-      && document.getElementById('bk-city').value.trim();
+      && document.getElementById('bk-city').value.trim()
+      && partnerOk;
     document.getElementById('bk-submitBtn').disabled = !ok;
   }
 
@@ -279,6 +298,43 @@
     bk_invoiceOn = !bk_invoiceOn;
     this.classList.toggle('bk-chip-active', bk_invoiceOn);
   });
+
+  /* ─── PARTNER PROGRAM TOGGLE (only on pages that include it) ─── */
+  window.bk_partnerOn = bk_partnerOn;
+  var bk_partnerBtn = document.getElementById('bk-partnerBtn');
+  if(bk_partnerBtn){
+    bk_partnerBtn.addEventListener('click',function(){
+      bk_partnerOn = !bk_partnerOn;
+      window.bk_partnerOn = bk_partnerOn;
+      this.classList.toggle('bk-chip-active', bk_partnerOn);
+      var wrap = document.getElementById('bk-partner-code-wrap');
+      if(wrap){
+        wrap.classList.toggle('bk-hidden', !bk_partnerOn);
+        var codeEl = document.getElementById('bk-partner-code');
+        if(bk_partnerOn && codeEl && !codeEl.value) codeEl.value = 'VC-';
+      }
+      bk_checkForm();
+      if(typeof window.updateOrder === 'function') window.updateOrder();
+      if(typeof window.updateSidebar === 'function') window.updateSidebar();
+    });
+  }
+  var bk_partnerCodeInput = document.getElementById('bk-partner-code');
+  if(bk_partnerCodeInput){
+    bk_partnerCodeInput.addEventListener('input',function(){
+      var v = bk_partnerCodeInput.value.toUpperCase();
+      if(v.indexOf('VC-') !== 0){
+        var digits = v.replace(/[^0-9]/g,'').slice(0,4);
+        bk_partnerCodeInput.value = 'VC-'+digits;
+      } else {
+        var digits2 = v.slice(3).replace(/[^0-9]/g,'').slice(0,4);
+        bk_partnerCodeInput.value = 'VC-'+digits2;
+      }
+      bk_checkForm();
+    });
+    bk_partnerCodeInput.addEventListener('focus',function(){
+      if(bk_partnerCodeInput.value.length < 3) bk_partnerCodeInput.value = 'VC-';
+    });
+  }
 
   /* ─── INPUTS → CHECK ───────────────────────────────── */
   ['bk-name','bk-phone','bk-email','bk-street','bk-apt','bk-postal','bk-city','bk-notes'].forEach(function(id){
@@ -332,6 +388,11 @@
     comment+='Adres: '+fullAddress+'\n';
     comment+='Sposób płatności: '+payLabel+'\n';
     comment+='Faktura: '+(bk_invoiceOn?'TAK':'nie')+'\n';
+    var partnerCode = '';
+    if(bk_partnerOn){
+      partnerCode = document.getElementById('bk-partner-code').value.trim();
+      comment+='Kod partnera: '+partnerCode+'\n';
+    }
     if(email) comment+='E-mail: '+email+'\n';
     if(notes) comment+='Uwagi: '+notes;
 
@@ -343,7 +404,7 @@
     fetch('/api/submit',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment})
+      body:JSON.stringify({name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, partnerCode:partnerCode})
     })
     .then(function(r){return r.json();})
     .then(function(){
@@ -353,6 +414,16 @@
       document.getElementById('bk-recapDate').textContent = dateLabel;
       document.getElementById('bk-recapTime').textContent = slotLabel;
       document.getElementById('bk-recapPhone').textContent = phone;
+      var partnerRow = document.getElementById('bk-recap-partner-row');
+      if(partnerRow){
+        if(partnerCode){
+          document.getElementById('bk-r-partner').textContent = bk_t('recapPartner');
+          document.getElementById('bk-recapPartner').textContent = partnerCode;
+          partnerRow.classList.remove('bk-hidden');
+        } else {
+          partnerRow.classList.add('bk-hidden');
+        }
+      }
       document.getElementById('bk-wa-btn').textContent = bk_t('waBtn');
       document.querySelector('.bk-grid-wrap').style.display='none';
       document.getElementById('bk-successView').classList.remove('bk-hidden');
@@ -386,6 +457,7 @@
       'bk-lbl-apt':'lblApt','bk-lbl-postal':'lblPostal','bk-lbl-city':'lblCity',
       'bk-lbl-payment':'lblPayment','bk-pay-transfer':'payTransfer','bk-pay-blik':'payBlik',
       'bk-pay-cash':'payCash','bk-invoice-label':'invoiceLabel',
+      'bk-partner-label':'partnerLabel','bk-lbl-partner-code':'lblPartnerCode','bk-partner-code-hint':'partnerCodeHint',
       'bk-lbl-notes':'lblNotes','bk-opt2':'opt','bk-submit-txt':'submitTxt',
       'bk-cta-sub':'ctaSub','bk-r-date':'recapDate','bk-r-time':'recapTime',
       'bk-r-phone':'recapPhone','bk-wa-btn':'waBtn'
