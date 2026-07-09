@@ -1,5 +1,8 @@
 #sidebar-lines{flex:1 1 auto;overflow-y:auto;min-height:48px}
 
+/* ─── COMPACT HERO (this page reuses .hero from base.css, which is 62vh tall — same as homepage. Shrink it to match the other service pages) ─── */
+.hero{min-height:280px}
+
 .ac-body{display:none;padding:0 14px 12px;border-top:1px solid var(--brd)}
 
 .ac-cancel{display:none;background:none;border:none;color:var(--gray);font-size:11px;
@@ -65,6 +68,36 @@
 .ac-zones{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 
 .add-circle.a1{background:#eff6ff}.add-circle.a2{background:#f0fdf4}.add-circle.a3{background:#fef3c7}
+
+/* ─── ROOM ACCORDION (Pokoje/Łazienka/Kuchnia) ─── */
+#uslugi-dodatkowe .add-col{grid-column:1/-1}
+.add-col-head.add-col-toggle{cursor:pointer;user-select:none;margin-bottom:0}
+.add-col-count{font-size:12px;color:var(--gray);margin-left:auto;flex-shrink:0}
+.add-col-arrow{width:16px;height:16px;flex-shrink:0;fill:none;stroke:var(--gray2);
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.add-col.open .add-col-arrow{transform:rotate(180deg)}
+.add-col-body{display:none;margin-top:14px}
+.add-col.open .add-col-body{display:block}
+
+/* ─── FULL-WIDTH CARD GRID (opened room contents) ─── */
+.add-list-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
+.add-list-cards li{flex-direction:column;align-items:center;justify-content:flex-start;
+  text-align:center;position:relative;padding:16px 8px 12px;gap:6px}
+.add-list-cards .ai-n{flex:none;font-size:12.5px;line-height:1.35;color:var(--text2)}
+.add-list-cards .ai-p{margin-left:0;font-size:13px}
+.add-list-cards .add-check{position:absolute;top:8px;right:8px;width:18px;height:18px;font-size:10px;margin:0}
+.add-list-cards .qty-wrap{margin-left:0;margin-top:2px}
+@media(max-width:640px){.add-list-cards{grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:8px}
+  .add-list-cards li{padding:12px 6px 10px}
+  .ai-icon-wrap{width:38px!important;height:38px!important}}
+
+/* ─── PER-SERVICE ICONS (colorful flat illustrations) ─── */
+.ai-icon-wrap{width:46px;height:46px;border-radius:12px;flex-shrink:0;background:var(--off);
+  display:flex;align-items:center;justify-content:center;margin-bottom:2px;transition:transform .2s}
+.ai-icon{width:28px;height:28px;flex-shrink:0}
+
+.add-list-cards li:hover .ai-icon-wrap{transform:scale(1.06)}
+.add-list-cards li.selected .ai-icon-wrap{background:var(--green-pale)}
 
 .area-calc-box{max-width:520px;margin:0 auto}
 
@@ -209,7 +242,8 @@
 
 .freq-tab:not(.active) .freq-tab-disc{color:var(--blue2)}
 
-.freq-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.freq-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:24px}
+@media(max-width:520px){.freq-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .freq-title{font-family:'Montserrat',sans-serif;font-size:clamp(22px,3vw,36px);font-weight:900;color:var(--text);margin-bottom:10px}
 
@@ -226,8 +260,6 @@
 .hdr-back{font-size:11px;color:var(--text3);padding:4px 7px;border-radius:8px;font-weight:500;transition:.2s;border:1.5px solid var(--brd)}
 
 .hdr-back:hover{color:var(--blue2);border-color:var(--blue2);background:var(--blue-pale)}
-
-.hdr-logo img{width:72px;height:auto;display:block}
 
 .hdr-nav a.active{color:var(--blue2);background:var(--blue-pale)}
 
