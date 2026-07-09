@@ -550,7 +550,7 @@ function zbUpdateSummary() {
   if(zbState.partnerCode){
     partnerRow.textContent = (t.sum_partner || 'Kod partnera: ') + zbState.partnerCode;
     partnerRow.style.display = '';
-    msg += '\nKod partnera: ' + zbState.partnerCode;
+    msg += '\n' + (t.sum_partner || 'Kod partnera: ') + zbState.partnerCode;
   } else {
     partnerRow.style.display = 'none';
   }
@@ -840,6 +840,7 @@ function setTxt(id, txt) { var el = document.getElementById(id); if (el) el.text
 
 function applyTranslations(l) {
   lang = l;
+  localStorage.setItem('vc_lang', l);
   var t = TX[l] || TX.pl;
   document.querySelectorAll('.lb').forEach(function(b, i) {
     b.classList.toggle('on', ['pl','uk','en'][i] === l);
@@ -926,7 +927,7 @@ function applyTranslations(l) {
 }
 
 function SL(l) { applyTranslations(l); }
-document.addEventListener('DOMContentLoaded', function(){ applyTranslations('pl'); });
+document.addEventListener('DOMContentLoaded', function(){ applyTranslations(localStorage.getItem('vc_lang') || 'pl'); });
 </script>
 </body>
 </html>
