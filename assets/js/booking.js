@@ -35,6 +35,7 @@
       ctaSub:'Potwierdzimy szczegóły przez WhatsApp lub telefon',
       errMsg:'Błąd wysyłania. Spróbuj ponownie lub zadzwoń: +48 514 363 538',
       orderHead:'Twoje zamówienie',ordService:'🏠 Usługa',ordArea:'📏 Powierzchnia',ordExtras:'💎 Dodatki',ordFreq:'🔄 Częstotliwość',ordTotal:'💰 Razem',
+      ordNight:'🌙 Dopłata nocna (+100%)',nightComment:'Dopłata nocna (+100%): TAK',
       f1:'✔ bez ukrytych dopłat',f2:'✔ własne środki w cenie',f3:'✔ możliwość zmiany terminu',
       successThanks:'Dziękujemy',successP:'Twoja prośba o rezerwację została wysłana. Skontaktujemy się z Tobą w ciągu <strong>15 minut</strong> przez WhatsApp lub telefon.',
       recapDate:'📅 Termin',recapTime:'⏰ Godzina',recapPhone:'📞 Telefon',waBtn:'💬 Otwórz WhatsApp',
@@ -62,6 +63,7 @@
       ctaSub:'Підтвердимо деталі через WhatsApp або телефон',
       errMsg:'Помилка. Спробуйте ще раз або зателефонуйте: +48 514 363 538',
       orderHead:'Твоє замовлення',ordService:'🏠 Послуга',ordArea:'📏 Площа',ordExtras:'💎 Додатково',ordFreq:'🔄 Частота',ordTotal:'💰 Разом',
+      ordNight:'🌙 Нічна доплата (+100%)',nightComment:'Нічна доплата (+100%): ТАК',
       f1:'✔ без прихованих доплат',f2:'✔ власні засоби включені',f3:'✔ можливість зміни дати',
       successThanks:'Дякуємо',successP:"Твоя заявка надіслана. Зв'яжемося протягом <strong>15 хвилин</strong> через WhatsApp або телефон.",
       recapDate:'📅 Дата',recapTime:'⏰ Час',recapPhone:'📞 Телефон',waBtn:'💬 Відкрити WhatsApp',
@@ -89,6 +91,7 @@
       ctaSub:"We'll confirm via WhatsApp or phone",
       errMsg:'Sending failed. Please try again or call: +48 514 363 538',
       orderHead:'Your order',ordService:'🏠 Service',ordArea:'📏 Area',ordExtras:'💎 Extras',ordFreq:'🔄 Frequency',ordTotal:'💰 Total',
+      ordNight:'🌙 Night surcharge (+100%)',nightComment:'Night surcharge (+100%): YES',
       f1:'✔ no hidden fees',f2:'✔ our own supplies included',f3:'✔ date can be changed',
       successThanks:'Thank you',successP:"Your booking request has been sent. We'll contact you within <strong>15 minutes</strong> via WhatsApp or phone.",
       recapDate:'📅 Date',recapTime:'⏰ Time',recapPhone:'📞 Phone',waBtn:'💬 Open WhatsApp',
@@ -158,6 +161,15 @@
     {id:'s7',icon:'🌙',label:'po 21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',en:'+100% — night visit'},night:true}
   ];
 
+  /* ─── NIGHT SURCHARGE (po 21:00 → +100%) ───────────── */
+  function bk_isNightSlot(){
+    var s = BK_SLOTS.find(function(x){return x.id===bk_selectedSlot;});
+    return !!(s && s.night);
+  }
+  function bk_finalPrice(basePrice){
+    return bk_isNightSlot() ? basePrice*2 : basePrice;
+  }
+
   /* ─── RENDER ORDER SUMMARY ─────────────────────────── */
   window.bk_renderOrder = function() {
     var d = window.bk_orderData;
@@ -166,6 +178,8 @@
     if(d.service) { d.service.split('|').forEach(function(l){ rows.push([bk_t('ordService'), l.trim()]); }); }
     if(d.extras) rows.push([bk_t('ordExtras'), d.extras]);
     if(d.freq) rows.push([bk_t('ordFreq'), d.freq]);
+    var nightOn = bk_isNightSlot();
+    if(nightOn && d.price) rows.push([bk_t('ordNight'), '+'+d.price+' zł']);
     function _set(id, val, html) {
       var el = document.getElementById(id);
       if(!el) return;
@@ -173,7 +187,7 @@
     }
     function _html(id, val) { var el=document.getElementById(id); if(el) el.innerHTML=val; }
     _html('bk-orderRows', rows.map(function(r){ return '<li><span>'+r[0]+'</span><strong>'+r[1]+'</strong></li>'; }).join(''));
-    _set('bk-orderTotal', d.price ? d.price+' zł' : '— zł');
+    _set('bk-orderTotal', d.price ? bk_finalPrice(d.price)+' zł' : '— zł');
     _set('bk-order-head', bk_t('orderHead'));
     _set('bk-total-lbl', bk_t('ordTotal'));
     _set('bk-f1', bk_t('f1'));
@@ -221,6 +235,7 @@
     bk_renderSlots();
     bk_updateBonus();
     bk_checkForm();
+    var calEl = document.getElementById('bk-calDays'); if(calEl) calEl.classList.remove('bk-invalid');
   };
 
   function bk_updateBonus(){
@@ -265,6 +280,8 @@
     bk_selectedSlot = id;
     bk_renderSlots();
     bk_checkForm();
+    if(typeof window.bk_renderOrder === 'function') window.bk_renderOrder();
+    var slotsEl = document.getElementById('bk-slotsContainer'); if(slotsEl) slotsEl.classList.remove('bk-invalid');
   };
 
   /* ─── FORM CHECK ───────────────────────────────────── */
@@ -281,7 +298,53 @@
       && document.getElementById('bk-postal').value.trim()
       && document.getElementById('bk-city').value.trim()
       && partnerOk;
-    document.getElementById('bk-submitBtn').disabled = !ok;
+    // Not actually disabled (so a click can still trigger validation highlighting) —
+    // just visually dimmed as a "not ready yet" hint.
+    document.getElementById('bk-submitBtn').classList.toggle('bk-notready', !ok);
+  }
+
+  /* ─── VALIDATION HIGHLIGHT ──────────────────────────── */
+  // The payment buttons' wrapper isn't consistently id'd across pages (only
+  // mieszkan.html has id="bk-payGroup") — find it by relation to a known button instead.
+  function bk_payGroupEl(){
+    var opt = document.querySelector('.bk-pay-opt');
+    return opt ? opt.parentElement : null;
+  }
+
+  function bk_clearInvalid(){
+    ['bk-calDays','bk-slotsContainer'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.classList.remove('bk-invalid');
+    });
+    var payGroup = bk_payGroupEl(); if(payGroup) payGroup.classList.remove('bk-invalid');
+    ['bk-name','bk-phone','bk-street','bk-postal','bk-city','bk-partner-code'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.classList.remove('bk-field-invalid');
+    });
+  }
+
+  function bk_validateAndHighlight(){
+    bk_clearInvalid();
+    var firstInvalid = null;
+    function markInvalid(el, isField){
+      if(!el) return;
+      el.classList.add(isField ? 'bk-field-invalid' : 'bk-invalid');
+      if(!firstInvalid) firstInvalid = el;
+    }
+    var ok = true;
+    if(!bk_selectedDate){ markInvalid(document.getElementById('bk-calDays')); ok = false; }
+    if(!bk_selectedSlot){ markInvalid(document.getElementById('bk-slotsContainer')); ok = false; }
+    if(!bk_selectedPayment){ markInvalid(bk_payGroupEl()); ok = false; }
+    ['bk-name','bk-phone','bk-street','bk-postal','bk-city'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && !el.value.trim()){ markInvalid(el, true); ok = false; }
+    });
+    if(bk_partnerOn){
+      var codeEl = document.getElementById('bk-partner-code');
+      if(codeEl && !/^VC-\d{4}$/.test(codeEl.value)){ markInvalid(codeEl, true); ok = false; }
+    }
+    if(!ok && firstInvalid){
+      firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    return ok;
   }
 
   /* ─── PAYMENT BUTTONS ──────────────────────────────── */
@@ -290,6 +353,7 @@
       bk_selectedPayment = btn.dataset.value;
       document.querySelectorAll('.bk-pay-opt').forEach(function(b){ b.classList.toggle('bk-pay-active', b===btn); });
       bk_checkForm();
+      var payEl = bk_payGroupEl(); if(payEl) payEl.classList.remove('bk-invalid');
     });
   });
 
@@ -339,7 +403,10 @@
   /* ─── INPUTS → CHECK ───────────────────────────────── */
   ['bk-name','bk-phone','bk-email','bk-street','bk-apt','bk-postal','bk-city','bk-notes'].forEach(function(id){
     var el = document.getElementById(id);
-    if(el) el.addEventListener('input', bk_checkForm);
+    if(el) el.addEventListener('input', function(){
+      el.classList.remove('bk-field-invalid');
+      bk_checkForm();
+    });
   });
 
   /* ─── MONTH NAV ────────────────────────────────────── */
@@ -356,7 +423,7 @@
 
   /* ─── SUBMIT ───────────────────────────────────────── */
   window.bk_submit = function(){
-    if(!bk_selectedDate||!bk_selectedSlot) return;
+    if(!bk_validateAndHighlight()) return;
     var l = typeof lang!=='undefined'?lang:'pl';
     var locale = bk_t('LOCALE');
     var slotObj = BK_SLOTS.find(function(s){return s.id===bk_selectedSlot;});
@@ -380,7 +447,9 @@
     if(d.service) comment+='Usługa: '+d.service+(d.m2?' ('+d.m2+' m²)':'')+'\n';
     if(d.extras) comment+='Dodatki: '+d.extras+'\n';
     if(d.freq) comment+='Częstotliwość: '+d.freq+'\n';
-    if(d.price) comment+='Szacunkowa cena: '+d.price+' zł\n';
+    var nightOn = bk_isNightSlot();
+    if(d.price) comment+='Szacunkowa cena: '+bk_finalPrice(d.price)+' zł\n';
+    if(nightOn) comment+=bk_t('nightComment')+'\n';
     comment+='Data: '+dateLabel+'\n';
     comment+='Godzina: '+slotLabel+'\n';
     var bonus = bk_getBonus(bk_selectedDate);

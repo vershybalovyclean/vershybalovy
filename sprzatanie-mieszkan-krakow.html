@@ -637,8 +637,13 @@ function checkConflict() {
 
   // Show conflict
   if(cw) cw.classList.add('show');
+  var CONFLICT_NAMES = {
+    wsp:{pl:'Wspomagające',uk:'Підтримуюче',en:'Maintenance'}[lang]||'Wspomagające',
+    gen:{pl:'Generalne',uk:'Генеральне',en:'General'}[lang]||'Generalne',
+    szc:{pl:'Szczegółowe',uk:'Детальне',en:'Detailed'}[lang]||'Szczegółowe'
+  };
   var ct = document.getElementById('conflict-types');
-  if(ct) ct.textContent = selected.map(function(t){return t.name;}).join(' + ');
+  if(ct) ct.textContent = selected.map(function(t){return CONFLICT_NAMES[t.mkey] || t.name;}).join(' + ');
 
   // Generate one "keep" button per selected type — using createElement (no onclick string issues)
   var btns = document.getElementById('conflict-btns');
@@ -647,7 +652,7 @@ function checkConflict() {
     selected.forEach(function(t) {
       var btn = document.createElement('button');
       btn.className = 'conflict-btn primary';
-      btn.innerHTML = '✅ Zostaw <strong>' + t.name + '</strong> — ustaw ' + freqState.times + '× w cyklu';
+      btn.innerHTML = _t('keep_btn', {name: CONFLICT_NAMES[t.mkey] || t.name, n: freqState.times});
       (function(key) {
         btn.addEventListener('click', function() { conflictKeepOnly(key); });
       })(t.key);
@@ -1376,6 +1381,9 @@ function applyTranslations(l) {
       el.innerHTML = zl.kuch + (el.innerHTML.includes('<small') ? el.innerHTML.substring(el.innerHTML.indexOf('<small')) : '');
     } else if(txt.includes('Łazienka') && txt.includes('+')) {
       el.textContent = zl.lazkuch;
+    } else {
+      var doM = txt.match(/^(?:do|до|up to)\s*(\d+)\s*m²$/i);
+      if(doM) el.textContent = (l==='uk' ? 'до '+doM[1]+' m²' : l==='en' ? 'up to '+doM[1]+' m²' : 'do '+doM[1]+' m²');
     }
   });
 
@@ -1414,6 +1422,8 @@ function applyTranslations(l) {
 
   // Update sidebar to retranslate dynamic content
   if(typeof updateSidebar === 'function') updateSidebar();
+  // Refresh the "multiple cleaning types selected" conflict panel if it's currently showing
+  if(typeof checkConflict === 'function') checkConflict();
 
   // Footer
   set('ft-copy', t.ft_copy);
@@ -1421,12 +1431,13 @@ function applyTranslations(l) {
 
 function SL(l) {
   lang = l;
+  localStorage.setItem('vc_lang', l);
   document.querySelectorAll('.lb').forEach(function(b,i){
     b.classList.toggle('on', ['pl','uk','en'][i] === l);
   });
   applyTranslations(l);
 }
-window.addEventListener('load', function(){ applyTranslations('pl'); });
+window.addEventListener('load', function(){ SL(localStorage.getItem('vc_lang') || 'pl'); });
 
 </script>
 <noscript><img height="1" width="1" style="display:none"
@@ -2576,7 +2587,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
             </div>
           </div>
 
-          <button type="button" id="bk-submitBtn" disabled class="bk-cta-btn" onclick="bk_submit()">
+          <button type="button" id="bk-submitBtn" class="bk-cta-btn bk-notready" onclick="bk_submit()">
             🟢 <span id="bk-submit-txt">Rezerwuję ten termin</span>
           </button>
           <p style="text-align:center;margin-top:8px;font-size:12px;color:#94a3b8" id="bk-cta-sub">Potwierdzimy szczegóły przez WhatsApp lub telefon</p>

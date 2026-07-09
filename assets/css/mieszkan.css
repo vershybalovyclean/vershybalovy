@@ -238,7 +238,7 @@
 
 .freq-tab.active .freq-tab-disc{color:#86efac}
 
-.freq-tab:hover{border-color:var(--blue2);background:var(--blue-pale)}
+.freq-tab:hover:not(.active){border-color:var(--blue2);background:var(--blue-pale)}
 
 .freq-tab:not(.active) .freq-tab-disc{color:var(--blue2)}
 

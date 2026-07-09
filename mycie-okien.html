@@ -395,7 +395,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
           <textarea id="bk-notes" class="bk-input" style="min-height:80px;resize:vertical" placeholder="Kod do bramy, piętro, dodatkowe info..."></textarea>
         </div>
       </div>
-      <button type="button" id="bk-submitBtn" disabled class="bk-cta-btn" onclick="bk_submit()">
+      <button type="button" id="bk-submitBtn" class="bk-cta-btn bk-notready" onclick="bk_submit()">
         🟢 <span id="bk-submit-txt">Rezerwuję ten termin</span>
       </button>
       <p style="text-align:center;margin-top:8px;font-size:12px;color:#94a3b8" id="bk-cta-sub">Potwierdzimy szczegóły przez WhatsApp lub telefon</p>
@@ -486,6 +486,15 @@ function _clearAll(){
   document.querySelectorAll('.ac-inp').forEach(function(i){i.value='';});
   document.querySelectorAll('.ac-result').forEach(function(r){r.className='ac-result';r.textContent='';});
 }
+var SVC_NAMES = {
+  pl:{zwykle0:'Mycie okien — Sezon', zwykle1:'Mycie okien — Zima', remont0:'Mycie okien po remoncie — Sezon', remont1:'Mycie okien po remoncie — Zima'},
+  uk:{zwykle0:'Миття вікон — Сезон', zwykle1:'Миття вікон — Зима', remont0:'Миття вікон після ремонту — Сезон', remont1:'Миття вікон після ремонту — Зима'},
+  en:{zwykle0:'Window cleaning — Season', zwykle1:'Window cleaning — Winter', remont0:'Post-renovation window cleaning — Season', remont1:'Post-renovation window cleaning — Winter'}
+};
+function svcName(cat, idx){
+  var m = SVC_NAMES[lang] || SVC_NAMES.pl;
+  return m[cat+idx] || SVC_NAMES.pl[cat+idx];
+}
 function acSelect(cat, idx, service, rate, min){
   var row = document.getElementById('acr-'+cat+'-'+idx);
   if(!row) return;
@@ -515,11 +524,11 @@ function updateSidebar(){
   var mobTotal=document.getElementById('mob-total'), mobBar=document.getElementById('mobile-order-bar');
   var cta=document.getElementById('sb-cta');
   if(SEL && SEL.price>0){
-    lines.innerHTML = '<div class="order-line"><span class="order-line-label">'+SEL.service+' ('+SEL.m2+' m²)</span><span class="order-line-val">'+SEL.price+' zł</span></div>';
+    lines.innerHTML = '<div class="order-line"><span class="order-line-label">'+svcName(SEL.cat,SEL.idx)+' ('+SEL.m2+' m²)</span><span class="order-line-val">'+SEL.price+' zł</span></div>';
     totalEl.textContent = SEL.price+' zł'; if(mobTotal) mobTotal.textContent = SEL.price+' zł';
     cta.disabled=false; document.body.classList.add('has-order'); if(mobBar) mobBar.classList.add('show');
   } else if(SEL){
-    lines.innerHTML = '<div class="order-line"><span class="order-line-label">'+SEL.service+' '+_t('wpisz_metraz')+'</span><span class="order-line-val">—</span></div>';
+    lines.innerHTML = '<div class="order-line"><span class="order-line-label">'+svcName(SEL.cat,SEL.idx)+' '+_t('wpisz_metraz')+'</span><span class="order-line-val">—</span></div>';
     totalEl.textContent='— zł'; if(mobTotal) mobTotal.textContent='— zł';
     cta.disabled=true; document.body.classList.add('has-order'); if(mobBar) mobBar.classList.add('show');
   } else {
@@ -611,6 +620,7 @@ function setTxt(id, txt) {
 
 function applyTranslations(l) {
   lang = l;
+  localStorage.setItem('vc_lang', l);
   var t = TX[l] || TX.pl;
 
   document.querySelectorAll('.lb').forEach(function(b, i) {
@@ -713,7 +723,7 @@ function SL(l) {
   applyTranslations(l);
 }
 
-document.addEventListener('DOMContentLoaded', function(){ applyTranslations('pl'); });
+document.addEventListener('DOMContentLoaded', function(){ applyTranslations(localStorage.getItem('vc_lang') || 'pl'); });
 </script>
 
 <script src="assets/js/nav.js"></script>
