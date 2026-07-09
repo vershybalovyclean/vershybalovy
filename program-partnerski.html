@@ -391,6 +391,13 @@ function submitSignup(e){
   document.getElementById('signup-wa-btn').href = 'https://wa.me/48514363538?text=' + encodeURIComponent(msg);
   document.getElementById('signup-form').style.display = 'none';
   document.getElementById('signup-thanks').classList.add('show');
+  if(typeof gtag !== 'undefined'){
+    gtag('event', 'generate_lead', {
+      'event_category': 'partner_signup',
+      'event_label': type || 'program_partnerski',
+      'value': 1
+    });
+  }
   return false;
 }
 

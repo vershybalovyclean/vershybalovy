@@ -6,10 +6,6 @@ function trackFormConversion(serviceName) {
     'event_label': serviceName || 'rezerwacja',
     'value': 1
   });
-  // Also send to Google Ads when conversion ID is set
-  gtag('event', 'conversion', {
-    'send_to': 'G-Q484FKHNVE'
-  });
 }
 
 function trackPhoneClick(phone) {

@@ -174,7 +174,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <div class="zb-summary-line" id="sum-line-area">Metraż: —</div>
         <div class="zb-summary-line" id="sum-line-degree">Stopień: —</div>
         <div class="zb-summary-line" id="sum-line-partner" style="display:none">Kod partnera: —</div>
-        <a href="#" target="_blank" class="zb-summary-cta" id="zb-cta-btn">📞 Umów bezpłatny kontakt</a>
+        <a href="#" target="_blank" class="zb-summary-cta" id="zb-cta-btn" onclick="if(typeof gtag!=='undefined'){gtag('event','generate_lead',{'event_category':'whatsapp_zbierackosc','event_label':zbState.type||'zbierackosc','value':1});}">📞 Umów bezpłatny kontakt</a>
         <div class="zb-summary-alt" id="sum-alt">lub zadzwoń: <a href="tel:+48514363538" style="color:var(--blue2);font-weight:700">+48 514 363 538</a></div>
       </div>
     </div>
