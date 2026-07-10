@@ -477,11 +477,13 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 
 
+<div class="mob-order-backdrop" onclick="toggleMobOrder(false)"></div>
 <div class="mobile-order-bar" id="mobile-order-bar">
   <div class="mob-bar-inner">
-    <div class="mob-bar-price">
+    <div class="mob-bar-price" onclick="toggleMobOrder()">
       <span class="mob-bar-label" id="mob-total-label">Łącznie:</span>
       <span class="mob-bar-val" id="mob-total">— zł</span>
+      <span class="mob-bar-chevron" id="mob-bar-chevron">▲</span>
     </div>
     <button class="mob-bar-btn" id="mob-cta-btn" onclick="submitOrder()">Zamów →</button>
   </div>
@@ -851,5 +853,6 @@ window.addEventListener('load', function(){
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/quote-prefill.js"></script>
+<script src="assets/js/mobile-order.js"></script>
 </body>
 </html>

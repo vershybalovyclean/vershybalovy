@@ -205,11 +205,15 @@
 
 .mob-bar-btn:hover{background:var(--blue)}
 
-.mob-bar-info{flex:1;min-width:0}
+.mob-bar-info{flex:1;min-width:0;cursor:pointer}
 
 .mob-bar-lbl{font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:1px}
 
 .mob-bar-val{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;color:var(--green)}
+
+.mob-bar-chevron{font-size:10px;color:var(--gray);margin-left:6px;transition:transform .2s}
+
+.mob-order-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:940}
 
 .order-card{background:#fff;border-radius:var(--r);padding:26px;text-align:left;box-shadow:0 12px 36px rgba(0,0,0,.18)}
 
@@ -373,6 +377,14 @@
   .order-layout{grid-template-columns:1fr;padding:0}
   .order-sidebar{display:none !important}
   .mob-bar.show{display:flex !important}
+
+  body.mob-order-open .mob-order-backdrop{display:block}
+  body.mob-order-open .order-sidebar{
+    display:block !important;position:fixed;left:0;right:0;bottom:64px;top:auto;
+    max-height:60vh;overflow-y:auto;z-index:950;margin:0;
+    border-radius:16px 16px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);
+  }
+  body.mob-order-open .mob-bar-chevron{transform:rotate(180deg)}
 }
 
 @media(max-width:600px){
