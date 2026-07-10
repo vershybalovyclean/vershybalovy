@@ -448,6 +448,11 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
           <label style="font-size:13px;font-weight:600;color:#334155" id="bk-lbl-notes">Uwagi <span style="font-weight:400;color:#94a3b8" id="bk-opt2">(opcjonalnie)</span></label>
           <textarea id="bk-notes" class="bk-input" style="min-height:80px;resize:vertical" placeholder="Kod do bramy, zwierzęta, dodatkowe info..."></textarea>
         </div>
+
+        <div style="grid-column:1/-1;display:flex;align-items:flex-start;gap:10px" id="bk-consent-wrap">
+          <input type="checkbox" id="bk-consent" style="margin-top:3px;flex-shrink:0;width:16px;height:16px;cursor:pointer">
+          <label for="bk-consent" style="font-size:12px;color:#64748b;line-height:1.5;cursor:pointer" id="bk-consent-label">Wyrażam zgodę na przetwarzanie moich danych osobowych w celu realizacji zgłoszenia — zgodnie z <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Polityką prywatności</a>. *</label>
+        </div>
       </div>
       <button type="button" id="bk-submitBtn" class="bk-cta-btn bk-notready" onclick="bk_submit()">
         🟢 <span id="bk-submit-txt">Rezerwuję ten termin</span>

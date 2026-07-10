@@ -24,6 +24,7 @@
       lblStreet:'Ulica i numer domu *',lblApt:'Numer mieszkania',lblPostal:'Kod pocztowy *',lblCity:'Miejscowość *',
       lblPayment:'Sposób płatności *',payTransfer:'Przelew na konto',payBlik:'BLIK',payCash:'Płatność gotówką',
       invoiceLabel:'Chcę otrzymać fakturę',
+      consentLabel:'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu realizacji zgłoszenia — zgodnie z <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Polityką prywatności</a>. *',
       partnerLabel:'Zamówienie w ramach programu partnerskiego',
       lblPartnerCode:'Kod partnera *',partnerCodeHint:'Format: VC- i 4 cyfry, np. VC-4821.',
       recapPartner:'🤝 Kod partnera',
@@ -52,6 +53,7 @@
       lblStreet:'Вулиця та номер будинку *',lblApt:'Номер квартири',lblPostal:'Поштовий індекс *',lblCity:'Населений пункт *',
       lblPayment:'Спосіб оплати *',payTransfer:'Банківський переказ',payBlik:'BLIK',payCash:'Оплата готівкою',
       invoiceLabel:'Хочу отримати рахунок-фактуру',
+      consentLabel:'Я даю згоду на обробку моїх персональних даних з метою обробки заявки — відповідно до <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Політики конфіденційності</a>. *',
       partnerLabel:'Замовлення в рамках партнерської програми',
       lblPartnerCode:'Код партнера *',partnerCodeHint:'Формат: VC- і 4 цифри, напр. VC-4821.',
       recapPartner:'🤝 Код партнера',
@@ -80,6 +82,7 @@
       lblStreet:'Улица и номер дома *',lblApt:'Номер квартиры',lblPostal:'Почтовый индекс *',lblCity:'Населённый пункт *',
       lblPayment:'Способ оплаты *',payTransfer:'Банковский перевод',payBlik:'BLIK',payCash:'Оплата наличными',
       invoiceLabel:'Хочу получить счёт-фактуру',
+      consentLabel:'Я даю согласие на обработку моих персональных данных для обработки заявки — согласно <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Политике конфиденциальности</a>. *',
       partnerLabel:'Заказ в рамках партнёрской программы',
       lblPartnerCode:'Код партнёра *',partnerCodeHint:'Формат: VC- и 4 цифры, напр. VC-4821.',
       recapPartner:'🤝 Код партнёра',
@@ -108,6 +111,7 @@
       lblStreet:'Street and house number *',lblApt:'Apartment number',lblPostal:'Postal code *',lblCity:'City *',
       lblPayment:'Payment method *',payTransfer:'Bank transfer',payBlik:'BLIK',payCash:'Cash payment',
       invoiceLabel:"I'd like an invoice",
+      consentLabel:'I consent to the processing of my personal data to handle this request — in accordance with the <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Privacy Policy</a>. *',
       partnerLabel:'Order under the partner program',
       lblPartnerCode:'Partner code *',partnerCodeHint:'Format: VC- plus 4 digits, e.g. VC-4821.',
       recapPartner:'🤝 Partner code',
@@ -319,13 +323,15 @@
       var codeEl = document.getElementById('bk-partner-code');
       partnerOk = !!(codeEl && /^VC-\d{4}$/.test(codeEl.value));
     }
+    var consentEl = document.getElementById('bk-consent');
+    var consentOk = !consentEl || consentEl.checked;
     var ok = bk_selectedDate && bk_selectedSlot && bk_selectedPayment
       && document.getElementById('bk-name').value.trim()
       && document.getElementById('bk-phone').value.trim()
       && document.getElementById('bk-street').value.trim()
       && document.getElementById('bk-postal').value.trim()
       && document.getElementById('bk-city').value.trim()
-      && partnerOk;
+      && partnerOk && consentOk;
     // Not actually disabled (so a click can still trigger validation highlighting) —
     // just visually dimmed as a "not ready yet" hint.
     document.getElementById('bk-submitBtn').classList.toggle('bk-notready', !ok);
@@ -340,7 +346,7 @@
   }
 
   function bk_clearInvalid(){
-    ['bk-calDays','bk-slotsContainer'].forEach(function(id){
+    ['bk-calDays','bk-slotsContainer','bk-consent-wrap'].forEach(function(id){
       var el = document.getElementById(id); if(el) el.classList.remove('bk-invalid');
     });
     var payGroup = bk_payGroupEl(); if(payGroup) payGroup.classList.remove('bk-invalid');
@@ -369,6 +375,8 @@
       var codeEl = document.getElementById('bk-partner-code');
       if(codeEl && !/^VC-\d{4}$/.test(codeEl.value)){ markInvalid(codeEl, true); ok = false; }
     }
+    var consentEl = document.getElementById('bk-consent');
+    if(consentEl && !consentEl.checked){ markInvalid(document.getElementById('bk-consent-wrap')); ok = false; }
     if(!ok && firstInvalid){
       firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
     }
@@ -390,6 +398,16 @@
     bk_invoiceOn = !bk_invoiceOn;
     this.classList.toggle('bk-chip-active', bk_invoiceOn);
   });
+
+  /* ─── PRIVACY CONSENT CHECKBOX ─────────────────────── */
+  var bk_consentInput = document.getElementById('bk-consent');
+  if(bk_consentInput){
+    bk_consentInput.addEventListener('change', function(){
+      var wrap = document.getElementById('bk-consent-wrap');
+      if(wrap) wrap.classList.remove('bk-invalid');
+      bk_checkForm();
+    });
+  }
 
   /* ─── PARTNER PROGRAM TOGGLE (only on pages that include it) ─── */
   window.bk_partnerOn = bk_partnerOn;
@@ -558,11 +576,12 @@
       'bk-partner-label':'partnerLabel','bk-lbl-partner-code':'lblPartnerCode','bk-partner-code-hint':'partnerCodeHint',
       'bk-lbl-notes':'lblNotes','bk-opt2':'opt','bk-submit-txt':'submitTxt',
       'bk-cta-sub':'ctaSub','bk-r-date':'recapDate','bk-r-time':'recapTime',
-      'bk-r-phone':'recapPhone','bk-wa-btn':'waBtn'
+      'bk-r-phone':'recapPhone','bk-wa-btn':'waBtn','bk-consent-label':'consentLabel'
     };
+    var richIds = {'bk-sub-txt':1,'bk-consent-label':1};
     Object.keys(ids).forEach(function(id){
       var el = document.getElementById(id);
-      if(el){ if(id==='bk-sub-txt') el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
+      if(el){ if(richIds[id]) el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
     });
     var phIds = {
       'bk-name':'phName','bk-phone':'phPhone','bk-email':'phEmail',
