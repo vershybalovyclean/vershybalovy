@@ -494,7 +494,8 @@
         }
       }
       document.getElementById('bk-wa-btn').textContent = bk_t('waBtn');
-      document.querySelector('.bk-grid-wrap').style.display='none';
+      var gridWrap = document.querySelector('.bk-grid-wrap');
+      if(gridWrap) gridWrap.style.display='none';
       document.getElementById('bk-successView').classList.remove('bk-hidden');
       document.getElementById('bk-successView').scrollIntoView({behavior:'smooth',block:'start'});
     })
