@@ -223,11 +223,15 @@
 
 .mob-bar-label{font-size:11px;color:var(--gray)}
 
-.mob-bar-price{display:flex;flex-direction:column}
+.mob-bar-price{display:flex;flex-direction:column;cursor:pointer}
 
 .mob-bar-val{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;color:var(--blue2)}
 
+.mob-bar-chevron{font-size:10px;color:var(--gray);margin-left:6px;transition:transform .2s}
+
 .mobile-order-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:#fff;border-top:1.5px solid var(--brd);padding:10px 16px;box-shadow:0 -4px 20px rgba(0,0,0,.12)}
+
+.mob-order-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:940}
 
 .order-card{background:#fff;border:1.5px solid var(--brd);border-radius:var(--r);box-shadow:var(--shadow-md);padding:20px;display:flex;flex-direction:column;max-height:calc(100vh - 148px)}
 
@@ -377,6 +381,14 @@ body.has-order{padding-bottom:76px}
   .mobile-order-bar.show{display:block}
   body.has-order{padding-bottom:72px}
   .bleed-fix{margin:0 -16px!important}
+
+  body.mob-order-open .mob-order-backdrop{display:block}
+  body.mob-order-open .order-sidebar{
+    display:block !important;position:fixed;left:0;right:0;bottom:64px;top:auto;
+    max-height:60vh;overflow-y:auto;z-index:950;margin:0;
+    border-radius:16px 16px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);
+  }
+  body.mob-order-open .mob-bar-chevron{transform:rotate(180deg)}
 }
 
 @media(max-width:600px){
