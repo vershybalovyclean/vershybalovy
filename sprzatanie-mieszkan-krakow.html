@@ -442,10 +442,10 @@ function updateFreqNotice() {
   if(!el) return;
   if(freqState.discount > 0) {
     el.className = 'freq-discount-notice green show';
-    var rbWord = {pl:'Rabat',uk:'Знижка',en:'Discount'}[lang]||'Rabat';
-    var regTxt = {pl:'za regularne sprzątanie',uk:'за регулярне прибирання',en:'for regular cleaning'}[lang]||'za regularne sprzątanie';
-    var appTxt = {pl:'w miesiącu — został uwzględniony w wycenie po prawej.',uk:'на місяць — врахована у вартості.',en:'per month — applied to price.'}[lang]||'w miesiącu — został uwzględniony w wycenie po prawej.';
-    var noCombi = {pl:'Nie łączy się z innymi rabatami promocyjnymi.',uk:'Не поєднується з іншими знижками.',en:'Cannot be combined with other discounts.'}[lang]||'Nie łączy się z innymi rabatami promocyjnymi.';
+    var rbWord = {pl:'Rabat',uk:'Знижка',ru:'Скидка',en:'Discount'}[lang]||'Rabat';
+    var regTxt = {pl:'za regularne sprzątanie',uk:'за регулярне прибирання',ru:'за регулярную уборку',en:'for regular cleaning'}[lang]||'za regularne sprzątanie';
+    var appTxt = {pl:'w miesiącu — został uwzględniony w wycenie po prawej.',uk:'на місяць — врахована у вартості.',ru:'в месяц — учтено в стоимости справа.',en:'per month — applied to price.'}[lang]||'w miesiącu — został uwzględniony w wycenie po prawej.';
+    var noCombi = {pl:'Nie łączy się z innymi rabatami promocyjnymi.',uk:'Не поєднується з іншими знижками.',ru:'Не суммируется с другими промо-скидками.',en:'Cannot be combined with other discounts.'}[lang]||'Nie łączy się z innymi rabatami promocyjnymi.';
     el.innerHTML = '🎉 ' + rbWord + ' <strong>−' + freqState.discount + '%</strong> ' + regTxt + ' ' + freqState.times + '× ' + appTxt + '<br><small>⚠️ ' + noCombi + '</small>';
   } else {
     el.className = 'freq-discount-notice';
@@ -473,9 +473,9 @@ function updateSidebar() {
     // MIXED MODE — each type with its count
     var MIX_KEYS = ['wsp','gen','szc'];
     var MIX_NAMES = {
-      wsp:{pl:'Wspomagające',uk:'Підтримуюче',en:'Maintenance'}[lang]||'Wspomagające',
-      gen:{pl:'Generalne',uk:'Генеральне',en:'General'}[lang]||'Generalne',
-      szc:{pl:'Szczegółowe',uk:'Детальне',en:'Detailed'}[lang]||'Szczegółowe'
+      wsp:{pl:'Wspomagające',uk:'Підтримуюче',ru:'Поддерживающая',en:'Maintenance'}[lang]||'Wspomagające',
+      gen:{pl:'Generalne',uk:'Генеральне',ru:'Генеральная',en:'General'}[lang]||'Generalne',
+      szc:{pl:'Szczegółowe',uk:'Детальне',ru:'Детальная',en:'Detailed'}[lang]||'Szczegółowe'
     };
     var MIX_TABS  = {wsp:'wspomagajace', gen:'generalne', szc:'szczegolowe'};
     MIX_KEYS.forEach(function(key) {
@@ -535,10 +535,10 @@ function updateSidebar() {
     var _planLbl = _t('plan');
     var _timesLbl = _t('cleanings');
     var freqLabels = {
-      'Jednorazowo':{pl:'Jednorazowo',uk:'Одноразово',en:'One-time'},
-      '2× w miesiącu':{pl:'2× w miesiącu',uk:'2× на місяць',en:'2× per month'},
-      '3× w miesiącu':{pl:'3× w miesiącu',uk:'3× на місяць',en:'3× per month'},
-      'Co tydzień':{pl:'Co tydzień',uk:'Щотижня',en:'Weekly'}
+      'Jednorazowo':{pl:'Jednorazowo',uk:'Одноразово',ru:'Разово',en:'One-time'},
+      '2× w miesiącu':{pl:'2× w miesiącu',uk:'2× на місяць',ru:'2× в месяц',en:'2× per month'},
+      '3× w miesiącu':{pl:'3× w miesiącu',uk:'3× на місяць',ru:'3× в месяц',en:'3× per month'},
+      'Co tydzień':{pl:'Co tydzień',uk:'Щотижня',ru:'Каждую неделю',en:'Weekly'}
     };
     var freqLabelTx = (freqLabels[freqLabel] && freqLabels[freqLabel][lang]) ? freqLabels[freqLabel][lang] : freqLabel;
     items.push({plan: true, label: '\uD83D\uDDD3 ' + _planLbl + ': ' + freqLabelTx + ' \u00b7 ' + freqTimes + ' ' + _timesLbl});
@@ -558,7 +558,7 @@ function updateSidebar() {
 
   // Window item — shown separately. Discount (below) applies ONLY for one-time orders (freqTimes === 1).
   var windowDiscountApplied = false;
-  var winDiscLbl = {pl:'Rabat na zamówienie z myciem okien', uk:'Знижка на замовлення з миттям вікон', en:'Discount for order with window cleaning'}[lang] || 'Rabat na zamówienie z myciem okien';
+  var winDiscLbl = {pl:'Rabat na zamówienie z myciem okien', uk:'Знижка на замовлення з миттям вікон', ru:'Скидка на заказ с мытьём окон', en:'Discount for order with window cleaning'}[lang] || 'Rabat na zamówienie z myciem okien';
   var winDiscPct = 10;
 
   if(windowItem && windowItem.price > 0) {
@@ -638,9 +638,9 @@ function checkConflict() {
   // Show conflict
   if(cw) cw.classList.add('show');
   var CONFLICT_NAMES = {
-    wsp:{pl:'Wspomagające',uk:'Підтримуюче',en:'Maintenance'}[lang]||'Wspomagające',
-    gen:{pl:'Generalne',uk:'Генеральне',en:'General'}[lang]||'Generalne',
-    szc:{pl:'Szczegółowe',uk:'Детальне',en:'Detailed'}[lang]||'Szczegółowe'
+    wsp:{pl:'Wspomagające',uk:'Підтримуюче',ru:'Поддерживающая',en:'Maintenance'}[lang]||'Wspomagające',
+    gen:{pl:'Generalne',uk:'Генеральне',ru:'Генеральная',en:'General'}[lang]||'Generalne',
+    szc:{pl:'Szczegółowe',uk:'Детальне',ru:'Детальная',en:'Detailed'}[lang]||'Szczegółowe'
   };
   var ct = document.getElementById('conflict-types');
   if(ct) ct.textContent = selected.map(function(t){return CONFLICT_NAMES[t.mkey] || t.name;}).join(' + ');
@@ -746,10 +746,10 @@ var COMPARE_TX = {"pl": {"col0": "Czynność", "col1": "🪣 Wspomagające", "co
 
 // ─── TRANSLATION HELPERS ────────────────────────────────────────────────────
 window._planTx = {
-  plan: {pl:'Plan miesięczny',uk:'Місячний план',en:'Monthly plan'},
-  times: {pl:'sprzątań',uk:'прибирань',en:'cleanings'},
-  rabat: {pl:'Rabat za regularność',uk:'Знижка за регулярністю',en:'Regularity discount'},
-  wybierz: {pl:'wybierz metraż',uk:'вкажіть площу',en:'enter area'}
+  plan: {pl:'Plan miesięczny',uk:'Місячний план',ru:'Месячный план',en:'Monthly plan'},
+  times: {pl:'sprzątań',uk:'прибирань',ru:'уборок',en:'cleanings'},
+  rabat: {pl:'Rabat za regularność',uk:'Знижка за регулярністю',ru:'Скидка за регулярность',en:'Regularity discount'},
+  wybierz: {pl:'wybierz metraż',uk:'вкажіть площу',ru:'укажите площадь',en:'enter area'}
 };
 
 
@@ -808,6 +808,33 @@ window._i18n = {
     not_combine: 'Не поєднується з іншими знижками.',
     regular: 'за регулярне прибирання',
     applied: 'на місяць — врахована у вартості.'
+  },
+  ru:{
+    err_below: 'входит в более низкий диапазон (до {max} m²) — выберите его выше',
+    err_above: 'превышает лимит {max} m² — выберите более высокий диапазон ниже',
+    err_enter: 'Введите площадь в m²',
+    calc_ok: '{area} m² — {price} zł',
+    mixed_sub: 'Сумма должна составлять',
+    mixed_sub2: 'уборок в месяц',
+    mixed_ok: 'Месячный план готов',
+    mixed_warn: 'Сумма',
+    cleanings: 'уборок',
+    choose_area: 'укажите площадь',
+    rabat: 'Скидка за регулярность',
+    plan: 'Месячный план',
+    no_service: 'Выберите услугу выше',
+    conflict_title: 'Выбрано несколько типов уборки',
+    conflict_desc: 'Режим «Одинаковая» повторяет один тип уборки в каждом цикле.',
+    conflict_selected: 'Выбрано:',
+    conflict_question: 'Что хотите сделать?',
+    conflict_switch: '🔀 Переключиться на «Комбинированную» — задать количество для каждого типа',
+    keep_btn: '✅ Оставить {name} — задать {n}× в цикле',
+    hint_area: 'Введите площадь',
+    hint_lkuch: 'Введите площадь ванной + кухни',
+    sum_title: '✅ Выбранные дополнительные услуги',
+    not_combine: 'Не суммируется с другими промо-скидками.',
+    regular: 'за регулярную уборку',
+    applied: 'в месяц — учтено в стоимости справа.'
   },
   en:{
     err_below: 'fits in a lower range (up to {max} m²) — select it above',
@@ -972,6 +999,61 @@ uk:{
   win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Мін: <strong>199 zł</strong> &nbsp;|&nbsp; Ціна за м² вікна з рамою",
   ft_copy:"© 2025 Vershy Property Care · Краків і Малопольща · Рахунки без ПДВ"
 },
+ru:{
+  topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>",
+  nav_home:"🏠 Главная", nav_mieszkan:"🧹 Уборка квартир",
+  nav_remont:"🏗️ После ремонта", nav_wyjazd:"🏠 После выезда", nav_zb:"🏚️ После захламления", nav_okna:"🪟 Мытьё окон", nav_about:"👥 О нас", nav_cta:"🤝 Стать партнёром",
+  hero_badge:"🏠 Краков и Малопольша",
+  hero_h1:"Уборка квартир<br><em>три уровня чистоты</em>",
+  hero_sub:"От быстрого освежения до глубокой чистки каждого уголка — подберём объём под ваши потребности.",
+  hero_btn1:"📋 Заказать оценку", hero_btn2:"💬 Связаться с менеджером", hero_btn3:"← Главная",
+  tr1:"🧴 Средства для уборки в цене", tr2:"📸 Бесплатная оценка по фото",
+  tr3:"⚡ Работаем 7 дней в неделю", tr4:"🌿 Экологичные средства", tr5:"🐾 Безопасно для животных",
+  tabs_lbl:"Три уровня чистоты", tabs_h2:"Выберите <em>вид уборки</em>",
+  tabs_sub:"Каждый вариант — это разный объём работ. Проверьте, что подходит именно вам.",
+  tab1:"🪣 Поддерживающая", tab2:"✨ Генеральная", tab3:"🔬 Детальная",
+  wsp_h2:"<em>Поддерживающая</em> уборка",
+  wsp_sub:"Регулярное освежение квартиры — идеально раз в 1-2 недели. Ваш дом всегда свежий и ухоженный.",
+  wsp_meta:"⏱ ок. 1–3 часа &nbsp;·&nbsp; 🧴 Средства в цене &nbsp;·&nbsp; 🌿 Экологичные препараты",
+  wsp_calc_hint:"Введите площадь",
+  gen_h2:"<em>Генеральная</em> уборка",
+  gen_sub:"Тщательная уборка от А до Я — паутина, розетки, плитка, фасады шкафов. Всё, что обычная уборка пропускает.",
+  gen_meta:"⏱ ок. 2–6 часов &nbsp;·&nbsp; 🧴 Средства в цене &nbsp;·&nbsp; ✅ Включает объём поддерживающей",
+  szc_h2:"<em>Детальная</em> уборка",
+  szc_sub:"Самый глубокий уровень чистоты — радиаторы изнутри, накипь из душевой кабины, вентиляция, под стиральной машиной.",
+  szc_meta:"⏱ ок. 5–12 часов &nbsp;·&nbsp; 🧴 Средства в цене &nbsp;·&nbsp; ✅ Включает объём генеральной",
+  price_btn:"Оформить заказ →", price_extras:"Средства в цене · Выезд за город — доплата",
+  price_min:"Мин:", gen_strefowe:"🔵 Зональная", gen_kompleksowe:"или комплексная вся квартира:",
+  szc_strefowe:"🔵 Зональная", szc_kompleksowe:"или комплексная вся квартира:",
+  addons_lbl:"По желанию", addons_h2:"Дополнительные <em>услуги</em>",
+  addons_sub:"Нажмите на услугу, чтобы выбрать — в конце отправьте выбор вместе с заказом",
+  addons_hint:"👆 Нажмите, чтобы выбрать услугу",
+  addons_note:"* Дополнительные цены — при заказе основной услуги. Можно заказать отдельно — индивидуальная оценка.",
+  addons_clear:"Очистить", addons_add:"Добавить в заказ →",
+  rooms_title:"Комнаты", bath_title:"Ванная", kit_title:"Кухня",
+  win_title:"Мытьё окон",
+  freq_lbl:"РЕГУЛЯРНОСТЬ = ЭКОНОМИЯ", freq_h2:"Частота <em>уборки</em>",
+  freq_sub:"Выберите, как часто хотите уборку — чем чаще, тем больше скидка.",
+  freq1_name:"Разово", freq1_sub:"Без обязательств",
+  freq2_name:"2× в месяц", freq2_sub:"раз в ~2 недели",
+  freq3_name:"3× в месяц", freq3_sub:"раз в ~10 дней",
+  freq4_name:"Каждую неделю", freq4_sub:"4× в месяц",
+  fmt_same_title:"🔁 Одинаковая уборка", fmt_same_desc:"Повторяем ту же выбранную услугу в каждом цикле",
+  fmt_mixed_title:"🔀 Комбинированная (разные типы)", fmt_mixed_desc:"Свободно комбинируйте разные типы уборки в течение месяца",
+  mixed_title:"Выберите, сколько уборок каждого типа в месяц",
+  cmp_lbl:"Сравнение", cmp_h2:"Что включает <em>каждый вид?</em>",
+  cmp_sub:"Выберите услугу, соответствующую степени загрязнения.",
+  cmp_col0:"Работа", cmp_col1:"🪣 Поддерживающая", cmp_col2:"✨ Генеральная", cmp_col3:"🔬 Детальная",
+  faq_lbl:"Вопросы и ответы", faq_h2:"Часто <em>задаваемые</em>",
+  sb_title:"📋 Ваш заказ", sb_sub:"Выберите услуги ниже — цена обновляется в реальном времени",
+  sb_empty:"Выберите услугу выше", sb_total:"Итого от:", sb_cta:"📩 Оформить заказ",
+  sb_note:"✓ Средства в цене · ✓ Оценка за 1-2 часа · ✓ 7 дней в неделю",
+  sb_wa:"💬 Написать в WhatsApp",
+  mob_total:"Итого от:", mob_cta:"Оформить заказ →",
+  win_season:"сезонное", win_winter:"зимнее",
+  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Мин: <strong>199 zł</strong> &nbsp;|&nbsp; Цена за м² окна с рамой",
+  ft_copy:"© 2025 Vershy Property Care · Краков и Малопольша · Счета без НДС"
+},
 en:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>",
   nav_home:"🏠 Home", nav_mieszkan:"🧹 Apartment cleaning",
@@ -1083,21 +1165,21 @@ function applyTranslations(l) {
   set('gen-sub', t.gen_sub);
   set('gen-meta', t.gen_meta);
   set('gen-strefowe', t.gen_strefowe);
-  var komplTxt = {pl:'lub kompleksowe całe mieszkanie:',uk:'або комплексне всієї квартири:',en:'or comprehensive full apartment:'}[l]||'lub kompleksowe całe mieszkanie:';
+  var komplTxt = {pl:'lub kompleksowe całe mieszkanie:',uk:'або комплексне всієї квартири:',ru:'или комплексная вся квартира:',en:'or comprehensive full apartment:'}[l]||'lub kompleksowe całe mieszkanie:';
   setTxt('gen-kompleksowe', komplTxt);
   setTxt('szc-kompleksowe', komplTxt);
   // Kompleksowe headings
-  var komplHead = {pl:'🔵 Kompleksowe całe mieszkanie',uk:'🔵 Комплексне всієї квартири',en:'🔵 Comprehensive full apartment'}[l]||'🔵 Kompleksowe całe mieszkanie';
+  var komplHead = {pl:'🔵 Kompleksowe całe mieszkanie',uk:'🔵 Комплексне всієї квартири',ru:'🔵 Комплексная вся квартира',en:'🔵 Comprehensive full apartment'}[l]||'🔵 Kompleksowe całe mieszkanie';
   setTxt('gen-kompl-head', komplHead);
   setTxt('szc-kompl-head', komplHead);
   // Strefowe heading
-  var strefHead = {pl:'🔵 Strefowe',uk:'🔵 Зонове',en:'🔵 Zone-based'}[l]||'🔵 Strefowe';
+  var strefHead = {pl:'🔵 Strefowe',uk:'🔵 Зонове',ru:'🔵 Зональная',en:'🔵 Zone-based'}[l]||'🔵 Strefowe';
   setTxt('gen-strefowe', strefHead);
   setTxt('szc-strefowe', strefHead);
-  var strefTitle = {pl:'Sprzątanie strefowe – płacisz tylko za to, czego potrzebujesz',uk:'Зональне прибирання — ви платите лише за те, що потрібно',en:'Zone cleaning – pay only for what you need'}[l]||'Sprzątanie strefowe – płacisz tylko za to, czego potrzebujesz';
+  var strefTitle = {pl:'Sprzątanie strefowe – płacisz tylko za to, czego potrzebujesz',uk:'Зональне прибирання — ви платите лише за те, що потрібно',ru:'Зональная уборка — вы платите только за то, что нужно',en:'Zone cleaning – pay only for what you need'}[l]||'Sprzątanie strefowe – płacisz tylko za to, czego potrzebujesz';
   setTxt('gen-strefowe-title', strefTitle);
   setTxt('szc-strefowe-title', strefTitle);
-  var strefDesc = {pl:'Idealne rozwiązanie, gdy nie potrzebujesz sprzątania całego mieszkania — tylko łazienka lub kuchnia. Dowolny metraż: od małej łazienki w bloku po przestronną kuchnię w domu. Pracujemy szybko, profesjonalnym sprzętem i certyfikowaną chemią ekologiczną.',uk:'Ідеальне рішення, коли не потрібне прибирання всієї квартири — лише ванна або кухня. Будь-який метраж: від маленької ванної в блоці до просторої кухні в будинку. Працюємо швидко, професійним обладнанням і сертифікованою екологічною хімією.',en:'The perfect solution when you need only the bathroom or kitchen cleaned — not the whole apartment. Any area: from a small bathroom in a block of flats to a spacious kitchen in a house. We work fast, with professional equipment and certified eco-friendly products.'}[l]||'';
+  var strefDesc = {pl:'Idealne rozwiązanie, gdy nie potrzebujesz sprzątania całego mieszkania — tylko łazienka lub kuchnia. Dowolny metraż: od małej łazienki w bloku po przestronną kuchnię w domu. Pracujemy szybko, profesjonalnym sprzętem i certyfikowaną chemią ekologiczną.',uk:'Ідеальне рішення, коли не потрібне прибирання всієї квартири — лише ванна або кухня. Будь-який метраж: від маленької ванної в блоці до просторої кухні в будинку. Працюємо швидко, професійним обладнанням і сертифікованою екологічною хімією.',ru:'Идеальное решение, когда не нужна уборка всей квартиры — только ванная или кухня. Любой метраж: от маленькой ванной в блоке до просторной кухни в доме. Работаем быстро, профессиональным оборудованием и сертифицированной экологичной химией.',en:'The perfect solution when you need only the bathroom or kitchen cleaned — not the whole apartment. Any area: from a small bathroom in a block of flats to a spacious kitchen in a house. We work fast, with professional equipment and certified eco-friendly products.'}[l]||'';
   setTxt('gen-strefowe-desc', strefDesc);
   setTxt('szc-strefowe-desc', strefDesc);
 
@@ -1184,7 +1266,7 @@ function applyTranslations(l) {
   });
 
   // Calc hints
-  var hintTxt = {pl:'Wpisz powierzchnię', uk:'Введіть площу', en:'Enter area'};
+  var hintTxt = {pl:'Wpisz powierzchnię', uk:'Введіть площу', ru:'Введите площадь', en:'Enter area'};
   document.querySelectorAll('.ac-hint').forEach(function(el){
     var full = el.textContent;
     var colon = full.indexOf(':');
@@ -1209,6 +1291,7 @@ function applyTranslations(l) {
   var mixedTxt = {
     pl:{wsp:'Wspomagające',gen:'Generalne',szc:'Szczegółowe'},
     uk:{wsp:'Підтримуюче',gen:'Генеральне',szc:'Детальне'},
+    ru:{wsp:'Поддерживающая',gen:'Генеральная',szc:'Детальная'},
     en:{wsp:'Maintenance',gen:'General',szc:'Detailed'}
   };
   var mt = mixedTxt[l]||mixedTxt.pl;
@@ -1309,16 +1392,16 @@ function applyTranslations(l) {
 
   // Update _planTx for sidebar dynamic use
   window._planTx = {
-    plan:{pl:'Plan miesięczny',uk:'Місячний план',en:'Monthly plan'},
-    times:{pl:'sprzątań',uk:'прибирань',en:'cleanings'},
-    rabat:{pl:'Rabat za regularność',uk:'Знижка за регулярністю',en:'Regularity discount'},
-    wybierz:{pl:'wybierz metraż',uk:'вкажіть площу',en:'enter area'}
+    plan:{pl:'Plan miesięczny',uk:'Місячний план',ru:'Месячный план',en:'Monthly plan'},
+    times:{pl:'sprzątań',uk:'прибирань',ru:'уборок',en:'cleanings'},
+    rabat:{pl:'Rabat za regularność',uk:'Знижка за регулярністю',ru:'Скидка за регулярность',en:'Regularity discount'},
+    wybierz:{pl:'wybierz metraż',uk:'вкажіть площу',ru:'укажите площадь',en:'enter area'}
   };
 
   // Freq discount notice retranslate
   var fn2 = document.getElementById('freq-notice');
   if(fn2 && fn2.classList.contains('show') && typeof freqState !== 'undefined' && freqState.discount > 0) {
-    var rbLbl = {pl:'Rabat',uk:'Знижка',en:'Discount'}[l]||'Rabat';
+    var rbLbl = {pl:'Rabat',uk:'Знижка',ru:'Скидка',en:'Discount'}[l]||'Rabat';
     var inMo = _t('regular');
     var inMo2 = _t('applied');
     var noCombi = _t('not_combine');
@@ -1336,8 +1419,8 @@ function applyTranslations(l) {
     uk:'Режим „Однакові" повторює <strong>один тип</strong> прибирання в кожному циклі.',
     en:'Mode „Same type" repeats <strong>one type</strong> of cleaning each cycle.'
   }[l]);
-  setTxt('masz-wybrane', {pl:'Masz wybrane:',uk:'Обрано:',en:'Selected:'}[l]||'Masz wybrane:');
-  setTxt('co-chcesz', {pl:'Co chcesz zrobić?',uk:'Що бажаєте зробити?',en:'What would you like to do?'}[l]||'Co chcesz zrobić?');
+  setTxt('masz-wybrane', {pl:'Masz wybrane:',uk:'Обрано:',ru:'Выбрано:',en:'Selected:'}[l]||'Masz wybrane:');
+  setTxt('co-chcesz', {pl:'Co chcesz zrobić?',uk:'Що бажаєте зробити?',ru:'Что хотите сделать?',en:'What would you like to do?'}[l]||'Co chcesz zrobić?');
   set('conflict-switch-btn', {
     pl:'🔀 Przełącz na „Łączone" — ustaw ile razy każdy typ',
     uk:'🔀 Перейти на „Комбіновані" — вказати кількість кожного типу',
@@ -1370,6 +1453,7 @@ function applyTranslations(l) {
   var zoneLbl = {
     pl:{laz:'Łazienka',kuch:'Kuchnia',lazkuch:'Łazienka + Kuchnia'},
     uk:{laz:'Ванна кімната',kuch:'Кухня',lazkuch:'Ванна + Кухня'},
+    ru:{laz:'Ванная',kuch:'Кухня',lazkuch:'Ванная + Кухня'},
     en:{laz:'Bathroom',kuch:'Kitchen',lazkuch:'Bathroom + Kitchen'}
   };
   var zl = zoneLbl[l]||zoneLbl.pl;
@@ -1383,15 +1467,15 @@ function applyTranslations(l) {
       el.textContent = zl.lazkuch;
     } else {
       var doM = txt.match(/^(?:do|до|up to)\s*(\d+)\s*m²$/i);
-      if(doM) el.textContent = (l==='uk' ? 'до '+doM[1]+' m²' : l==='en' ? 'up to '+doM[1]+' m²' : 'do '+doM[1]+' m²');
+      if(doM) el.textContent = ((l==='uk'||l==='ru') ? 'до '+doM[1]+' m²' : l==='en' ? 'up to '+doM[1]+' m²' : 'do '+doM[1]+' m²');
     }
   });
 
   // ac-hints "Wpisz powierzchnię łazienki + kuchni"
   document.querySelectorAll('.ac-hint').forEach(function(el){
     var txt = el.textContent;
-    var enterTxt = {pl:'Wpisz powierzchnię',uk:'Введіть площу',en:'Enter area'}[l]||'Wpisz powierzchnię';
-    var lkTxt = {pl:'Wpisz powierzchnię łazienki + kuchni',uk:'Введіть площу ванної + кухні',en:'Enter bathroom + kitchen area'}[l];
+    var enterTxt = {pl:'Wpisz powierzchnię',uk:'Введіть площу',ru:'Введите площадь',en:'Enter area'}[l]||'Wpisz powierzchnię';
+    var lkTxt = {pl:'Wpisz powierzchnię łazienki + kuchni',uk:'Введіть площу ванної + кухні',ru:'Введите площадь ванной + кухни',en:'Enter bathroom + kitchen area'}[l];
     if(txt.includes('łazienki + kuchni') || txt.includes('łazienki') && txt.includes('kuchni')) {
       var range = txt.match(/:\s*(.+)$/);
       el.textContent = lkTxt + (range ? ': ' + range[1] : '');
@@ -1402,22 +1486,22 @@ function applyTranslations(l) {
   });
 
   // "Nie wybrano jeszcze żadnej usługi" in sidebar
-  var notChosenTx = {pl:'Nie wybrano jeszcze żadnej usługi',uk:'Послугу ще не обрано',en:'No service selected yet'};
+  var notChosenTx = {pl:'Nie wybrano jeszcze żadnej usługi',uk:'Послугу ще не обрано',ru:'Услуга ещё не выбрана',en:'No service selected yet'};
   document.querySelectorAll('.order-empty').forEach(function(el){
     el.textContent = notChosenTx[l]||notChosenTx.pl;
   });
 
   // Sidebar empty
-  var empTx = {pl:'Wybierz usługę powyżej',uk:'Оберіть послугу вище',en:'Select a service above'};
+  var empTx = {pl:'Wybierz usługę powyżej',uk:'Оберіть послугу вище',ru:'Выберите услугу выше',en:'Select a service above'};
   document.querySelectorAll('.order-empty').forEach(function(el){ el.textContent = empTx[l]||empTx.pl; });
 
   // Sidebar total label
-  var totLbl = {pl:'Łącznie:',uk:'Разом:',en:'Total:'}[l]||'Łącznie:';
+  var totLbl = {pl:'Łącznie:',uk:'Разом:',ru:'Итого:',en:'Total:'}[l]||'Łącznie:';
   set('sidebar-total-label', totLbl);
   set('mob-total-label', totLbl);
 
   // Mobile CTA
-  var mobCta = {pl:'Złóż zamówienie →',uk:'Оформити замовлення →',en:'Place order →'}[l]||'Złóż zamówienie →';
+  var mobCta = {pl:'Złóż zamówienie →',uk:'Оформити замовлення →',ru:'Оформить заказ →',en:'Place order →'}[l]||'Złóż zamówienie →';
   set('mob-cta-btn', mobCta);
 
   // Update sidebar to retranslate dynamic content
@@ -1433,7 +1517,7 @@ function SL(l) {
   lang = l;
   localStorage.setItem('vc_lang', l);
   document.querySelectorAll('.lb').forEach(function(b,i){
-    b.classList.toggle('on', ['pl','uk','en'][i] === l);
+    b.classList.toggle('on', ['pl','uk','ru','en'][i] === l);
   });
   applyTranslations(l);
 }
@@ -1489,6 +1573,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="topbar-langs">
       <button class="lb on" onclick="SL('pl')">PL</button>
       <button class="lb" onclick="SL('uk')">UA</button>
+      <button class="lb" onclick="SL('ru')">RU</button>
       <button class="lb" onclick="SL('en')">EN</button>
     </div>
   </div>
@@ -2664,9 +2749,9 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <script>
 function getTabNames() {
   return {
-    wspomagajace: {pl:'Sprzątanie wspomagające',uk:'Прибирання підтримуюче',en:'Maintenance cleaning'}[lang]||'Sprzątanie wspomagające',
-    generalne:    {pl:'Sprzątanie generalne',uk:'Прибирання генеральне',en:'General cleaning'}[lang]||'Sprzątanie generalne',
-    szczegolowe:  {pl:'Sprzątanie szczegółowe',uk:'Прибирання детальне',en:'Detailed cleaning'}[lang]||'Sprzątanie szczegółowe'
+    wspomagajace: {pl:'Sprzątanie wspomagające',uk:'Прибирання підтримуюче',ru:'Уборка поддерживающая',en:'Maintenance cleaning'}[lang]||'Sprzątanie wspomagające',
+    generalne:    {pl:'Sprzątanie generalne',uk:'Прибирання генеральне',ru:'Уборка генеральная',en:'General cleaning'}[lang]||'Sprzątanie generalne',
+    szczegolowe:  {pl:'Sprzątanie szczegółowe',uk:'Прибирання детальне',ru:'Уборка детальная',en:'Detailed cleaning'}[lang]||'Sprzątanie szczegółowe'
   };
 }
 var TAB_NAMES = {

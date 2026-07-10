@@ -72,6 +72,34 @@
       WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],
       LOCALE:'uk-UA'
     },
+    ru:{
+      h1:'Выберите дату',
+      sub:'Дату бронируем только после подтверждения — <strong style="color:#16a34a">без оплаты на этом этапе</strong>.',
+      calTitle:'📅 Выберите день',slotsDefault:'⏰ Выберите время',slotsBase:'⏰ Выберите время — ',
+      formTitle:'📝 Ваши данные',lblName:'Имя и фамилия *',lblPhone:'Телефон *',lblEmail:'E-mail',
+      lblStreet:'Улица и номер дома *',lblApt:'Номер квартиры',lblPostal:'Почтовый индекс *',lblCity:'Населённый пункт *',
+      lblPayment:'Способ оплаты *',payTransfer:'Банковский перевод',payBlik:'BLIK',payCash:'Оплата наличными',
+      invoiceLabel:'Хочу получить счёт-фактуру',
+      partnerLabel:'Заказ в рамках партнёрской программы',
+      lblPartnerCode:'Код партнёра *',partnerCodeHint:'Формат: VC- и 4 цифры, напр. VC-4821.',
+      recapPartner:'🤝 Код партнёра',
+      lblNotes:'Комментарий',opt:'(необязательно)',
+      phName:'Анна Иванова',phPhone:'+48 600 000 000',phEmail:'anna@example.com',
+      phStreet:'ул. Флорианская 1',phApt:'напр. 5',phPostal:'30-001',phCity:'Краков',
+      phNotes:'Код от ворот, животные, доп. информация...',
+      submitTxt:'Бронирую эту дату',submitSending:'Отправка...',
+      ctaSub:'Подтвердим детали через WhatsApp или по телефону',
+      errMsg:'Ошибка отправки. Попробуйте снова или позвоните: +48 514 363 538',
+      orderHead:'Ваш заказ',ordService:'🏠 Услуга',ordArea:'📏 Площадь',ordExtras:'💎 Дополнительно',ordFreq:'🔄 Частота',ordTotal:'💰 Итого',
+      ordNight:'🌙 Ночная доплата (+100%)',nightComment:'Ночная доплата (+100%): ДА',
+      f1:'✔ без скрытых доплат',f2:'✔ собственные средства в цене',f3:'✔ возможность изменить дату',
+      successThanks:'Спасибо',successP:'Ваша заявка на бронирование отправлена. Свяжемся с вами в течение <strong>15 минут</strong> через WhatsApp или по телефону.',
+      recapDate:'📅 Дата',recapTime:'⏰ Время',recapPhone:'📞 Телефон',waBtn:'💬 Открыть WhatsApp',
+      bonusNote:'✓ Бонус уже включён — без доплат',
+      MONTHS:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+      WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+      LOCALE:'ru-RU'
+    },
     en:{
       h1:'Choose a date',
       sub:'We confirm the date only after you agree — <strong style="color:#16a34a">no payment at this stage</strong>.',
@@ -152,13 +180,13 @@
 
   /* ─── TIME SLOTS ───────────────────────────────────── */
   var BK_SLOTS = [
-    {id:'s1',icon:'🌅',label:'09:00–11:00',tag:{pl:'Polecamy z rana!',uk:'Радимо вранці!',en:'Best in the morning!'}},
-    {id:'s2',icon:'☀️',label:'11:00–13:00',tag:{pl:'Najczęściej wybierany',uk:'Найчастіше обирають',en:'Most popular'}},
-    {id:'s3',icon:'🌤',label:'13:00–15:00',tag:{pl:'',uk:'',en:''}},
-    {id:'s4',icon:'🌇',label:'15:00–17:00',tag:{pl:'',uk:'',en:''}},
-    {id:'s5',icon:'🌆',label:'17:00–19:00',tag:{pl:'',uk:'',en:''}},
-    {id:'s6',icon:'🌃',label:'19:00–21:00',tag:{pl:'',uk:'',en:''}},
-    {id:'s7',icon:'🌙',label:'po 21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',en:'+100% — night visit'},night:true}
+    {id:'s1',icon:'🌅',label:'09:00–11:00',tag:{pl:'Polecamy z rana!',uk:'Радимо вранці!',ru:'Рекомендуем с утра!',en:'Best in the morning!'}},
+    {id:'s2',icon:'☀️',label:'11:00–13:00',tag:{pl:'Najczęściej wybierany',uk:'Найчастіше обирають',ru:'Чаще всего выбирают',en:'Most popular'}},
+    {id:'s3',icon:'🌤',label:'13:00–15:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s4',icon:'🌇',label:'15:00–17:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s5',icon:'🌆',label:'17:00–19:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s6',icon:'🌃',label:'19:00–21:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s7',icon:'🌙',label:'po 21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',ru:'+100% — ночной выезд',en:'+100% — night visit'},night:true}
   ];
 
   /* ─── NIGHT SURCHARGE (po 21:00 → +100%) ───────────── */
