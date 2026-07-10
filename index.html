@@ -1824,6 +1824,9 @@ var REV_SHOWALL={pl:"Pokaż wszystkie opinie",uk:"Показати всі від
 var REV_COLLAPSE={pl:"Zwiń opinie",uk:"Згорнути відгуки",ru:"Свернуть отзывы",en:"Show fewer reviews"};
 var REV_EMPTY={pl:"Jeszcze nie ma opinii. Bądź pierwszy!",uk:"Ще немає відгуків. Будьте першим!",ru:"Пока нет отзывов. Будьте первым!",en:"No reviews yet. Be the first!"};
 var REV_RATING_ALERT={pl:"Wybierz ocenę (1–5 gwiazdek)",uk:"Оберіть оцінку (1–5 зірок)",ru:"Выберите оценку (1–5 звёзд)",en:"Please select a rating (1–5 stars)"};
+var GOOGLE_REVIEW_LINK = 'https://g.page/r/Cc8ZI8DxWjDREAE/review';
+var REV_SUCCESS_GOOGLE={pl:"✅ Dziękujemy! Otwieramy dla Ciebie Google — będzie nam bardzo miło, jeśli dodasz tam swoją opinię również 🙂",uk:"✅ Дякуємо! Відкриваємо для вас Google — будемо дуже раді, якщо ви залишите відгук і там 🙂",ru:"✅ Спасибо! Открываем для вас Google — будем очень рады, если вы оставите отзыв и там 🙂",en:"✅ Thank you! We're opening Google for you — we'd love it if you left a review there too 🙂"};
+var REV_SUCCESS_PRIVATE={pl:"✅ Dziękujemy za szczerą opinię. Skontaktujemy się z Tobą, aby to naprawić.",uk:"✅ Дякуємо за чесний відгук. Ми зв'яжемося з вами, щоб усе виправити.",ru:"✅ Спасибо за честный отзыв. Мы свяжемся с вами, чтобы всё исправить.",en:"✅ Thank you for your honest feedback. We'll reach out to make this right."};
 
 function renderReviews(){
   var reviews = loadReviews();
@@ -1910,26 +1913,39 @@ function submitReview(){
   var success = document.getElementById('rev-success');
   var name = nameInput.value.trim();
   var text = textInput.value.trim();
-  
+
   if(!name){ nameInput.style.borderColor = '#ef4444'; setTimeout(function(){nameInput.style.borderColor='';},2000); return; }
   if(selectedRating < 1){ alert(REV_RATING_ALERT[lang]||REV_RATING_ALERT.pl); return; }
   if(!text){ textInput.style.borderColor = '#ef4444'; setTimeout(function(){textInput.style.borderColor='';},2000); return; }
-  
-  var reviews = loadReviews();
-  var d = new Date();
-  var pad = function(n){return n<10?'0'+n:n;};
-  var dateStr = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  reviews.unshift({name:name, text:text, stars:selectedRating, date:dateStr});
-  localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
-  
+
+  var stars = selectedRating;
+
+  if(stars >= 4){
+    var reviews = loadReviews();
+    var d = new Date();
+    var pad = function(n){return n<10?'0'+n:n;};
+    var dateStr = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    reviews.unshift({name:name, text:text, stars:stars, date:dateStr});
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+    renderReviews();
+    success.textContent = REV_SUCCESS_GOOGLE[lang]||REV_SUCCESS_GOOGLE.pl;
+    window.open(GOOGLE_REVIEW_LINK, '_blank');
+  } else {
+    fetch('/api/review', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name:name, stars:stars, text:text})
+    }).catch(function(){});
+    success.textContent = REV_SUCCESS_PRIVATE[lang]||REV_SUCCESS_PRIVATE.pl;
+  }
+
   nameInput.value = '';
   textInput.value = '';
   selectedRating = 0;
   document.querySelectorAll('#rev-stars .star-btn').forEach(function(s){s.classList.remove('active');});
-  
+
   success.style.display = 'block';
-  setTimeout(function(){success.style.display='none';},5000);
-  renderReviews();
+  setTimeout(function(){success.style.display='none';},6000);
 }
 
 initStarButtons();
