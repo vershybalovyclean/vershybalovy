@@ -1798,7 +1798,7 @@ function submitReview(){
 initStarButtons();
 renderReviews();
 
-SL(localStorage.getItem('vc_lang') || "pl");
+SL(localStorage.getItem('vc_lang') || localStorage.getItem('pn_lang') || localStorage.getItem('lang') || "pl");
 renderSrvShort();
 renderQsv();
 renderCalendar();
