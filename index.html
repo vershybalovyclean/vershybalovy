@@ -299,28 +299,11 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <button type="button" class="review-toggle-btn" id="rev-toggle-btn" onclick="toggleAllReviews()"></button>
     </div>
 
-    <div class="review-form fi">
-      <div class="review-form-title" id="rev-form-title">Dodaj swoją opinię</div>
-      <div class="review-success" id="rev-success">✅ Dziękujemy! Twoja opinia została dodana.</div>
-      <div class="review-form-row">
-        <label for="rev-name" id="rev-name-lbl">Imię lub pseudonim</label>
-        <input type="text" id="rev-name" placeholder=" np. Anna K." maxlength="40">
-      </div>
-      <div class="review-form-row">
-        <label id="rev-rating-lbl">Ocena</label>
-        <div class="review-rating-select" id="rev-stars">
-          <button type="button" class="star-btn" data-val="1">★</button>
-          <button type="button" class="star-btn" data-val="2">★</button>
-          <button type="button" class="star-btn" data-val="3">★</button>
-          <button type="button" class="star-btn" data-val="4">★</button>
-          <button type="button" class="star-btn" data-val="5">★</button>
-        </div>
-      </div>
-      <div class="review-form-row">
-        <label for="rev-text" id="rev-text-lbl">Twoja opinia</label>
-        <textarea id="rev-text" placeholder="Napisz, co sądzisz o naszych usługach..." maxlength="500"></textarea>
-      </div>
-      <button type="button" class="review-submit-btn" id="rev-submit" onclick="submitReview()">⭐ Dodaj opinię</button>
+    <div class="review-form fi" id="rev-cta">
+      <div class="review-form-title" id="rev-cta-title">Podobała Ci się nasza usługa?</div>
+      <p style="text-align:center;color:#64748b;margin:0 0 20px;font-size:15px" id="rev-cta-sub">Zostaw opinię w Google — zajmie to tylko chwilę!</p>
+      <div style="text-align:center;font-size:36px;color:#fbbc04;letter-spacing:4px;margin-bottom:20px" aria-hidden="true">★★★★★</div>
+      <button type="button" class="review-submit-btn" id="rev-google-btn" onclick="openGoogleReview()">⭐ Zostaw opinię w Google</button>
     </div>
   </div>
 </section>
@@ -1769,7 +1752,6 @@ window.addEventListener('resize', function(){ toggleQsvMenu(false); });
 
 // ===== REVIEWS =====
 var REVIEWS_KEY = 'vershy_reviews_v2';
-var selectedRating = 0;
 var AVATAR_COLORS = ['#1a73e8','#ea4335','#34a853','#fbbc04','#9333ea','#0d9488','#e8710a','#d33f8d','#3b82f6','#16a34a'];
 function avatarColor(name){
   var h=0;for(var i=0;i<name.length;i++){h=(h*31+name.charCodeAt(i))>>>0;}
@@ -1823,15 +1805,28 @@ var reviewsExpanded = false;
 var REV_SHOWALL={pl:"Pokaż wszystkie opinie",uk:"Показати всі відгуки",ru:"Показать все отзывы",en:"Show all reviews"};
 var REV_COLLAPSE={pl:"Zwiń opinie",uk:"Згорнути відгуки",ru:"Свернуть отзывы",en:"Show fewer reviews"};
 var REV_EMPTY={pl:"Jeszcze nie ma opinii. Bądź pierwszy!",uk:"Ще немає відгуків. Будьте першим!",ru:"Пока нет отзывов. Будьте первым!",en:"No reviews yet. Be the first!"};
-var REV_RATING_ALERT={pl:"Wybierz ocenę (1–5 gwiazdek)",uk:"Оберіть оцінку (1–5 зірок)",ru:"Выберите оценку (1–5 звёзд)",en:"Please select a rating (1–5 stars)"};
 var GOOGLE_REVIEW_LINK = 'https://g.page/r/Cc8ZI8DxWjDREAE/review';
-var REV_SUCCESS_GOOGLE={pl:"✅ Dziękujemy! Otwieramy dla Ciebie Google — będzie nam bardzo miło, jeśli dodasz tam swoją opinię również 🙂",uk:"✅ Дякуємо! Відкриваємо для вас Google — будемо дуже раді, якщо ви залишите відгук і там 🙂",ru:"✅ Спасибо! Открываем для вас Google — будем очень рады, если вы оставите отзыв и там 🙂",en:"✅ Thank you! We're opening Google for you — we'd love it if you left a review there too 🙂"};
+var REV_CTA_TITLE={pl:"Podobała Ci się nasza usługa?",uk:"Сподобалась наша послуга?",ru:"Понравилась наша услуга?",en:"Enjoyed our service?"};
+var REV_CTA_SUB={pl:"Zostaw opinię w Google — zajmie to tylko chwilę!",uk:"Залиште відгук у Google — це займе лише хвилину!",ru:"Оставьте отзыв в Google — это займёт всего минуту!",en:"Leave a review on Google — it only takes a minute!"};
+var REV_GOOGLE_BTN={pl:"⭐ Zostaw opinię w Google",uk:"⭐ Залишити відгук у Google",ru:"⭐ Оставить отзыв в Google",en:"⭐ Leave a review on Google"};
+
+function openGoogleReview(){
+  window.open(GOOGLE_REVIEW_LINK, '_blank');
+}
 
 function renderReviews(){
   var reviews = loadReviews();
   var grid = document.getElementById('reviews-grid');
   var toggleWrap = document.getElementById('rev-toggle-wrap');
   var toggleBtn = document.getElementById('rev-toggle-btn');
+
+  var ctaTitleEl = document.getElementById('rev-cta-title');
+  if(ctaTitleEl) ctaTitleEl.textContent = REV_CTA_TITLE[lang]||REV_CTA_TITLE.pl;
+  var ctaSubEl = document.getElementById('rev-cta-sub');
+  if(ctaSubEl) ctaSubEl.textContent = REV_CTA_SUB[lang]||REV_CTA_SUB.pl;
+  var gbtn = document.getElementById('rev-google-btn');
+  if(gbtn) gbtn.textContent = REV_GOOGLE_BTN[lang]||REV_GOOGLE_BTN.pl;
+
   if(!grid) return;
   if(reviews.length === 0){
     grid.innerHTML = '<div class="review-empty" id="rev-empty">'+(REV_EMPTY[lang]||REV_EMPTY.pl)+'</div>';
@@ -1892,52 +1887,6 @@ function escapeHtml(t){
   return d.innerHTML;
 }
 
-function initStarButtons(){
-  var stars = document.querySelectorAll('#rev-stars .star-btn');
-  stars.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var val = parseInt(this.getAttribute('data-val'));
-      selectedRating = val;
-      stars.forEach(function(s){
-        var sv = parseInt(s.getAttribute('data-val'));
-        s.classList.toggle('active', sv <= val);
-      });
-    });
-  });
-}
-
-function submitReview(){
-  var nameInput = document.getElementById('rev-name');
-  var textInput = document.getElementById('rev-text');
-  var success = document.getElementById('rev-success');
-  var name = nameInput.value.trim();
-  var text = textInput.value.trim();
-
-  if(!name){ nameInput.style.borderColor = '#ef4444'; setTimeout(function(){nameInput.style.borderColor='';},2000); return; }
-  if(selectedRating < 1){ alert(REV_RATING_ALERT[lang]||REV_RATING_ALERT.pl); return; }
-  if(!text){ textInput.style.borderColor = '#ef4444'; setTimeout(function(){textInput.style.borderColor='';},2000); return; }
-
-  var stars = selectedRating;
-  var reviews = loadReviews();
-  var d = new Date();
-  var pad = function(n){return n<10?'0'+n:n;};
-  var dateStr = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  reviews.unshift({name:name, text:text, stars:stars, date:dateStr});
-  localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
-  renderReviews();
-  success.textContent = REV_SUCCESS_GOOGLE[lang]||REV_SUCCESS_GOOGLE.pl;
-  window.open(GOOGLE_REVIEW_LINK, '_blank');
-
-  nameInput.value = '';
-  textInput.value = '';
-  selectedRating = 0;
-  document.querySelectorAll('#rev-stars .star-btn').forEach(function(s){s.classList.remove('active');});
-
-  success.style.display = 'block';
-  setTimeout(function(){success.style.display='none';},6000);
-}
-
-initStarButtons();
 renderReviews();
 
 SL(localStorage.getItem('vc_lang') || "pl");
