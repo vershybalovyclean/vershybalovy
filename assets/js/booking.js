@@ -24,6 +24,7 @@
       lblStreet:'Ulica i numer domu *',lblApt:'Numer mieszkania',lblPostal:'Kod pocztowy *',lblCity:'Miejscowość *',
       lblPayment:'Sposób płatności *',payTransfer:'Przelew na konto',payBlik:'BLIK',payCash:'Płatność gotówką',
       invoiceLabel:'Chcę otrzymać fakturę',
+      consentLabel:'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu realizacji zgłoszenia — zgodnie z <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Polityką prywatności</a>. *',
       partnerLabel:'Zamówienie w ramach programu partnerskiego',
       lblPartnerCode:'Kod partnera *',partnerCodeHint:'Format: VC- i 4 cyfry, np. VC-4821.',
       recapPartner:'🤝 Kod partnera',
@@ -52,6 +53,7 @@
       lblStreet:'Вулиця та номер будинку *',lblApt:'Номер квартири',lblPostal:'Поштовий індекс *',lblCity:'Населений пункт *',
       lblPayment:'Спосіб оплати *',payTransfer:'Банківський переказ',payBlik:'BLIK',payCash:'Оплата готівкою',
       invoiceLabel:'Хочу отримати рахунок-фактуру',
+      consentLabel:'Я даю згоду на обробку моїх персональних даних з метою обробки заявки — відповідно до <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Політики конфіденційності</a>. *',
       partnerLabel:'Замовлення в рамках партнерської програми',
       lblPartnerCode:'Код партнера *',partnerCodeHint:'Формат: VC- і 4 цифри, напр. VC-4821.',
       recapPartner:'🤝 Код партнера',
@@ -72,6 +74,35 @@
       WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],
       LOCALE:'uk-UA'
     },
+    ru:{
+      h1:'Выберите дату',
+      sub:'Дату бронируем только после подтверждения — <strong style="color:#16a34a">без оплаты на этом этапе</strong>.',
+      calTitle:'📅 Выберите день',slotsDefault:'⏰ Выберите время',slotsBase:'⏰ Выберите время — ',
+      formTitle:'📝 Ваши данные',lblName:'Имя и фамилия *',lblPhone:'Телефон *',lblEmail:'E-mail',
+      lblStreet:'Улица и номер дома *',lblApt:'Номер квартиры',lblPostal:'Почтовый индекс *',lblCity:'Населённый пункт *',
+      lblPayment:'Способ оплаты *',payTransfer:'Банковский перевод',payBlik:'BLIK',payCash:'Оплата наличными',
+      invoiceLabel:'Хочу получить счёт-фактуру',
+      consentLabel:'Я даю согласие на обработку моих персональных данных для обработки заявки — согласно <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Политике конфиденциальности</a>. *',
+      partnerLabel:'Заказ в рамках партнёрской программы',
+      lblPartnerCode:'Код партнёра *',partnerCodeHint:'Формат: VC- и 4 цифры, напр. VC-4821.',
+      recapPartner:'🤝 Код партнёра',
+      lblNotes:'Комментарий',opt:'(необязательно)',
+      phName:'Анна Иванова',phPhone:'+48 600 000 000',phEmail:'anna@example.com',
+      phStreet:'ул. Флорианская 1',phApt:'напр. 5',phPostal:'30-001',phCity:'Краков',
+      phNotes:'Код от ворот, животные, доп. информация...',
+      submitTxt:'Бронирую эту дату',submitSending:'Отправка...',
+      ctaSub:'Подтвердим детали через WhatsApp или по телефону',
+      errMsg:'Ошибка отправки. Попробуйте снова или позвоните: +48 514 363 538',
+      orderHead:'Ваш заказ',ordService:'🏠 Услуга',ordArea:'📏 Площадь',ordExtras:'💎 Дополнительно',ordFreq:'🔄 Частота',ordTotal:'💰 Итого',
+      ordNight:'🌙 Ночная доплата (+100%)',nightComment:'Ночная доплата (+100%): ДА',
+      f1:'✔ без скрытых доплат',f2:'✔ собственные средства в цене',f3:'✔ возможность изменить дату',
+      successThanks:'Спасибо',successP:'Ваша заявка на бронирование отправлена. Свяжемся с вами в течение <strong>15 минут</strong> через WhatsApp или по телефону.',
+      recapDate:'📅 Дата',recapTime:'⏰ Время',recapPhone:'📞 Телефон',waBtn:'💬 Открыть WhatsApp',
+      bonusNote:'✓ Бонус уже включён — без доплат',
+      MONTHS:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+      WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+      LOCALE:'ru-RU'
+    },
     en:{
       h1:'Choose a date',
       sub:'We confirm the date only after you agree — <strong style="color:#16a34a">no payment at this stage</strong>.',
@@ -80,6 +111,7 @@
       lblStreet:'Street and house number *',lblApt:'Apartment number',lblPostal:'Postal code *',lblCity:'City *',
       lblPayment:'Payment method *',payTransfer:'Bank transfer',payBlik:'BLIK',payCash:'Cash payment',
       invoiceLabel:"I'd like an invoice",
+      consentLabel:'I consent to the processing of my personal data to handle this request — in accordance with the <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Privacy Policy</a>. *',
       partnerLabel:'Order under the partner program',
       lblPartnerCode:'Partner code *',partnerCodeHint:'Format: VC- plus 4 digits, e.g. VC-4821.',
       recapPartner:'🤝 Partner code',
@@ -152,13 +184,13 @@
 
   /* ─── TIME SLOTS ───────────────────────────────────── */
   var BK_SLOTS = [
-    {id:'s1',icon:'🌅',label:'09:00–11:00',tag:{pl:'Polecamy z rana!',uk:'Радимо вранці!',en:'Best in the morning!'}},
-    {id:'s2',icon:'☀️',label:'11:00–13:00',tag:{pl:'Najczęściej wybierany',uk:'Найчастіше обирають',en:'Most popular'}},
-    {id:'s3',icon:'🌤',label:'13:00–15:00',tag:{pl:'',uk:'',en:''}},
-    {id:'s4',icon:'🌇',label:'15:00–17:00',tag:{pl:'',uk:'',en:''}},
-    {id:'s5',icon:'🌆',label:'17:00–19:00',tag:{pl:'',uk:'',en:''}},
-    {id:'s6',icon:'🌃',label:'19:00–21:00',tag:{pl:'',uk:'',en:''}},
-    {id:'s7',icon:'🌙',label:'po 21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',en:'+100% — night visit'},night:true}
+    {id:'s1',icon:'🌅',label:'09:00–11:00',tag:{pl:'Polecamy z rana!',uk:'Радимо вранці!',ru:'Рекомендуем с утра!',en:'Best in the morning!'}},
+    {id:'s2',icon:'☀️',label:'11:00–13:00',tag:{pl:'Najczęściej wybierany',uk:'Найчастіше обирають',ru:'Чаще всего выбирают',en:'Most popular'}},
+    {id:'s3',icon:'🌤',label:'13:00–15:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s4',icon:'🌇',label:'15:00–17:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s5',icon:'🌆',label:'17:00–19:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s6',icon:'🌃',label:'19:00–21:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s7',icon:'🌙',label:'po 21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',ru:'+100% — ночной выезд',en:'+100% — night visit'},night:true}
   ];
 
   /* ─── NIGHT SURCHARGE (po 21:00 → +100%) ───────────── */
@@ -291,13 +323,15 @@
       var codeEl = document.getElementById('bk-partner-code');
       partnerOk = !!(codeEl && /^VC-\d{4}$/.test(codeEl.value));
     }
+    var consentEl = document.getElementById('bk-consent');
+    var consentOk = !consentEl || consentEl.checked;
     var ok = bk_selectedDate && bk_selectedSlot && bk_selectedPayment
       && document.getElementById('bk-name').value.trim()
       && document.getElementById('bk-phone').value.trim()
       && document.getElementById('bk-street').value.trim()
       && document.getElementById('bk-postal').value.trim()
       && document.getElementById('bk-city').value.trim()
-      && partnerOk;
+      && partnerOk && consentOk;
     // Not actually disabled (so a click can still trigger validation highlighting) —
     // just visually dimmed as a "not ready yet" hint.
     document.getElementById('bk-submitBtn').classList.toggle('bk-notready', !ok);
@@ -312,7 +346,7 @@
   }
 
   function bk_clearInvalid(){
-    ['bk-calDays','bk-slotsContainer'].forEach(function(id){
+    ['bk-calDays','bk-slotsContainer','bk-consent-wrap'].forEach(function(id){
       var el = document.getElementById(id); if(el) el.classList.remove('bk-invalid');
     });
     var payGroup = bk_payGroupEl(); if(payGroup) payGroup.classList.remove('bk-invalid');
@@ -341,6 +375,8 @@
       var codeEl = document.getElementById('bk-partner-code');
       if(codeEl && !/^VC-\d{4}$/.test(codeEl.value)){ markInvalid(codeEl, true); ok = false; }
     }
+    var consentEl = document.getElementById('bk-consent');
+    if(consentEl && !consentEl.checked){ markInvalid(document.getElementById('bk-consent-wrap')); ok = false; }
     if(!ok && firstInvalid){
       firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
     }
@@ -362,6 +398,16 @@
     bk_invoiceOn = !bk_invoiceOn;
     this.classList.toggle('bk-chip-active', bk_invoiceOn);
   });
+
+  /* ─── PRIVACY CONSENT CHECKBOX ─────────────────────── */
+  var bk_consentInput = document.getElementById('bk-consent');
+  if(bk_consentInput){
+    bk_consentInput.addEventListener('change', function(){
+      var wrap = document.getElementById('bk-consent-wrap');
+      if(wrap) wrap.classList.remove('bk-invalid');
+      bk_checkForm();
+    });
+  }
 
   /* ─── PARTNER PROGRAM TOGGLE (only on pages that include it) ─── */
   window.bk_partnerOn = bk_partnerOn;
@@ -530,11 +576,12 @@
       'bk-partner-label':'partnerLabel','bk-lbl-partner-code':'lblPartnerCode','bk-partner-code-hint':'partnerCodeHint',
       'bk-lbl-notes':'lblNotes','bk-opt2':'opt','bk-submit-txt':'submitTxt',
       'bk-cta-sub':'ctaSub','bk-r-date':'recapDate','bk-r-time':'recapTime',
-      'bk-r-phone':'recapPhone','bk-wa-btn':'waBtn'
+      'bk-r-phone':'recapPhone','bk-wa-btn':'waBtn','bk-consent-label':'consentLabel'
     };
+    var richIds = {'bk-sub-txt':1,'bk-consent-label':1};
     Object.keys(ids).forEach(function(id){
       var el = document.getElementById(id);
-      if(el){ if(id==='bk-sub-txt') el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
+      if(el){ if(richIds[id]) el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
     });
     var phIds = {
       'bk-name':'phName','bk-phone':'phPhone','bk-email':'phEmail',

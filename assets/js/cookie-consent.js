@@ -7,6 +7,7 @@
   var CB_TX = {
     pl:{text:'Ta strona wykorzystuje pliki cookies analityczne i marketingowe. Więcej informacji znajdziesz w <a href="/polityka-cookies">Polityce cookies</a>.', btn:'OK, rozumiem'},
     uk:{text:'Цей сайт використовує аналітичні та рекламні файли cookie. Більше інформації в <a href="/polityka-cookies">Політиці cookies</a>.', btn:'ОК, зрозуміло'},
+    ru:{text:'Этот сайт использует аналитические и рекламные файлы cookie. Подробнее в <a href="/polityka-cookies">Политике cookies</a>.', btn:'ОК, понятно'},
     en:{text:'This site uses analytics and marketing cookies. More information in the <a href="/polityka-cookies">Cookie Policy</a>.', btn:'OK, got it'}
   };
   function cbLang(){
