@@ -211,8 +211,6 @@
 
 .mob-bar-val{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;color:var(--green)}
 
-.mob-bar.show{display:flex !important}
-
 .order-card{background:#fff;border-radius:var(--r);padding:26px;text-align:left;box-shadow:0 12px 36px rgba(0,0,0,.18)}
 
 .order-card .order-sub{font-size:13px;color:var(--gray);margin-bottom:18px}
@@ -374,6 +372,7 @@
 @media(max-width:900px){
   .order-layout{grid-template-columns:1fr;padding:0}
   .order-sidebar{display:none !important}
+  .mob-bar.show{display:flex !important}
 }
 
 @media(max-width:600px){
