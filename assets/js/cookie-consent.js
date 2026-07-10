@@ -3,6 +3,16 @@
    "OK, rozumiem". Choice is remembered in localStorage. */
 (function(){
   var KEY = 'vc_cookie_consent';
+  var LANG_KEY = 'vc_lang';
+  var CB_TX = {
+    pl:{text:'Ta strona wykorzystuje pliki cookies analityczne i marketingowe. Więcej informacji znajdziesz w <a href="/polityka-cookies">Polityce cookies</a>.', btn:'OK, rozumiem'},
+    uk:{text:'Цей сайт використовує аналітичні та рекламні файли cookie. Більше інформації в <a href="/polityka-cookies">Політиці cookies</a>.', btn:'ОК, зрозуміло'},
+    en:{text:'This site uses analytics and marketing cookies. More information in the <a href="/polityka-cookies">Cookie Policy</a>.', btn:'OK, got it'}
+  };
+  function cbLang(){
+    var l = localStorage.getItem(LANG_KEY);
+    return CB_TX[l] ? l : 'pl';
+  }
 
   function loadAnalytics(){
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PLMP4PG5');
@@ -31,12 +41,13 @@
   }
 
   function showBanner(){
+    var t = CB_TX[cbLang()];
     var el = document.createElement('div');
     el.id = 'cookie-banner';
     el.innerHTML =
       '<div class="cb-box">' +
-        '<p class="cb-text">Ta strona wykorzystuje pliki cookies analityczne i marketingowe. Więcej informacji znajdziesz w <a href="/polityka-cookies">Polityce cookies</a>.</p>' +
-        '<button type="button" id="cb-ok" class="cb-btn">OK, rozumiem</button>' +
+        '<p class="cb-text">' + t.text + '</p>' +
+        '<button type="button" id="cb-ok" class="cb-btn">' + t.btn + '</button>' +
       '</div>';
     document.body.appendChild(el);
     document.getElementById('cb-ok').addEventListener('click', function(){

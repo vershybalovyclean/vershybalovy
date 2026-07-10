@@ -447,7 +447,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
           <textarea id="bk-notes" class="bk-input" style="min-height:80px;resize:vertical" placeholder="Kod do bramy, zwierzęta, dodatkowe info..."></textarea>
         </div>
       </div>
-      <button type="button" id="bk-submitBtn" disabled class="bk-cta-btn" onclick="bk_submit()">
+      <button type="button" id="bk-submitBtn" class="bk-cta-btn bk-notready" onclick="bk_submit()">
         🟢 <span id="bk-submit-txt">Rezerwuję ten termin</span>
       </button>
       <p style="text-align:center;margin-top:8px;font-size:12px;color:#94a3b8" id="bk-cta-sub">Potwierdzimy szczegóły przez WhatsApp lub telefon</p>
@@ -543,6 +543,18 @@ function switchPriceTab(cat){
   document.getElementById('pcontent-zmeb').classList.toggle('active', cat==='zmeb');
   document.getElementById('pcontent-bezmeb').classList.toggle('active', cat==='bezmeb');
 }
+var SVC_PREFIX = {
+  pl:{zmeb:'Po wyjeździe z meblami', bezmeb:'Po wyjeździe bez mebli'},
+  uk:{zmeb:'Після виїзду з меблями', bezmeb:'Після виїзду без меблів'},
+  en:{zmeb:'Post-checkout with furniture', bezmeb:'Post-checkout without furniture'}
+};
+function svcName(cat, idx){
+  var m = SVC_PREFIX[lang] || SVC_PREFIX.pl;
+  var prefix = m[cat] || cat;
+  var lblEl = document.getElementById('ac-lbl-'+cat+'-'+idx);
+  var range = lblEl ? lblEl.textContent : '';
+  return prefix + (range ? ' — '+range : '');
+}
 function acSelect(cat, idx, service, rate, min){
   var row = document.getElementById('acr-'+cat+'-'+idx); if(!row) return;
   if(SEL && SEL.cat===cat && SEL.idx===idx){ _clearAll(); SEL=null; updateSidebar(); return; }
@@ -583,10 +595,10 @@ function updateSidebar(){
 
   if(SEL && SEL.price>0){
     var m2Part = SEL.m2 ? (' ('+SEL.m2+' m²)') : '';
-    html += '<div class="order-line"><span class="order-line-label">'+SEL.service+m2Part+'</span><span class="order-line-val">'+SEL.price+' zł</span></div>';
+    html += '<div class="order-line"><span class="order-line-label">'+svcName(SEL.cat,SEL.idx)+m2Part+'</span><span class="order-line-val">'+SEL.price+' zł</span></div>';
     total += SEL.price;
   } else if(SEL){
-    html += '<div class="order-line"><span class="order-line-label">'+SEL.service+' '+_t('wpisz_metraz')+'</span><span class="order-line-val">—</span></div>';
+    html += '<div class="order-line"><span class="order-line-label">'+svcName(SEL.cat,SEL.idx)+' '+_t('wpisz_metraz')+'</span><span class="order-line-val">—</span></div>';
   }
 
   selectedAddons.forEach(function(a){
@@ -698,6 +710,7 @@ function setTxt(id, txt) {
 
 function applyTranslations(l) {
   lang = l;
+  localStorage.setItem('vc_lang', l);
   var t = TX[l] || TX.pl;
 
   document.querySelectorAll('.lb').forEach(function(b, i) {
@@ -817,7 +830,7 @@ function SL(l) {
   applyTranslations(l);
 }
 
-document.addEventListener('DOMContentLoaded', function(){ applyTranslations('pl'); });
+document.addEventListener('DOMContentLoaded', function(){ applyTranslations(localStorage.getItem('vc_lang') || 'pl'); });
 
 // page bottom form (fallback)
 var pf=document.getElementById('pageform');

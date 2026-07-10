@@ -382,11 +382,12 @@ function submitSignup(e){
   var email = document.getElementById('sg-email').value;
   var type = document.getElementById('sg-type').value;
 
-  var msg = '🤝 Zgłoszenie do programu partnerskiego\n\n'
-    + 'Imię i nazwisko: ' + name + '\n'
-    + 'Telefon: ' + phone + '\n'
-    + (email ? 'Email: ' + email + '\n' : '')
-    + 'Rodzaj współpracy: ' + type;
+  var t = TX[lang] || TX.pl;
+  var msg = t.sg_msg_title + '\n\n'
+    + t.sg_msg_name + name + '\n'
+    + t.sg_msg_phone + phone + '\n'
+    + (email ? t.sg_msg_email + email + '\n' : '')
+    + t.sg_msg_type + type;
 
   document.getElementById('signup-wa-btn').href = 'https://wa.me/48514363538?text=' + encodeURIComponent(msg);
   document.getElementById('signup-form').style.display = 'none';
@@ -447,6 +448,7 @@ pl: {
   sg_opt1:'Agencja nieruchomości', sg_opt2:'Firma remontowo-budowlana', sg_opt3:'Firma przeprowadzkowa',
   sg_opt4:'Klient indywidualny', sg_opt5:'Inne',
   sg_submit:'🤝 Wyślij zgłoszenie', sg_note:'Udział w programie jest bezpłatny. Odpowiemy w ciągu 24h.',
+  sg_msg_title:'🤝 Zgłoszenie do programu partnerskiego', sg_msg_name:'Imię i nazwisko: ', sg_msg_phone:'Telefon: ', sg_msg_email:'Email: ', sg_msg_type:'Rodzaj współpracy: ',
   sg_thanks_title:'Dziękujemy za zgłoszenie!',
   sg_thanks_t1:'Skontaktujemy się z Tobą w ciągu 24 godzin i przekażemy Twój unikalny kod partnera.',
   sg_thanks_t2:'Możesz też napisać do nas od razu, aby przyspieszyć proces:',
@@ -504,6 +506,7 @@ uk: {
   sg_opt1:'Агенція нерухомості', sg_opt2:'Будівельно-ремонтна компанія', sg_opt3:'Компанія з переїзду',
   sg_opt4:'Індивідуальний клієнт', sg_opt5:'Інше',
   sg_submit:'🤝 Надіслати заявку', sg_note:"Участь у програмі безкоштовна. Відповімо протягом 24 годин.",
+  sg_msg_title:'🤝 Заявка на участь у партнерській програмі', sg_msg_name:"Ім'я та прізвище: ", sg_msg_phone:'Телефон: ', sg_msg_email:'Email: ', sg_msg_type:'Вид співпраці: ',
   sg_thanks_title:'Дякуємо за заявку!',
   sg_thanks_t1:"Ми зв'яжемося з тобою протягом 24 годин і надамо твій унікальний код партнера.",
   sg_thanks_t2:"Можеш також написати нам одразу, щоб прискорити процес:",
@@ -561,6 +564,7 @@ en: {
   sg_opt1:'Real estate agency', sg_opt2:'Construction & renovation company', sg_opt3:'Moving company',
   sg_opt4:'Individual client', sg_opt5:'Other',
   sg_submit:'🤝 Send application', sg_note:"Participation in the program is free. We'll respond within 24h.",
+  sg_msg_title:'🤝 Partner program application', sg_msg_name:'Full name: ', sg_msg_phone:'Phone: ', sg_msg_email:'Email: ', sg_msg_type:'Type of cooperation: ',
   sg_thanks_title:'Thanks for your application!',
   sg_thanks_t1:"We'll contact you within 24 hours and give you your unique partner code.",
   sg_thanks_t2:'You can also message us right away to speed things up:',
@@ -627,13 +631,14 @@ function applyTranslations(l){
 
 function SL(l){
   lang = l;
+  localStorage.setItem('vc_lang', l);
   document.querySelectorAll('.lb').forEach(function(b){ b.classList.remove('on'); });
   var idx = l==='pl'?0:(l==='uk'?1:2);
   document.querySelectorAll('.lb')[idx].classList.add('on');
   applyTranslations(l);
 }
 
-document.addEventListener('DOMContentLoaded', function(){ applyTranslations('pl'); });
+document.addEventListener('DOMContentLoaded', function(){ SL(localStorage.getItem('vc_lang') || 'pl'); });
 </script>
 </body>
 </html>
