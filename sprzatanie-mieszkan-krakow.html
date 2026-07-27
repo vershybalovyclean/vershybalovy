@@ -914,7 +914,7 @@ pl:{
   addons_hint:"👆 Kliknij aby wybrać usługę",
   addons_note:"* Ceny dodatkowe — przy zamówieniu usługi głównej. Możliwość zamówienia osobno — wycena indywidualna.",
   addons_clear:"Wyczyść", addons_add:"Dodaj do zamówienia →",
-  rooms_title:"Pokoje", bath_title:"Łazienka", kit_title:"Kuchnia",
+  rooms_title:"Pokoje", bath_title:"Łazienka", kit_title:"Kuchnia", other_title:"Inne",
   win_title:"Mycie okien",
   /* FREQ */
   freq_lbl:"REGULARNOŚĆ = OSZCZĘDNOŚĆ", freq_h2:"Częstotliwość <em>sprzątania</em>",
@@ -975,7 +975,7 @@ uk:{
   addons_hint:"👆 Натисніть для вибору послуги",
   addons_note:"* Ціни на додаткові — при замовленні основної послуги. Можна замовити окремо — кошторис індивідуальний.",
   addons_clear:"Очистити", addons_add:"Додати до замовлення →",
-  rooms_title:"Кімнати", bath_title:"Ванна", kit_title:"Кухня",
+  rooms_title:"Кімнати", bath_title:"Ванна", kit_title:"Кухня", other_title:"Інше",
   win_title:"Миття вікон",
   freq_lbl:"РЕГУЛЯРНІСТЬ = ЕКОНОМІЯ", freq_h2:"Частота <em>прибирання</em>",
   freq_sub:"Оберіть, як часто хочете прибирання — чим частіше, тим більша знижка.",
@@ -1030,7 +1030,7 @@ ru:{
   addons_hint:"👆 Нажмите, чтобы выбрать услугу",
   addons_note:"* Дополнительные цены — при заказе основной услуги. Можно заказать отдельно — индивидуальная оценка.",
   addons_clear:"Очистить", addons_add:"Добавить в заказ →",
-  rooms_title:"Комнаты", bath_title:"Ванная", kit_title:"Кухня",
+  rooms_title:"Комнаты", bath_title:"Ванная", kit_title:"Кухня", other_title:"Другое",
   win_title:"Мытьё окон",
   freq_lbl:"РЕГУЛЯРНОСТЬ = ЭКОНОМИЯ", freq_h2:"Частота <em>уборки</em>",
   freq_sub:"Выберите, как часто хотите уборку — чем чаще, тем больше скидка.",
@@ -1085,7 +1085,7 @@ en:{
   addons_hint:"👆 Click to select service",
   addons_note:"* Add-on prices — when ordering a main service. Can be ordered separately — individual quote.",
   addons_clear:"Clear", addons_add:"Add to order →",
-  rooms_title:"Rooms", bath_title:"Bathroom", kit_title:"Kitchen",
+  rooms_title:"Rooms", bath_title:"Bathroom", kit_title:"Kitchen", other_title:"Other",
   win_title:"Window cleaning",
   freq_lbl:"REGULARITY = SAVINGS", freq_h2:"Cleaning <em>frequency</em>",
   freq_sub:"Choose how often you want cleaning — the more frequent, the bigger the discount.",
@@ -1209,6 +1209,7 @@ function applyTranslations(l) {
   set('rooms-title', t.rooms_title);
   set('bath-title', t.bath_title);
   set('kit-title', t.kit_title);
+  set('other-title', t.other_title);
   set('win-addon-title', t.win_title);
   document.querySelectorAll('.add-hint').forEach(function(el){ el.textContent = t.addons_hint; });
   document.querySelectorAll('.add-clear').forEach(function(el){ el.textContent = t.addons_clear; });
@@ -2417,6 +2418,20 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
           <li onclick="toggleAdd(this)" data-name-id="kl10" data-price="40"><div class="add-check">✓</div><span class="ai-icon-wrap"><svg class="ai-icon"><use href="#ic-degrease"></use></svg></span><span class="ai-n">Odtłuszczanie frontów</span><span class="ai-p">od 40 zł</span><div class="qty-wrap"><input class="qty-input" type="number" min="1" value="1" onclick="event.stopPropagation()" oninput="qtyInputChange(this)"><span class="qty-unit">m²</span></div></li>
           <li onclick="toggleAdd(this)" data-name-id="kl11" data-price="25"><div class="add-check">✓</div><span class="ai-icon-wrap"><svg class="ai-icon"><use href="#ic-cabinet"></use></svg></span><span class="ai-n">Czyszczenie szafek</span><span class="ai-p">od 25 zł</span><div class="qty-wrap"><input class="qty-input" type="number" min="1" value="1" onclick="event.stopPropagation()" oninput="qtyInputChange(this)"><span class="qty-unit">m²</span></div></li>
           <li onclick="toggleAdd(this)" data-name-id="kl12" data-price="20"><div class="add-check">✓</div><span class="ai-icon-wrap"><svg class="ai-icon"><use href="#ic-trash"></use></svg></span><span class="ai-n">Kosz na śmieci</span><span class="ai-p">20 zł</span><div class="qty-wrap"><button class="qty-btn" onclick="qtyChange(event,this,-1)">−</button><span class="qty-val">1</span><button class="qty-btn" onclick="qtyChange(event,this,1)">+</button><span class="qty-unit">szt</span></div></li>
+        </ul>
+        </div>
+      </div>
+      <!-- INNE -->
+      <div class="add-col">
+        <div class="add-col-head add-col-toggle" onclick="toggleAddCol(this)">
+          <div class="add-circle" style="background:#f3e8ff">🔧</div><div class="add-col-title" id="other-title">Inne</div>
+          <span class="add-col-count">1 usługa</span>
+          <svg class="add-col-arrow"><use href="#ic-chevron"></use></svg>
+        </div>
+        <div class="add-col-body">
+        <p class="add-hint">👆 Kliknij aby wybrać usługę</p>
+        <ul class="add-list add-list-cards cat-other" id="add-other">
+          <li onclick="toggleAdd(this)" data-name-id="ol1" data-price="60"><div class="add-check">✓</div><span class="ai-n">🔧 Usługa dodatkowa (nietypowa prośba)</span><span class="ai-p">od 60 zł</span><div class="qty-wrap"><button class="qty-btn" onclick="qtyChange(event,this,-1)">−</button><span class="qty-val">1</span><button class="qty-btn" onclick="qtyChange(event,this,1)">+</button><span class="qty-unit">szt</span></div></li>
         </ul>
         </div>
       </div>
