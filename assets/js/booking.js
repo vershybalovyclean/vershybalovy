@@ -521,8 +521,9 @@
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, partnerCode:partnerCode})
     })
-    .then(function(r){return r.json();})
-    .then(function(){
+    .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })
+    .then(function(res){
+      if(!res || res.success !== true) throw new Error('submit failed');
       trackFormConversion(d.service || '');
       document.getElementById('bk-successName').textContent = bk_t('successThanks')+', '+(name.split(' ')[0]||'')+'!';
       document.getElementById('bk-success-p').innerHTML = bk_t('successP');
