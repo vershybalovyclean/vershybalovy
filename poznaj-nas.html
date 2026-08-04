@@ -544,8 +544,9 @@ var cformEl=document.getElementById("cform");if(cformEl)cformEl.addEventListener
    headers:{"Content-Type":"application/json"},
    body:JSON.stringify(data)
  })
- .then(function(r){return r.json();})
+ .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })
  .then(function(res){
+   if(!res || res.success !== true) throw new Error('submit failed');
    var ts=document.getElementById("toast");
    ts.textContent=t("toast");
    ts.classList.add("show");
@@ -1539,8 +1540,9 @@ function calcSubmit() {
       comment:comment
     })
   })
-  .then(function(r){return r.json();})
-  .then(function(){
+  .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })
+  .then(function(res){
+    if(!res || res.success !== true) throw new Error('submit failed');
     btn.textContent = '✅ Wysłano!';
     btn.style.background = '#16a34a';
     phone.value = '';
