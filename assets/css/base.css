@@ -101,13 +101,14 @@ header{
 .hero-label{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);
   backdrop-filter:blur(6px);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:20px;
   padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:.8px;
-  text-transform:uppercase;margin-bottom:12px}
+  text-transform:uppercase;margin-bottom:12px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .hero h1{font-family:'Montserrat',sans-serif;font-size:clamp(26px,3.6vw,46px);
   font-weight:900;line-height:1.1;color:#fff;margin-bottom:12px;letter-spacing:-.5px;
-  text-shadow:0 2px 16px rgba(0,0,0,.25)}
+  text-shadow:0 2px 10px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.5)}
 .hero h1 em{font-style:normal;color:#4EA8FF}
-.hero-sub{font-size:clamp(14px,1.6vw,16px);color:rgba(255,255,255,.92);line-height:1.6;
-  max-width:480px;margin:0 auto 18px;text-shadow:0 1px 8px rgba(0,0,0,.2)}
+.hero-sub{font-size:clamp(14px,1.6vw,16px);color:rgba(255,255,255,.95);line-height:1.6;
+  max-width:480px;margin:0 auto 18px;text-shadow:0 2px 8px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.5)}
+.hero-sub strong{color:#4ADE80;font-weight:700}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .btn-prim{background:var(--blue2);color:#fff;padding:13px 28px;border-radius:50px;
   font-weight:700;font-size:14px;border:none;cursor:pointer;display:inline-block;
@@ -901,9 +902,9 @@ footer{background:#e0f2fe;color:var(--text);padding:48px 28px 24px}
 .hero-inner{text-align:center}
 .hero-calc{width:100%;max-width:620px;margin:28px auto 0}
 .hero-calc .qsv-head{margin:0 0 14px;text-align:center;max-width:none}
-.hero-calc .qsv-title{color:rgba(255,255,255,.85);text-shadow:0 1px 8px rgba(0,0,0,.4);
+.hero-calc .qsv-title{color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.5);
   font-size:13px;font-weight:700;letter-spacing:.3px}
-.hero-calc .qsv-sub{color:rgba(255,255,255,.7);text-shadow:0 1px 6px rgba(0,0,0,.35);font-size:11.5px;font-weight:500}
+.hero-calc .qsv-sub{color:rgba(255,255,255,.92);text-shadow:0 2px 8px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.5);font-size:11.5px;font-weight:500}
 
 .hero-calc-box{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:end}
 .hero-calc-field{min-width:0;text-align:left}
