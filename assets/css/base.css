@@ -55,9 +55,9 @@ header{
   box-shadow:0 1px 8px rgba(0,0,0,.06);position:relative;z-index:100;
   overflow:visible;
 }
-.hdr-logo{display:flex;align-items:center;flex-shrink:0;padding-left:114px}
+.hdr-logo{display:flex;align-items:center;flex-shrink:0;padding-left:99px}
 .hdr-logo img{position:absolute;left:28px;top:50%;transform:translateY(-50%);
-  width:100px;height:auto;display:block;z-index:5;pointer-events:none}
+  width:85px;height:auto;display:block;z-index:5;pointer-events:none}
 .logo-svg{width:64px;height:64px;flex-shrink:0}
 .hdr-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;
   color:var(--blue);line-height:1.2}
@@ -1069,8 +1069,8 @@ footer{background:#e0f2fe;color:var(--text);padding:48px 28px 24px}
 /* --- Mobile burger visibility fix (guarantees the button is never clipped) --- */
 @media(max-width:1460px){
   header{padding-left:14px !important;padding-right:14px !important}
-  .hdr-logo{min-width:0;flex-shrink:1;padding-left:114px}
-  .hdr-logo img{width:100px !important;height:auto !important;left:14px}
+  .hdr-logo{min-width:0;flex-shrink:1;padding-left:99px}
+  .hdr-logo img{width:85px !important;height:auto !important;left:14px}
   .hdr-brand{font-size:14px}
   .hdr-brand small{font-size:8px}
 }
