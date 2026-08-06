@@ -55,9 +55,9 @@ header{
   box-shadow:0 1px 8px rgba(0,0,0,.06);position:relative;z-index:100;
   overflow:visible;
 }
-.hdr-logo{display:flex;align-items:center;flex-shrink:0;padding-left:274px}
+.hdr-logo{display:flex;align-items:center;flex-shrink:0;padding-left:162px}
 .hdr-logo img{position:absolute;left:28px;top:50%;transform:translateY(-50%);
-  width:260px;height:auto;display:block;z-index:5;pointer-events:none}
+  width:148px;height:auto;display:block;z-index:5;pointer-events:none}
 .logo-svg{width:64px;height:64px;flex-shrink:0}
 .hdr-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;
   color:var(--blue);line-height:1.2}
