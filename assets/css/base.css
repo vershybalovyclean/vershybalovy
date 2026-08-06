@@ -1074,10 +1074,6 @@ footer{background:#e0f2fe;color:var(--text);padding:48px 28px 24px}
   .hdr-brand{font-size:14px}
   .hdr-brand small{font-size:8px}
 }
-@media(max-width:1250px){
-  .hdr-logo{padding-left:104px}
-  .hdr-logo img{width:90px !important;left:14px}
-}
 @media(max-width:1024px){
   .burger{display:flex !important;flex-shrink:0;margin-left:auto}
 }
