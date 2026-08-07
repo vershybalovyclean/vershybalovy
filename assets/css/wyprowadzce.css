@@ -97,7 +97,7 @@
 
 .bk-hidden{display:none!important}
 
-.bk-input{background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;padding:11px 13px;font-family:inherit;font-size:14px;color:#1e293b;outline:none;transition:.15s;width:100%}
+.bk-input{background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;padding:11px 13px;font-family:inherit;font-size:16px;color:#1e293b;outline:none;transition:.15s;width:100%}
 
 .bk-input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
 
