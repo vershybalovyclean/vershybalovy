@@ -67,7 +67,11 @@
 
 .ac-zones{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 
-.add-circle.a1{background:#eff6ff}.add-circle.a2{background:#f0fdf4}.add-circle.a3{background:#fef3c7}
+.add-circle.a1{background:#eff6ff}.add-circle.a2{background:#f0fdf4}.add-circle.a3{background:#fef3c7}.add-circle.a4{background:#fce7f3}
+
+.add-group-label{grid-column:1/-1;font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--brd)}
+.add-group-label:first-child{margin-top:0;padding-top:0;border-top:none}
+.chem-min-note{font-size:10px;color:var(--gray2);text-align:center;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:4px}
 
 /* ─── ROOM ACCORDION (Pokoje/Łazienka/Kuchnia) ─── */
 #uslugi-dodatkowe .add-col{grid-column:1/-1}
@@ -95,6 +99,7 @@
 .ai-icon-wrap{width:46px;height:46px;border-radius:12px;flex-shrink:0;background:var(--off);
   display:flex;align-items:center;justify-content:center;margin-bottom:2px;transition:transform .2s}
 .ai-icon{width:28px;height:28px;flex-shrink:0}
+.ai-emoji{font-size:24px;line-height:1}
 
 .add-list-cards li:hover .ai-icon-wrap{transform:scale(1.06)}
 .add-list-cards li.selected .ai-icon-wrap{background:var(--green-pale)}

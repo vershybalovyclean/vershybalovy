@@ -229,6 +229,12 @@ section{padding:72px 28px}
 .ai-n{color:var(--text3)}
 .ai-p{color:var(--blue2);font-weight:700;white-space:nowrap;margin-left:8px}
 .add-note{font-size:12px;color:var(--gray);margin-top:20px;text-align:center}
+.add-col-head.add-col-toggle{cursor:pointer;user-select:none;margin-bottom:0}
+.add-col-count{font-size:12px;color:var(--gray);margin-left:auto;flex-shrink:0}
+.add-col-arrow-txt{font-size:12px;color:var(--gray2);flex-shrink:0;transition:transform .2s}
+.add-col.open .add-col-arrow-txt{transform:rotate(180deg)}
+.add-col-body{display:none;margin-top:14px}
+.add-col.open .add-col-body{display:block}
 
 /* ─── SUBSCRIPTIONS ─── */
 .subs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto}
@@ -559,6 +565,11 @@ footer{background:#e0f2fe;color:var(--text);padding:48px 28px 24px}
 }
 .add-hint{font-size:10px;color:var(--gray2);text-align:center;
   margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:4px}
+.chem-hint{font-size:10px;color:var(--gray2);text-align:center;
+  margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:4px}
+.chem-min-note{font-size:10px;color:var(--gray2);text-align:center;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:4px}
+.add-group-label-row{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--brd);list-style:none}
+.add-group-label-row:first-child{margin-top:0;padding-top:0;border-top:none}
 .ai-n{flex:1;font-size:13px}
 .add-summary{background:#fff;border:1.5px solid var(--green2);border-radius:var(--r);
   padding:16px 20px;margin-top:20px;display:none}
