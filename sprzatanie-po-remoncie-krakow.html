@@ -815,6 +815,10 @@ function toggleAdd(li) {
     selectedAddons.push({nameId: nameId, name: displayName, price: totalPrice, qty: qty, basePrice: basePrice, unit: unit});
   } else {
     selectedAddons = selectedAddons.filter(function(a){ return a.nameId !== nameId; });
+    if(nameId === 'ozon1'){
+      var priceEl = li.querySelector('.ai-p');
+      if(priceEl) priceEl.textContent = 'od '+basePrice+' zł';
+    }
   }
   updateOrder();
 }
@@ -860,8 +864,7 @@ function maybeShowOzonUpsell(continueFn) {
   if(!ozonLi || ozonLi.classList.contains('selected')) return false;
   sessionStorage.setItem('vc_ozon_upsell_seen', '1');
   _ozonUpsellContinue = continueFn;
-  var m2 = (typeof order !== 'undefined' && order.m2) ? order.m2 : 0;
-  var price = m2>0 ? ozonTierPrice(m2) : 199;
+  var price = 199;
   var t = OZON_UPSELL_TX[lang] || OZON_UPSELL_TX.pl;
   var bg = document.createElement('div');
   bg.className = 'ozon-upsell-backdrop';
@@ -878,28 +881,28 @@ function maybeShowOzonUpsell(continueFn) {
   document.body.appendChild(bg);
   return true;
 }
-function dismissOzonUpsell() {
+function closeOzonUpsell() {
   var el = document.getElementById('ozon-upsell');
   if(el) el.remove();
+}
+function dismissOzonUpsell() {
+  closeOzonUpsell();
   var cont = _ozonUpsellContinue;
   _ozonUpsellContinue = null;
   if(cont) cont();
 }
 function addOzonFromUpsell() {
   var ozonLi = document.querySelector('[data-name-id="ozon1"]');
-  var m2 = (typeof order !== 'undefined' && order.m2) ? order.m2 : 0;
+  closeOzonUpsell();
+  _ozonUpsellContinue = null;
   if(ozonLi){
-    if(m2>0){
-      var input = ozonLi.querySelector('.qty-input');
-      if(input){ input.value = m2; }
-    }
     if(!ozonLi.classList.contains('selected')) ozonLi.click();
-    if(m2>0){
-      var input2 = ozonLi.querySelector('.qty-input');
-      if(input2) ozonCalc(input2);
-    }
+    ozonLi.scrollIntoView({behavior:'smooth', block:'center'});
+    ozonLi.classList.add('ozon-flash');
+    setTimeout(function(){ ozonLi.classList.remove('ozon-flash'); }, 1600);
+    var input = ozonLi.querySelector('.qty-input');
+    if(input) setTimeout(function(){ input.focus(); }, 450);
   }
-  dismissOzonUpsell();
 }
 
 function qtyInputChange(input) {
