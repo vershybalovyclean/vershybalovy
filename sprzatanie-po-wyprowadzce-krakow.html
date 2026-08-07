@@ -933,10 +933,10 @@ var OZON_UPSELL_TX = {
 };
 var _ozonUpsellContinue = null;
 function maybeShowOzonUpsell(continueFn) {
-  if(sessionStorage.getItem('vc_ozon_upsell_seen')) return false;
+  if(sessionStorage.getItem('vc_ozon_upsell_seen_wyprowadzce')) return false;
   var ozonLi = document.querySelector('[onclick="toggleOzonAddon(this)"]');
   if(!ozonLi || ozonLi.classList.contains('selected')) return false;
-  sessionStorage.setItem('vc_ozon_upsell_seen', '1');
+  sessionStorage.setItem('vc_ozon_upsell_seen_wyprowadzce', '1');
   _ozonUpsellContinue = continueFn;
   var price = 199;
   var t = OZON_UPSELL_TX[lang] || OZON_UPSELL_TX.pl;
