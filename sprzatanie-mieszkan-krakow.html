@@ -2993,6 +2993,62 @@ function ozonCalc(input) {
   updateSidebar();
 }
 
+// ─── OZON UPSELL POPUP ──────────────────────────────────────────────────
+var OZON_UPSELL_TX = {
+  pl:{text:'Chcesz, by powietrze było równie czyste jak podłogi? Ozonowanie od {price} zł.',btn:'Dodaj',dismiss:'Nie, dziękuję'},
+  uk:{text:'Хочете, щоб повітря було таким же чистим, як підлога? Озонування від {price} zł.',btn:'Додати',dismiss:'Ні, дякую'},
+  ru:{text:'Хотите, чтобы воздух был таким же чистым, как полы? Озонирование от {price} zł.',btn:'Добавить',dismiss:'Нет, спасибо'},
+  en:{text:'Want the air as clean as the floors? Ozone treatment from {price} zł.',btn:'Add',dismiss:'No, thanks'}
+};
+var _ozonUpsellContinue = null;
+function maybeShowOzonUpsell(continueFn) {
+  if(sessionStorage.getItem('vc_ozon_upsell_seen')) return false;
+  var ozonLi = document.querySelector('[data-name-id="ozon1"]');
+  if(!ozonLi || ozonLi.classList.contains('selected')) return false;
+  sessionStorage.setItem('vc_ozon_upsell_seen', '1');
+  _ozonUpsellContinue = continueFn;
+  var m2 = (typeof orderState !== 'undefined' && acM2[orderState.currentTab]) ? acM2[orderState.currentTab] : 0;
+  var price = m2>0 ? ozonTierPrice(m2) : 150;
+  var t = OZON_UPSELL_TX[lang] || OZON_UPSELL_TX.pl;
+  var bg = document.createElement('div');
+  bg.className = 'ozon-upsell-backdrop';
+  bg.id = 'ozon-upsell';
+  bg.onclick = function(e){ if(e.target === bg) dismissOzonUpsell(); };
+  bg.innerHTML = '<div class="ozon-upsell">'+
+    '<button class="ozon-upsell-close" onclick="dismissOzonUpsell()">✕</button>'+
+    '<div class="ozon-upsell-icon">🌬️</div>'+
+    '<div class="ozon-upsell-text">'+t.text.replace('{price}', price)+'</div>'+
+    '<div class="ozon-upsell-actions">'+
+      '<button class="ozon-upsell-btn" onclick="addOzonFromUpsell()">'+t.btn+'</button>'+
+      '<button class="ozon-upsell-dismiss" onclick="dismissOzonUpsell()">'+t.dismiss+'</button>'+
+    '</div></div>';
+  document.body.appendChild(bg);
+  return true;
+}
+function dismissOzonUpsell() {
+  var el = document.getElementById('ozon-upsell');
+  if(el) el.remove();
+  var cont = _ozonUpsellContinue;
+  _ozonUpsellContinue = null;
+  if(cont) cont();
+}
+function addOzonFromUpsell() {
+  var ozonLi = document.querySelector('[data-name-id="ozon1"]');
+  var m2 = (typeof orderState !== 'undefined' && acM2[orderState.currentTab]) ? acM2[orderState.currentTab] : 0;
+  if(ozonLi){
+    if(m2>0){
+      var input = ozonLi.querySelector('.qty-input');
+      if(input){ input.value = m2; }
+    }
+    if(!ozonLi.classList.contains('selected')) ozonLi.click();
+    if(m2>0){
+      var input2 = ozonLi.querySelector('.qty-input');
+      if(input2) ozonCalc(input2);
+    }
+  }
+  dismissOzonUpsell();
+}
+
 function qtyInputChange(input) {
   var li = input.closest('li');
   if(li.classList.contains('selected')) {
@@ -3149,6 +3205,8 @@ function submitOrder() {
     alert('Wybierz usługę i wpisz metraż.');
     return;
   }
+
+  if(maybeShowOzonUpsell(submitOrder)) return;
 
   var params = new URLSearchParams();
   params.set('service', serviceLines.join('|') || 'Sprzątanie mieszkania');

@@ -922,6 +922,62 @@ function ozonAddonChange(input){
   }
   updateSidebar();
 }
+// ─── OZON UPSELL POPUP ──────────────────────────────────────────────────
+var OZON_UPSELL_TX = {
+  pl:{text:'Zero śladu poprzednich lokatorów — świeże powietrze dla nowych. Ozonowanie od {price} zł.',btn:'Dodaj',dismiss:'Nie, dziękuję'},
+  uk:{text:'Жодного сліду попередніх мешканців — свіже повітря для нових. Озонування від {price} zł.',btn:'Додати',dismiss:'Ні, дякую'},
+  ru:{text:'Ни следа прежних жильцов — свежий воздух для новых. Озонирование от {price} zł.',btn:'Добавить',dismiss:'Нет, спасибо'},
+  en:{text:'No trace of previous tenants — fresh air for the new ones. Ozone treatment from {price} zł.',btn:'Add',dismiss:'No, thanks'}
+};
+var _ozonUpsellContinue = null;
+function maybeShowOzonUpsell(continueFn) {
+  if(sessionStorage.getItem('vc_ozon_upsell_seen')) return false;
+  var ozonLi = document.querySelector('[onclick="toggleOzonAddon(this)"]');
+  if(!ozonLi || ozonLi.classList.contains('selected')) return false;
+  sessionStorage.setItem('vc_ozon_upsell_seen', '1');
+  _ozonUpsellContinue = continueFn;
+  var m2 = (typeof SEL !== 'undefined' && SEL && SEL.m2) ? SEL.m2 : 0;
+  var price = m2>0 ? ozonTierPrice(m2) : 199;
+  var t = OZON_UPSELL_TX[lang] || OZON_UPSELL_TX.pl;
+  var bg = document.createElement('div');
+  bg.className = 'ozon-upsell-backdrop';
+  bg.id = 'ozon-upsell';
+  bg.onclick = function(e){ if(e.target === bg) dismissOzonUpsell(); };
+  bg.innerHTML = '<div class="ozon-upsell">'+
+    '<button class="ozon-upsell-close" onclick="dismissOzonUpsell()">✕</button>'+
+    '<div class="ozon-upsell-icon">🌬️</div>'+
+    '<div class="ozon-upsell-text">'+t.text.replace('{price}', price)+'</div>'+
+    '<div class="ozon-upsell-actions">'+
+      '<button class="ozon-upsell-btn" onclick="addOzonFromUpsell()">'+t.btn+'</button>'+
+      '<button class="ozon-upsell-dismiss" onclick="dismissOzonUpsell()">'+t.dismiss+'</button>'+
+    '</div></div>';
+  document.body.appendChild(bg);
+  return true;
+}
+function dismissOzonUpsell() {
+  var el = document.getElementById('ozon-upsell');
+  if(el) el.remove();
+  var cont = _ozonUpsellContinue;
+  _ozonUpsellContinue = null;
+  if(cont) cont();
+}
+function addOzonFromUpsell() {
+  var ozonLi = document.querySelector('[onclick="toggleOzonAddon(this)"]');
+  var m2 = (typeof SEL !== 'undefined' && SEL && SEL.m2) ? SEL.m2 : 0;
+  if(ozonLi){
+    if(m2>0){
+      var input = ozonLi.querySelector('.qty-input');
+      if(input){ input.value = m2; }
+    }
+    if(!ozonLi.classList.contains('selected')) ozonLi.click();
+    if(m2>0){
+      var input2 = ozonLi.querySelector('.qty-input');
+      if(input2) ozonAddonChange(input2);
+    }
+  }
+  dismissOzonUpsell();
+}
+
 function addonQtyChange(input, id, basePrice){
   var li = input.closest('li');
   if(!li || !li.classList.contains('selected')) return;
@@ -945,6 +1001,7 @@ function toggleSbForm(){
 function submitOrder(){
   var total = (SEL&&SEL.price>0?SEL.price:0) + selectedAddons.reduce(function(s,a){return s+a.price;},0);
   if(total<=0){alert(_t('select_choose'));return;}
+  if(maybeShowOzonUpsell(submitOrder)) return;
   var extrasArr = selectedAddons.map(function(a){ return a.name; });
   var params = new URLSearchParams();
   bk_orderData = {
