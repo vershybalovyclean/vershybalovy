@@ -3040,12 +3040,16 @@ function addOzonFromUpsell() {
   closeOzonUpsell();
   _ozonUpsellContinue = null;
   if(ozonLi){
+    var col = ozonLi.closest('.add-col');
+    if(col && !col.classList.contains('open')) col.classList.add('open');
     if(!ozonLi.classList.contains('selected')) ozonLi.click();
-    ozonLi.scrollIntoView({behavior:'smooth', block:'center'});
-    ozonLi.classList.add('ozon-flash');
-    setTimeout(function(){ ozonLi.classList.remove('ozon-flash'); }, 1600);
-    var input = ozonLi.querySelector('.qty-input');
-    if(input) setTimeout(function(){ input.focus(); }, 450);
+    setTimeout(function(){
+      ozonLi.scrollIntoView({behavior:'smooth', block:'center'});
+      ozonLi.classList.add('ozon-flash');
+      setTimeout(function(){ ozonLi.classList.remove('ozon-flash'); }, 1600);
+      var input = ozonLi.querySelector('.qty-input');
+      if(input) input.focus();
+    }, 50);
   }
 }
 
