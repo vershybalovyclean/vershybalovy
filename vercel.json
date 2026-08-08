@@ -3,5 +3,9 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/poznaj-nas", "destination": "/poznaj-nas.html" }
+  ],
+  "redirects": [
+    { "source": "/sprzatanie-po-zbierackosci-krakow", "destination": "/sprzatanie-po-zbieractwie-krakow", "permanent": true },
+    { "source": "/sprzatanie-mieszkan-krakow", "destination": "/sprzatanie-mieszkan-i-domow-krakow", "permanent": true }
   ]
 }

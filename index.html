@@ -82,10 +82,10 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   </a>
   <button class="burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
   <nav class="hdr-nav" id="hn">
-    <a href="/sprzatanie-mieszkan-krakow" id="hn1">🧹 Sprzątanie mieszkań</a>
+    <a href="/sprzatanie-mieszkan-i-domow-krakow" id="hn1">🧹 Sprzątanie mieszkań</a>
     <a href="/sprzatanie-po-remoncie-krakow" id="hn2">🏗️ Po remoncie</a>
     <a href="/sprzatanie-po-wyprowadzce-krakow" id="hn3">🏠 Po wyjeździe</a>
-    <a href="/sprzatanie-po-zbierackosci-krakow" id="hn6">🏚️ Po zbieractwie</a>
+    <a href="/sprzatanie-po-zbieractwie-krakow" id="hn6">🏚️ Po zbieractwie</a>
     <a href="/mycie-okien" id="hn4">🪟 Mycie okien</a>
     <a href="/poznaj-nas" id="hn0">👥 Poznaj nas</a>
     <a href="/program-partnerski" class="hdr-cta" id="hn5">🤝 Zostań partnerem</a>
@@ -310,7 +310,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="sec-lbl" style="color:#93c5fd" id="zbt-lbl">Trudne przypadki</div>
     <h2 class="sec-title" style="color:#fff" id="zbt-h2">Zbieractwo, zaniedbanie, <em style="color:#86efac;font-style:normal">strata bliskiej osoby?</em></h2>
     <p style="color:rgba(255,255,255,.82);font-size:14px;line-height:1.75;margin:14px 0 22px" id="zbt-text">Niektóre sytuacje wymagają więcej niż zwykłego sprzątania. Pracujemy z pełną dyskrecją i szacunkiem — bez oceniania. Audyt techniczny, dezynfekcja, ozonowanie i przywrócenie mieszkania do życia.</p>
-    <a href="/sprzatanie-po-zbierackosci-krakow" class="btn-prim" id="zbt-btn">🏚️ Dowiedz się więcej →</a>
+    <a href="/sprzatanie-po-zbieractwie-krakow" class="btn-prim" id="zbt-btn">🏚️ Dowiedz się więcej →</a>
   </div>
 </section>
 
@@ -1686,17 +1686,17 @@ function calcSubmit() {
 
 // ===== SHORT SERVICE CARDS =====
 var SRV_SHORT = [
-  {icon:'🪣',cc:'c1',img:'https://images.unsplash.com/photo-1649083048337-4aeb6dda80bb?w=500&q=80',pl:{name:'Sprzątanie wspomagające',desc:'Regularne utrzymanie porządku — odkurzanie, mycie podłóg, łazienka, kuchnia.',price:'od 199 zł',link:'/sprzatanie-mieszkan-krakow#wspomagajace'},
-   uk:{name:'Допоміжне прибирання',desc:'Регулярне підтримання порядку — пилосос, миття підлог, ванна, кухня.',price:'від 199 zł',link:'/sprzatanie-mieszkan-krakow#wspomagajace'},
-   ru:{name:'Поддерживающая уборка',desc:'Регулярное поддержание порядка — пылесос, мытьё полов, ванная, кухня.',price:'от 199 zł',link:'/sprzatanie-mieszkan-krakow#wspomagajace'},
+  {icon:'🪣',cc:'c1',img:'https://images.unsplash.com/photo-1649083048337-4aeb6dda80bb?w=500&q=80',pl:{name:'Sprzątanie wspomagające',desc:'Regularne utrzymanie porządku — odkurzanie, mycie podłóg, łazienka, kuchnia.',price:'od 199 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#wspomagajace'},
+   uk:{name:'Допоміжне прибирання',desc:'Регулярне підтримання порядку — пилосос, миття підлог, ванна, кухня.',price:'від 199 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#wspomagajace'},
+   ru:{name:'Поддерживающая уборка',desc:'Регулярное поддержание порядка — пылесос, мытьё полов, ванная, кухня.',price:'от 199 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#wspomagajace'},
    en:{name:'Maintenance cleaning',desc:'Regular upkeep — vacuuming, floor mopping, bathroom, kitchen.',price:'from 199 zł',link:'#kontakt'}},
-  {icon:'✨',cc:'c2',img:'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=500&q=80',pl:{name:'Sprzątanie generalne',desc:'Dokładne czyszczenie od A do Z — usuwamy pajęczyny, myjemy gniazdka, lampy, za meblami.',price:'od 349 zł',link:'/sprzatanie-mieszkan-krakow#generalne'},
-   uk:{name:'Генеральне прибирання',desc:'Ретельне чищення від А до Я — видаляємо павутиння, миємо розетки, лампи, за меблями.',price:'від 349 zł',link:'/sprzatanie-mieszkan-krakow#generalne'},
-   ru:{name:'Генеральная уборка',desc:'Тщательная чистка от А до Я — убираем паутину, моем розетки, лампы, за мебелью.',price:'от 349 zł',link:'/sprzatanie-mieszkan-krakow#generalne'},
+  {icon:'✨',cc:'c2',img:'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=500&q=80',pl:{name:'Sprzątanie generalne',desc:'Dokładne czyszczenie od A do Z — usuwamy pajęczyny, myjemy gniazdka, lampy, za meblami.',price:'od 349 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#generalne'},
+   uk:{name:'Генеральне прибирання',desc:'Ретельне чищення від А до Я — видаляємо павутиння, миємо розетки, лампи, за меблями.',price:'від 349 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#generalne'},
+   ru:{name:'Генеральная уборка',desc:'Тщательная чистка от А до Я — убираем паутину, моем розетки, лампы, за мебелью.',price:'от 349 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#generalne'},
    en:{name:'General cleaning',desc:'Thorough clean from A to Z — cobwebs, sockets, lamps, behind furniture.',price:'from 349 zł',link:'#kontakt'}},
-  {icon:'🔬',cc:'c3',img:'https://images.unsplash.com/photo-1721825170838-9747d16c4255?w=500&q=80',pl:{name:'Sprzątanie szczegółowe',desc:'Najgłębszy poziom czystości — wszystko z generalnego + parowanie grzejników, usuwanie kamienia.',price:'od 617 zł',link:'/sprzatanie-mieszkan-krakow#szczegolowe'},
-   uk:{name:'Детальне прибирання',desc:'Найглибший рівень чистоти — все з генерального + парова обробка радіаторів, видалення накипу.',price:'від 617 zł',link:'/sprzatanie-mieszkan-krakow#szczegolowe'},
-   ru:{name:'Детальная уборка',desc:'Самый глубокий уровень чистоты — всё из генеральной + паровая обработка радиаторов, удаление накипи.',price:'от 617 zł',link:'/sprzatanie-mieszkan-krakow#szczegolowe'},
+  {icon:'🔬',cc:'c3',img:'https://images.unsplash.com/photo-1721825170838-9747d16c4255?w=500&q=80',pl:{name:'Sprzątanie szczegółowe',desc:'Najgłębszy poziom czystości — wszystko z generalnego + parowanie grzejników, usuwanie kamienia.',price:'od 617 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#szczegolowe'},
+   uk:{name:'Детальне прибирання',desc:'Найглибший рівень чистоти — все з генерального + парова обробка радіаторів, видалення накипу.',price:'від 617 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#szczegolowe'},
+   ru:{name:'Детальная уборка',desc:'Самый глубокий уровень чистоты — всё из генеральной + паровая обработка радиаторов, удаление накипи.',price:'от 617 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#szczegolowe'},
    en:{name:'Deep cleaning',desc:'Deepest level of cleanliness — everything in general + steam radiators, limescale removal.',price:'from 617 zł',link:'#kontakt'}},
   {icon:'🏗️',cc:'c4',img:'https://images.unsplash.com/photo-1721395290083-895bf53d6178?w=500&q=80',pl:{name:'Po remoncie — z meblami',desc:'Specjalistyczne czyszczenie budowlane w umeblowanym wnętrzu — kurz, fugi, farba, gruz.',price:'od 1050 zł',link:'/sprzatanie-po-remoncie-krakow#z'},
    uk:{name:'Після ремонту — з меблями',desc:'Спеціалізоване будівельне чищення в умебльованому приміщенні — пил, затирка, фарба, сміття.',price:'від 1050 zł',link:'/sprzatanie-po-remoncie-krakow#z'},
@@ -1718,9 +1718,9 @@ var SRV_SHORT = [
    uk:{name:'Миття вікон',desc:'Сезонне та зимове миття вікон з обох сторін — рами, підвіконня, ущільнювачі. Знижка -10% до 30.09.',price:'від 25 zł/m²',link:'/mycie-okien'},
    ru:{name:'Мытьё окон',desc:'Сезонное и зимнее мытьё окон с обеих сторон — рамы, подоконники, уплотнители. Скидка -10% до 30.09.',price:'от 25 zł/m²',link:'/mycie-okien'},
    en:{name:'Window cleaning',desc:'Seasonal and winter window cleaning both sides — frames, sills, seals. -10% discount until 30.09.',price:'from 25 zł/m²',link:'/mycie-okien'}},
-  {icon:'🏚️',cc:'c7',img:'assets/img/zbierackosc-hero.webp',pl:{name:'Sprzątanie po zbieractwie',desc:'Audyt techniczny, dezynfekcja, ozonowanie i przywrócenie mieszkania do życia — z pełną dyskrecją.',price:'od 300 zł',link:'/sprzatanie-po-zbierackosci-krakow'},
-   uk:{name:'Прибирання після захаращення',desc:'Технічний аудит, дезінфекція, озонування та повернення квартири до життя — з повною конфіденційністю.',price:'від 300 zł',link:'/sprzatanie-po-zbierackosci-krakow'},
-   ru:{name:'Уборка после захламления',desc:'Технический аудит, дезинфекция, озонирование и возвращение квартиры к жизни — с полной конфиденциальностью.',price:'от 300 zł',link:'/sprzatanie-po-zbierackosci-krakow'},
+  {icon:'🏚️',cc:'c7',img:'assets/img/zbierackosc-hero.webp',pl:{name:'Sprzątanie po zbieractwie',desc:'Audyt techniczny, dezynfekcja, ozonowanie i przywrócenie mieszkania do życia — z pełną dyskrecją.',price:'od 300 zł',link:'/sprzatanie-po-zbieractwie-krakow'},
+   uk:{name:'Прибирання після захаращення',desc:'Технічний аудит, дезінфекція, озонування та повернення квартири до життя — з повною конфіденційністю.',price:'від 300 zł',link:'/sprzatanie-po-zbieractwie-krakow'},
+   ru:{name:'Уборка после захламления',desc:'Технический аудит, дезинфекция, озонирование и возвращение квартиры к жизни — с полной конфиденциальностью.',price:'от 300 zł',link:'/sprzatanie-po-zbieractwie-krakow'},
    en:{name:'Hoarding cleanup',desc:'Technical audit, disinfection, ozone treatment and bringing the apartment back to life — with full discretion.',price:'from 300 zł',link:'#kontakt'}}
 ];
 

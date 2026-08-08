@@ -79,10 +79,10 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   </a>
   <button class="burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
   <nav class="hdr-nav" id="hn">
-    <a href="/sprzatanie-mieszkan-krakow" id="hn1">🧹 Sprzątanie mieszkań</a>
+    <a href="/sprzatanie-mieszkan-i-domow-krakow" id="hn1">🧹 Sprzątanie mieszkań</a>
     <a href="/sprzatanie-po-remoncie-krakow" id="hn2">🏗️ Po remoncie</a>
     <a href="/sprzatanie-po-wyprowadzce-krakow" id="hn3">🏠 Po wyjeździe</a>
-    <a href="/sprzatanie-po-zbierackosci-krakow" id="hn6">🏚️ Po zbieractwie</a>
+    <a href="/sprzatanie-po-zbieractwie-krakow" id="hn6">🏚️ Po zbieractwie</a>
     <a href="/mycie-okien" id="hn4">🪟 Mycie okien</a>
     <a href="/poznaj-nas" class="hdr-back active" id="hn0">👥 Poznaj nas</a>
     <a href="/program-partnerski" class="hdr-cta" id="hn5">🤝 Zostań partnerem</a>
@@ -1580,14 +1580,14 @@ function calcSubmit() {
 
 // ===== SHORT SERVICE CARDS =====
 var SRV_SHORT = [
-  {icon:'🪣',cc:'c1',img:'https://images.unsplash.com/photo-1649083048337-4aeb6dda80bb?w=500&q=80',pl:{name:'Sprzątanie wspomagające',desc:'Regularne utrzymanie porządku — odkurzanie, mycie podłóg, łazienka, kuchnia.',price:'od 199 zł',link:'/sprzatanie-mieszkan-krakow#wspomagajace'},
-   uk:{name:'Допоміжне прибирання',desc:'Регулярне підтримання порядку — пилосос, миття підлог, ванна, кухня.',price:'від 199 zł',link:'/sprzatanie-mieszkan-krakow#wspomagajace'},
+  {icon:'🪣',cc:'c1',img:'https://images.unsplash.com/photo-1649083048337-4aeb6dda80bb?w=500&q=80',pl:{name:'Sprzątanie wspomagające',desc:'Regularne utrzymanie porządku — odkurzanie, mycie podłóg, łazienka, kuchnia.',price:'od 199 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#wspomagajace'},
+   uk:{name:'Допоміжне прибирання',desc:'Регулярне підтримання порядку — пилосос, миття підлог, ванна, кухня.',price:'від 199 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#wspomagajace'},
    en:{name:'Maintenance cleaning',desc:'Regular upkeep — vacuuming, floor mopping, bathroom, kitchen.',price:'from 199 zł',link:'#kontakt'}},
-  {icon:'✨',cc:'c2',img:'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=500&q=80',pl:{name:'Sprzątanie generalne',desc:'Dokładne czyszczenie od A do Z — usuwamy pajęczyny, myjemy gniazdka, lampy, za meblami.',price:'od 349 zł',link:'/sprzatanie-mieszkan-krakow#generalne'},
-   uk:{name:'Генеральне прибирання',desc:'Ретельне чищення від А до Я — видаляємо павутиння, миємо розетки, лампи, за меблями.',price:'від 349 zł',link:'/sprzatanie-mieszkan-krakow#generalne'},
+  {icon:'✨',cc:'c2',img:'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=500&q=80',pl:{name:'Sprzątanie generalne',desc:'Dokładne czyszczenie od A do Z — usuwamy pajęczyny, myjemy gniazdka, lampy, za meblami.',price:'od 349 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#generalne'},
+   uk:{name:'Генеральне прибирання',desc:'Ретельне чищення від А до Я — видаляємо павутиння, миємо розетки, лампи, за меблями.',price:'від 349 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#generalne'},
    en:{name:'General cleaning',desc:'Thorough clean from A to Z — cobwebs, sockets, lamps, behind furniture.',price:'from 349 zł',link:'#kontakt'}},
-  {icon:'🔬',cc:'c3',img:'https://images.unsplash.com/photo-1721825170838-9747d16c4255?w=500&q=80',pl:{name:'Sprzątanie szczegółowe',desc:'Najgłębszy poziom czystości — wszystko z generalnego + parowanie grzejników, usuwanie kamienia.',price:'od 617 zł',link:'/sprzatanie-mieszkan-krakow#szczegolowe'},
-   uk:{name:'Детальне прибирання',desc:'Найглибший рівень чистоти — все з генерального + парова обробка радіаторів, видалення накипу.',price:'від 617 zł',link:'/sprzatanie-mieszkan-krakow#szczegolowe'},
+  {icon:'🔬',cc:'c3',img:'https://images.unsplash.com/photo-1721825170838-9747d16c4255?w=500&q=80',pl:{name:'Sprzątanie szczegółowe',desc:'Najgłębszy poziom czystości — wszystko z generalnego + parowanie grzejników, usuwanie kamienia.',price:'od 617 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#szczegolowe'},
+   uk:{name:'Детальне прибирання',desc:'Найглибший рівень чистоти — все з генерального + парова обробка радіаторів, видалення накипу.',price:'від 617 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#szczegolowe'},
    en:{name:'Deep cleaning',desc:'Deepest level of cleanliness — everything in general + steam radiators, limescale removal.',price:'from 617 zł',link:'#kontakt'}},
   {icon:'🏗️',cc:'c4',img:'https://images.unsplash.com/photo-1721395290083-895bf53d6178?w=500&q=80',pl:{name:'Sprzątanie po remoncie',desc:'Specjalistyczne czyszczenie budowlane — kurz, fugi, farba, gruz. Dokumentacja fotograficzna.',price:'od 949 zł',link:'/sprzatanie-po-remoncie-krakow'},
    uk:{name:'Прибирання після ремонту',desc:'Спеціалізоване будівельне чищення — пил, затирка, фарба, сміття. Фотодокументація.',price:'від 949 zł',link:'/sprzatanie-po-remoncie-krakow'},
