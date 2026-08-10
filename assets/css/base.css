@@ -368,6 +368,10 @@ section{padding:72px 28px}
 .cb-btn{background:var(--blue2);color:#fff;font-weight:700;font-size:13px;border:none;border-radius:50px;
   padding:10px 22px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:.2s}
 .cb-btn:hover{background:var(--blue)}
+.cb-actions{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0}
+.cb-btn-reject{background:none;border:none;color:var(--gray2);font-size:11px;
+  cursor:pointer;text-decoration:underline;padding:2px;transition:.2s}
+.cb-btn-reject:hover{color:var(--gray)}
 @media(max-width:480px){.cb-box{flex-direction:column;align-items:stretch;text-align:center}}
 
 /* ─── FOOTER ─── */
