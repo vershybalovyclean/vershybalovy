@@ -8,6 +8,7 @@
 <title>Vershy Property Care – Kraków i Małopolska</title>
 <meta name="description" content="Profesjonalne sprzątanie w Krakowie i Małopolsce — mieszkania, domy, biura, po remoncie i po wyprowadzce. Bezpłatna wycena po zdjęciach, ekologiczne środki w cenie.">
 <link rel="canonical" href="https://vershclean.pl/">
+<meta name="google-site-verification" content="_wCcmjhviza5f79zdM5Zz02cj5a5jKR4ByOexm00Z1k" />
 
   <!-- FAVICON / PWA icons -->
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
@@ -1833,7 +1834,7 @@ var REVIEW_SEED=[
  {name:"Adam",stars:5,date:"2026-01-08",text:"Mieszkanie bardzo dobrze posprzątane, bez zastrzeżeń ;)"}
 ];
 
-var REAL_GOOGLE_REVIEWS=[
+var FALLBACK_GOOGLE_REVIEWS=[
  {name:"Paulina Kowalska",stars:5,date:"2026-05-07",text:{
    pl:"Ogromnie polecam! Super kontakt, a i samo sprzątanie naprawdę na błysk:)",
    uk:"Дуже рекомендую! Чудове спілкування, а саме прибирання — просто бездоганне :)",
@@ -1845,6 +1846,20 @@ var REAL_GOOGLE_REVIEWS=[
    ru:"Приятные люди, отличная работа)",
    en:"Nice people, great work)"}}
 ];
+/* REAL_GOOGLE_REVIEWS starts as the fallback above; loadLiveReviews() overwrites it
+   with live data from /api/reviews (Google Places API) once fetched, if available. */
+var REAL_GOOGLE_REVIEWS = FALLBACK_GOOGLE_REVIEWS;
+var LIVE_REVIEW_STATS = null; /* {rating, total} once loaded */
+
+function loadLiveReviews(){
+  fetch('/api/reviews').then(function(r){ return r.json(); }).then(function(data){
+    if(data && data.reviews && data.reviews.length){
+      REAL_GOOGLE_REVIEWS = data.reviews;
+      LIVE_REVIEW_STATS = (data.rating && data.total) ? {rating:data.rating, total:data.total} : null;
+      renderReviews();
+    }
+  }).catch(function(){ /* keep showing the fallback reviews already rendered */ });
+}
 
 var G_ICON_TPL='<svg width="__W__" height="__W__" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="vertical-align:-3px;flex-shrink:0">'+
  '<path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/>'+
@@ -1878,7 +1893,11 @@ function renderReviews(){
   var gbtn = document.getElementById('rev-google-btn');
   if(gbtn) gbtn.innerHTML = gIcon(18)+' '+(REV_GOOGLE_BTN[lang]||REV_GOOGLE_BTN.pl);
   var trustEl = document.getElementById('rev-trust-line');
-  if(trustEl) trustEl.innerHTML = SHIELD_ICON+' '+escapeHtml(REV_TRUST_LINE[lang]||REV_TRUST_LINE.pl);
+  if(trustEl){
+    var trustTxt = SHIELD_ICON+' '+escapeHtml(REV_TRUST_LINE[lang]||REV_TRUST_LINE.pl);
+    if(LIVE_REVIEW_STATS) trustTxt += ' · ★ '+LIVE_REVIEW_STATS.rating+' ('+LIVE_REVIEW_STATS.total+')';
+    trustEl.innerHTML = trustTxt;
+  }
 
   var grid = document.getElementById('reviews-grid');
   if(!grid) return;
@@ -1886,7 +1905,7 @@ function renderReviews(){
   grid.innerHTML = REAL_GOOGLE_REVIEWS.map(function(r,idx){
     var stars = '★'.repeat(r.stars) + '☆'.repeat(5-r.stars);
     var initials = r.name.split(' ').map(function(p){return p[0];}).join('').slice(0,2).toUpperCase();
-    var text = r.text[lang]||r.text.pl;
+    var text = (typeof r.text === 'string') ? r.text : (r.text[lang]||r.text.pl);
     var long = text.length > 180;
     return '<div class="review-card">'+
       '<div class="review-top">'+
@@ -1926,6 +1945,7 @@ function escapeHtml(t){
 }
 
 renderReviews();
+loadLiveReviews();
 
 SL(localStorage.getItem('vc_lang') || "pl");
 renderSrvShort();
