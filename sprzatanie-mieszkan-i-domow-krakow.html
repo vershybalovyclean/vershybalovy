@@ -1546,6 +1546,7 @@ function applyTranslations(l) {
 
   // Update sidebar to retranslate dynamic content
   if(typeof updateSidebar === 'function') updateSidebar();
+  if(typeof wpRefreshLabels === 'function') wpRefreshLabels('wl1-mieszkan');
   // Refresh the "multiple cleaning types selected" conflict panel if it's currently showing
   if(typeof checkConflict === 'function') checkConflict();
 
@@ -1561,7 +1562,7 @@ function SL(l) {
   });
   applyTranslations(l);
 }
-window.addEventListener('load', function(){ SL(localStorage.getItem('vc_lang') || 'pl'); });
+window.addEventListener('load', function(){ initWindowPicker(); SL(localStorage.getItem('vc_lang') || 'pl'); });
 
 </script>
 <noscript><img height="1" width="1" style="display:none"
@@ -1595,6 +1596,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/booking.css">
   <link rel="stylesheet" href="assets/css/mieszkan.css">
+  <link rel="stylesheet" href="assets/css/window-picker.css">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -2393,7 +2395,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         </div>
         <p class="add-hint"><span id="win-addon-hint">👆 Kliknij aby dodać mycie okien — cena z ramami i parapetem</span></p>
         <ul class="add-list">
-          <li onclick="toggleAdd(this)" data-name-id="wl1" data-price="25"><div class="add-check">✓</div><span class="ai-n">Mycie okien (sezonowe)</span><span class="ai-p">25 zł/m²</span><div class="qty-wrap"><input class="qty-input" type="number" min="0.5" step="0.5" value="1" onclick="event.stopPropagation()" oninput="qtyInputChange(this)"><span class="qty-unit">m²</span></div></li>
+          <li onclick="toggleAddWindow(this,'wl1-mieszkan')" data-name-id="wl1" data-price="25"><div class="add-check">✓</div><span class="ai-n">Mycie okien (sezonowe)</span><span class="ai-p">25 zł/m²</span><div class="win-picker-wrap" id="wp-wl1-mieszkan" onclick="event.stopPropagation()"></div></li>
         </ul>
         <p id="win-info-txt" style="font-size:11px;color:var(--gray);margin-top:8px">☀️ Sezon (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Zima (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Min: <strong>199 zł</strong> &nbsp;|&nbsp; Cena za m² okna z ramą</p>
       </div>
@@ -3075,6 +3077,43 @@ function qtyInputChange(input) {
   updateSidebar();
 }
 
+function winAddonSync(li, nameId, basePrice, m2) {
+  if (!li.classList.contains('selected')) return;
+  var nameSpan = li.querySelector('.ai-n');
+  var name = nameSpan ? nameSpan.textContent.trim() : nameId;
+  if (m2 <= 0) {
+    selectedAddons = selectedAddons.filter(function(a){ return a.nameId !== nameId; });
+  } else {
+    var price = Math.round(basePrice*m2);
+    var displayName = name+' — '+m2+' m²';
+    var found = false;
+    selectedAddons = selectedAddons.map(function(a){
+      if (a.nameId === nameId) { found = true; return {nameId:nameId, name:displayName, price:price, priceStr:'od '+price+' zł', qty:m2, basePrice:basePrice, unit:'m²'}; }
+      return a;
+    });
+    if (!found) selectedAddons.push({nameId:nameId, name:displayName, price:price, priceStr:'od '+price+' zł', qty:m2, basePrice:basePrice, unit:'m²'});
+  }
+  updateAddonSummary();
+  updateSidebar();
+}
+function toggleAddWindow(li, instanceKey) {
+  toggleAdd(li);
+  var nameId = li.getAttribute('data-name-id');
+  var basePrice = parseInt(li.getAttribute('data-price'));
+  if (li.classList.contains('selected')) {
+    winAddonSync(li, nameId, basePrice, wpTotalM2(instanceKey));
+  } else {
+    wpClear(instanceKey);
+  }
+}
+function initWindowPicker() {
+  wpBuild('wl1-mieszkan', 'wp-wl1-mieszkan');
+  wpOnChange('wl1-mieszkan', function(m2){
+    var li = document.querySelector('li[data-name-id="wl1"]');
+    if (li) winAddonSync(li, 'wl1', 25, m2);
+  });
+}
+
 function updateAddonSummary() {
   // add-summary div removed - addons shown in sidebar only
   var summary = document.getElementById('add-summary');
@@ -3266,5 +3305,6 @@ function addonsToForm() {
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/quote-prefill.js"></script>
 <script src="assets/js/mobile-order.js"></script>
+<script src="assets/js/window-picker.js"></script>
 </body>
 </html>

@@ -43,6 +43,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/booking.css">
   <link rel="stylesheet" href="assets/css/wyprowadzce.css">
+  <link rel="stylesheet" href="assets/css/window-picker.css">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -201,14 +202,11 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <h2 class="sec-title" id="extras-h2">Coś <em>ekstra?</em></h2>
     <p class="sec-sub" id="extras-sub">Kliknij usługę aby ją wybrać — cena pojawi się w Twoim zamówieniu.</p>
     <ul class="add-list">
-      <li onclick="toggleAddon(this,'okna',25,'m²',1)">
+      <li onclick="toggleAddWindow(this,'okna-wyprowadzce')">
         <div class="add-check">✓</div>
         <span class="ai-n" id="extra1">🪟 Mycie okien</span>
         <span class="ai-p">25 zł/m²</span>
-        <div class="qty-wrap">
-          <input class="qty-input" type="number" min="0.5" step="0.5" value="1" onclick="event.stopPropagation()" oninput="addonQtyChange(this,'okna',25)">
-          <span class="qty-unit">m²</span>
-        </div>
+        <div class="win-picker-wrap" id="wp-okna-wyprowadzce" onclick="event.stopPropagation()"></div>
       </li>
       <li onclick="toggleAddon(this,'balkon',20,'m²',1)">
         <div class="add-check">✓</div>
@@ -993,6 +991,39 @@ function addonQtyChange(input, id, basePrice){
   if(existing){ existing.name=displayName; existing.price=price; existing.qty=qty; }
   updateSidebar();
 }
+function winAddonSync(li, id, basePrice, m2) {
+  if (!li.classList.contains('selected')) return;
+  var nameSpan = li.querySelector('.ai-n');
+  var name = nameSpan ? nameSpan.textContent.trim() : id;
+  if (m2 <= 0) {
+    selectedAddons = selectedAddons.filter(function(a){ return a.id !== id; });
+  } else {
+    var price = Math.round(basePrice*m2);
+    var displayName = name + ' (' + m2 + ' m²)';
+    var existing = selectedAddons.filter(function(a){ return a.id === id; })[0];
+    if (existing) {
+      existing.name = displayName; existing.price = price; existing.qty = m2;
+    } else {
+      selectedAddons.push({id:id, name:displayName, price:price, qty:m2, basePrice:basePrice, unit:'m²'});
+    }
+  }
+  updateSidebar();
+}
+function toggleAddWindow(li, instanceKey) {
+  toggleAddon(li, 'okna', 25, 'm²', 0);
+  if (li.classList.contains('selected')) {
+    winAddonSync(li, 'okna', 25, wpTotalM2(instanceKey));
+  } else {
+    wpClear(instanceKey);
+  }
+}
+function initWindowPicker() {
+  wpBuild('okna-wyprowadzce', 'wp-okna-wyprowadzce');
+  wpOnChange('okna-wyprowadzce', function(m2){
+    var li = document.getElementById('extra1') ? document.getElementById('extra1').closest('li') : null;
+    if (li) winAddonSync(li, 'okna', 25, m2);
+  });
+}
 function toggleSbForm(){
   var total = (SEL&&SEL.price>0?SEL.price:0) + selectedAddons.reduce(function(s,a){return s+a.price;},0);
   if(total<=0) return;
@@ -1178,13 +1209,14 @@ function applyTranslations(l) {
   setTxt('combo-note', t.combo_note);
 
   updateSidebar();
+  if(typeof wpRefreshLabels === 'function') wpRefreshLabels('okna-wyprowadzce');
 }
 
 function SL(l) {
   applyTranslations(l);
 }
 
-document.addEventListener('DOMContentLoaded', function(){ applyTranslations(localStorage.getItem('vc_lang') || 'pl'); });
+document.addEventListener('DOMContentLoaded', function(){ initWindowPicker(); applyTranslations(localStorage.getItem('vc_lang') || 'pl'); });
 
 // page bottom form (fallback)
 var pf=document.getElementById('pageform');
@@ -1206,5 +1238,6 @@ window.addEventListener('load', function(){
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/quote-prefill.js"></script>
 <script src="assets/js/mobile-order.js"></script>
+<script src="assets/js/window-picker.js"></script>
 </body>
 </html>
