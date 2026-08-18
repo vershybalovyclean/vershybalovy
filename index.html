@@ -321,10 +321,20 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 <!-- REVIEWS -->
 <section class="reviews-section" id="opinie">
-  <div class="reviews-wrap">
+  <div class="reviews-wrap" style="text-align:center">
+    <div class="rev-pill fi" id="rev-pill">⭐ Google Reviews</div>
     <div class="sec-lbl fi" id="rev-lbl">Opinie klientów</div>
     <h2 class="sec-title fi" id="rev-title">Co mówią <em>nasze klientki i klienci?</em></h2>
-    <p class="sec-sub fi" style="margin:0 auto 32px;text-align:center" id="rev-sub">Sprawdź, co klienci mówią o usługach VershClean.</p>
+    <p class="sec-sub fi" style="margin:0 auto 24px;text-align:center" id="rev-sub">Sprawdź, co klienci mówią o usługach VershClean.</p>
+
+    <div class="rev-summary fi" id="rev-summary">
+      <div class="rev-summary-score" id="rev-summary-score">5.0</div>
+      <div class="rev-summary-right">
+        <div class="rev-summary-stars" aria-hidden="true">★★★★★</div>
+        <div class="rev-summary-count" id="rev-summary-count">3 opinie na Google</div>
+        <a href="https://maps.google.com/?cid=15073647947166194127" target="_blank" rel="noopener" class="rev-summary-link" id="rev-summary-link">Zobacz na Google Maps →</a>
+      </div>
+    </div>
 
     <div class="reviews-scroll-wrap fi">
       <button type="button" class="reviews-arrow reviews-arrow-l" onclick="scrollReviews(-1)" aria-label="Poprzednie">‹</button>
@@ -1881,6 +1891,33 @@ var REV_CTA_TITLE={pl:"Podobała Ci się nasza usługa?",uk:"Сподобала�
 var REV_CTA_SUB={pl:"Zostaw opinię w Google — zajmie to tylko chwilę!",uk:"Залиште відгук у Google — це займе лише хвилину!",ru:"Оставьте отзыв в Google — это займёт всего минуту!",en:"Leave a review on Google — it only takes a minute!"};
 var REV_GOOGLE_BTN={pl:"Zostaw opinię w Google",uk:"Залишити відгук у Google",ru:"Оставить отзыв в Google",en:"Leave a review on Google"};
 var REV_TRUST_LINE={pl:"Opinie pochodzą z profilu Google VershClean",uk:"Відгуки взяті з профілю VershClean у Google",ru:"Отзывы взяты из профиля VershClean в Google",en:"Reviews are sourced from VershClean's Google profile"};
+var REV_PILL={pl:"⭐ Opinie Google",uk:"⭐ Відгуки Google",ru:"⭐ Отзывы Google",en:"⭐ Google Reviews"};
+var REV_MAPS_LINK={pl:"Zobacz na Google Maps →",uk:"Дивитись на Google Maps →",ru:"Смотреть на Google Картах →",en:"View on Google Maps →"};
+function pluralSlavic(n,one,few,many){
+  var mod10=n%10, mod100=n%100;
+  if(mod10===1 && mod100!==11) return one;
+  if(mod10>=2 && mod10<=4 && (mod100<10||mod100>=20)) return few;
+  return many;
+}
+function reviewCountLabel(n){
+  if(lang==='pl'){
+    var w = n===1?'opinia':(pluralSlavic(n,'opinia','opinie','opinii'));
+    return n+' '+w+' na Google';
+  }
+  if(lang==='uk') return n+' '+pluralSlavic(n,'відгук','відгуки','відгуків')+' на Google';
+  if(lang==='ru') return n+' '+pluralSlavic(n,'отзыв','отзыва','отзывов')+' в Google';
+  return n+' review'+(n===1?'':'s')+' on Google';
+}
+function avgRating(){
+  if(LIVE_REVIEW_STATS && LIVE_REVIEW_STATS.rating) return LIVE_REVIEW_STATS.rating;
+  var arr = REAL_GOOGLE_REVIEWS;
+  if(!arr || !arr.length) return 5;
+  var sum=0; arr.forEach(function(r){sum+=r.stars;});
+  return Math.round((sum/arr.length)*10)/10;
+}
+function totalReviewCount(){
+  return (LIVE_REVIEW_STATS && LIVE_REVIEW_STATS.total) ? LIVE_REVIEW_STATS.total : (REAL_GOOGLE_REVIEWS||[]).length;
+}
 var SHIELD_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="vertical-align:-2px;flex-shrink:0">'+
  '<path d="M12 2L4 5v6c0 5.25 3.4 9.74 8 11 4.6-1.26 8-5.75 8-11V5l-8-3z" fill="var(--green)"/>'+
  '<path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'+
@@ -1891,6 +1928,15 @@ function openGoogleReview(){
 }
 
 function renderReviews(){
+  var pillEl = document.getElementById('rev-pill');
+  if(pillEl) pillEl.textContent = REV_PILL[lang]||REV_PILL.pl;
+  var avg = avgRating(), total = totalReviewCount();
+  var scoreEl = document.getElementById('rev-summary-score');
+  if(scoreEl) scoreEl.textContent = avg.toFixed(1);
+  var countEl = document.getElementById('rev-summary-count');
+  if(countEl) countEl.textContent = reviewCountLabel(total);
+  var linkEl = document.getElementById('rev-summary-link');
+  if(linkEl) linkEl.textContent = REV_MAPS_LINK[lang]||REV_MAPS_LINK.pl;
   var ctaTitleEl = document.getElementById('rev-cta-title');
   if(ctaTitleEl) ctaTitleEl.textContent = REV_CTA_TITLE[lang]||REV_CTA_TITLE.pl;
   var ctaSubEl = document.getElementById('rev-cta-sub');
@@ -1914,9 +1960,9 @@ function renderReviews(){
     var long = text.length > 180;
     return '<div class="review-card">'+
       '<div class="review-top">'+
-        '<div class="review-avatar" style="background:'+avatarColor(r.name)+'">'+initials+'</div>'+
+        '<div class="review-avatar-wrap"><div class="review-avatar" style="background:'+avatarColor(r.name)+'">'+initials+'</div><span class="review-g-badge">'+gIcon(11)+'</span></div>'+
         '<div class="review-meta">'+
-          '<div class="review-name-row">'+gIcon(14)+'<span class="review-name">'+escapeHtml(r.name)+'</span></div>'+
+          '<div class="review-name-row"><span class="review-name">'+escapeHtml(r.name)+'</span></div>'+
           '<div class="review-date">'+relTime(r.date)+'</div>'+
         '</div>'+
       '</div>'+

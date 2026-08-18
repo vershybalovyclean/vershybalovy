@@ -184,14 +184,18 @@
 
   /* ─── TIME SLOTS ───────────────────────────────────── */
   var BK_SLOTS = [
-    {id:'s1',icon:'🌅',label:'09:00–11:00',tag:{pl:'Polecamy z rana!',uk:'Радимо вранці!',ru:'Рекомендуем с утра!',en:'Best in the morning!'}},
-    {id:'s2',icon:'☀️',label:'11:00–13:00',tag:{pl:'Najczęściej wybierany',uk:'Найчастіше обирають',ru:'Чаще всего выбирают',en:'Most popular'}},
-    {id:'s3',icon:'🌤',label:'13:00–15:00',tag:{pl:'',uk:'',ru:'',en:''}},
-    {id:'s4',icon:'🌇',label:'15:00–17:00',tag:{pl:'',uk:'',ru:'',en:''}},
-    {id:'s5',icon:'🌆',label:'17:00–19:00',tag:{pl:'',uk:'',ru:'',en:''}},
-    {id:'s6',icon:'🌃',label:'19:00–21:00',tag:{pl:'',uk:'',ru:'',en:''}},
-    {id:'s7',icon:'🌙',label:'po 21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',ru:'+100% — ночной выезд',en:'+100% — night visit'},night:true}
+    {id:'s1',icon:'🌅',label:'09:00–11:00',start:'09:00',tag:{pl:'Polecamy z rana!',uk:'Радимо вранці!',ru:'Рекомендуем с утра!',en:'Best in the morning!'}},
+    {id:'s2',icon:'☀️',label:'11:00–13:00',start:'11:00',tag:{pl:'Najczęściej wybierany',uk:'Найчастіше обирають',ru:'Чаще всего выбирают',en:'Most popular'}},
+    {id:'s3',icon:'🌤',label:'13:00–15:00',start:'13:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s4',icon:'🌇',label:'15:00–17:00',start:'15:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s5',icon:'🌆',label:'17:00–19:00',start:'17:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s6',icon:'🌃',label:'19:00–21:00',start:'19:00',tag:{pl:'',uk:'',ru:'',en:''}},
+    {id:'s7',icon:'🌙',label:'po 21:00',start:'21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',ru:'+100% — ночной выезд',en:'+100% — night visit'},night:true}
   ];
+
+  function bk_isoDate(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
 
   /* ─── NIGHT SURCHARGE (po 21:00 → +100%) ───────────── */
   function bk_isNightSlot(){
@@ -519,7 +523,12 @@
     fetch('/api/submit',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, partnerCode:partnerCode})
+      body:JSON.stringify({
+        name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, partnerCode:partnerCode,
+        email:email||'', address:fullAddress,
+        scheduledDate:bk_isoDate(bk_selectedDate), scheduledTime:(slotObj?slotObj.start:''),
+        price:d.price?bk_finalPrice(d.price):null
+      })
     })
     .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })
     .then(function(res){
