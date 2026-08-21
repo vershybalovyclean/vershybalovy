@@ -878,7 +878,7 @@ pl:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em>",
   /* NAV */
   nav_home:"🏠 Strona główna", nav_mieszkan:"🧹 Sprzątanie mieszkań",
-  nav_remont:"🏗️ Po remoncie", nav_wyjazd:"🏠 Po wyjeździe", nav_zb:"🏚️ Po zbieractwie", nav_okna:"🪟 Mycie okien", nav_about:"👥 Poznaj nas", nav_cta:"🤝 Zostań partnerem",
+  nav_remont:"🏗️ Po remoncie", nav_wyjazd:"🏠 Po wyjeździe", nav_zb:"🏚️ Po zbieractwie", nav_okna:"🪟 Mycie okien", nav_about:"👥 Poznaj nas", nav_cta:"🤝 Zostań partnerem", login_btn:"Zaloguj się", login_client:"👤 Kabinet klienta", login_partner:"🤝 Kabinet partnera",
   /* HERO */
   hero_badge:"🏠 Kraków i Małopolska",
   hero_h1:"Profesjonalne sprzątanie mieszkań<br><em>trzy poziomy czystości</em>",
@@ -954,7 +954,7 @@ pl:{
 uk:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>",
   nav_home:"🏠 Головна", nav_mieszkan:"🧹 Прибирання квартир",
-  nav_remont:"🏗️ Після ремонту", nav_wyjazd:"🏠 Після виїзду", nav_zb:"🏚️ Після захаращення", nav_okna:"🪟 Миття вікон", nav_about:"👥 Про нас", nav_cta:"🤝 Стати партнером",
+  nav_remont:"🏗️ Після ремонту", nav_wyjazd:"🏠 Після виїзду", nav_zb:"🏚️ Після захаращення", nav_okna:"🪟 Миття вікон", nav_about:"👥 Про нас", nav_cta:"🤝 Стати партнером", login_btn:"Увійти", login_client:"👤 Кабінет клієнта", login_partner:"🤝 Кабінет партнера",
   hero_badge:"🏠 Краків і Малопольща",
   hero_h1:"Професійне прибирання квартир<br><em>три рівні чистоти</em>",
   hero_sub:"Від швидкого освіження до глибокого прибирання кожного куточка — підберемо обсяг під ваші потреби.",
@@ -1016,7 +1016,7 @@ uk:{
 ru:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>",
   nav_home:"🏠 Главная", nav_mieszkan:"🧹 Уборка квартир",
-  nav_remont:"🏗️ После ремонта", nav_wyjazd:"🏠 После выезда", nav_zb:"🏚️ После захламления", nav_okna:"🪟 Мытьё окон", nav_about:"👥 О нас", nav_cta:"🤝 Стать партнёром",
+  nav_remont:"🏗️ После ремонта", nav_wyjazd:"🏠 После выезда", nav_zb:"🏚️ После захламления", nav_okna:"🪟 Мытьё окон", nav_about:"👥 О нас", nav_cta:"🤝 Стать партнёром", login_btn:"Войти", login_client:"👤 Кабинет клиента", login_partner:"🤝 Кабинет партнёра",
   hero_badge:"🏠 Краков и Малопольша",
   hero_h1:"Профессиональная уборка квартир<br><em>три уровня чистоты</em>",
   hero_sub:"От быстрого освежения до глубокой чистки каждого уголка — подберём объём под ваши потребности.",
@@ -1078,7 +1078,7 @@ ru:{
 en:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>",
   nav_home:"🏠 Home", nav_mieszkan:"🧹 Apartment cleaning",
-  nav_remont:"🏗️ Post-renovation", nav_wyjazd:"🏠 Post-checkout", nav_zb:"🏚️ Hoarding cleanup", nav_okna:"🪟 Window cleaning", nav_about:"👥 Meet us", nav_cta:"🤝 Become a partner",
+  nav_remont:"🏗️ Post-renovation", nav_wyjazd:"🏠 Post-checkout", nav_zb:"🏚️ Hoarding cleanup", nav_okna:"🪟 Window cleaning", nav_about:"👥 Meet us", nav_cta:"🤝 Become a partner", login_btn:"Sign in", login_client:"👤 Client cabinet", login_partner:"🤝 Partner cabinet",
   hero_badge:"🏠 Kraków & Małopolska",
   hero_h1:"Professional apartment cleaning<br><em>three levels of cleanliness</em>",
   hero_sub:"From a quick refresh to deep cleaning every corner — we'll tailor the scope to your needs.",
@@ -1165,6 +1165,9 @@ function applyTranslations(l) {
   set('nav-okna', t.nav_okna);
   set('nav-about', t.nav_about);
   set('hn5', t.nav_cta);
+  setTxt('loginBtnTxt', t.login_btn);
+  setTxt('loginClient', t.login_client);
+  setTxt('loginPartner', t.login_partner);
 
   // Hero
   set('hero-badge', t.hero_badge);
@@ -1617,6 +1620,13 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <button class="lb" onclick="SL('uk')">UA</button>
       <button class="lb" onclick="SL('ru')">RU</button>
       <button class="lb" onclick="SL('en')">EN</button>
+    </div>
+    <div class="topbar-login">
+      <button type="button" class="login-trigger" onclick="toggleLoginMenu()">🔑 <span id="loginBtnTxt" class="login-txt">Zaloguj się</span></button>
+      <div class="login-dropdown" id="login-dropdown">
+        <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener" id="loginClient">👤 Kabinet klienta</a>
+        <a href="https://kabinet.vershclean.pl/partner/login.html" target="_blank" rel="noopener" id="loginPartner">🤝 Kabinet partnera</a>
+      </div>
     </div>
   </div>
 </div>
@@ -2817,40 +2827,83 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 
 
-<footer>
-  <div class="ft-top">
-    <div>
+<footer class="ft2">
+  <div class="ft2-top">
+    <div class="ft2-brand-block">
       <div class="ft-logo-row">
         <img src="assets/img/logo.png" alt="Vershy Property Care" style="width:100px;height:auto;display:block">
         <div class="ft-brand">Vershy Property Care</div>
       </div>
       <p class="ft-slogan">Premium Cleaning &amp; Property Services</p>
-    </div>
-    <div>
-      <h4>Kontakt</h4>
-      <a href="tel:+48514363538" class="ft-link">📞 +48 514 363 538</a>
-      <a href="mailto:vershybalovy@gmail.com" class="ft-link">📧 vershybalovy@gmail.com</a>
-      <span class="ft-link">📍 Kraków i Małopolska</span>
-    </div>
-    <div>
-      <h4>Social media</h4>
-      <div class="soc-grid">
-        <a href="https://wa.me/48514363538" class="soc-btn" target="_blank">💬 Napisz na WhatsApp</a>
-        <a href="https://www.instagram.com/vershybalovy_cleaning_krakow/" class="soc-btn" target="_blank">📸 Instagram</a>
-        <a href="https://www.facebook.com/vershybalovycleaning/?locale=pl_PL" class="soc-btn" target="_blank">👥 Facebook</a>
-        <a href="https://t.me/vershybalovyclean" class="soc-btn" target="_blank">✈️ Telegram</a>
+      <div class="ft2-soc">
+        <a href="https://wa.me/48514363538" target="_blank" aria-label="WhatsApp">💬</a>
+        <a href="https://www.instagram.com/vershybalovy_cleaning_krakow/" target="_blank" aria-label="Instagram">📸</a>
+        <a href="https://www.facebook.com/vershybalovycleaning/?locale=pl_PL" target="_blank" aria-label="Facebook">👥</a>
+        <a href="https://t.me/vershybalovyclean" target="_blank" aria-label="Telegram">✈️</a>
       </div>
     </div>
-  </div>
-  <div class="ft-bottom">
-    <p class="ft-copy">© 2025 Vershy Property Care</p>
-    <p class="ft-copy">Faktury bez VAT · Cena zależy od stopnia zabrudzenia</p>
-    <div class="ft-legal">
+    <div class="ft2-col">
+      <h4>Usługi</h4>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow">Sprzątanie mieszkań</a>
+      <a href="/sprzatanie-po-remoncie-krakow">Po remoncie</a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow">Po wyjeździe</a>
+      <a href="/sprzatanie-po-zbieractwie-krakow">Po zbieractwie</a>
+      <a href="/mycie-okien">Mycie okien</a>
+    </div>
+    <div class="ft2-col">
+      <h4>Firma</h4>
+      <a href="/poznaj-nas">Poznaj nas</a>
+      <a href="/program-partnerski">Zostań partnerem</a>
+      <a href="tel:+48514363538">📞 +48 514 363 538</a>
+      <a href="mailto:vershybalovy@gmail.com">📧 vershybalovy@gmail.com</a>
+      <span style="display:block;font-size:13.5px;margin-bottom:10px">📍 Kraków i Małopolska</span>
+    </div>
+    <div class="ft2-col">
+      <h4>Informacje</h4>
       <a href="/polityka-prywatnosci">Polityka prywatności</a>
       <a href="/regulamin">Regulamin</a>
       <a href="/polityka-cookies">Polityka cookies</a>
       <a href="/zalacznik-nr-1-zakres-uslug">Załącznik nr 1 – Zakres usług</a>
     </div>
+  </div>
+  <div class="ft2-tags">
+    <h4>Popularne usługi</h4>
+    <div class="ft2-tag-row">
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Kraków</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie domów Kraków</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie wspomagające Kraków</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Generalne sprzątanie Kraków</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie szczegółowe Kraków</a>
+      <a href="/sprzatanie-po-remoncie-krakow" class="ft2-tag">Sprzątanie po remoncie Kraków</a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow" class="ft2-tag">Sprzątanie po wyprowadzce Kraków</a>
+      <a href="/mycie-okien" class="ft2-tag">Mycie okien Kraków</a>
+      <a href="/#dodatkowe-uslugi" class="ft2-tag">Ozonowanie mieszkania Kraków</a>
+      <a href="/sprzatanie-po-zbieractwie-krakow" class="ft2-tag">Sprzątanie po zbieractwie Kraków</a>
+      <a href="/sprzatanie-po-zbieractwie-krakow" class="ft2-tag">Sprzątanie po depresji Kraków</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Wieliczka</a>
+      <a href="/sprzatanie-po-remoncie-krakow" class="ft2-tag">Sprzątanie po remoncie Wieliczka</a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow" class="ft2-tag">Sprzątanie po wyprowadzce Wieliczka</a>
+      <a href="/mycie-okien" class="ft2-tag">Mycie okien Wieliczka</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Skawina</a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow" class="ft2-tag">Sprzątanie po wyprowadzce Skawina</a>
+      <a href="/sprzatanie-po-remoncie-krakow" class="ft2-tag">Sprzątanie po remoncie Skawina</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Niepołomice</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Generalne sprzątanie Niepołomice</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Zabierzów</a>
+      <a href="/mycie-okien" class="ft2-tag">Mycie okien Zabierzów</a>
+      <a href="/sprzatanie-po-remoncie-krakow" class="ft2-tag">Sprzątanie po remoncie Krzeszowice</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Michałowice</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Zielonki</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Świątniki Górne</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Mogilany</a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Myślenice</a>
+      <a href="/poznaj-nas" class="ft2-tag">O nas</a>
+      <a href="/program-partnerski" class="ft2-tag">Program partnerski</a>
+    </div>
+  </div>
+  <div class="ft2-bottom">
+    <p class="ft-copy">© 2025 Vershy Property Care · NIP: 6793355668 · REGON: 543849999</p>
+    <p class="ft-copy">Faktury bez VAT · Cena zależy od stopnia zabrudzenia</p>
   </div>
 </footer>
 

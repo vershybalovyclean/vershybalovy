@@ -47,6 +47,21 @@ body{padding-top:0}
   color:#fff;letter-spacing:.5px;text-align:center}
 .topbar-txt em{font-style:normal;color:#86efac;font-weight:900}
 
+/* ─── LOGIN dropdown (client/partner cabinet) in topbar ─── */
+.topbar-login{position:relative;display:flex;align-items:center;padding:6px 12px;
+  background:rgba(0,0,0,.15);border-left:1px solid rgba(255,255,255,.15);flex-shrink:0}
+.login-trigger{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;
+  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;
+  transition:.2s;font-family:'Inter',sans-serif;letter-spacing:.5px;white-space:nowrap}
+.login-trigger:hover,.login-trigger.open{background:rgba(255,255,255,.25);border-color:#fff}
+.login-dropdown{position:absolute;top:100%;right:0;margin-top:8px;background:#fff;
+  border-radius:var(--r2);box-shadow:var(--shadow-md);min-width:190px;padding:6px;
+  display:none;flex-direction:column;gap:2px;z-index:200}
+.login-dropdown.open{display:flex}
+.login-dropdown a{display:block;padding:10px 12px;border-radius:8px;font-size:13px;
+  font-weight:600;color:var(--text2);transition:.15s;white-space:nowrap}
+.login-dropdown a:hover{background:var(--blue-pale);color:var(--blue2)}
+
 /* ─── HEADER ─── */
 header{
   background:#fff;
@@ -395,6 +410,38 @@ footer{background:#e0f2fe;color:var(--text);padding:48px 28px 24px}
 .ft-bottom{max-width:1100px;margin:0 auto;border-top:1px solid var(--brd);
   padding-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .ft-copy{font-size:12px;color:var(--gray)}
+
+/* ─── FOOTER (dark, ft2-*) ─── */
+footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
+.ft2-top{max-width:1100px;margin:0 auto;display:grid;
+  grid-template-columns:1.3fr 1fr 1fr 1fr;gap:36px 28px}
+@media(max-width:800px){.ft2-top{grid-template-columns:1fr 1fr;gap:30px 20px}}
+@media(max-width:480px){.ft2-top{grid-template-columns:1fr}}
+.ft2-brand-block{grid-column:span 1}
+@media(max-width:800px){.ft2-brand-block{grid-column:1/-1}}
+.ft2 .ft-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.ft2 .ft-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;color:#fff}
+.ft2 .ft-slogan{font-size:13px;color:#94a3b8;line-height:1.6;margin-bottom:18px;font-style:normal}
+.ft2-soc{display:flex;gap:10px;flex-wrap:wrap}
+.ft2-soc a{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;font-size:16px;text-decoration:none;
+  border:1px solid rgba(255,255,255,.1);transition:.2s}
+.ft2-soc a:hover{background:var(--blue3);border-color:var(--blue3);transform:translateY(-2px)}
+.ft2-col h4{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+  color:#fff;margin-bottom:14px;font-family:'Inter',sans-serif}
+.ft2-col a{display:block;color:#94a3b8;font-size:13.5px;margin-bottom:10px;text-decoration:none;transition:.2s}
+.ft2-col a:hover{color:#fff}
+.ft2-tags{max-width:1100px;margin:36px auto 0;padding-top:28px;border-top:1px solid rgba(255,255,255,.08)}
+.ft2-tags h4{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+  color:#fff;margin-bottom:14px;font-family:'Inter',sans-serif}
+.ft2-tag-row{display:flex;flex-wrap:wrap;gap:8px}
+.ft2-tag{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.14);
+  color:#94a3b8;font-size:12.5px;text-decoration:none;transition:.2s}
+.ft2-tag:hover{border-color:var(--green2);color:var(--green2)}
+.ft2-bottom{max-width:1100px;margin:28px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+.ft2-bottom p{font-size:12px;color:#64748b;margin:0}
+
 #btt{position:fixed;bottom:26px;right:22px;width:44px;height:44px;border-radius:50%;
   background:var(--blue2);color:#fff;border:none;cursor:pointer;font-size:18px;
   display:flex;align-items:center;justify-content:center;
@@ -456,6 +503,10 @@ footer{background:#e0f2fe;color:var(--text);padding:48px 28px 24px}
   .topbar-txt{font-size:10px;letter-spacing:0}
   .topbar-langs{padding:6px 8px;gap:3px}
   .lb{padding:2px 8px;font-size:10px}
+  .topbar-login{padding:6px 8px}
+  .login-trigger{padding:2px 8px;font-size:10px}
+  .login-txt{display:none}
+  .login-dropdown{right:-8px;min-width:170px}
   
 
   /* Хедер — компактный */
