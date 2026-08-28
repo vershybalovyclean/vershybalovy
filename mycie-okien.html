@@ -43,8 +43,9 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/booking.css">
   <link rel="stylesheet" href="assets/css/mycie-okien.css">
+  <link rel="stylesheet" href="assets/css/mobile-tabbar.css">
 </head>
-<body>
+<body class="has-mobile-tabbar">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -56,7 +57,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <div class="topbar-txt" id="topbar-txt">Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em></div>
       <div class="topbar-dot"></div>
     </div>
-    <div class="topbar-langs">
+    <div class="topbar-langs" id="topbar-langs">
       <button class="lb on" onclick="SL('pl')">PL</button>
       <button class="lb" onclick="SL('uk')">UA</button>
       <button class="lb" onclick="SL('ru')">RU</button>
@@ -78,7 +79,25 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="hdr-brand">Vershy Property Care<small>Premium Cleaning &amp; Property Services</small></div>
   </a>
   <button class="burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
+  <div class="hdr-nav-backdrop" onclick="toggleNav()"></div>
   <nav class="hdr-nav" id="hn">
+    <div class="hdr-nav-handle"></div>
+    <div class="hdr-nav-mhead"><span>Menu</span><button type="button" onclick="toggleNav()" aria-label="Zamknij">✕</button></div>
+    <div class="hdr-nav-grid">
+      <a href="/poznaj-nas"><span class="hng-icon">🏠</span><span class="hng-label">O nas</span></a>
+      <a href="/#opinie"><span class="hng-icon">⭐</span><span class="hng-label">Opinie</span></a>
+      <a href="/#przed-po"><span class="hng-icon">📸</span><span class="hng-label">Realizacje</span></a>
+      <a href="#faq-lbl"><span class="hng-icon">❓</span><span class="hng-label">FAQ</span></a>
+      <a href="#kontakt"><span class="hng-icon">📞</span><span class="hng-label">Kontakt</span></a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon">🧹</span><span class="hng-label">Sprzątanie mieszkań</span></a>
+      <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon">🏗️</span><span class="hng-label">Po remoncie</span></a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon">🏠</span><span class="hng-label">Po wyprowadzce</span></a>
+      <a href="/mycie-okien"><span class="hng-icon">🪟</span><span class="hng-label">Mycie okien</span></a>
+      <a href="/sprzatanie-po-zbieractwie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label">Po zbieractwie</span></a>
+      <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener"><span class="hng-icon">📝</span><span class="hng-label">Zarejestruj się</span></a>
+      <a href="/program-partnerski"><span class="hng-icon">🤝</span><span class="hng-label">Zostań partnerem</span></a>
+    </div>
+    <a href="tel:+48514363538" class="hdr-nav-call">📞 ZADZWOŃ DO NAS</a>
     <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">🧹 Sprzątanie mieszkań</a>
     <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">🏗️ Po remoncie</a>
     <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">🏠 Po wyjeździe</a>
@@ -428,7 +447,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 
 
-<footer class="ft2">
+<footer class="ft2" id="kontakt">
   <div class="ft2-top">
     <div class="ft2-brand-block">
       <div class="ft-logo-row">
@@ -864,10 +883,29 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
-<script src="assets/js/nav.js"></script>
+<script src="assets/js/nav.js?v=2"></script>
 <script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/mobile-order.js"></script>
+
+<!-- FLOATING CTA -->
+<a id="float-cta" href="tel:+48514363538">
+  <span class="cta-icon">📞</span>
+  <span id="cta-txt">Zadzwoń</span>
+</a>
+
+<!-- MOBILE TAB BAR -->
+<nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
+  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label">Strona główna</span></a>
+  <a href="#cennik" class="mtb-item"><span class="mtb-icon">📅</span><span class="mtb-label">Zamów</span></a>
+  <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label">Więcej</span></button>
+  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon">💬</span><span class="mtb-label">Czat</span></a>
+  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon">👤</span><span class="mtb-label">Konto</span></button>
+</nav>
+<div class="mtb-account-menu" id="mtb-account-menu">
+  <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener">👤 Kabinet klienta</a>
+  <a href="https://kabinet.vershclean.pl/partner/login.html" target="_blank" rel="noopener">🤝 Kabinet partnera</a>
+</div>
 </body>
 </html>

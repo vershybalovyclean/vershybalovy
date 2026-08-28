@@ -59,7 +59,10 @@
 .pn-story-text p{font-size:15px;line-height:1.8;color:var(--text3);margin-bottom:14px}
 
 .pn-story-wrap{display:grid;grid-template-columns:1fr 420px;gap:56px;align-items:start}
-@media(max-width:900px){.pn-story-wrap{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .pn-story-wrap{grid-template-columns:1fr}
+  .pn-story-photo{order:-1}
+}
 
 .pn-vid{width:100%;display:block;max-height:280px;object-fit:cover}
 
