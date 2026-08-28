@@ -3,6 +3,13 @@
    on mobile widths, so there's one consistent bottom zone instead of two. */
 .mobile-tabbar{display:none}
 
+/* Default-hidden so desktop never shows sheet-only chrome. Must come BEFORE
+   the media query below — same specificity, so source order decides, and
+   these need to lose once the media query's own display rules kick in. */
+.hdr-nav-mhead{display:none}
+.hdr-nav-grid,.hdr-nav-call{display:none}
+.hdr-nav-backdrop{display:none}
+
 @media(max-width:768px){
   .mobile-tabbar{
     display:flex;
@@ -129,9 +136,3 @@
     box-shadow:0 6px 18px rgba(34,197,94,.35);text-decoration:none;
   }
 }
-
-/* Default-hidden so desktop never shows sheet-only chrome even before the
-   media query above narrows things down. */
-.hdr-nav-mhead{display:none}
-.hdr-nav-grid,.hdr-nav-call{display:none}
-.hdr-nav-backdrop{display:none}
