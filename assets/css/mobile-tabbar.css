@@ -6,7 +6,7 @@
 @media(max-width:768px){
   .mobile-tabbar{
     display:flex;
-    position:fixed;left:0;right:0;bottom:0;z-index:850;
+    position:fixed;left:0;right:0;bottom:0;z-index:1000;
     background:#fff;
     border-top:1px solid var(--brd,#e2e8f0);
     box-shadow:0 -4px 20px rgba(0,0,0,.08);

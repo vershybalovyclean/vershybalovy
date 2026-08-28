@@ -107,22 +107,43 @@
   /* Language switcher: show only the active language; tap it to reveal the rest. */
   .topbar-langs:not(.expanded) .lb:not(.on){display:none}
 
-  /* "Więcej" dropdown menu — a proper panel instead of cramped chips. */
-  .hdr-nav.open{
-    padding:0 0 20px;border-radius:0 0 20px 20px;
-    box-shadow:0 20px 45px rgba(15,23,42,.18);
-    animation:hdrNavIn .22s ease-out;
+  /* "Więcej" menu — a real bottom sheet: dark backdrop, slides up from the
+     bottom edge with rounded top corners, instead of dropping down from the
+     header. Matches the app-style pattern used for the rest of the mobile nav. */
+  .hdr-nav-backdrop{display:none}
+  body.nav-sheet-open .hdr-nav-backdrop{
+    display:block;position:fixed;inset:0;background:rgba(15,23,42,.55);
+    z-index:997;animation:hdrBackdropIn .25s ease-out;
   }
-  @keyframes hdrNavIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes hdrBackdropIn{from{opacity:0}to{opacity:1}}
+
+  #hn.hdr-nav{
+    display:flex!important;position:fixed!important;top:auto!important;left:0;right:0;bottom:0;
+    flex-direction:column;
+    max-height:82vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    background:#fff;border-radius:20px 20px 0 0;
+    box-shadow:0 -12px 40px rgba(15,23,42,.25);
+    padding:0 0 calc(20px + env(safe-area-inset-bottom));
+    z-index:999;
+    transform:translateY(105%);
+    transition:transform .32s cubic-bezier(.32,.72,0,1);
+  }
+  #hn.hdr-nav.open{transform:translateY(0)}
+  .hdr-nav-handle{
+    width:36px;height:4px;border-radius:2px;background:var(--brd,#e2e8f0);
+    margin:10px auto 2px;flex-shrink:0;
+  }
   .hdr-nav-mhead{
     display:flex!important;align-items:center;justify-content:space-between;
-    padding:16px 20px;margin-bottom:6px;border-bottom:1px solid var(--brd);
+    padding:14px 20px 16px;margin-bottom:6px;border-bottom:1px solid var(--brd);
     font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:var(--text);
+    flex-shrink:0;
   }
   .hdr-nav-mhead button{
     background:var(--off);border:none;border-radius:50%;width:32px;height:32px;
     font-size:15px;color:var(--gray);cursor:pointer;
   }
+  body.nav-sheet-open #float-cta{display:none!important}
   /* Old horizontal-nav links stay for desktop only; mobile gets the grid + service list below. */
   #hn > a:not(.hdr-nav-call):not(.hnav-svc){display:none}
   .hdr-cta{display:none}
