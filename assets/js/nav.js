@@ -51,3 +51,16 @@ document.addEventListener('click', function(e){
   var btn = document.querySelector('.login-trigger');
   if(btn) btn.classList.remove('open');
 });
+
+// "Konto" popup in the bottom mobile tab bar (client/partner cabinet links)
+function toggleMtbAccount(){
+  var m = document.getElementById('mtb-account-menu');
+  if(m) m.classList.toggle('show');
+}
+document.addEventListener('click', function(e){
+  var m = document.getElementById('mtb-account-menu');
+  var btn = e.target.closest('.mtb-item');
+  if(m && m.classList.contains('show') && !m.contains(e.target) && !(btn && btn.getAttribute('onclick')==='toggleMtbAccount()')){
+    m.classList.remove('show');
+  }
+});

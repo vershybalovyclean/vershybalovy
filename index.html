@@ -2165,19 +2165,6 @@ observeFI();
   <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener">👤 Kabinet klienta</a>
   <a href="https://kabinet.vershclean.pl/partner/login.html" target="_blank" rel="noopener">🤝 Kabinet partnera</a>
 </div>
-<script>
-function toggleMtbAccount(){
-  var m = document.getElementById('mtb-account-menu');
-  if(m) m.classList.toggle('show');
-}
-document.addEventListener('click', function(e){
-  var m = document.getElementById('mtb-account-menu');
-  var btn = e.target.closest('.mtb-item');
-  if(m && m.classList.contains('show') && !m.contains(e.target) && !(btn && btn.getAttribute('onclick')==='toggleMtbAccount()')){
-    m.classList.remove('show');
-  }
-});
-</script>
 
 <script src="assets/js/nav.js?v=2"></script>
 <script src="assets/js/site-texts-sync.js" defer></script>

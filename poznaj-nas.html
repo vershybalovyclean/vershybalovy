@@ -1854,11 +1854,15 @@ observeFI();
 <!-- MOBILE TAB BAR -->
 <nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
   <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label">Strona główna</span></a>
-  <button type="button" class="mtb-item" onclick="toggleNav()"><span class="mtb-icon">🧹</span><span class="mtb-label">Usługi</span></button>
-  <a href="/#wycena" class="mtb-item mtb-cta"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label">Zamów</span></a>
-  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon">📞</span><span class="mtb-label">Kontakt</span></a>
-  <a href="/poznaj-nas" class="mtb-item"><span class="mtb-icon">👤</span><span class="mtb-label">O nas</span></a>
+  <a href="/#wycena" class="mtb-item"><span class="mtb-icon">📅</span><span class="mtb-label">Zamów</span></a>
+  <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label">Więcej</span></button>
+  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon">💬</span><span class="mtb-label">Czat</span></a>
+  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon">👤</span><span class="mtb-label">Konto</span></button>
 </nav>
+<div class="mtb-account-menu" id="mtb-account-menu">
+  <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener">👤 Kabinet klienta</a>
+  <a href="https://kabinet.vershclean.pl/partner/login.html" target="_blank" rel="noopener">🤝 Kabinet partnera</a>
+</div>
 
 <script>
 var PN_TX = {
@@ -2100,7 +2104,7 @@ window.addEventListener('DOMContentLoaded',function(){
   };
 });
 </script>
-<script src="assets/js/nav.js"></script>
+<script src="assets/js/nav.js?v=2"></script>
 <script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 </body>
