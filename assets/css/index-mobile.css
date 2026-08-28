@@ -24,6 +24,14 @@
      more harm than good here — it can flash in mid-transition, briefly
      looking like blank space cutting into the section above. Just show it. */
   body.has-mobile-tabbar #opinie .fi{opacity:1!important;transform:none!important;transition:none!important}
+  /* The section's own ::before fade assumes a white predecessor (see base.css)
+     — now it follows the blue trust badges instead, so the gradient just looks
+     like a messy smudge at the seam. Replace it with a real, deliberate edge. */
+  body.has-mobile-tabbar #opinie::before{display:none}
+  body.has-mobile-tabbar #opinie{
+    border-top:1px solid var(--brd,#e2e8f0);
+    box-shadow:0 -6px 16px rgba(15,23,42,.06);
+  }
 
   /* Hero calculator as a raised white card, not fields floating on the photo. */
   .hero-calc{
