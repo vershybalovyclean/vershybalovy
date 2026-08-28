@@ -18,6 +18,11 @@
   body.has-mobile-tabbar #home{order:-3}
   body.has-mobile-tabbar .trust{order:-2}
   body.has-mobile-tabbar #opinie{order:-1}
+  /* This section now appears right at the top of the reordered mobile flow
+     instead of deep in the page, so its scroll-triggered fade-in (.fi) does
+     more harm than good here — it can flash in mid-transition, briefly
+     looking like blank space cutting into the section above. Just show it. */
+  body.has-mobile-tabbar #opinie .fi{opacity:1!important;transform:none!important;transition:none!important}
 
   /* Hero calculator as a raised white card, not fields floating on the photo. */
   .hero-calc{
