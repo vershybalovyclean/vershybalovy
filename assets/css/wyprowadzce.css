@@ -397,6 +397,34 @@ body.has-order{padding-bottom:76px}
      completely hiding it, so a price change looked like it wasn't updating
      the total at all. Lift it to sit just above the tab bar. */
   body.has-mobile-tabbar .mobile-order-bar{bottom:64px}
+
+  /* ── Commercial-first reorder ──────────────────────────────────────────
+     Client spec: Z meblami/Bez mebli -> metraż -> price come before any
+     "Dla kogo?" / trust text, and the full add-on list already sits in its
+     own section right after the calculator — just needs pulling forward.
+     Pure reordering via flex `order`, no HTML/JS pricing logic touched. */
+  .order-main{display:flex;flex-direction:column;gap:8px}
+  .order-main > .div{display:none}
+  #cennik{order:1}
+  #extras-section{order:2}
+  #chem-section{order:3}
+  .photo-cta-wrap{order:4;margin-top:4px}
+  #dla-kogo-section{order:5}
+  #combo-section{order:6}
+  #scope-section{order:7}
+  #faq-section{order:8}
+  #win-upsell-section{order:9}
+
+  /* This line points at the desktop right-hand sidebar, which doesn't
+     exist in the mobile flow — the price now renders directly below the
+     metraż selection instead. */
+  #calc-sub{display:none}
+
+  /* Bigger tap targets for the do-35/45/60/75/90/90+ rows. */
+  .ac-row-hdr{padding:14px 14px;min-height:48px}
+  .ac-radio{width:24px;height:24px}
+  .ac-lbl{font-size:14px}
+  .ac-start{font-size:14px}
 }
 
 @media(max-width:600px){
