@@ -501,10 +501,10 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   .topbar{padding:0}
   .topbar-center{padding:6px 10px;font-size:11px}
   .topbar-txt{font-size:10px;letter-spacing:0}
-  .topbar-langs{padding:6px 8px;gap:3px}
-  .lb{padding:2px 8px;font-size:10px}
-  .topbar-login{padding:6px 8px}
-  .login-trigger{padding:2px 8px;font-size:10px}
+  .topbar-langs{padding:2px 8px;gap:3px}
+  .lb{padding:0 8px;font-size:10px;min-height:36px;display:inline-flex;align-items:center;justify-content:center}
+  .topbar-login{padding:2px 8px}
+  .login-trigger{padding:0 8px;font-size:10px;min-height:36px;display:inline-flex;align-items:center}
   .login-txt{display:none}
   .login-dropdown{right:-8px;min-width:170px}
   

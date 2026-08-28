@@ -50,8 +50,9 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 </script>
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/poznaj-nas.css">
+  <link rel="stylesheet" href="assets/css/mobile-tabbar.css">
 </head>
-<body>
+<body class="has-mobile-tabbar">
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- TOPBAR sticky -->
@@ -1850,6 +1851,14 @@ observeFI();
   <span id="cta-txt">Zadzwoń</span>
 </a>
 
+<!-- MOBILE TAB BAR -->
+<nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
+  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label">Strona główna</span></a>
+  <button type="button" class="mtb-item" onclick="toggleNav()"><span class="mtb-icon">🧹</span><span class="mtb-label">Usługi</span></button>
+  <a href="/#wycena" class="mtb-item mtb-cta"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label">Zamów</span></a>
+  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon">📞</span><span class="mtb-label">Kontakt</span></a>
+  <a href="/poznaj-nas" class="mtb-item"><span class="mtb-icon">👤</span><span class="mtb-label">O nas</span></a>
+</nav>
 
 <script>
 var PN_TX = {
@@ -2092,6 +2101,7 @@ window.addEventListener('DOMContentLoaded',function(){
 });
 </script>
 <script src="assets/js/nav.js"></script>
+<script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 </body>
 </html>

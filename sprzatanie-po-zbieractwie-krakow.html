@@ -42,8 +42,9 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 </script>
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/zbierackosc.css">
+  <link rel="stylesheet" href="assets/css/mobile-tabbar.css">
 </head>
-<body>
+<body class="has-mobile-tabbar">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -510,6 +511,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script src="assets/js/nav.js"></script>
+<script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 <script>
 function toggleFaq(el){el.parentNode.classList.toggle('open');}
@@ -1055,5 +1057,14 @@ function applyTranslations(l) {
 function SL(l) { applyTranslations(l); }
 document.addEventListener('DOMContentLoaded', function(){ applyTranslations(localStorage.getItem('vc_lang') || 'pl'); });
 </script>
+
+<!-- MOBILE TAB BAR -->
+<nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
+  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label">Strona główna</span></a>
+  <button type="button" class="mtb-item" onclick="toggleNav()"><span class="mtb-icon">🧹</span><span class="mtb-label">Usługi</span></button>
+  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item mtb-cta"><span class="mtb-cta-icon">💬</span><span class="mtb-label">Kontakt</span></a>
+  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon">📞</span><span class="mtb-label">Zadzwoń</span></a>
+  <a href="/poznaj-nas" class="mtb-item"><span class="mtb-icon">👤</span><span class="mtb-label">O nas</span></a>
+</nav>
 </body>
 </html>

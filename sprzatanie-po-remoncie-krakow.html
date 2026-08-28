@@ -44,8 +44,9 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <link rel="stylesheet" href="assets/css/booking.css">
   <link rel="stylesheet" href="assets/css/remont.css">
   <link rel="stylesheet" href="assets/css/window-picker.css">
+  <link rel="stylesheet" href="assets/css/mobile-tabbar.css">
 </head>
-<body>
+<body class="has-mobile-tabbar">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -436,6 +437,21 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
           <p style="font-size:11px;color:#94a3b8;margin:0" id="bk-partner-code-hint">Format: VC- i 4 cyfry, np. VC-4821.</p>
         </div>
 
+        <div style="grid-column:1/-1">
+          <button type="button" class="bk-toggle-chip" id="bk-promoBtn">
+            <span class="bk-toggle-box">✓</span>
+            <span id="bk-promo-label">Mam kod promocyjny</span>
+          </button>
+        </div>
+        <div id="bk-promo-code-wrap" class="bk-hidden" style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:13px;font-weight:600;color:#334155">Kod promocyjny</label>
+          <div style="display:flex;gap:8px">
+            <input id="bk-promo-code" placeholder="KOD" class="bk-input" style="flex:1">
+            <button type="button" id="bk-promo-check-btn" style="cursor:pointer;background:#2563eb;color:#fff;border:none;border-radius:8px;font-weight:600;white-space:nowrap;padding:0 16px">Sprawdź</button>
+          </div>
+          <p style="font-size:12px;margin:0" id="bk-promo-result"></p>
+        </div>
+
         <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px">
           <label style="font-size:13px;font-weight:600;color:#334155" id="bk-lbl-notes">Uwagi <span style="font-weight:400;color:#94a3b8" id="bk-opt2">(opcjonalnie)</span></label>
           <textarea id="bk-notes" class="bk-input" style="min-height:80px;resize:vertical" placeholder="Kod do bramy, zwierzęta, dodatkowe info..."></textarea>
@@ -583,6 +599,41 @@ var TIERS = {
 };
 var order = {tier:'bez', zoneIdx:null, m2:0, price:0};
 var selectedAddons = [];
+
+// Syncs the 5 fixed-price tiers (0-90 m²) plus the 90+ per-m² overage rate with the
+// cabinet's Услуги editor (services.area_tiers / services.price_per_m2). TIERS above
+// is the fallback if this fetch fails or the cabinet's tier count doesn't match what
+// this page expects (defensive: never guess a mapping).
+(function syncAreaTiers(){
+  var SYNC_URL = "https://qwwerfvyscrzwvadgudn.supabase.co";
+  var SYNC_KEY = "sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp";
+  function applyTiers(tierKey, dbTiers, ratePerM2){
+    var zones = TIERS[tierKey].zones;
+    if(!Array.isArray(dbTiers) || dbTiers.length !== zones.length) return;
+    for(var i=0;i<zones.length;i++){
+      var t = dbTiers[i];
+      if(typeof t.price !== 'number') return;
+      zones[i].minPrice = t.price;
+      zones[i].max = (t.to==null) ? 999 : t.to;
+      zones[i].min = (i===0) ? 1 : (dbTiers[i-1].to||0)+1;
+      zones[i].label = (t.to==null) ? ((i>0?dbTiers[i-1].to:0)+'+ m²') : ('do '+t.to+' m²');
+      if(t.to==null && typeof ratePerM2 === 'number') zones[i].rate = ratePerM2;
+    }
+  }
+  fetch(SYNC_URL + "/rest/v1/services?slug=in.(sprzatanie-po-remoncie,remont-z-meblami)&select=slug,area_tiers,price_per_m2", {
+    headers: { apikey: SYNC_KEY, Authorization: "Bearer " + SYNC_KEY }
+  })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(rows){
+      if(!rows) return;
+      rows.forEach(function(row){
+        if(row.slug === 'sprzatanie-po-remoncie') applyTiers('bez', row.area_tiers, row.price_per_m2);
+        if(row.slug === 'remont-z-meblami') applyTiers('z', row.area_tiers, row.price_per_m2);
+      });
+      if(typeof renderRows === 'function') renderRows();
+    })
+    .catch(function(){});
+})();
 
 function fmt(n){ return Math.round(n).toLocaleString('pl-PL').replace(/,/g,' ') + ' zł'; }
 
@@ -811,6 +862,7 @@ function submitOrder(){
   // Populate booking section
   bk_orderData = {
     service: serviceLabel,
+    serviceSlug: (order.tier === 'bez') ? 'sprzatanie-po-remoncie' : 'remont-z-meblami',
     area: order.m2 ? order.m2 + ' m²' : '',
     extras: extrasArr.join(', '),
     price: total
@@ -863,8 +915,37 @@ function toggleAdd(li) {
   updateOrder();
 }
 
+// Base ozonation price, kept in one place so the cabinet's Маркетинг/Услуги-adjacent
+// addon_services price ("Озонирование (после ремонта)") can override it below —
+// the rest of the tier schedule (269/349/439/+5 zł per m²) has no field in the
+// cabinet yet and stays hardcoded by design.
+var OZON_BASE = 199;
+(function syncOzonPrice(){
+  fetch("https://qwwerfvyscrzwvadgudn.supabase.co/rest/v1/rpc/get_public_addon_prices", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: "sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp", Authorization: "Bearer sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp" },
+    body: "{}"
+  })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(rows){
+      if(!rows) return;
+      var row = rows.filter(function(r){ return r.name === 'Озонирование (после ремонта)'; })[0];
+      if(!row || typeof row.price !== 'number') return;
+      OZON_BASE = row.price;
+      var li = document.querySelector('[data-name-id="ozon1"]');
+      if(li){
+        li.setAttribute('data-price', OZON_BASE);
+        if(!li.classList.contains('selected')){
+          var priceEl = li.querySelector('.ai-p');
+          if(priceEl) priceEl.textContent = 'od '+OZON_BASE+' zł';
+        }
+      }
+    })
+    .catch(function(){});
+})();
+
 function ozonTierPrice(m2) {
-  if(m2<=30) return 199;
+  if(m2<=30) return OZON_BASE;
   if(m2<=50) return 269;
   if(m2<=75) return 349;
   if(m2<=100) return 439;
@@ -904,7 +985,7 @@ function maybeShowOzonUpsell(continueFn) {
   if(!ozonLi || ozonLi.classList.contains('selected')) return false;
   sessionStorage.setItem('vc_ozon_upsell_seen_remont', '1');
   _ozonUpsellContinue = continueFn;
-  var price = 199;
+  var price = OZON_BASE;
   var t = OZON_UPSELL_TX[lang] || OZON_UPSELL_TX.pl;
   var bg = document.createElement('div');
   bg.className = 'ozon-upsell-backdrop';
@@ -1188,10 +1269,20 @@ window.addEventListener('load', function(){
 });
 </script>
 <script src="assets/js/nav.js"></script>
+<script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/quote-prefill.js"></script>
 <script src="assets/js/mobile-order.js"></script>
 <script src="assets/js/window-picker.js"></script>
+
+<!-- MOBILE TAB BAR -->
+<nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
+  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label">Strona główna</span></a>
+  <button type="button" class="mtb-item" onclick="toggleNav()"><span class="mtb-icon">🧹</span><span class="mtb-label">Usługi</span></button>
+  <a href="#cennik-kalkulator" class="mtb-item mtb-cta"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label">Zamów</span></a>
+  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon">📞</span><span class="mtb-label">Kontakt</span></a>
+  <a href="/poznaj-nas" class="mtb-item"><span class="mtb-icon">👤</span><span class="mtb-label">O nas</span></a>
+</nav>
 </body>
 </html>

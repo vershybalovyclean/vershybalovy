@@ -8,11 +8,31 @@
   var bk_selectedPayment = null;
   var bk_invoiceOn = false;
   var bk_partnerOn = false;
+  var bk_promoOn = false;
+  var bk_promoApplied = null; // {discount_type, discount_value, min_order_amount} once a valid code is confirmed
+  // Same anon/publishable key already used server-side in api/submit.js (Supabase_anon_key) —
+  // safe to embed client-side, it's the public half by design (RLS + narrow RPC grants gate it).
+  var BK_SUPABASE_URL = "https://qwwerfvyscrzwvadgudn.supabase.co";
+  var BK_SUPABASE_ANON_KEY = "sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp";
   var bk_viewYear, bk_viewMonth;
+  var bk_blockedDates = {}; // isoDate -> true, from cabinet's Календарь → заблокированные даты
 
   var now = new Date();
   bk_viewYear = now.getFullYear();
   bk_viewMonth = now.getMonth();
+
+  // Cabinet-side day-off/holiday blocks (blocked_dates table) — publicly readable by
+  // design specifically for this. Fails open (calendar behaves as before) if the
+  // fetch fails, same fallback approach as the rest of the site's Supabase reads.
+  fetch(BK_SUPABASE_URL + '/rest/v1/blocked_dates?select=blocked_date', {
+    headers: { 'apikey': BK_SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + BK_SUPABASE_ANON_KEY }
+  })
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(rows){
+      rows.forEach(function(row){ bk_blockedDates[row.blocked_date] = true; });
+      if(Object.keys(bk_blockedDates).length) bk_renderCal();
+    })
+    .catch(function(){});
 
   /* ─── TRANSLATIONS ─────────────────────────────────── */
   var BK_TX = {
@@ -203,7 +223,13 @@
     return !!(s && s.night);
   }
   function bk_finalPrice(basePrice){
-    return bk_isNightSlot() ? basePrice*2 : basePrice;
+    var p = bk_isNightSlot() ? basePrice*2 : basePrice;
+    if(bk_promoApplied){
+      if(bk_promoApplied.discount_type === 'percent') p = p * (1 - bk_promoApplied.discount_value/100);
+      else if(bk_promoApplied.discount_type === 'fixed') p = Math.max(0, p - bk_promoApplied.discount_value);
+      p = Math.round(p);
+    }
+    return p;
   }
 
   /* ─── RENDER ORDER SUMMARY ─────────────────────────── */
@@ -252,7 +278,7 @@
       var dow = date.getDay();
       var cls = 'bk-day';
       var disabled = '';
-      if(date<today||dow===0){ cls+=' bk-none'; disabled='disabled'; }
+      if(date<today||dow===0||bk_blockedDates[bk_isoDate(date)]){ cls+=' bk-none'; disabled='disabled'; }
       var bonus = (!disabled&&bk_getBonus(date));
       if(bonus) cls+=' bk-bonus';
       if(bk_selectedDate&&date.toDateString()===bk_selectedDate.toDateString()) cls+=' bk-selected';
@@ -450,6 +476,65 @@
     });
   }
 
+  /* ─── PROMO CODE TOGGLE + LIVE CHECK (only on pages that include it) ─── */
+  var bk_promoBtn = document.getElementById('bk-promoBtn');
+  if(bk_promoBtn){
+    bk_promoBtn.addEventListener('click',function(){
+      bk_promoOn = !bk_promoOn;
+      this.classList.toggle('bk-chip-active', bk_promoOn);
+      var wrap = document.getElementById('bk-promo-code-wrap');
+      if(wrap) wrap.classList.toggle('bk-hidden', !bk_promoOn);
+      if(!bk_promoOn){
+        // Turning the section off drops any already-applied discount — re-opening
+        // requires checking the code again, same as re-typing a partner code.
+        bk_promoApplied = null;
+        var res = document.getElementById('bk-promo-result');
+        if(res) res.textContent = '';
+        bk_renderOrder();
+      }
+    });
+  }
+  var bk_promoCheckBtn = document.getElementById('bk-promo-check-btn');
+  if(bk_promoCheckBtn){
+    bk_promoCheckBtn.addEventListener('click',function(){
+      var input = document.getElementById('bk-promo-code');
+      var res = document.getElementById('bk-promo-result');
+      var code = input ? input.value.trim().toUpperCase() : '';
+      bk_promoApplied = null;
+      if(!code){
+        if(res){ res.textContent = '⚠️ Wpisz kod promocyjny'; res.style.color = '#dc2626'; }
+        bk_renderOrder();
+        return;
+      }
+      bk_promoCheckBtn.disabled = true;
+      var prevTxt = bk_promoCheckBtn.textContent;
+      bk_promoCheckBtn.textContent = '…';
+      fetch(BK_SUPABASE_URL + '/rest/v1/rpc/validate_promo_code', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'apikey': BK_SUPABASE_ANON_KEY, 'Authorization':'Bearer '+BK_SUPABASE_ANON_KEY },
+        body: JSON.stringify({ p_code: code })
+      }).then(function(r){ return r.ok ? r.json() : []; }).then(function(rows){
+        var row = rows && rows[0];
+        var d = window.bk_orderData || {};
+        if(!row){
+          if(res){ res.textContent = '❌ Nieprawidłowy lub wygasły kod'; res.style.color = '#dc2626'; }
+        } else if(row.min_order_amount && d.price && d.price < row.min_order_amount){
+          if(res){ res.textContent = '❌ Kod wymaga zamówienia od '+row.min_order_amount+' zł'; res.style.color = '#dc2626'; }
+        } else {
+          bk_promoApplied = { discount_type: row.discount_type, discount_value: row.discount_value, min_order_amount: row.min_order_amount, code: code };
+          var label = row.discount_type === 'percent' ? ('-'+row.discount_value+'%') : ('-'+row.discount_value+' zł');
+          if(res){ res.textContent = '✅ Kod zastosowany: '+label; res.style.color = '#16a34a'; }
+        }
+        bk_renderOrder();
+      }).catch(function(){
+        if(res){ res.textContent = '❌ Błąd sprawdzania kodu, spróbuj ponownie'; res.style.color = '#dc2626'; }
+      }).finally(function(){
+        bk_promoCheckBtn.disabled = false;
+        bk_promoCheckBtn.textContent = prevTxt;
+      });
+    });
+  }
+
   /* ─── INPUTS → CHECK ───────────────────────────────── */
   ['bk-name','bk-phone','bk-email','bk-street','bk-apt','bk-postal','bk-city','bk-notes'].forEach(function(id){
     var el = document.getElementById(id);
@@ -512,6 +597,8 @@
       partnerCode = document.getElementById('bk-partner-code').value.trim();
       comment+='Kod partnera: '+partnerCode+'\n';
     }
+    var promoCode = (bk_promoOn && bk_promoApplied) ? bk_promoApplied.code : '';
+    if(promoCode) comment+='Kod promocyjny: '+promoCode+'\n';
     if(email) comment+='E-mail: '+email+'\n';
     if(notes) comment+='Uwagi: '+notes;
 
@@ -525,6 +612,7 @@
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, partnerCode:partnerCode,
+        promoCode:promoCode, serviceSlug:d.serviceSlug||'',
         email:email||'', address:fullAddress,
         scheduledDate:bk_isoDate(bk_selectedDate), scheduledTime:(slotObj?slotObj.start:''),
         price:d.price?bk_finalPrice(d.price):null

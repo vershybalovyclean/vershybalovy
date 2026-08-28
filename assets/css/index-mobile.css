@@ -1,0 +1,169 @@
+/* Homepage-only mobile tweaks — not shared with other pages. */
+.mobile-svc-wizard{display:none}
+.hdr-nav-mhead{display:none}
+.hdr-nav-grid,.hdr-nav-call{display:none}
+.hdr-nav-svc-label{display:none}
+
+@media(max-width:768px){
+  /* Shorten the decorative topbar tagline to one line instead of 3 at 10px. */
+  .topbar-txt-long{display:none}
+
+  /* Order: hero -> quick trust badges -> Google reviews -> everything else.
+     Desktop order is untouched — only body becomes a flex column on mobile. */
+  body.has-mobile-tabbar{
+    display:flex;flex-direction:column;
+  }
+  body.has-mobile-tabbar .topbar{order:-5}
+  body.has-mobile-tabbar header{order:-4}
+  body.has-mobile-tabbar #home{order:-3}
+  body.has-mobile-tabbar .trust{order:-2}
+  body.has-mobile-tabbar #opinie{order:-1}
+
+  /* Hero calculator as a raised white card, not fields floating on the photo. */
+  .hero-calc{
+    background:#fff;border-radius:22px;
+    padding:20px 16px 22px;margin-top:20px;
+    box-shadow:0 16px 40px rgba(0,0,0,.25);
+  }
+  .hero-calc .qsv-title{color:var(--text,#0f172a);text-shadow:none}
+  .hero-calc .qsv-sub{color:var(--gray,#64748b);text-shadow:none}
+  .hero-calc-field label{color:var(--text,#0f172a);text-shadow:none}
+  .hero-calc-input,.hero-calc-select-btn{
+    background:var(--off,#f8fafc);box-shadow:none;border:1.5px solid var(--brd,#e2e8f0);
+  }
+
+  /* Mobile step flow replaces the metraż+dropdown pair above. */
+  .hero-calc-box{display:none}
+  .mobile-svc-wizard{display:block;margin-top:6px}
+  .msw-step-label{font-size:14px;font-weight:700;color:var(--text,#0f172a);margin-bottom:10px}
+  .msw-cards{display:flex;flex-direction:column;gap:10px}
+  .msw-card{
+    width:100%;text-align:left;padding:15px 16px;border-radius:14px;font-size:14px;font-weight:700;
+    border:1.5px solid var(--brd,#e2e8f0);background:var(--off,#f8fafc);color:var(--text3,#334155);
+    font-family:'Inter',sans-serif;
+  }
+  .msw-card.active{
+    background:linear-gradient(135deg,var(--blue2,#2563eb),var(--blue,#1d4ed8));
+    border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(37,99,235,.3);
+  }
+  .msw-step2{display:none;margin-top:18px;padding-top:18px;border-top:1px solid var(--brd,#e2e8f0)}
+  .msw-step2.show{display:block}
+  .msw-m2-row{position:relative;margin-bottom:14px}
+  .msw-m2-row input{
+    width:100%;height:52px;border-radius:12px;border:1.5px solid var(--brd,#e2e8f0);
+    background:var(--off,#f8fafc);padding:0 48px 0 16px;font-size:16px;font-weight:600;
+    color:var(--text,#0f172a);font-family:'Inter',sans-serif;
+  }
+  .msw-m2-unit{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gray,#64748b);font-size:13px;font-weight:600}
+  .msw-cta{
+    width:100%;height:52px;border-radius:12px;border:none;
+    background:linear-gradient(135deg,var(--blue2,#2563eb),var(--blue,#1d4ed8));color:#fff;
+    font-size:15px;font-weight:700;font-family:'Inter',sans-serif;
+  }
+
+  /* Trust strip: icon-badge grid instead of a stacked text list. */
+  .trust{padding:20px 16px}
+  .trust-in{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;align-items:stretch}
+  .trust-item{
+    flex-direction:column;text-align:center;justify-content:flex-start;gap:6px;
+    background:rgba(255,255,255,.14);border-radius:14px;padding:16px 8px;
+    font-size:22px;line-height:1;
+  }
+  .trust-item span{font-size:11.5px;font-weight:600;line-height:1.35;color:#fff}
+
+  /* Persistent green call button — client spec: icon only, always visible
+     (including on load, unlike the desktop scroll-triggered behavior), sitting
+     above the bottom tab bar so it never overlaps it. #btt stays hidden — the
+     spec doesn't call for a separate back-to-top control on mobile. */
+  #float-cta{
+    display:flex!important;
+    width:56px;height:56px;border-radius:50%;
+    padding:0;justify-content:center;align-items:center;
+    right:16px;bottom:78px;
+    box-shadow:0 6px 18px rgba(34,197,94,.45);
+  }
+  #float-cta .cta-icon{font-size:24px}
+  #float-cta #cta-txt{display:none}
+  #float-cta.hidden{opacity:1!important;pointer-events:auto!important;transform:none!important}
+
+  /* Login/register moved out of the cramped topbar into the bottom tab bar's
+     "Konto" item — a small popup with the same two links, anchored above the bar. */
+  .topbar-login{display:none}
+  .mtb-account-menu{
+    display:none;position:fixed;right:12px;bottom:80px;z-index:900;
+    background:#fff;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.25);
+    padding:8px;min-width:200px;
+  }
+  .mtb-account-menu.show{display:block}
+  .mtb-account-menu a{
+    display:block;padding:11px 12px;border-radius:10px;text-decoration:none;
+    color:var(--text,#0f172a);font-size:13.5px;font-weight:600;font-family:'Inter',sans-serif;
+  }
+  .mtb-account-menu a:hover{background:var(--blue-pale,#eff6ff)}
+
+  /* Header burger removed — "Więcej" in the bottom bar opens the same menu now. */
+  #header-burger{display:none!important}
+
+  /* Language switcher: show only the active language; tap it to reveal the rest. */
+  .topbar-langs:not(.expanded) .lb:not(.on){display:none}
+
+  /* "Więcej" dropdown menu — a proper panel instead of cramped chips. */
+  .hdr-nav.open{
+    padding:0 0 20px;border-radius:0 0 20px 20px;
+    box-shadow:0 20px 45px rgba(15,23,42,.18);
+    animation:hdrNavIn .22s ease-out;
+  }
+  @keyframes hdrNavIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  .hdr-nav-mhead{
+    display:flex!important;align-items:center;justify-content:space-between;
+    padding:16px 20px;margin-bottom:6px;border-bottom:1px solid var(--brd);
+    font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:var(--text);
+  }
+  .hdr-nav-mhead button{
+    background:var(--off);border:none;border-radius:50%;width:32px;height:32px;
+    font-size:15px;color:var(--gray);cursor:pointer;
+  }
+  /* Old horizontal-nav links stay for desktop only; mobile gets the grid + service list below. */
+  #hn > a:not(.hdr-nav-call):not(.hnav-svc){display:none}
+  .hdr-cta{display:none}
+
+  .hdr-nav-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 20px 18px;
+  }
+  .hdr-nav-grid a{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    background:#fff;border:1px solid var(--brd);border-radius:16px;
+    padding:18px 8px;box-shadow:0 2px 8px rgba(15,23,42,.05);
+    text-decoration:none;
+  }
+  .hdr-nav-grid a.hng-wide{grid-column:1 / -1;flex-direction:row;gap:10px;padding:14px}
+  .hng-icon{
+    width:44px;height:44px;border-radius:50%;
+    background:var(--green-pale,#f0fdf4);border:1px solid var(--green-light,#dcfce7);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+  }
+  .hng-label{font-size:13px;font-weight:700;color:var(--text3)}
+
+  /* Full services list — every cleaning service, each linking straight to its page. */
+  .hdr-nav-svc-label{
+    display:block!important;margin:16px 20px 8px;padding:0 2px;
+    font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--gray,#64748b);
+  }
+  .hnav-svc{
+    display:flex!important;align-items:center;gap:12px;
+    margin:0 20px 8px;padding:13px 14px;background:#fff;
+    border:1px solid var(--brd);border-radius:12px;
+    text-decoration:none;font-family:'Inter',sans-serif;
+  }
+  .hnav-svc .hnsvc-ico{font-size:18px;width:26px;text-align:center;flex-shrink:0}
+  .hnav-svc .hnsvc-txt{flex:1;font-size:14px;font-weight:700;color:var(--text,#0f172a)}
+  .hnav-svc .hnsvc-arrow{color:var(--gray,#64748b);font-size:16px}
+
+  .hdr-nav.open .hdr-nav-call{
+    display:block;margin:4px 20px 20px;padding:16px;text-align:center;
+    background:linear-gradient(135deg,var(--green2),var(--green))!important;color:#fff!important;
+    border:none!important;border-radius:14px;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;
+    box-shadow:0 6px 18px rgba(34,197,94,.35);text-decoration:none;
+  }
+}

@@ -26,6 +26,114 @@ var acActive = {}; // tabId -> idx
 var acM2     = {}; // tabId -> m2 value
 var acPrice  = {}; // tabId -> calculated price
 
+// Syncs the 5 fixed-price tiers + the open 90+ tier's starting price (per tab) and
+// the 3 kitchen/bathroom zone floor prices (per tab) with the cabinet's Услуги editor
+// (services.area_tiers / services.base_price). Rows keep their original onclick/
+// oninput attributes as a same-value fallback; MC_TIERS/MC_ZONES, when populated,
+// override the numbers acFixed()/acSelect()/acCalc()/acZoneCalc() actually use. The
+// per-m² overage rate (90+ tier) and the zone per-m² rate come from
+// services.price_per_m2.
+var MC_TIERS = null;
+var MC_ZONES = null;
+var MC_RATES = null;
+var MC_ZONE_RATES = null;
+(function syncMieszkanPricing(){
+  var SLUG_TO_TAB = {
+    'sprzatanie-mieszkan-wspomagajace': 'wspomagajace',
+    'sprzatanie-mieszkan-generalne': 'generalne',
+    'sprzatanie-mieszkan-szczegolowe': 'szczegolowe'
+  };
+  var ZONE_SLUGS = {
+    generalne: { 'zone-0': 'mieszkania-generalne-lazienka', 'zone-1': 'mieszkania-generalne-kuchnia', 'zone-2': 'mieszkania-generalne-lazienka-kuchnia' },
+    szczegolowe: { 'zone-0': 'mieszkania-szczegolowe-lazienka', 'zone-1': 'mieszkania-szczegolowe-kuchnia', 'zone-2': 'mieszkania-szczegolowe-lazienka-kuchnia' }
+  };
+  var ANON_HEADERS = { apikey: "sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp", Authorization: "Bearer sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp" };
+  var allSlugs = Object.keys(SLUG_TO_TAB)
+    .concat(Object.keys(ZONE_SLUGS.generalne).map(function(k){ return ZONE_SLUGS.generalne[k]; }))
+    .concat(Object.keys(ZONE_SLUGS.szczegolowe).map(function(k){ return ZONE_SLUGS.szczegolowe[k]; }));
+  fetch("https://qwwerfvyscrzwvadgudn.supabase.co/rest/v1/services?slug=in.(" + allSlugs.join(',') + ")&select=slug,base_price,area_tiers,price_per_m2", {
+    headers: ANON_HEADERS
+  })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(rows){
+      if(!rows) return;
+      var bySlug = {}; rows.forEach(function(r){ bySlug[r.slug] = r; });
+      MC_TIERS = {}; MC_ZONES = {}; MC_RATES = {}; MC_ZONE_RATES = {};
+      Object.keys(SLUG_TO_TAB).forEach(function(slug){
+        var tab = SLUG_TO_TAB[slug];
+        var tiers = bySlug[slug] && bySlug[slug].area_tiers;
+        if(!Array.isArray(tiers) || tiers.length !== 6) return;
+        MC_TIERS[tab] = tiers.map(function(t){ return t.price; });
+        if(typeof bySlug[slug].price_per_m2 === 'number') MC_RATES[tab] = bySlug[slug].price_per_m2;
+        for(var i=0;i<6;i++){
+          var startEl = document.querySelector('#acr-'+tab+'-'+i+' .ac-start');
+          if(!startEl) continue;
+          startEl.textContent = (i===5) ? ('od '+tiers[i].price+' zł') : (tiers[i].price+' zł');
+        }
+      });
+      ['generalne','szczegolowe'].forEach(function(tab){
+        MC_ZONES[tab] = {}; MC_ZONE_RATES[tab] = {};
+        Object.keys(ZONE_SLUGS[tab]).forEach(function(zoneKey){
+          var slug = ZONE_SLUGS[tab][zoneKey];
+          var row = bySlug[slug];
+          if(!row || typeof row.base_price !== 'number') return;
+          MC_ZONES[tab][zoneKey] = row.base_price;
+          if(typeof row.price_per_m2 === 'number') MC_ZONE_RATES[tab][zoneKey] = row.price_per_m2;
+          var startEl = document.querySelector('#acr-'+tab+'-'+zoneKey+' .ac-start');
+          if(startEl) startEl.textContent = 'od '+row.base_price+' zł';
+        });
+      });
+    })
+    .catch(function(){});
+})();
+function mcTierPrice(tabId, idx, fallback){
+  if(MC_TIERS && MC_TIERS[tabId] && MC_TIERS[tabId][idx] != null) return MC_TIERS[tabId][idx];
+  return fallback;
+}
+function mcTierRate(tabId, fallback){
+  if(MC_RATES && MC_RATES[tabId] != null) return MC_RATES[tabId];
+  return fallback;
+}
+function mcZonePrice(tabId, zoneKey, fallback){
+  if(MC_ZONES && MC_ZONES[tabId] && MC_ZONES[tabId][zoneKey] != null) return MC_ZONES[tabId][zoneKey];
+  return fallback;
+}
+function mcZoneRate(tabId, zoneKey, fallback){
+  if(MC_ZONE_RATES && MC_ZONE_RATES[tabId] && MC_ZONE_RATES[tabId][zoneKey] != null) return MC_ZONE_RATES[tabId][zoneKey];
+  return fallback;
+}
+
+// Mobile step-2 "type your m²" input. Boundaries (30/45/60/75/90) are the same
+// across all three tabs and are structural, not cabinet-editable — only the
+// price per bracket is. Reuses the real row handlers (acFixed/acSelect/acCalc,
+// already price-synced) instead of recomputing anything, so there is exactly
+// one place the price math lives.
+var M2_BRACKETS = [30, 45, 60, 75, 90];
+function m2QuickApply(val){
+  var m2 = parseFloat(val);
+  var resEl = document.getElementById('m2-quick-result');
+  var activeTabContent = document.querySelector('.tab-content.active');
+  if(!activeTabContent) return;
+  var tabId = activeTabContent.id.replace('tc-', '');
+  if(!m2 || m2 <= 0){ if(resEl) resEl.textContent = ''; return; }
+  var idx = M2_BRACKETS.findIndex(function(max){ return m2 <= max; });
+  if(idx === -1) idx = 5;
+  var row = document.getElementById('acr-' + tabId + '-' + idx);
+  if(!row) return;
+  var header = row.querySelector('.ac-row-hdr');
+  if(header && header.onclick) header.onclick();
+  if(idx === 5){
+    var input = document.getElementById('ac-inp-' + tabId + '-5');
+    if(input){
+      input.value = m2;
+      var oninputAttr = input.getAttribute('oninput');
+      if(oninputAttr) new Function(oninputAttr).call(input);
+    }
+  }
+  var price = (typeof acPrice !== 'undefined') ? acPrice[tabId] : 0;
+  if(resEl) resEl.innerHTML = price > 0 ? ('✅ ' + m2 + ' m² — <strong>' + price + ' zł</strong>') : '';
+}
+
 function acSelect(tabId, idx, maxM2, rate, minPrice, minM2, prevMax) {
   // Deactivate old
   var old = acActive[tabId];
@@ -48,6 +156,8 @@ function acSelect(tabId, idx, maxM2, rate, minPrice, minM2, prevMax) {
 }
 
 function acCalc(tabId, idx, maxM2, rate, minPrice, minM2, prevMax) {
+  minPrice = mcTierPrice(tabId, idx, minPrice);
+  rate = mcTierRate(tabId, rate);
   var inp = document.getElementById('ac-inp-'+tabId+'-'+idx);
   var res = document.getElementById('ac-res-'+tabId+'-'+idx);
   if(!inp || !res) return;
@@ -118,6 +228,7 @@ function acSelectZone(tabId, zoneKey, price, label) {
 
 
 function acFixed(tabId, idx, price) {
+  price = mcTierPrice(tabId, idx, price);
   var wasActive = acActive[tabId] === idx;
   // Deactivate zone rows (if any)
   ['zone-0','zone-1','zone-2'].forEach(function(zk) {
@@ -191,6 +302,8 @@ function acZoneToggle(tabId, zoneKey) {
 }
 
 function acZoneCalc(tabId, zoneKey, rawVal, maxM2, rate, minPrice) {
+  minPrice = mcZonePrice(tabId, zoneKey, minPrice);
+  rate = mcZoneRate(tabId, zoneKey, rate);
   var res = document.getElementById('ac-res-' + tabId + '-' + zoneKey);
   if(!res) return;
   var val = parseFloat(rawVal);
@@ -1600,8 +1713,10 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <link rel="stylesheet" href="assets/css/booking.css">
   <link rel="stylesheet" href="assets/css/mieszkan.css">
   <link rel="stylesheet" href="assets/css/window-picker.css">
+  <link rel="stylesheet" href="assets/css/mobile-tabbar.css">
+  <link rel="stylesheet" href="assets/css/mieszkan-mobile.css">
 </head>
-<body>
+<body class="has-mobile-tabbar">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -1670,7 +1785,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 </div>
 
 
-<div class="order-layout">
+<div class="order-layout" id="cennik">
 <div class="order-main"><div class="div"></div>
 
 <!-- TABS SECTION -->
@@ -1686,6 +1801,18 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <button class="tab active" id="tab1" onclick="showTab('wspomagajace',this)">🪣 Wspomagające</button>
       <button class="tab" id="tab2" onclick="showTab('generalne',this)">✨ Generalne</button>
       <button class="tab" id="tab3" onclick="showTab('szczegolowe',this)">🔬 Szczegółowe</button>
+    </div>
+
+    <!-- Mobile-only step 2: type m², we find the matching price bracket in the
+         active tab and activate it the same way clicking the row would —
+         reuses acFixed()/acSelect()/acCalc() as-is, no pricing logic duplicated. -->
+    <div class="m2-quick" id="m2-quick">
+      <label for="m2-quick-input">2. Podaj metraż</label>
+      <div class="m2-quick-row">
+        <input type="number" id="m2-quick-input" min="1" placeholder="np. 55 m²" oninput="m2QuickApply(this.value)">
+        <span class="m2-quick-unit">m²</span>
+      </div>
+      <p class="m2-quick-result" id="m2-quick-result"></p>
     </div>
 
     <!-- TAB 1: WSPOMAGAJĄCE -->
@@ -2549,8 +2676,8 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="sec-lbl" id="cmp-lbl">Porównanie</div>
     <h2 class="sec-title" id="cmp-h2">Co obejmuje <em>każdy rodzaj?</em></h2>
     <p class="sec-sub" id="cmp-sub">Wybierz usługę dopasowaną do stopnia zabrudzenia.</p>
-    <div style="overflow-x:auto">
-      <table class="compare-table">
+    <div style="overflow-x:auto" id="cmp-table-wrap">
+      <table class="compare-table" id="cmp-table">
         <thead><tr><th id="cmp-col0">Czynność</th><th id="cmp-col1">🪣 Wspomagające</th><th id="cmp-col2">✨ Generalne</th><th id="cmp-col3">🔬 Szczegółowe</th></tr></thead>
         <tbody>
           <tr><td colspan="4" style="background:var(--blue-pale);font-weight:700;font-size:12px;color:var(--blue2);padding:8px 14px;letter-spacing:.5px" id="cmp-g1">PODSTAWOWE PRACE</td></tr>
@@ -2591,8 +2718,64 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         </tbody>
       </table>
     </div>
+
+    <!-- Mobile-only: same data as the table above, filtered by selected level
+         instead of scrolled sideways. Built at runtime from #cmp-table so the
+         two views can never drift apart. -->
+    <div class="cmp-mobile" id="cmp-mobile">
+      <div class="cmp-tabs" id="cmp-tabs">
+        <button type="button" class="cmp-tab active" data-col="1">🪣 Wspomagające</button>
+        <button type="button" class="cmp-tab" data-col="2">✨ Generalne</button>
+        <button type="button" class="cmp-tab" data-col="3">🔬 Szczegółowe</button>
+      </div>
+      <div class="cmp-list" id="cmp-list"></div>
+    </div>
   </div>
 </section>
+<script>
+(function(){
+  var table = document.getElementById('cmp-table');
+  var list = document.getElementById('cmp-list');
+  var tabs = document.querySelectorAll('#cmp-tabs .cmp-tab');
+  if(!table || !list) return;
+
+  function render(col){
+    var rows = Array.from(table.querySelectorAll('tbody tr'));
+    var html = '';
+    var groupHtml = '';
+    var groupHasYes = false;
+    rows.forEach(function(row){
+      var groupCell = row.querySelector('td[colspan]');
+      if(groupCell){
+        if(groupHasYes) html += groupHtml;
+        groupHtml = '<div class="cmp-list-group">' + groupCell.textContent.trim() + '</div>';
+        groupHasYes = false;
+        return;
+      }
+      var cells = row.querySelectorAll('td');
+      var labelCell = cells[0];
+      var valueCell = cells[col];
+      if(!valueCell) return;
+      if(valueCell.classList.contains('compare-yes')){
+        groupHasYes = true;
+        groupHtml += '<div class="cmp-list-item"><span class="cmp-mark">✓</span>' + labelCell.textContent.trim() + '</div>';
+      }
+    });
+    if(groupHasYes) html += groupHtml;
+    list.innerHTML = html;
+  }
+
+  tabs.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      tabs.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      render(parseInt(btn.dataset.col, 10));
+    });
+  });
+
+  render(1);
+})();
+</script>
 
 <div class="div"></div>
 
@@ -3019,8 +3202,36 @@ function qtyChange(e, btn, delta) {
   updateSidebar();
 }
 
+// Base ozonation price synced with the cabinet's addon_services catalog
+// ("Озонирование (квартира)") — see syncOzonPrice() below. The rest of the tier
+// schedule has no field there yet and stays hardcoded by design.
+var OZON_BASE = 150;
+(function syncOzonPrice(){
+  fetch("https://qwwerfvyscrzwvadgudn.supabase.co/rest/v1/rpc/get_public_addon_prices", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: "sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp", Authorization: "Bearer sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp" },
+    body: "{}"
+  })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(rows){
+      if(!rows) return;
+      var row = rows.filter(function(r){ return r.name === 'Озонирование (квартира)'; })[0];
+      if(!row || typeof row.price !== 'number') return;
+      OZON_BASE = row.price;
+      var li = document.querySelector('[data-name-id="ozon1"]');
+      if(li){
+        li.setAttribute('data-price', OZON_BASE);
+        if(!li.classList.contains('selected')){
+          var priceEl = li.querySelector('.ai-p');
+          if(priceEl) priceEl.textContent = 'od '+OZON_BASE+' zł';
+        }
+      }
+    })
+    .catch(function(){});
+})();
+
 function ozonTierPrice(m2) {
-  if(m2<=30) return 150;
+  if(m2<=30) return OZON_BASE;
   if(m2<=50) return 199;
   if(m2<=75) return 259;
   if(m2<=100) return 329;
@@ -3063,7 +3274,7 @@ function maybeShowOzonUpsell(continueFn) {
   if(!ozonLi || ozonLi.classList.contains('selected')) return false;
   sessionStorage.setItem('vc_ozon_upsell_seen_mieszkan', '1');
   _ozonUpsellContinue = continueFn;
-  var price = 150;
+  var price = OZON_BASE;
   var t = OZON_UPSELL_TX[lang] || OZON_UPSELL_TX.pl;
   var bg = document.createElement('div');
   bg.className = 'ozon-upsell-backdrop';
@@ -3267,6 +3478,7 @@ function submitOrder() {
 
   var serviceLines = [];
   var serviceTotal = 0;
+  var orderedTabKeys = [];
 
   var freqTimes   = (typeof freqState !== 'undefined') ? freqState.times    : 1;
   var freqDisc    = (typeof freqState !== 'undefined') ? freqState.discount : 0;
@@ -3280,8 +3492,21 @@ function submitOrder() {
     var mult = (freqTimes > 1 && selectedAll.length === 1) ? freqTimes : 1;
     var label = t.name + (m2 ? ' (' + m2 + ' m²)' : '') + (mult > 1 ? ' × ' + mult : '');
     serviceLines.push(label);
+    orderedTabKeys.push(t.key);
     serviceTotal += price * mult;
   });
+
+  // Only resolve a single services.id when the order is unambiguous (exactly one
+  // tier). A mixed order (e.g. wspomagajace + szczegolowe together) has no single
+  // matching row, so service_id stays null and requests.service_label (the free-text
+  // line above) remains the source of truth for it — same fallback the schema
+  // already documents for orders the site can't precisely categorize.
+  var TAB_TO_SLUG = {
+    wspomagajace: 'sprzatanie-mieszkan-wspomagajace',
+    generalne: 'sprzatanie-mieszkan-generalne',
+    szczegolowe: 'sprzatanie-mieszkan-szczegolowe'
+  };
+  var orderServiceSlug = (orderedTabKeys.length === 1) ? (TAB_TO_SLUG[orderedTabKeys[0]] || '') : '';
 
   // --- Frequency discount ---
   var discAmt = (freqDisc > 0 && serviceTotal > 0) ? Math.round(serviceTotal * freqDisc / 100) : 0;
@@ -3313,6 +3538,7 @@ function submitOrder() {
   // Populate booking section with order data
   bk_orderData = {
     service: serviceLines.join('|') || 'Sprzątanie mieszkania',
+    serviceSlug: orderServiceSlug,
     freq: (freqLabel && freqLabel !== 'Jednorazowo') ? freqLabel : '',
     extras: extrasLabels.join(', '),
     price: totalAmt
@@ -3354,10 +3580,20 @@ function addonsToForm() {
 </div>
 
 <script src="assets/js/nav.js"></script>
+<script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/quote-prefill.js"></script>
 <script src="assets/js/mobile-order.js"></script>
 <script src="assets/js/window-picker.js"></script>
+
+<!-- MOBILE TAB BAR -->
+<nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
+  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label">Strona główna</span></a>
+  <button type="button" class="mtb-item" onclick="toggleNav()"><span class="mtb-icon">🧹</span><span class="mtb-label">Usługi</span></button>
+  <a href="#cennik" class="mtb-item mtb-cta"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label">Zamów</span></a>
+  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon">📞</span><span class="mtb-label">Kontakt</span></a>
+  <a href="/poznaj-nas" class="mtb-item"><span class="mtb-icon">👤</span><span class="mtb-label">O nas</span></a>
+</nav>
 </body>
 </html>

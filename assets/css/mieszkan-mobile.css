@@ -1,0 +1,72 @@
+/* Comparison table -> level switcher on mobile, no sideways scroll.
+   Desktop keeps the real table untouched. */
+.cmp-mobile{display:none}
+
+.cmp-tabs{display:flex;gap:8px;margin-top:22px;margin-bottom:16px}
+.cmp-tab{flex:1;text-align:center;padding:12px 4px;border-radius:14px;font-size:12px;font-weight:700;
+  border:1.5px solid var(--brd);color:var(--text3);background:#fff;cursor:pointer;font-family:'Inter',sans-serif;
+  transition:transform .15s,box-shadow .15s}
+.cmp-tab.active{
+  background:linear-gradient(135deg,var(--blue2),var(--blue));
+  border-color:transparent;color:#fff;
+  box-shadow:0 6px 16px rgba(37,99,235,.32);
+  transform:translateY(-1px);
+}
+
+.cmp-list{display:flex;flex-direction:column;gap:14px}
+.cmp-list-group{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:800;color:var(--blue2);letter-spacing:.6px;
+  margin:6px 2px 2px;text-transform:uppercase;
+}
+.cmp-list-group::before{content:"";width:14px;height:2px;border-radius:2px;background:var(--blue2)}
+.cmp-list-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  font-size:13px;font-weight:500;color:var(--text3);
+  background:#fff;border:1px solid var(--brd);border-radius:12px;
+  box-shadow:0 1px 3px rgba(15,23,42,.04);
+}
+.cmp-list-item .cmp-mark{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,var(--green2),var(--green));
+  box-shadow:0 2px 6px rgba(34,197,94,.35);
+}
+
+.m2-quick{display:none}
+
+@media(max-width:768px){
+  #cmp-table-wrap{display:none}
+  .cmp-mobile{display:block}
+
+  /* Step 1: turn the tier tabs into big, thumb-friendly cards. */
+  .tabs{flex-direction:column;gap:10px}
+  .tab{
+    width:100%;text-align:left;padding:16px 18px;border-radius:14px;font-size:15px;font-weight:700;
+    border:1.5px solid var(--brd);background:#fff;color:var(--text3);
+  }
+  .tab.active{
+    background:linear-gradient(135deg,var(--blue2),var(--blue));border-color:transparent;color:#fff;
+    box-shadow:0 6px 16px rgba(37,99,235,.3);
+  }
+
+  /* Step 2: one m² field instead of manually finding the matching row. */
+  .ac-ranges{display:none}
+  .m2-quick{
+    display:block;margin-top:20px;background:#fff;border:1.5px solid var(--brd);
+    border-radius:16px;padding:16px;
+  }
+  .m2-quick label{display:block;font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px}
+  .m2-quick-row{position:relative}
+  .m2-quick-row input{
+    width:100%;height:52px;border-radius:12px;border:1.5px solid var(--brd);
+    background:var(--off);padding:0 48px 0 16px;font-size:16px;font-weight:600;color:var(--text);
+    font-family:'Inter',sans-serif;
+  }
+  .m2-quick-unit{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gray);font-size:13px;font-weight:600}
+  .m2-quick-result{margin:10px 0 0;font-size:14px;color:var(--text3)}
+
+  /* No regularity picker in the mobile flow — client spec. */
+  .freq-section{display:none}
+}

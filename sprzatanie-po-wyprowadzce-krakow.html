@@ -44,8 +44,9 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <link rel="stylesheet" href="assets/css/booking.css">
   <link rel="stylesheet" href="assets/css/wyprowadzce.css">
   <link rel="stylesheet" href="assets/css/window-picker.css">
+  <link rel="stylesheet" href="assets/css/mobile-tabbar.css">
 </head>
-<body>
+<body class="has-mobile-tabbar">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -672,6 +673,21 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
           <input id="bk-partner-code" placeholder="VC-0000" class="bk-input" maxlength="7">
           <p style="font-size:11px;color:#94a3b8;margin:0" id="bk-partner-code-hint">Format: VC- i 4 cyfry, np. VC-4821.</p>
         </div>
+
+        <div style="grid-column:1/-1">
+          <button type="button" class="bk-toggle-chip" id="bk-promoBtn">
+            <span class="bk-toggle-box">✓</span>
+            <span id="bk-promo-label">Mam kod promocyjny</span>
+          </button>
+        </div>
+        <div id="bk-promo-code-wrap" class="bk-hidden" style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:13px;font-weight:600;color:#334155">Kod promocyjny</label>
+          <div style="display:flex;gap:8px">
+            <input id="bk-promo-code" placeholder="KOD" class="bk-input" style="flex:1">
+            <button type="button" id="bk-promo-check-btn" style="cursor:pointer;background:#2563eb;color:#fff;border:none;border-radius:8px;font-weight:600;white-space:nowrap;padding:0 16px">Sprawdź</button>
+          </div>
+          <p style="font-size:12px;margin:0" id="bk-promo-result"></p>
+        </div>
         <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px">
           <label style="font-size:13px;font-weight:600;color:#334155" id="bk-lbl-notes">Uwagi <span style="font-weight:400;color:#94a3b8" id="bk-opt2">(opcjonalnie)</span></label>
           <textarea id="bk-notes" class="bk-input" style="min-height:80px;resize:vertical" placeholder="Kod do bramy, zwierzęta, dodatkowe info..."></textarea>
@@ -798,6 +814,51 @@ function showTab2(id,btn){var a=document.getElementById('tc2-zmeb'),b=document.g
 // ── AREA CALCULATOR ──
 var SEL = null;
 var selectedAddons = [];
+
+// Syncs the 5 fixed-price tiers (0-90 m²) with the cabinet's Услуги editor
+// (services.area_tiers). Rows keep their original onclick/oninput attributes
+// (with the page's hardcoded numbers as a same-value fallback) — AC_TIERS, when
+// populated, overrides the min/rate acSelect()/acCalc() actually use, so a price
+// edit in the cabinet takes effect without touching each row's markup. The 90+
+// per-m² overage rate is synced too, from services.price_per_m2.
+var AC_TIERS = null;
+(function syncAreaTiers(){
+  function fmtPL(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+  function buildTiers(dbTiers, ratePerM2, fallbackLastRate){
+    if(!Array.isArray(dbTiers) || dbTiers.length !== 6) return null;
+    var rate = (typeof ratePerM2 === 'number') ? ratePerM2 : fallbackLastRate;
+    return dbTiers.map(function(t, i){
+      return { price: t.price, rate: (i===5) ? rate : 0 };
+    });
+  }
+  fetch("https://qwwerfvyscrzwvadgudn.supabase.co/rest/v1/services?slug=in.(sprzatanie-po-wyprowadzce,wyprowadzka-bez-mebli)&select=slug,area_tiers,price_per_m2", {
+    headers: { apikey: "sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp", Authorization: "Bearer sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp" }
+  })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(rows){
+      if(!rows) return;
+      var map = {}; rows.forEach(function(r){ map[r.slug] = r; });
+      var zmeb = map['sprzatanie-po-wyprowadzce'] && buildTiers(map['sprzatanie-po-wyprowadzce'].area_tiers, map['sprzatanie-po-wyprowadzce'].price_per_m2, 18);
+      var bezmeb = map['wyprowadzka-bez-mebli'] && buildTiers(map['wyprowadzka-bez-mebli'].area_tiers, map['wyprowadzka-bez-mebli'].price_per_m2, 14);
+      if(!zmeb && !bezmeb) return;
+      AC_TIERS = { zmeb: zmeb, bezmeb: bezmeb };
+      ['zmeb','bezmeb'].forEach(function(cat){
+        if(!AC_TIERS[cat]) return;
+        AC_TIERS[cat].forEach(function(t, i){
+          var startEl = document.getElementById('ac-start-'+cat+'-'+i);
+          if(startEl) startEl.textContent = (i===5) ? ('od '+t.rate+' zł/m²') : (fmtPL(t.price)+' zł');
+          var hintEl = document.getElementById('ac-hint-'+cat+'-'+i);
+          if(hintEl && i===5) hintEl.textContent = 'Powyżej 90 m²: '+t.price+' zł + '+t.rate+' zł/m² ponad 90.';
+          else if(hintEl) hintEl.textContent = hintEl.textContent.replace(/Min\.\s*\d+(\s*\d*)?\s*zł/, 'Min. '+t.price+' zł');
+        });
+      });
+    })
+    .catch(function(){});
+})();
+function acTierOverride(cat, idx, rate, min){
+  if(AC_TIERS && AC_TIERS[cat] && AC_TIERS[cat][idx]) return {rate: AC_TIERS[cat][idx].rate, min: AC_TIERS[cat][idx].price};
+  return {rate: rate, min: min};
+}
 function _clearAll(){
   document.querySelectorAll('.ac-row.active').forEach(function(r){r.classList.remove('active');});
   document.querySelectorAll('.ac-inp').forEach(function(i){i.value='';});
@@ -825,6 +886,7 @@ function svcName(cat, idx){
 function acSelect(cat, idx, service, rate, min){
   var row = document.getElementById('acr-'+cat+'-'+idx); if(!row) return;
   if(SEL && SEL.cat===cat && SEL.idx===idx){ _clearAll(); SEL=null; updateSidebar(); return; }
+  var ov = acTierOverride(cat, idx, rate, min); rate = ov.rate; min = ov.min;
   _clearAll(); row.classList.add('active');
   SEL = {cat:cat, idx:idx, service:service, rate:rate, min:min, m2:0, price:0};
   if(rate===0){ SEL.price = min; }
@@ -834,6 +896,7 @@ function acSelect(cat, idx, service, rate, min){
 function acCancel(cat){ if(SEL && SEL.cat===cat){_clearAll();SEL=null;updateSidebar();} }
 function acCalc(cat, idx, rate, min, maxM2, prevMax){
   if(!SEL || SEL.cat!==cat || SEL.idx!==idx) return;
+  var ov = acTierOverride(cat, idx, rate, min); rate = ov.rate; min = ov.min;
   var inp = document.getElementById('ac-inp-'+cat+'-'+idx);
   var res = document.getElementById('ac-res-'+cat+'-'+idx);
   var val = parseFloat(inp.value);
@@ -919,8 +982,33 @@ function toggleAddon(li, id, basePrice, unit, defaultQty){
   }
   updateSidebar();
 }
+// Base ozonation price synced with the cabinet's addon_services catalog
+// ("Озонирование (после выезда)") — see syncOzonPrice() below. The rest of the
+// tier schedule has no field there yet and stays hardcoded by design.
+var OZON_BASE = 199;
+(function syncOzonPrice(){
+  fetch("https://qwwerfvyscrzwvadgudn.supabase.co/rest/v1/rpc/get_public_addon_prices", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: "sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp", Authorization: "Bearer sb_publishable_DoLfCe_aAMX1mqG1eE7w9A_R06qfDXp" },
+    body: "{}"
+  })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(rows){
+      if(!rows) return;
+      var row = rows.filter(function(r){ return r.name === 'Озонирование (после выезда)'; })[0];
+      if(!row || typeof row.price !== 'number') return;
+      OZON_BASE = row.price;
+      var li = document.querySelector('[onclick="toggleOzonAddon(this)"]');
+      if(li && !li.classList.contains('selected')){
+        var priceEl = li.querySelector('.ai-p');
+        if(priceEl) priceEl.textContent = 'od '+OZON_BASE+' zł';
+      }
+    })
+    .catch(function(){});
+})();
+
 function ozonTierPrice(m2) {
-  if(m2<=30) return 199;
+  if(m2<=30) return OZON_BASE;
   if(m2<=50) return 269;
   if(m2<=75) return 349;
   if(m2<=100) return 439;
@@ -933,20 +1021,20 @@ function toggleOzonAddon(li){
   if(li.classList.contains('selected')){
     var qtyInput = li.querySelector('.qty-input');
     var m2 = qtyInput ? (parseFloat(qtyInput.value)||0) : 0;
-    var price = m2>0 ? ozonTierPrice(m2) : 199;
+    var price = m2>0 ? ozonTierPrice(m2) : OZON_BASE;
     var displayName = m2>0 ? name+' ('+m2+' m²)' : name;
     selectedAddons.push({id:'ozon', name:displayName, price:price, qty:m2||1, basePrice:price, unit:'m²'});
   } else {
     selectedAddons = selectedAddons.filter(function(a){ return a.id!=='ozon'; });
     var priceEl = li.querySelector('.ai-p');
-    if(priceEl) priceEl.textContent = 'od 199 zł';
+    if(priceEl) priceEl.textContent = 'od '+OZON_BASE+' zł';
   }
   updateSidebar();
 }
 function ozonAddonChange(input){
   var li = input.closest('li');
   var m2 = parseFloat(input.value)||0;
-  var price = m2>0 ? ozonTierPrice(m2) : 199;
+  var price = m2>0 ? ozonTierPrice(m2) : OZON_BASE;
   var priceEl = li.querySelector('.ai-p');
   if(priceEl) priceEl.textContent = (m2>0?'':'od ')+price+' zł';
   if(li.classList.contains('selected')){
@@ -972,7 +1060,7 @@ function maybeShowOzonUpsell(continueFn) {
   if(!ozonLi || ozonLi.classList.contains('selected')) return false;
   sessionStorage.setItem('vc_ozon_upsell_seen_wyprowadzce', '1');
   _ozonUpsellContinue = continueFn;
-  var price = 199;
+  var price = OZON_BASE;
   var t = OZON_UPSELL_TX[lang] || OZON_UPSELL_TX.pl;
   var bg = document.createElement('div');
   bg.className = 'ozon-upsell-backdrop';
@@ -1074,6 +1162,7 @@ function submitOrder(){
   var params = new URLSearchParams();
   bk_orderData = {
     service: SEL ? SEL.service : 'Sprzątanie po wyprowadzce',
+    serviceSlug: (SEL && SEL.cat === 'bezmeb') ? 'wyprowadzka-bez-mebli' : 'sprzatanie-po-wyprowadzce',
     area: (SEL && SEL.m2) ? SEL.m2 + ' m²' : '',
     extras: extrasArr.join(', '),
     price: total
@@ -1273,10 +1362,20 @@ window.addEventListener('load', function(){
 });
 </script>
 <script src="assets/js/nav.js"></script>
+<script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/quote-prefill.js"></script>
 <script src="assets/js/mobile-order.js"></script>
 <script src="assets/js/window-picker.js"></script>
+
+<!-- MOBILE TAB BAR -->
+<nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
+  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label">Strona główna</span></a>
+  <button type="button" class="mtb-item" onclick="toggleNav()"><span class="mtb-icon">🧹</span><span class="mtb-label">Usługi</span></button>
+  <a href="#cennik" class="mtb-item mtb-cta"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label">Zamów</span></a>
+  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon">📞</span><span class="mtb-label">Kontakt</span></a>
+  <a href="/poznaj-nas" class="mtb-item"><span class="mtb-icon">👤</span><span class="mtb-label">O nas</span></a>
+</nav>
 </body>
 </html>
