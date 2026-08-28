@@ -1885,7 +1885,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-wspomagajace-5" min="91"  placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-wspomagajace-5" min="91"  placeholder="m²"
             oninput="acCalc('wspomagajace',5,999,4,459,91,90)">
           <span class="ac-unit">m²</span>
         </div>
@@ -1952,7 +1952,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-generalne-5" min="91"  placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-generalne-5" min="91"  placeholder="m²"
             oninput="acCalc('generalne',5,999,7,799,91,90)">
           <span class="ac-unit">m²</span>
         </div>
@@ -1977,7 +1977,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-generalne-zone-0" min="1" placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-generalne-zone-0" min="1" placeholder="m²"
             oninput="acZoneCalc('generalne','zone-0',this.value,999,20,150)">
           <span class="ac-unit">m²</span>
         </div>
@@ -1993,7 +1993,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-generalne-zone-1" min="1" placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-generalne-zone-1" min="1" placeholder="m²"
             oninput="acZoneCalc('generalne','zone-1',this.value,999,18,180)">
           <span class="ac-unit">m²</span>
         </div>
@@ -2009,7 +2009,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-generalne-zone-2" min="1" placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-generalne-zone-2" min="1" placeholder="m²"
             oninput="acZoneCalc('generalne','zone-2',this.value,999,19,300)">
           <span class="ac-unit">m²</span>
         </div>
@@ -2078,7 +2078,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-szczegolowe-5" min="91"  placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-szczegolowe-5" min="91"  placeholder="m²"
             oninput="acCalc('szczegolowe',5,999,9,1270,91,90)">
           <span class="ac-unit">m²</span>
         </div>
@@ -2103,7 +2103,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-szczegolowe-zone-0" min="1" placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-szczegolowe-zone-0" min="1" placeholder="m²"
             oninput="acZoneCalc('szczegolowe','zone-0',this.value,999,33,250)">
           <span class="ac-unit">m²</span>
         </div>
@@ -2119,7 +2119,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-szczegolowe-zone-1" min="1" placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-szczegolowe-zone-1" min="1" placeholder="m²"
             oninput="acZoneCalc('szczegolowe','zone-1',this.value,999,28,300)">
           <span class="ac-unit">m²</span>
         </div>
@@ -2135,7 +2135,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="ac-body">
         <div class="ac-inp-row">
-          <input class="ac-inp" type="number" id="ac-inp-szczegolowe-zone-2" min="1" placeholder="m²"
+          <input class="ac-inp" type="number" autocomplete="off" id="ac-inp-szczegolowe-zone-2" min="1" placeholder="m²"
             oninput="acZoneCalc('szczegolowe','zone-2',this.value,999,30,500)">
           <span class="ac-unit">m²</span>
         </div>
@@ -2897,7 +2897,10 @@ document.addEventListener('DOMContentLoaded', function(){
 <aside class="order-sidebar">
   <div class="order-panel">
     <div class="order-panel-head">
-      <div class="order-panel-title" id="sidebar-title">📋 Twoje zamówienie</div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+        <div class="order-panel-title" id="sidebar-title">📋 Twoje zamówienie</div>
+        <button type="button" class="order-reset-btn" id="order-reset-btn" onclick="if(confirm('Wyczyścić cały wybór?')) location.href = location.pathname;">🗑 Wyczyść</button>
+      </div>
       <div class="order-panel-sub" id="sidebar-sub">Wybierz usługi poniżej — cena aktualizuje się na bieżąco</div>
     </div>
     <div class="order-panel-body">
@@ -3657,6 +3660,12 @@ function addonsToForm() {
 <script src="assets/js/quote-prefill.js"></script>
 <script src="assets/js/mobile-order.js"></script>
 <script src="assets/js/window-picker.js?v=2"></script>
+
+<!-- FLOATING CTA -->
+<a id="float-cta" href="tel:+48514363538">
+  <span class="cta-icon">📞</span>
+  <span id="cta-txt">Zadzwoń</span>
+</a>
 
 <!-- MOBILE TAB BAR -->
 <nav class="mobile-tabbar" aria-label="Nawigacja mobilna">

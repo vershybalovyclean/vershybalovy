@@ -235,6 +235,13 @@
 
 .order-card{background:#fff;border:1.5px solid var(--brd);border-radius:var(--r);box-shadow:var(--shadow-md);padding:20px;display:flex;flex-direction:column;max-height:calc(100vh - 148px)}
 
+.order-reset-btn{
+  flex-shrink:0;background:var(--off,#f8fafc);border:1px solid var(--brd,#e2e8f0);
+  color:var(--text3,#334155);font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:20px;
+  cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;
+}
+.order-reset-btn:hover{background:var(--brd,#e2e8f0)}
+
 .order-card h3{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;color:var(--text);margin:0 0 6px}
 
 .order-cta{display:block;width:100%;padding:13px;border-radius:50px;text-align:center;background:var(--green2);color:#fff;font-weight:800;font-size:14px;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;transition:.2s;box-shadow:0 4px 16px rgba(34,197,94,.35)}
@@ -384,10 +391,14 @@ body.has-order{padding-bottom:76px}
 
   body.mob-order-open .mob-order-backdrop{display:block}
   body.mob-order-open .order-sidebar{
-    display:block !important;position:fixed;left:0;right:0;bottom:64px;top:auto;
-    max-height:60vh;overflow-y:auto;z-index:950;margin:0;
+    display:flex !important;flex-direction:column;position:fixed;left:0;right:0;bottom:64px;top:auto;
+    max-height:60vh;overflow:hidden;z-index:950;margin:0;padding-top:0;
     border-radius:16px 16px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);
   }
+  /* Only the line-item list scrolls — the total and "Złóż zamówienie" stay
+     pinned in view no matter how many add-ons are selected. */
+  body.mob-order-open .order-card{flex:1;min-height:0;max-height:none}
+  body.mob-order-open .order-lines{flex:1 1 auto;min-height:0}
   body.mob-order-open .mob-bar-chevron{transform:rotate(180deg)}
 }
 

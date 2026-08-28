@@ -385,7 +385,10 @@ document.addEventListener('DOMContentLoaded', function(){
 <!-- ORDER SUMMARY (sticky sidebar — spans whole page) -->
 <aside class="order-sidebar">
   <div class="order-card" id="formularz">
-    <h3 id="sidebar-title">📋 Twoje zamówienie</h3>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+      <h3 id="sidebar-title" style="margin:0">📋 Twoje zamówienie</h3>
+      <button type="button" class="order-reset-btn" onclick="if(confirm('Wyczyścić cały wybór?')) location.href = location.pathname;">🗑 Wyczyść</button>
+    </div>
     <div class="order-sub" id="sidebar-sub">Wybierz usługi powyżej — cena aktualizuje się na bieżąco</div>
     <div class="order-lines" id="order-lines">
       <div class="order-empty" id="order-empty">Wybierz metraż mieszkania, aby zobaczyć cenę</div>
@@ -745,7 +748,7 @@ function renderRows(){
         '</div>'+
         '<div class="calc-body">'+
           '<div class="calc-inp-row">'+
-            '<input class="calc-inp" type="number" id="cinp-'+i+'" min="'+z.min+'" placeholder="m²" oninput="calcZone('+i+')">'+
+            '<input class="calc-inp" type="number" id="cinp-'+i+'" min="'+z.min+'" placeholder="m²" autocomplete="off" oninput="calcZone('+i+')">'+
             '<span class="calc-unit">m²</span>'+
           '</div>'+
           '<p class="calc-hint">'+hint+'</p>'+
@@ -1344,6 +1347,12 @@ window.addEventListener('load', function(){
 <script src="assets/js/quote-prefill.js"></script>
 <script src="assets/js/mobile-order.js"></script>
 <script src="assets/js/window-picker.js?v=2"></script>
+
+<!-- FLOATING CTA -->
+<a id="float-cta" href="tel:+48514363538">
+  <span class="cta-icon">📞</span>
+  <span id="cta-txt">Zadzwoń</span>
+</a>
 
 <!-- MOBILE TAB BAR -->
 <nav class="mobile-tabbar" aria-label="Nawigacja mobilna">

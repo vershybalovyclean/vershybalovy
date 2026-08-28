@@ -220,6 +220,13 @@
 
 .order-card{background:#fff;border-radius:var(--r);padding:26px;text-align:left;box-shadow:0 12px 36px rgba(0,0,0,.18)}
 
+.order-reset-btn{
+  flex-shrink:0;background:var(--off,#f8fafc);border:1px solid var(--brd,#e2e8f0);
+  color:var(--text3,#334155);font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:20px;
+  cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;
+}
+.order-reset-btn:hover{background:var(--brd,#e2e8f0)}
+
 .order-card .order-sub{font-size:13px;color:var(--gray);margin-bottom:18px}
 
 .order-card h3{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;color:var(--text);margin-bottom:6px}
@@ -383,10 +390,14 @@
 
   body.mob-order-open .mob-order-backdrop{display:block}
   body.mob-order-open .order-sidebar{
-    display:block !important;position:fixed;left:0;right:0;bottom:64px;top:auto;
-    max-height:60vh;overflow-y:auto;z-index:950;margin:0;
+    display:flex !important;flex-direction:column;position:fixed;left:0;right:0;bottom:64px;top:auto;
+    max-height:60vh;overflow:hidden;z-index:950;margin:0;
     border-radius:16px 16px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);
   }
+  /* Only the line-item list scrolls — the total and "Złóż zamówienie" stay
+     pinned in view no matter how many add-ons are selected. */
+  body.mob-order-open .order-card{flex:1;min-height:0;display:flex;flex-direction:column}
+  body.mob-order-open #order-lines{flex:1;min-height:0;overflow-y:auto}
   body.mob-order-open .mob-bar-chevron{transform:rotate(180deg)}
 }
 
