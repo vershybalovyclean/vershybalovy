@@ -128,7 +128,7 @@
     max-height:82vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
     background:#fff;border-radius:20px 20px 0 0;
     box-shadow:0 -12px 40px rgba(15,23,42,.25);
-    padding:0 0 calc(20px + env(safe-area-inset-bottom));
+    padding:0 0 calc(84px + env(safe-area-inset-bottom));
     z-index:999;
     transform:translateY(105%);
     transition:transform .32s cubic-bezier(.32,.72,0,1);
