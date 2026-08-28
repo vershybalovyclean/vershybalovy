@@ -1328,9 +1328,13 @@ window.addEventListener('load', function(){
   if(['bez','z'].indexOf(hash)!==-1){
     var btn = document.getElementById('tab-'+hash);
     if(btn) setTier(hash, btn);
-    var m2 = parseFloat(vpcGetParam('m2'));
-    if(m2>0) vpcSelectByArea('#calc-rows .calc-row','.calc-lbl','.calc-row-hdr','.calc-inp', m2);
   }
+  // Runs regardless of the hash above — the homepage's quick-quote widget
+  // only ever sends ?m2= (it doesn't ask which variant), so this must not
+  // require a hash match to fire; it just prefills whichever tier tab is
+  // already active (the hash-selected one, or the default "Bez mebli").
+  var m2 = parseFloat(vpcGetParam('m2'));
+  if(m2>0) vpcSelectByArea('#calc-rows .calc-row','.calc-lbl','.calc-row-hdr','.calc-inp', m2);
 });
 </script>
 <script src="assets/js/nav.js?v=2"></script>

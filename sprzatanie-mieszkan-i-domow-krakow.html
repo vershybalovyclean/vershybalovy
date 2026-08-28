@@ -3185,12 +3185,19 @@ function showTab(id, btn) {
 }
 window.addEventListener('load',function(){
   var hash=window.location.hash.replace('#','');
-  if(['wspomagajace','generalne','szczegolowe'].indexOf(hash)!==-1){
+  var validHash=['wspomagajace','generalne','szczegolowe'].indexOf(hash)!==-1;
+  if(validHash){
     var btn=document.querySelector('[onclick*="'+hash+'"]');
     if(btn)showTab(hash,btn);
-    var m2=parseFloat(vpcGetParam('m2'));
-    if(m2>0) vpcSelectByArea('#tc-'+hash+' .ac-row','.ac-lbl','.ac-row-hdr','.ac-inp', m2);
   }
+  // Runs regardless of the hash above — the homepage's quick-quote widget
+  // only ever sends ?m2= (it doesn't ask which of the three levels), so
+  // this must not require a hash match to fire; it just prefills whichever
+  // tab is already active (the hash-selected one, or the default
+  // "Wspomagające").
+  var activeTab=validHash?hash:'wspomagajace';
+  var m2=parseFloat(vpcGetParam('m2'));
+  if(m2>0) vpcSelectByArea('#tc-'+activeTab+' .ac-row','.ac-lbl','.ac-row-hdr','.ac-inp', m2);
 });
 function toggleFaq(el){el.parentNode.classList.toggle('open');}
 
