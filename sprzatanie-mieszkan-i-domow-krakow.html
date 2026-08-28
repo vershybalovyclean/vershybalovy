@@ -2152,6 +2152,52 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   </div>
 </section>
 
+<!-- MOBILE-ONLY: quick upsell shown right after the price, per client spec —
+     surfaces the two most-requested add-ons without sending the user hunting
+     through the full catalog further down the page. Reuses the exact same
+     controls/state as the full "Usługi dodatkowe" section below (wl1/kl5);
+     nothing here duplicates pricing or selection logic. -->
+<div class="quick-addons-mobile" id="quick-addons-mobile">
+  <div class="qa-lbl" id="qa-lbl">Chcesz dodać coś jeszcze?</div>
+  <div class="qa-cards">
+    <button type="button" class="qa-card" id="qa-windows" onclick="mieszkanQuickScrollTo('[data-name-id=\'wl1\']')">
+      <span class="qa-ico">🪟</span>
+      <span class="qa-txt"><span class="qa-name">Mycie okien</span><span class="qa-desc">z ramami i parapetem</span></span>
+      <span class="qa-action"><span class="qa-plus-icon">Dodaj</span><span class="qa-check-icon">✓</span></span>
+    </button>
+    <button type="button" class="qa-card" id="qa-fridge" onclick="mieszkanQuickToggle(this,'[data-name-id=\'kl5\']')">
+      <span class="qa-ico">🧊</span>
+      <span class="qa-txt"><span class="qa-name">Lodówka</span><span class="qa-desc">wewnątrz i na zewnątrz</span></span>
+      <span class="qa-action"><span class="qa-plus-icon">+ Dodaj</span><span class="qa-check-icon">✓</span></span>
+    </button>
+  </div>
+  <button type="button" class="qa-all" onclick="document.getElementById('uslugi-dodatkowe').scrollIntoView({behavior:'smooth'})">+ Zobacz wszystkie usługi dodatkowe</button>
+</div>
+<script>
+function mieszkanSyncQuickCards(){
+  var w = document.querySelector('[data-name-id="wl1"]');
+  var f = document.querySelector('[data-name-id="kl5"]');
+  var qw = document.getElementById('qa-windows');
+  var qf = document.getElementById('qa-fridge');
+  if(w && qw) qw.classList.toggle('active', w.classList.contains('selected'));
+  if(f && qf) qf.classList.toggle('active', f.classList.contains('selected'));
+}
+function mieszkanQuickToggle(btn, sel){
+  var real = document.querySelector(sel);
+  if(!real) return;
+  real.click();
+  mieszkanSyncQuickCards();
+}
+function mieszkanQuickScrollTo(sel){
+  var real = document.querySelector(sel);
+  if(real) real.scrollIntoView({behavior:'smooth', block:'center'});
+}
+document.addEventListener('DOMContentLoaded', function(){
+  var list = document.getElementById('uslugi-dodatkowe');
+  if(list) list.addEventListener('click', function(){ setTimeout(mieszkanSyncQuickCards, 0); });
+});
+</script>
+
 <div class="div"></div>
 
 <div class="photo-cta-wrap">
@@ -2798,7 +2844,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <div class="div"></div>
 
 <!-- FAQ -->
-<section>
+<section id="faq-section">
   <div class="wrap">
     <div class="sec-lbl" id="faq-lbl">Pytania i odpowiedzi</div>
     <h2 class="sec-title" id="faq-h2">Często <em>pytacie</em></h2>
@@ -2832,7 +2878,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 
 <!-- WINDOWS UPSELL -->
-<section style="position:relative;overflow:hidden;padding:36px 28px"><img src="assets/img/hero-service.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;z-index:0"><div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(12,74,110,.92) 0%,rgba(3,105,161,.80) 50%,rgba(12,74,110,.70) 100%);z-index:1"></div><div style="position:relative;z-index:2;max-width:860px;margin:0 auto;" class="wrap">
+<section id="win-upsell-section" style="position:relative;overflow:hidden;padding:36px 28px"><img src="assets/img/hero-service.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;z-index:0"><div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(12,74,110,.92) 0%,rgba(3,105,161,.80) 50%,rgba(12,74,110,.70) 100%);z-index:1"></div><div style="position:relative;z-index:2;max-width:860px;margin:0 auto;" class="wrap">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
     <div>
       <div id="win-upsell-lbl" style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px">🪟 Dodaj do zamówienia</div>

@@ -34,11 +34,34 @@
   box-shadow:0 2px 6px rgba(34,197,94,.35);
 }
 
-.m2-quick{display:none}
+/* Quick add-ons card, shown right after the price on mobile (see below). */
+.quick-addons-mobile{display:none}
+
+/* Client spec now explicitly rules out a free-text m² field for the main
+   tiers (up to 90 m² picks a fixed range; only 90+ takes exact m²) — this
+   earlier free-input experiment is retired in favour of the real ac-ranges
+   rows, which stay visible and simply get bigger tap targets below. */
+.m2-quick{display:none!important}
 
 @media(max-width:768px){
   #cmp-table-wrap{display:none}
   .cmp-mobile{display:block}
+
+  /* ── Commercial-first reorder ──────────────────────────────────────────
+     Client spec: service -> price -> quick add-ons -> frequency -> full
+     add-ons -> (only then) comparison / FAQ / windows banner. The decorative
+     divider lines don't carry meaning once sections move, so they're hidden
+     here and replaced by the flex gap + each section's own spacing. */
+  .order-main{display:flex;flex-direction:column;gap:8px}
+  .order-main > .div{display:none}
+  #uslugi{order:1}
+  .quick-addons-mobile{order:2}
+  .freq-section{order:3}
+  #uslugi-dodatkowe{order:4}
+  .sec-alt{order:5}
+  #faq-section{order:6}
+  #win-upsell-section{order:7}
+  .photo-cta-wrap{order:8;margin-top:4px}
 
   /* Step 1: turn the tier tabs into big, thumb-friendly cards. */
   .tabs{flex-direction:column;gap:10px}
@@ -51,22 +74,46 @@
     box-shadow:0 6px 16px rgba(37,99,235,.3);
   }
 
-  /* Step 2: one m² field instead of manually finding the matching row. */
-  .ac-ranges{display:none}
-  .m2-quick{
-    display:block;margin-top:20px;background:#fff;border:1.5px solid var(--brd);
-    border-radius:16px;padding:16px;
+  /* Step 2: the real do-30/45/60/75/90/90+ rows — bigger tap targets, still
+     the same acFixed()/acSelect()/acCalc() rows, just roomier on a phone. */
+  .ac-row-hdr{padding:14px 14px;min-height:48px}
+  .ac-radio{width:24px;height:24px}
+  .ac-lbl{font-size:14px}
+  .ac-start{font-size:14px}
+
+  /* Step 3: quick add-ons right after the price — the two most-requested
+     services (windows, fridge), pulled forward instead of buried in the
+     full catalog further down the page. */
+  .quick-addons-mobile{
+    display:block;margin:18px 0 0;padding:16px;background:#fff;
+    border:1.5px solid var(--brd);border-radius:16px;
   }
-  .m2-quick label{display:block;font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px}
-  .m2-quick-row{position:relative}
-  .m2-quick-row input{
-    width:100%;height:52px;border-radius:12px;border:1.5px solid var(--brd);
-    background:var(--off);padding:0 48px 0 16px;font-size:16px;font-weight:600;color:var(--text);
+  .qa-lbl{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;font-family:'Montserrat',sans-serif}
+  .qa-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+  .qa-card{
+    display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+    padding:13px 14px;border-radius:12px;border:1.5px solid var(--brd);background:var(--off);
     font-family:'Inter',sans-serif;
   }
-  .m2-quick-unit{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gray);font-size:13px;font-weight:600}
-  .m2-quick-result{margin:10px 0 0;font-size:14px;color:var(--text3)}
+  .qa-card.active{border-color:var(--green2);background:var(--green-pale,#f0fdf4)}
+  .qa-ico{font-size:22px;flex-shrink:0}
+  .qa-txt{flex:1;min-width:0;display:flex;flex-direction:column}
+  .qa-name{font-size:14px;font-weight:700;color:var(--text)}
+  .qa-desc{font-size:11.5px;color:var(--gray)}
+  .qa-action{
+    flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:13px;font-weight:800;
+    background:var(--blue2);color:#fff;
+  }
+  .qa-card.active .qa-action{background:var(--green2)}
+  .qa-check-icon{display:none}
+  .qa-card.active .qa-plus-icon{display:none}
+  .qa-card.active .qa-check-icon{display:inline}
+  .qa-all{
+    display:block;width:100%;text-align:center;padding:12px;border-radius:12px;
+    border:1.5px dashed var(--brd);background:none;color:var(--blue2);font-weight:700;font-size:13.5px;
+    font-family:'Inter',sans-serif;
+  }
 
-  /* No regularity picker in the mobile flow — client spec. */
-  .freq-section{display:none}
+  /* Step 4: no regularity picker was showing at all before — now it's back,
+     right after add-ons, discount shown inside each frequency tab already. */
 }
