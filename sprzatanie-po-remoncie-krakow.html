@@ -136,7 +136,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <div class="div"></div>
 
 <!-- WHY -->
-<section>
+<section id="why-calc-section">
   <div class="wrap">
     <div class="sec-lbl" id="why-lbl">Dlaczego my?</div>
     <h2 class="sec-title" id="why-h2">Remont skończony —<br><em>czas na prawdziwe sprzątanie</em></h2>
@@ -161,6 +161,53 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   </div>
 </section>
 
+<!-- MOBILE-ONLY: quick upsell shown right after the price, per client spec —
+     surfaces the most-requested add-ons without sending the user hunting
+     through the full catalog further down. Reuses the exact same controls/
+     state as "Usługi dodatkowe" below (wl1/ozon1/ol1); nothing here
+     duplicates pricing or selection logic. -->
+<div class="quick-addons-mobile" id="quick-addons-mobile">
+  <div class="qa-lbl" id="qa-lbl">Chcesz dodać coś jeszcze?</div>
+  <div class="qa-cards">
+    <button type="button" class="qa-card" onclick="remontQuickScrollTo('[data-name-id=\'wl1\']')">
+      <span class="qa-ico">🪟</span>
+      <span class="qa-txt"><span class="qa-name">Mycie okien</span><span class="qa-desc">od 33 zł/m² · rabat -10% do 30.09</span></span>
+      <span class="qa-action"><span class="qa-plus-icon">Dodaj</span><span class="qa-check-icon">✓</span></span>
+    </button>
+    <button type="button" class="qa-card" onclick="remontQuickScrollTo('[data-name-id=\'ozon1\']')">
+      <span class="qa-ico">🌬️</span>
+      <span class="qa-txt"><span class="qa-name">Ozonowanie</span><span class="qa-desc">od 199 zł</span></span>
+      <span class="qa-action"><span class="qa-plus-icon">Dodaj</span><span class="qa-check-icon">✓</span></span>
+    </button>
+    <button type="button" class="qa-card" id="qa-other" onclick="remontQuickToggle(this,'[data-name-id=\'ol1\']')">
+      <span class="qa-ico">🔧</span>
+      <span class="qa-txt"><span class="qa-name">Usługa dodatkowa</span><span class="qa-desc">od 60 zł</span></span>
+      <span class="qa-action"><span class="qa-plus-icon">+ Dodaj</span><span class="qa-check-icon">✓</span></span>
+    </button>
+  </div>
+  <button type="button" class="qa-all" onclick="document.getElementById('uslugi-dodatkowe').scrollIntoView({behavior:'smooth'})">+ Czyszczenie chemiczne i pozostałe usługi</button>
+</div>
+<script>
+function remontSyncQuickCards(){
+  var o = document.querySelector('[data-name-id="ol1"]');
+  var qo = document.getElementById('qa-other');
+  if(o && qo) qo.classList.toggle('active', o.classList.contains('selected'));
+}
+function remontQuickToggle(btn, sel){
+  var real = document.querySelector(sel);
+  if(!real) return;
+  real.click();
+  remontSyncQuickCards();
+}
+function remontQuickScrollTo(sel){
+  var real = document.querySelector(sel);
+  if(real) real.scrollIntoView({behavior:'smooth', block:'center'});
+}
+document.addEventListener('DOMContentLoaded', function(){
+  var list = document.getElementById('uslugi-dodatkowe');
+  if(list) list.addEventListener('click', function(){ setTimeout(remontSyncQuickCards, 0); });
+});
+</script>
 
 <div class="div"></div>
 
@@ -287,7 +334,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <div class="div"></div>
 
 <!-- FAQ -->
-<section>
+<section id="faq-section">
   <div class="wrap">
     <div class="sec-lbl" id="faq-lbl">FAQ</div>
     <h2 class="sec-title" id="faq-h2">Często <em>pytacie</em></h2>
@@ -321,7 +368,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <!-- FORM -->
 
 <!-- WINDOWS UPSELL -->
-<section style="position:relative;overflow:hidden;padding:36px 28px"><img src="assets/img/hero-service.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;z-index:0"><div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(12,74,110,.92) 0%,rgba(3,105,161,.80) 50%,rgba(12,74,110,.70) 100%);z-index:1"></div><div style="position:relative;z-index:2;max-width:860px;margin:0 auto;" class="wrap">
+<section id="win-upsell-section" style="position:relative;overflow:hidden;padding:36px 28px"><img src="assets/img/hero-service.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;z-index:0"><div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(12,74,110,.92) 0%,rgba(3,105,161,.80) 50%,rgba(12,74,110,.70) 100%);z-index:1"></div><div style="position:relative;z-index:2;max-width:860px;margin:0 auto;" class="wrap">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
     <div>
       <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px" id="upsell-lbl">🪟 Dodaj do zamówienia</div>
