@@ -387,6 +387,14 @@
   body.mob-order-open .mob-bar-chevron{transform:rotate(180deg)}
 }
 
+@media(max-width:768px){
+  /* The site-wide bottom tab bar (z-index:1000) sits on top of this page's
+     own sticky price/checkout bar (z-index:90) — same bottom:0 fixed spot —
+     completely hiding it, so a window-count change looked like it wasn't
+     updating the total at all. Lift it to sit just above the tab bar. */
+  body.has-mobile-tabbar .mob-bar{bottom:64px}
+}
+
 @media(max-width:600px){
   .tabs{flex-direction:column;border-radius:14px}
   .tab{border-radius:10px}

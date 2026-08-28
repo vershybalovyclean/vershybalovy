@@ -472,3 +472,11 @@
   }
   body.mob-order-open .mob-bar-chevron{transform:rotate(180deg)}
 }
+
+@media(max-width:768px){
+  /* The site-wide bottom tab bar (z-index:1000) sits on top of this page's
+     own sticky price/checkout bar (z-index:900) — same bottom:0 fixed spot —
+     completely hiding it, so a price change looked like it wasn't updating
+     the total at all. Lift it to sit just above the tab bar. */
+  body.has-mobile-tabbar .mobile-order-bar{bottom:64px}
+}
