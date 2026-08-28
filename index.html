@@ -74,21 +74,6 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <button class="lb" onclick="SL('ru')">RU</button>
       <button class="lb" onclick="SL('en')">EN</button>
     </div>
-    <script>
-    (function(){
-      var box = document.getElementById('topbar-langs');
-      if(!box) return;
-      box.addEventListener('click', function(e){
-        var btn = e.target.closest('.lb');
-        if(!btn) return;
-        if(!box.classList.contains('expanded')){
-          box.classList.add('expanded');
-          return;
-        }
-        setTimeout(function(){ box.classList.remove('expanded'); }, 150);
-      });
-    })();
-    </script>
     <div class="topbar-login">
       <button type="button" class="login-trigger" onclick="toggleLoginMenu()">🔑 <span id="loginBtnTxt" class="login-txt">Zaloguj się</span></button>
       <div class="login-dropdown" id="login-dropdown">

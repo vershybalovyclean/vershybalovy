@@ -58,7 +58,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <div class="topbar-txt" id="topbar-txt">Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em></div>
       <div class="topbar-dot"></div>
     </div>
-    <div class="topbar-langs">
+    <div class="topbar-langs" id="topbar-langs">
       <button class="lb on" onclick="SL('pl')">PL</button>
       <button class="lb" onclick="SL('uk')">UA</button>
       <button class="lb" onclick="SL('ru')">RU</button>
@@ -80,7 +80,25 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="hdr-brand">Vershy Property Care<small>Premium Cleaning &amp; Property Services</small></div>
   </a>
   <button class="burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
+  <div class="hdr-nav-backdrop" onclick="toggleNav()"></div>
   <nav class="hdr-nav" id="hn">
+    <div class="hdr-nav-handle"></div>
+    <div class="hdr-nav-mhead"><span>Menu</span><button type="button" onclick="toggleNav()" aria-label="Zamknij">✕</button></div>
+    <div class="hdr-nav-grid">
+      <a href="/poznaj-nas"><span class="hng-icon">🏠</span><span class="hng-label">O nas</span></a>
+      <a href="/#opinie"><span class="hng-icon">⭐</span><span class="hng-label">Opinie</span></a>
+      <a href="/#przed-po"><span class="hng-icon">📸</span><span class="hng-label">Realizacje</span></a>
+      <a href="#faq-lbl"><span class="hng-icon">❓</span><span class="hng-label">FAQ</span></a>
+      <a href="#kontakt"><span class="hng-icon">📞</span><span class="hng-label">Kontakt</span></a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon">🧹</span><span class="hng-label">Sprzątanie mieszkań</span></a>
+      <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon">🏗️</span><span class="hng-label">Po remoncie</span></a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon">🏠</span><span class="hng-label">Po wyprowadzce</span></a>
+      <a href="/mycie-okien"><span class="hng-icon">🪟</span><span class="hng-label">Mycie okien</span></a>
+      <a href="/sprzatanie-po-zbieractwie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label">Po zbieractwie</span></a>
+      <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener"><span class="hng-icon">📝</span><span class="hng-label">Zarejestruj się</span></a>
+      <a href="/program-partnerski"><span class="hng-icon">🤝</span><span class="hng-label">Zostań partnerem</span></a>
+    </div>
+    <a href="tel:+48514363538" class="hdr-nav-call">📞 ZADZWOŃ DO NAS</a>
     <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">🧹 Sprzątanie mieszkań</a>
     <a href="/sprzatanie-po-remoncie-krakow" class="active" id="nav-remont">🏗️ Po remoncie</a>
     <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">🏠 Po wyjeździe</a>
@@ -493,7 +511,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 
 
-<footer class="ft2">
+<footer class="ft2" id="kontakt">
   <div class="ft2-top">
     <div class="ft2-brand-block">
       <div class="ft-logo-row">

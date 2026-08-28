@@ -52,6 +52,22 @@ document.addEventListener('click', function(e){
   if(btn) btn.classList.remove('open');
 });
 
+// Collapsed language switcher in the topbar: shows only the active language
+// until tapped, then reveals the rest for one more tap.
+(function(){
+  var box = document.getElementById('topbar-langs');
+  if(!box) return;
+  box.addEventListener('click', function(e){
+    var btn = e.target.closest('.lb');
+    if(!btn) return;
+    if(!box.classList.contains('expanded')){
+      box.classList.add('expanded');
+      return;
+    }
+    setTimeout(function(){ box.classList.remove('expanded'); }, 150);
+  });
+})();
+
 // "Konto" popup in the bottom mobile tab bar (client/partner cabinet links)
 function toggleMtbAccount(){
   var m = document.getElementById('mtb-account-menu');
