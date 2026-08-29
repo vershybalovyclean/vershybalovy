@@ -122,6 +122,50 @@ async function resolveServiceId(serviceSlug, SUPABASE_URL, SUPABASE_ANON_KEY) {
   }
 }
 
+// Verifies a client's access_token (mirrored by the client cabinet into the
+// vc_at cookie the site reads — see assets/js/client-session.js) via Supabase's
+// own Auth API, and returns the real, server-verified user id. Never trusts a
+// client-supplied id directly: this endpoint runs on the anon key, and the
+// requests table accepts anonymous inserts (guests must be able to book), so
+// a body field alone could otherwise be used to falsely attribute a booking to
+// an arbitrary client's cabinet. Returns null on any missing/expired/invalid
+// token — the booking still proceeds as a guest order in that case.
+async function resolveClientId(clientToken, SUPABASE_URL, SUPABASE_ANON_KEY) {
+  if (!clientToken || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+  try {
+    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/auth/v1/user", {
+      headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + clientToken }
+    });
+    if (!r.ok) return null;
+    const user = await r.json();
+    return user && user.id ? user.id : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+// Confirms a client-picked "saved address" actually belongs to that same
+// verified client before linking it — property_id is just an FK on requests,
+// so without this check a manipulated id could attach someone else's saved
+// address (name/access notes/photos) to an unrelated booking.
+async function resolvePropertyId(propertyId, clientId, clientToken, SUPABASE_URL, SUPABASE_ANON_KEY) {
+  if (!propertyId || !clientId || !clientToken || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+  try {
+    // RLS (properties_select_staff) only lets a 'client' role see rows where
+    // client_id = auth.uid() — that identity comes from the JWT in Authorization,
+    // so this must run as the client's own verified token, not the anon key
+    // (which has no auth.uid() and would just get an empty result either way).
+    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/properties?id=eq." + encodeURIComponent(propertyId) + "&client_id=eq." + encodeURIComponent(clientId) + "&select=id", {
+      headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + clientToken }
+    });
+    if (!r.ok) return null;
+    const rows = await r.json();
+    return (rows[0] && rows[0].id) || null;
+  } catch (error) {
+    return null;
+  }
+}
+
 async function insertSupabaseRequest(data) {
   const SUPABASE_URL = process.env.supabase_url;
   const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
@@ -132,6 +176,8 @@ async function insertSupabaseRequest(data) {
   try {
     const partnerId = await resolvePartnerId(data.partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY);
     const serviceId = await resolveServiceId(data.serviceSlug, SUPABASE_URL, SUPABASE_ANON_KEY);
+    const clientId = await resolveClientId(data.clientToken, SUPABASE_URL, SUPABASE_ANON_KEY);
+    const propertyId = clientId ? await resolvePropertyId(data.propertyId, clientId, data.clientToken, SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
       method: "POST",
       headers: {
@@ -141,6 +187,8 @@ async function insertSupabaseRequest(data) {
         "Prefer": "return=minimal"
       },
       body: JSON.stringify({
+        client_id: clientId,
+        property_id: propertyId,
         client_name: data.name,
         client_phone: data.phone,
         client_email: data.email || null,
@@ -169,7 +217,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price } = req.body;
+  const { name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId } = req.body;
 
   if (!name || !phone) {
     return res.status(400).json({ error: "Imię i telefon są wymagane" });
@@ -194,7 +242,7 @@ export default async function handler(req, res) {
   // notified (email/Telegram/Sheets), never on whether the admin-panel database write
   // succeeded — otherwise a total failure of all three notification channels could be
   // silently masked as success by this alone.
-  await insertSupabaseRequest({ name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price });
+  await insertSupabaseRequest({ name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId });
 
   const anySucceeded = results.some(function (r) { return r.status === "fulfilled" && r.value === true; });
 

@@ -10,6 +10,10 @@
   var bk_partnerOn = false;
   var bk_promoOn = false;
   var bk_promoApplied = null; // {discount_type, discount_value, min_order_amount} once a valid code is confirmed
+  var bk_usingSavedAddress = false;
+  var bk_savedAddressText = '';
+  var bk_savedPropertyId = null;
+  var bk_clientToken = null;
   // Same anon/publishable key already used server-side in api/submit.js (Supabase_anon_key) —
   // safe to embed client-side, it's the public half by design (RLS + narrow RPC grants gate it).
   var BK_SUPABASE_URL = "https://qwwerfvyscrzwvadgudn.supabase.co";
@@ -576,7 +580,7 @@
     var notes = document.getElementById('bk-notes').value.trim();
     var payMap = {transfer:bk_t('payTransfer'),blik:bk_t('payBlik'),cash:bk_t('payCash')};
     var payLabel = bk_selectedPayment?(payMap[bk_selectedPayment]||bk_selectedPayment):'';
-    var fullAddress = street+(apt?('/'+apt):'')+', '+postal+' '+city;
+    var fullAddress = bk_usingSavedAddress ? bk_savedAddressText : (street+(apt?('/'+apt):'')+', '+postal+' '+city);
 
     var comment = 'REZERWACJA TERMINU (' + (document.title.split('|')[0] || '').trim() + ')\n';
     if(d.service) comment+='Usługa: '+d.service+(d.m2?' ('+d.m2+' m²)':'')+'\n';
@@ -615,7 +619,8 @@
         promoCode:promoCode, serviceSlug:d.serviceSlug||'',
         email:email||'', address:fullAddress,
         scheduledDate:bk_isoDate(bk_selectedDate), scheduledTime:(slotObj?slotObj.start:''),
-        price:d.price?bk_finalPrice(d.price):null
+        price:d.price?bk_finalPrice(d.price):null,
+        clientToken:bk_clientToken||'', propertyId:bk_savedPropertyId||''
       })
     })
     .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })
@@ -692,9 +697,90 @@
     });
   }
 
+  /* ─── LOGGED-IN CLIENT: prefill + saved-address picker ─
+     window.vcGetClientSession (assets/js/client-session.js) resolves the
+     cookie the client cabinet mirrors onto .vershclean.pl. Guests (no
+     cookie, or vcGetClientSession missing/rejects) fall straight through —
+     the form behaves exactly as before. */
+  function bk_buildSavedAddressUI(properties){
+    var streetInput = document.getElementById('bk-street');
+    if(!streetInput) return;
+    var streetWrap = streetInput.closest('div');
+    if(!streetWrap || !streetWrap.parentNode) return;
+    var manualWraps = ['bk-street','bk-apt','bk-postal','bk-city'].map(function(id){
+      var el = document.getElementById(id);
+      return el ? el.closest('div') : null;
+    }).filter(Boolean);
+
+    var wrap = document.createElement('div');
+    wrap.id = 'bk-saved-addr-wrap';
+    wrap.style.cssText = 'grid-column:1/-1;display:flex;flex-direction:column;gap:6px';
+    var label = document.createElement('label');
+    label.style.cssText = 'font-size:13px;font-weight:600;color:#334155';
+    label.textContent = 'Adres';
+    var select = document.createElement('select');
+    select.id = 'bk-saved-addr-select';
+    select.className = 'bk-input';
+    properties.forEach(function(p){
+      var opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = '📍 ' + p.address + (p.area ? ' (' + p.area + ' m²)' : '');
+      select.appendChild(opt);
+    });
+    var manualOpt = document.createElement('option');
+    manualOpt.value = 'manual';
+    manualOpt.textContent = '✏️ Inny adres (wpisz ręcznie)';
+    select.appendChild(manualOpt);
+    wrap.appendChild(label);
+    wrap.appendChild(select);
+    streetWrap.parentNode.insertBefore(wrap, streetWrap);
+
+    function applySelection(){
+      if(select.value === 'manual'){
+        bk_usingSavedAddress = false;
+        bk_savedAddressText = '';
+        bk_savedPropertyId = null;
+        manualWraps.forEach(function(el){ el.style.display = ''; });
+      } else {
+        var prop = properties.find(function(p){ return p.id === select.value; });
+        bk_usingSavedAddress = true;
+        bk_savedAddressText = prop ? prop.address : '';
+        bk_savedPropertyId = prop ? prop.id : null;
+        manualWraps.forEach(function(el){ el.style.display = 'none'; });
+        // bk_checkForm()/bk_validateAndHighlight() still read these hidden inputs'
+        // .value — keep them non-empty so a saved address doesn't block the "ready"
+        // state. bk_submit() ignores this placeholder and sends bk_savedAddressText.
+        document.getElementById('bk-street').value = bk_savedAddressText;
+        document.getElementById('bk-postal').value = '00-000';
+        document.getElementById('bk-city').value = '—';
+        document.getElementById('bk-apt').value = '';
+      }
+      bk_checkForm();
+    }
+    select.addEventListener('change', applySelection);
+    applySelection();
+  }
+
+  function bk_initClientSession(){
+    if(typeof window.vcGetClientSession !== 'function') return;
+    window.vcGetClientSession().then(function(session){
+      if(!session) return;
+      bk_clientToken = session.token;
+      var nameEl = document.getElementById('bk-name');
+      var phoneEl = document.getElementById('bk-phone');
+      var emailEl = document.getElementById('bk-email');
+      if(nameEl && !nameEl.value.trim() && session.name) nameEl.value = session.name;
+      if(phoneEl && !phoneEl.value.trim() && session.phone) phoneEl.value = session.phone;
+      if(emailEl && !emailEl.value.trim() && session.email) emailEl.value = session.email;
+      bk_checkForm();
+      if(session.properties && session.properties.length) bk_buildSavedAddressUI(session.properties);
+    }).catch(function(){});
+  }
+
   /* ─── INIT ─────────────────────────────────────────── */
   bk_renderCal();
   bk_renderSlots();
   bk_applyTexts();
+  bk_initClientSession();
 
 })();
