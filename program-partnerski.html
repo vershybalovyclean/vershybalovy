@@ -510,7 +510,8 @@ pl: {
   faq_q4:'Czy dołączenie do programu jest płatne?', faq_a4:'Nie, udział w programie partnerskim jest całkowicie bezpłatny i nie wiąże się z żadnym ryzykiem.',
   final_h2:'Gotowy, aby <em style="color:#fbbf24;font-style:normal">zacząć zarabiać?</em>',
   final_p:'Dołączenie do programu partnerskiego zajmuje kilka minut i jest całkowicie bezpłatne. Otrzymaj swój kod jeszcze dziś.',
-  final_btn:'🤝 Zostań partnerem →'
+  final_btn:'🤝 Zostań partnerem →',
+  mtb_home:'Strona główna', mtb_join:'Dołącz', mtb_more:'Więcej', mtb_chat:'Czat', mtb_account:'Konto'
 },
 uk: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>',
@@ -568,7 +569,8 @@ uk: {
   faq_q4:'Чи платне приєднання до програми?', faq_a4:"Ні, участь у партнерській програмі повністю безкоштовна і не пов'язана з жодним ризиком.",
   final_h2:'Готовий <em style="color:#fbbf24;font-style:normal">почати заробляти?</em>',
   final_p:'Приєднання до партнерської програми займає кілька хвилин і повністю безкоштовне. Отримай свій код вже сьогодні.',
-  final_btn:'🤝 Стати партнером →'
+  final_btn:'🤝 Стати партнером →',
+  mtb_home:'Головна', mtb_join:'Приєднатися', mtb_more:'Ще', mtb_chat:'Чат', mtb_account:'Кабінет'
 },
 ru: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>',
@@ -626,7 +628,8 @@ ru: {
   faq_q4:'Платно ли присоединение к программе?', faq_a4:'Нет, участие в партнёрской программе полностью бесплатно и не несёт никакого риска.',
   final_h2:'Готов <em style="color:#fbbf24;font-style:normal">начать зарабатывать?</em>',
   final_p:'Присоединение к партнёрской программе занимает несколько минут и полностью бесплатно. Получи свой код уже сегодня.',
-  final_btn:'🤝 Стать партнёром →'
+  final_btn:'🤝 Стать партнёром →',
+  mtb_home:'Главная', mtb_join:'Присоединиться', mtb_more:'Ещё', mtb_chat:'Чат', mtb_account:'Кабинет'
 },
 en: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>',
@@ -684,7 +687,8 @@ en: {
   faq_q4:'Is joining the program paid?', faq_a4:'No, participation in the partner program is completely free and carries no risk.',
   final_h2:'Ready to <em style="color:#fbbf24;font-style:normal">start earning?</em>',
   final_p:'Joining the partner program takes a few minutes and is completely free. Get your code today.',
-  final_btn:'🤝 Become a partner →'
+  final_btn:'🤝 Become a partner →',
+  mtb_home:'Home', mtb_join:'Join', mtb_more:'More', mtb_chat:'Chat', mtb_account:'Account'
 }
 };
 
@@ -735,6 +739,8 @@ function applyTranslations(l){
   set('faq-q3', t.faq_q3); set('faq-a3', t.faq_a3);
   set('faq-q4', t.faq_q4); set('faq-a4', t.faq_a4);
   setHtml('final-h2', t.final_h2); set('final-p', t.final_p); set('final-btn', t.final_btn);
+  set('mtb-lbl-home', t.mtb_home); set('mtb-lbl-join', t.mtb_join); set('mtb-lbl-more', t.mtb_more);
+  set('mtb-lbl-chat', t.mtb_chat); set('mtb-lbl-account', t.mtb_account);
 }
 
 function SL(l){
@@ -751,11 +757,11 @@ document.addEventListener('DOMContentLoaded', function(){ SL(localStorage.getIte
 
 <!-- MOBILE TAB BAR -->
 <nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
-  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label">Strona główna</span></a>
-  <a href="#dolacz" class="mtb-item"><span class="mtb-icon">🤝</span><span class="mtb-label">Dołącz</span></a>
-  <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label">Więcej</span></button>
-  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon">💬</span><span class="mtb-label">Czat</span></a>
-  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon">👤</span><span class="mtb-label">Konto</span></button>
+  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label" id="mtb-lbl-home">Strona główna</span></a>
+  <a href="#dolacz" class="mtb-item"><span class="mtb-icon">🤝</span><span class="mtb-label" id="mtb-lbl-join">Dołącz</span></a>
+  <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label" id="mtb-lbl-more">Więcej</span></button>
+  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon">💬</span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
+  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon">👤</span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
 </nav>
 <div class="mtb-account-menu" id="mtb-account-menu">
   <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener">👤 Kabinet klienta</a>
