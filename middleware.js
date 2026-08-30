@@ -11,19 +11,23 @@ export default function middleware(req) {
     return;
   }
 
-  const user = process.env.STAGING_USER || "vershclean";
-  const pass = process.env.STAGING_PASS || "test2026";
+  const user = process.env.STAGING_USER;
+  const pass = process.env.STAGING_PASS;
 
-  const auth = req.headers.get("authorization");
-  if (auth) {
-    const [scheme, encoded] = auth.split(" ");
-    if (scheme === "Basic" && encoded) {
-      const decoded = atob(encoded);
-      const sepIndex = decoded.indexOf(":");
-      const u = decoded.slice(0, sepIndex);
-      const p = decoded.slice(sepIndex + 1);
-      if (u === user && p === pass) {
-        return;
+  // No credentials configured on Vercel → fail closed (deny everyone),
+  // never fall back to a password baked into the repo.
+  if (user && pass) {
+    const auth = req.headers.get("authorization");
+    if (auth) {
+      const [scheme, encoded] = auth.split(" ");
+      if (scheme === "Basic" && encoded) {
+        const decoded = atob(encoded);
+        const sepIndex = decoded.indexOf(":");
+        const u = decoded.slice(0, sepIndex);
+        const p = decoded.slice(sepIndex + 1);
+        if (u === user && p === pass) {
+          return;
+        }
       }
     }
   }
