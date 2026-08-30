@@ -1037,7 +1037,9 @@ pl:{
   chem_g1:"Dywany i wykładziny", chem_g2:"🛋️ Meble tapicerowane", chem_g3:"🛏️ Materace", chem_min_note:"ℹ️ Zamówienie minimalne: 100 zł",
   win_title:"Mycie okien",
   /* FREQ */
-  photo_cta_title:"Nie wiesz, którą usługę wybrać?",
+  qa_lbl:"Chcesz dodać coś jeszcze?",qa_desc_1:"z ramami i parapetem",qa_plus:"Dodaj",qa_desc_2:"wewnątrz i na zewnątrz",qa_plus_other:"+ Dodaj",qa_all_btn:"+ Zobacz wszystkie usługi dodatkowe",
+  rooms_count:"12 usług",bath_count:"12 usług",kit_count:"13 usług",chem_count_mieszkan:"18 usług",other_count:"2 usługi",
+photo_cta_title:"Nie wiesz, którą usługę wybrać?",
   photo_cta_sub:"Wyślij zdjęcia na WhatsApp — przygotujemy bezpłatną indywidualną wycenę w ciągu 1–3 godzin.",
   photo_cta_btn:"Wyślij zdjęcia →",
   svc_combo_title:"🧴 Więcej usług w jednym miejscu",
@@ -1104,7 +1106,9 @@ uk:{
   rooms_title:"Кімнати", bath_title:"Ванна", kit_title:"Кухня", chem_title:"Хімчистка", other_title:"Інше",
   chem_g1:"Килими та покриття", chem_g2:"🛋️ М'які меблі", chem_g3:"🛏️ Матраци", chem_min_note:"ℹ️ Мінімальне замовлення: 100 zł",
   win_title:"Миття вікон",
-  photo_cta_title:"Не знаєте, яку послугу обрати?",
+  qa_lbl:"Хочете додати щось ще?",qa_desc_1:"з рамами і підвіконням",qa_plus:"Додати",qa_desc_2:"всередині та зовні",qa_plus_other:"+ Додати",qa_all_btn:"+ Переглянути всі додаткові послуги",
+  rooms_count:"12 послуг",bath_count:"12 послуг",kit_count:"13 послуг",chem_count_mieszkan:"18 послуг",other_count:"2 послуги",
+photo_cta_title:"Не знаєте, яку послугу обрати?",
   photo_cta_sub:"Надішліть фото у WhatsApp — підготуємо безкоштовну індивідуальну оцінку протягом 1–3 годин.",
   photo_cta_btn:"Надіслати фото →",
   svc_combo_title:"🧴 Більше послуг в одному місці",
@@ -1166,7 +1170,9 @@ ru:{
   rooms_title:"Комнаты", bath_title:"Ванная", kit_title:"Кухня", chem_title:"Химчистка", other_title:"Другое",
   chem_g1:"Ковры и покрытия", chem_g2:"🛋️ Мягкая мебель", chem_g3:"🛏️ Матрасы", chem_min_note:"ℹ️ Минимальный заказ: 100 zł",
   win_title:"Мытьё окон",
-  photo_cta_title:"Не знаете, какую услугу выбрать?",
+  qa_lbl:"Хотите добавить что-то ещё?",qa_desc_1:"с рамами и подоконником",qa_plus:"Добавить",qa_desc_2:"внутри и снаружи",qa_plus_other:"+ Добавить",qa_all_btn:"+ Смотреть все дополнительные услуги",
+  rooms_count:"12 услуг",bath_count:"12 услуг",kit_count:"13 услуг",chem_count_mieszkan:"18 услуг",other_count:"2 услуги",
+photo_cta_title:"Не знаете, какую услугу выбрать?",
   photo_cta_sub:"Отправьте фото в WhatsApp — подготовим бесплатную индивидуальную оценку в течение 1–3 часов.",
   photo_cta_btn:"Отправить фото →",
   svc_combo_title:"🧴 Больше услуг в одном месте",
@@ -1228,7 +1234,9 @@ en:{
   rooms_title:"Rooms", bath_title:"Bathroom", kit_title:"Kitchen", chem_title:"Dry cleaning", other_title:"Other",
   chem_g1:"Carpets & rugs", chem_g2:"🛋️ Upholstered furniture", chem_g3:"🛏️ Mattresses", chem_min_note:"ℹ️ Minimum order: 100 zł",
   win_title:"Window cleaning",
-  photo_cta_title:"Not sure which service to pick?",
+  qa_lbl:"Want to add anything else?",qa_desc_1:"frames and sills included",qa_plus:"Add",qa_desc_2:"inside and outside",qa_plus_other:"+ Add",qa_all_btn:"+ See all add-on services",
+  rooms_count:"12 services",bath_count:"12 services",kit_count:"13 services",chem_count_mieszkan:"18 services",other_count:"2 services",
+photo_cta_title:"Not sure which service to pick?",
   photo_cta_sub:"Send us photos on WhatsApp — we'll prepare a free custom quote within 1–3 hours.",
   photo_cta_btn:"Send photos →",
   svc_combo_title:"🧴 More services in one place",
@@ -1372,6 +1380,19 @@ function applyTranslations(l) {
   document.querySelectorAll('.add-summary-btn').forEach(function(el){ el.textContent = t.addons_add; });
 
   // Frequency
+  set('qa-lbl', t.qa_lbl);
+  set('qa-desc-1', t.qa_desc_1);
+  set('qa-plus-1', t.qa_plus);
+  set('qa-desc-2', t.qa_desc_2);
+  set('qa-plus-2', t.qa_plus_other);
+  set('qa-all-btn', t.qa_all_btn);
+
+  set('rooms-count', t.rooms_count);
+  set('bath-count', t.bath_count);
+  set('kit-count', t.kit_count);
+  set('chem-count-mieszkan', t.chem_count_mieszkan);
+  set('other-count', t.other_count);
+
   set('photo-cta-title', t.photo_cta_title);
   set('photo-cta-sub', t.photo_cta_sub);
   set('photo-cta-btn', t.photo_cta_btn);
@@ -2173,16 +2194,16 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <div class="qa-cards">
     <button type="button" class="qa-card" id="qa-windows" onclick="mieszkanQuickScrollTo('[data-name-id=\'wl1\']')">
       <span class="qa-ico">🪟</span>
-      <span class="qa-txt"><span class="qa-name">Mycie okien</span><span class="qa-desc">z ramami i parapetem</span></span>
-      <span class="qa-action"><span class="qa-plus-icon">Dodaj</span><span class="qa-check-icon">✓</span></span>
+      <span class="qa-txt"><span class="qa-name">Mycie okien</span><span class="qa-desc" id="qa-desc-1">z ramami i parapetem</span></span>
+      <span class="qa-action"><span class="qa-plus-icon" id="qa-plus-1">Dodaj</span><span class="qa-check-icon">✓</span></span>
     </button>
     <button type="button" class="qa-card" id="qa-fridge" onclick="mieszkanQuickToggle(this,'[data-name-id=\'kl5\']')">
       <span class="qa-ico">🧊</span>
-      <span class="qa-txt"><span class="qa-name">Lodówka</span><span class="qa-desc">wewnątrz i na zewnątrz</span></span>
-      <span class="qa-action"><span class="qa-plus-icon">+ Dodaj</span><span class="qa-check-icon">✓</span></span>
+      <span class="qa-txt"><span class="qa-name">Lodówka</span><span class="qa-desc" id="qa-desc-2">wewnątrz i na zewnątrz</span></span>
+      <span class="qa-action"><span class="qa-plus-icon" id="qa-plus-2">+ Dodaj</span><span class="qa-check-icon">✓</span></span>
     </button>
   </div>
-  <button type="button" class="qa-all" onclick="document.getElementById('uslugi-dodatkowe').scrollIntoView({behavior:'smooth'})">+ Zobacz wszystkie usługi dodatkowe</button>
+  <button type="button" class="qa-all" id="qa-all-btn" onclick="document.getElementById('uslugi-dodatkowe').scrollIntoView({behavior:'smooth'})">+ Zobacz wszystkie usługi dodatkowe</button>
 </div>
 <script>
 function mieszkanSyncQuickCards(){
@@ -2621,7 +2642,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="add-col">
         <div class="add-col-head add-col-toggle" onclick="toggleAddCol(this)">
           <div class="add-circle a1">🛏️</div><div class="add-col-title" id="rooms-title">Pokoje</div>
-          <span class="add-col-count">12 usług</span>
+          <span class="add-col-count" id="rooms-count">12 usług</span>
           <svg class="add-col-arrow"><use href="#ic-chevron"></use></svg>
         </div>
         <div class="add-col-body">
@@ -2646,7 +2667,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="add-col">
         <div class="add-col-head add-col-toggle" onclick="toggleAddCol(this)">
           <div class="add-circle a2">🚿</div><div class="add-col-title" id="bath-title">Łazienka</div>
-          <span class="add-col-count">12 usług</span>
+          <span class="add-col-count" id="bath-count">12 usług</span>
           <svg class="add-col-arrow"><use href="#ic-chevron"></use></svg>
         </div>
         <div class="add-col-body">
@@ -2671,7 +2692,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="add-col">
         <div class="add-col-head add-col-toggle" onclick="toggleAddCol(this)">
           <div class="add-circle a3">🍳</div><div class="add-col-title" id="kit-title">Kuchnia</div>
-          <span class="add-col-count">13 usług</span>
+          <span class="add-col-count" id="kit-count">13 usług</span>
           <svg class="add-col-arrow"><use href="#ic-chevron"></use></svg>
         </div>
         <div class="add-col-body">
@@ -2697,7 +2718,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="add-col">
         <div class="add-col-head add-col-toggle" onclick="toggleAddCol(this)">
           <div class="add-circle a4">🧽</div><div class="add-col-title" id="chem-title">Czyszczenie chemiczne</div>
-          <span class="add-col-count">18 usług</span>
+          <span class="add-col-count" id="chem-count-mieszkan">18 usług</span>
           <svg class="add-col-arrow"><use href="#ic-chevron"></use></svg>
         </div>
         <div class="add-col-body">
@@ -2732,7 +2753,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="add-col">
         <div class="add-col-head add-col-toggle" onclick="toggleAddCol(this)">
           <div class="add-circle" style="background:#f3e8ff">🔧</div><div class="add-col-title" id="other-title">Inne</div>
-          <span class="add-col-count">2 usługi</span>
+          <span class="add-col-count" id="other-count">2 usługi</span>
           <svg class="add-col-arrow"><use href="#ic-chevron"></use></svg>
         </div>
         <div class="add-col-body">
