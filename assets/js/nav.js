@@ -2,6 +2,7 @@
 // On mobile this nav renders as a bottom sheet (see index-mobile.css) — the
 // body class drives its dark backdrop and hides the floating call button
 // while it's open, so every path that opens/closes #hn must keep both in sync.
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});
 function setNavOpen(open){
   var n = document.getElementById('hn');
   if(!n) return;
