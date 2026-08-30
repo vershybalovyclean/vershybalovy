@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 async function sendEmail(text, name) {
   const RESEND_API_KEY = process.env.Resend_api_key;
   const TO_EMAIL = process.env.to_email;
@@ -31,6 +33,28 @@ async function sendTelegram(text) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+    });
+    return r.ok;
+  } catch (error) {
+    return false;
+  }
+}
+
+// Пингует владельца/менеджеров в Telegram (см. vershy-admin/supabase/
+// functions/notify-owner-event) о только что созданной заявке — заменяет
+// старый sendTelegram() для реальных бронирований: тот бил в ОДИН
+// захардкоженный chat_id, этот рассылает всем owner/manager с подключённым
+// ботом. Требует, чтобы requests-строка с этим id уже реально была вставлена
+// (см. insertSupabaseRequest/handler) — иначе функция просто не найдёт
+// строку и молча ничего не пошлёт.
+async function notifyOwnerEvent(requestId) {
+  const SUPABASE_URL = process.env.supabase_url;
+  if (!SUPABASE_URL || !requestId) return false;
+  try {
+    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/notify-owner-event", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event: "request", id: requestId })
     });
     return r.ok;
   } catch (error) {
@@ -187,6 +211,7 @@ async function insertSupabaseRequest(data) {
         "Prefer": "return=minimal"
       },
       body: JSON.stringify({
+        ...(data.id ? { id: data.id } : {}),
         client_id: clientId,
         property_id: propertyId,
         client_name: data.name,
@@ -230,24 +255,41 @@ export default async function handler(req, res) {
     (partnerCode ? "Kod partnera: " + partnerCode + "\n" : "") +
     "Komentarz: " + (comment || "brak");
 
-  const results = await Promise.allSettled([
+  // Real calendar bookings get their id generated here (instead of letting Postgres
+  // default it) so it's already known before insertSupabaseRequest ever runs — needed
+  // to call notifyOwnerEvent() afterwards without a RETURNING round-trip, which anon
+  // inserts can't safely do (see the RLS SELECT-gap note in insertSupabaseRequest).
+  const hasBooking = !!scheduledDate;
+  const requestId = hasBooking ? randomUUID() : null;
+
+  const [emailResult, sheetResult] = await Promise.allSettled([
     sendEmail(text, name),
-    sendTelegram(text),
     logToSheet({ date: new Date().toISOString(), name: name, phone: phone, service: service || "", partnerCode: partnerCode || "", comment: comment || "" })
   ]);
 
-  // Awaited so it finishes before the serverless function returns (Vercel doesn't guarantee
-  // background execution after the response is sent), but kept OUT of the anySucceeded
-  // check above: a booking should count as "sent" based on whether a human was actually
-  // notified (email/Telegram/Sheets), never on whether the admin-panel database write
-  // succeeded — otherwise a total failure of all three notification channels could be
-  // silently masked as success by this alone.
-  await insertSupabaseRequest({ name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId });
+  // Telegram is handled sequentially, not in the allSettled batch above: for a real
+  // booking it must fan out via notifyOwnerEvent (which needs the DB row to already
+  // exist), falling back to the single-recipient sendTelegram() only if that insert
+  // itself failed — so a Supabase outage still reaches someone instead of going silent.
+  // Awaited so both finish before the function returns (Vercel doesn't guarantee
+  // background execution after the response is sent).
+  let telegramOk;
+  if (hasBooking) {
+    const inserted = await insertSupabaseRequest({ name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, id: requestId });
+    telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
+  } else {
+    // Quick contact/estimate forms never become a requests row — same single-recipient
+    // channel as before, nothing to fan out via a row that doesn't exist.
+    telegramOk = await sendTelegram(text);
+  }
 
-  const anySucceeded = results.some(function (r) { return r.status === "fulfilled" && r.value === true; });
+  // Same invariant as before: "sent" means a human was actually notified (email/
+  // Telegram/Sheets), never just that the admin-panel database write succeeded.
+  const anySucceeded = telegramOk === true
+    || [emailResult, sheetResult].some(function (r) { return r.status === "fulfilled" && r.value === true; });
 
   if (!anySucceeded) {
-    console.error("All notification channels failed", results);
+    console.error("All notification channels failed", { emailResult, sheetResult, telegramOk });
     return res.status(500).json({ error: "Błąd wysyłania" });
   }
 
