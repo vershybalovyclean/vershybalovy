@@ -55,6 +55,11 @@
   #float-cta .cta-icon{font-size:24px}
   #float-cta #cta-txt{display:none}
   #float-cta.hidden{opacity:1!important;pointer-events:auto!important;transform:none!important}
+  /* When a page's own sticky price bar is showing (body.has-order, set by
+     each service page's order-total JS), it docks to the same bottom edge
+     as this button. Lift the button above the price bar so it stays
+     visible on top of it instead of being covered by it. */
+  body.has-order #float-cta{bottom:150px}
 
   /* "Konto" popup (client/partner cabinet links), anchored above the tab bar. */
   .mtb-account-menu{
