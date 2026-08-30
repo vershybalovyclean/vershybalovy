@@ -462,6 +462,40 @@
       if(typeof window.updateSidebar === 'function') window.updateSidebar();
     });
   }
+  // Live existence check — same RPC api/submit.js already uses server-side
+  // (resolve_partner_id, granted to anon, returns only the id — never the
+  // partner's name/phone/commission) — so the client sees right away whether
+  // a code is real, instead of silently booking unattributed on a typo.
+  var bk_partnerCheckTimer = null;
+  var bk_partnerCodeValid = null; // null = not checked yet, true/false = last result
+  function bk_checkPartnerCode(){
+    var input = document.getElementById('bk-partner-code');
+    var res = document.getElementById('bk-partner-result');
+    var code = input ? input.value.trim().toUpperCase() : '';
+    if(!/^VC-\d{4}$/.test(code)){
+      bk_partnerCodeValid = null;
+      if(res) res.textContent = '';
+      return;
+    }
+    fetch(BK_SUPABASE_URL + '/rest/v1/rpc/resolve_partner_id', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'apikey': BK_SUPABASE_ANON_KEY, 'Authorization':'Bearer '+BK_SUPABASE_ANON_KEY },
+      body: JSON.stringify({ code: code })
+    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(id){
+      // A stale response for an already-edited-again field would show the
+      // wrong verdict — bail if the input no longer matches what we checked.
+      if(!input || input.value.trim().toUpperCase() !== code) return;
+      bk_partnerCodeValid = !!id;
+      if(res){
+        if(id){ res.textContent = '✅ Kod partnera prawidłowy'; res.style.color = '#16a34a'; }
+        else { res.textContent = '❌ Taki kod nie istnieje'; res.style.color = '#dc2626'; }
+      }
+    }).catch(function(){
+      bk_partnerCodeValid = null;
+      if(res) res.textContent = '';
+    });
+  }
+
   var bk_partnerCodeInput = document.getElementById('bk-partner-code');
   if(bk_partnerCodeInput){
     bk_partnerCodeInput.addEventListener('input',function(){
@@ -473,6 +507,11 @@
         var digits2 = v.slice(3).replace(/[^0-9]/g,'').slice(0,4);
         bk_partnerCodeInput.value = 'VC-'+digits2;
       }
+      bk_partnerCodeValid = null;
+      var res = document.getElementById('bk-partner-result');
+      if(res) res.textContent = '';
+      clearTimeout(bk_partnerCheckTimer);
+      bk_partnerCheckTimer = setTimeout(bk_checkPartnerCode, 400);
       bk_checkForm();
     });
     bk_partnerCodeInput.addEventListener('focus',function(){
@@ -495,6 +534,7 @@
     if(wrap) wrap.classList.remove('bk-hidden');
     bk_partnerCodeInput.value = 'VC-' + digits;
     bk_checkForm();
+    bk_checkPartnerCode();
   })();
 
   /* ─── PROMO CODE TOGGLE + LIVE CHECK (only on pages that include it) ─── */
