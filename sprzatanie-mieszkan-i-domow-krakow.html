@@ -3498,16 +3498,6 @@ function clearAddons() {
   document.getElementById('add-summary').classList.remove('show');
 }
 
-function addonsToForm() {
-  if (selectedAddons.length === 0) return;
-  var names = selectedAddons.map(function(a){ return a.name; }).join(', ');
-  var comment = document.getElementById('fi4');
-  var current = comment.value.trim();
-  var addStr = 'Usługi dodatkowe: ' + names;
-  comment.value = current ? current + '\n' + addStr : addStr;
-  document.getElementById('kontakt').scrollIntoView({behavior:'smooth'});
-}
-
 // ===== FREQUENCY DISCOUNT =====
 var currentFreq = {times: 1, discount: 0};
 
@@ -3527,18 +3517,6 @@ function setFreq(btn, times, discount) {
   } else {
     note.classList.remove('show');
   }
-}
-
-
-function addonsToForm(){
-  if(selectedAddons.length===0)return;
-  var names=selectedAddons.map(function(a){return a.name;}).join(', ');
-  var comment=document.getElementById('pf-comment');
-  if(!comment)return;
-  var current=comment.value.trim();
-  var addStr='Usługi dodatkowe: '+names;
-  comment.value=current?current+'\n'+addStr:addStr;
-  document.getElementById('formularz').scrollIntoView({behavior:'smooth'});
 }
 
 
