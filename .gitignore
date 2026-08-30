@@ -1,0 +1,16 @@
+# Local Claude Code settings — may contain permission rules referencing secrets
+.claude/
+
+# Environment variables / secrets — real values live in Vercel env vars
+.env
+.env.*
+
+# Stale legal-text drafts superseded by the live .html pages
+*.txt.txt
+
+# Dependency directory (not currently used — static site — kept as a safeguard)
+node_modules/
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
