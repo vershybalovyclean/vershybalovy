@@ -480,6 +480,23 @@
     });
   }
 
+  /* ─── ?ref= AUTO-ATTRIBUTION (e.g. vershclean.pl/?ref=VC-4821, a partner's own
+     shared link) — opens the partner section and fills the code, same as if the
+     client had typed it in by hand. Only on pages that have the partner UI. ─── */
+  (function(){
+    var refParam = new URLSearchParams(location.search).get('ref');
+    if(!refParam || !bk_partnerBtn || !bk_partnerCodeInput) return;
+    var digits = refParam.toUpperCase().replace(/[^0-9]/g,'').slice(0,4);
+    if(digits.length !== 4) return;
+    bk_partnerOn = true;
+    window.bk_partnerOn = true;
+    bk_partnerBtn.classList.add('bk-chip-active');
+    var wrap = document.getElementById('bk-partner-code-wrap');
+    if(wrap) wrap.classList.remove('bk-hidden');
+    bk_partnerCodeInput.value = 'VC-' + digits;
+    bk_checkForm();
+  })();
+
   /* ─── PROMO CODE TOGGLE + LIVE CHECK (only on pages that include it) ─── */
   var bk_promoBtn = document.getElementById('bk-promoBtn');
   if(bk_promoBtn){
@@ -620,7 +637,8 @@
         email:email||'', address:fullAddress,
         scheduledDate:bk_isoDate(bk_selectedDate), scheduledTime:(slotObj?slotObj.start:''),
         price:d.price?bk_finalPrice(d.price):null,
-        clientToken:bk_clientToken||'', propertyId:bk_savedPropertyId||''
+        clientToken:bk_clientToken||'', propertyId:bk_savedPropertyId||'',
+        clientLanguage: (typeof localStorage!=='undefined' && localStorage.getItem('vc_lang')) || bk_lang || 'pl'
       })
     })
     .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })

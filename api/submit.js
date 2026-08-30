@@ -217,6 +217,7 @@ async function insertSupabaseRequest(data) {
         client_name: data.name,
         client_phone: data.phone,
         client_email: data.email || null,
+        client_language: data.clientLanguage || null,
         address: data.address || null,
         scheduled_date: data.scheduledDate,
         scheduled_time: data.scheduledTime || null,
@@ -242,7 +243,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId } = req.body;
+  const { name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage } = req.body;
 
   if (!name || !phone) {
     return res.status(400).json({ error: "Imię i telefon są wymagane" });
@@ -275,7 +276,7 @@ export default async function handler(req, res) {
   // background execution after the response is sent).
   let telegramOk;
   if (hasBooking) {
-    const inserted = await insertSupabaseRequest({ name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, id: requestId });
+    const inserted = await insertSupabaseRequest({ name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, id: requestId });
     telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
   } else {
     // Quick contact/estimate forms never become a requests row — same single-recipient
