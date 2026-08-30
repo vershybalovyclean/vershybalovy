@@ -98,6 +98,21 @@
     });
   }
 
+  // The banner renders once at DOMContentLoaded, using whatever language was
+  // already saved from a PREVIOUS visit — but the very first time a visitor
+  // clicks a language pill, the banner is usually already showing and had no
+  // way to hear about that click. Each page's SL() calls this after updating
+  // vc_lang, so the banner (if still open) re-renders in the new language
+  // instead of staying stuck in whatever it first loaded as.
+  window.refreshCookieBanner = function(lang){
+    var el = document.getElementById('cookie-banner');
+    if(!el) return;
+    var t = CB_TX[lang] || CB_TX.pl;
+    el.querySelector('.cb-text').innerHTML = t.text;
+    el.querySelector('#cb-ok').textContent = t.btn;
+    el.querySelector('#cb-reject').textContent = t.reject;
+  };
+
   loadGoogleTags();
 
   document.addEventListener('DOMContentLoaded', function(){

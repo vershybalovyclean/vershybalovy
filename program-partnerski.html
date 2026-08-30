@@ -66,22 +66,22 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <div class="hdr-nav-backdrop" onclick="toggleNav()"></div>
   <nav class="hdr-nav" id="hn">
     <div class="hdr-nav-handle"></div>
-    <div class="hdr-nav-mhead"><span>Menu</span><button type="button" onclick="toggleNav()" aria-label="Zamknij">✕</button></div>
+    <div class="hdr-nav-mhead"><span id="hngMenuTitle">Menu</span><button type="button" onclick="toggleNav()" id="hngCloseBtn" aria-label="Zamknij">✕</button></div>
     <div class="hdr-nav-grid">
-      <a href="/poznaj-nas"><span class="hng-icon">🏠</span><span class="hng-label">O nas</span></a>
-      <a href="/#opinie"><span class="hng-icon">⭐</span><span class="hng-label">Opinie</span></a>
-      <a href="#kontakt"><span class="hng-icon">📞</span><span class="hng-label">Kontakt</span></a>
-      <a href="/mycie-okien"><span class="hng-icon">🪟</span><span class="hng-label">Mycie okien</span></a>
-      <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon">🧹</span><span class="hng-label">Sprzątanie mieszkań</span></a>
-      <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon">🏗️</span><span class="hng-label">Po remoncie</span></a>
-      <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon">🏠</span><span class="hng-label">Po wyprowadzce</span></a>
-      <a href="/sprzatanie-po-zbieractwie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label">Po zbieractwie</span></a>
-      <a href="/#przed-po"><span class="hng-icon">📸</span><span class="hng-label">Realizacje</span></a>
-      <a href="#faq-lbl"><span class="hng-icon">❓</span><span class="hng-label">FAQ</span></a>
-      <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener"><span class="hng-icon">📝</span><span class="hng-label">Zarejestruj się</span></a>
-      <a href="/program-partnerski"><span class="hng-icon">🤝</span><span class="hng-label">Zostań partnerem</span></a>
+      <a href="/poznaj-nas"><span class="hng-icon">🏠</span><span class="hng-label" id="hng1">O nas</span></a>
+      <a href="/#opinie"><span class="hng-icon">⭐</span><span class="hng-label" id="hng2">Opinie</span></a>
+      <a href="#kontakt"><span class="hng-icon">📞</span><span class="hng-label" id="hng3">Kontakt</span></a>
+      <a href="/mycie-okien"><span class="hng-icon">🪟</span><span class="hng-label" id="hng4">Mycie okien</span></a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon">🧹</span><span class="hng-label" id="hng5">Sprzątanie mieszkań</span></a>
+      <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon">🏗️</span><span class="hng-label" id="hng6">Po remoncie</span></a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon">🏠</span><span class="hng-label" id="hng7">Po wyprowadzce</span></a>
+      <a href="/sprzatanie-po-zbieractwie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label" id="hng8">Po zbieractwie</span></a>
+      <a href="/#przed-po"><span class="hng-icon">📸</span><span class="hng-label" id="hng9">Realizacje</span></a>
+      <a href="#faq-lbl"><span class="hng-icon">❓</span><span class="hng-label" id="hng10">FAQ</span></a>
+      <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener"><span class="hng-icon">📝</span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
+      <a href="/program-partnerski"><span class="hng-icon">🤝</span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
-    <a href="tel:+48514363538" class="hdr-nav-call">📞 ZADZWOŃ DO NAS</a>
+    <a href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
     <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">🧹 Sprzątanie mieszkań</a>
     <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">🏗️ Po remoncie</a>
     <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">🏠 Po wyjeździe</a>
@@ -364,7 +364,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <img src="assets/img/logo.png" alt="Vershy Property Care" style="width:100px;height:auto;display:block">
         <div class="ft-brand">Vershy Property Care</div>
       </div>
-      <p class="ft-slogan">Premium Cleaning &amp; Property Services</p>
+      <p class="ft-slogan" id="fslogan">Premium Cleaning &amp; Property Services</p>
       <div class="ft2-soc">
         <a href="https://wa.me/48514363538" target="_blank" aria-label="WhatsApp">💬</a>
         <a href="https://www.instagram.com/vershybalovy_cleaning_krakow/" target="_blank" aria-label="Instagram">📸</a>
@@ -373,31 +373,31 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
     </div>
     <div class="ft2-col">
-      <h4>Usługi</h4>
-      <a href="/sprzatanie-mieszkan-i-domow-krakow">Sprzątanie mieszkań</a>
-      <a href="/sprzatanie-po-remoncie-krakow">Po remoncie</a>
-      <a href="/sprzatanie-po-wyprowadzce-krakow">Po wyjeździe</a>
-      <a href="/sprzatanie-po-zbieractwie-krakow">Po zbieractwie</a>
-      <a href="/mycie-okien">Mycie okien</a>
+      <h4 id="ftUslugiH">Usługi</h4>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow" id="ftLinkMieszkania">Sprzątanie mieszkań</a>
+      <a href="/sprzatanie-po-remoncie-krakow" id="ftLinkRemont">Po remoncie</a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow" id="ftLinkWyprowadzka">Po wyjeździe</a>
+      <a href="/sprzatanie-po-zbieractwie-krakow" id="ftLinkZbieractwo">Po zbieractwie</a>
+      <a href="/mycie-okien" id="ftLinkOkna">Mycie okien</a>
     </div>
     <div class="ft2-col">
-      <h4>Firma</h4>
-      <a href="/poznaj-nas">Poznaj nas</a>
-      <a href="/program-partnerski">Zostań partnerem</a>
+      <h4 id="ftFirmaH">Firma</h4>
+      <a href="/poznaj-nas" id="ftLinkPoznaj">Poznaj nas</a>
+      <a href="/program-partnerski" id="ftLinkPartner">Zostań partnerem</a>
       <a href="tel:+48514363538">📞 +48 514 363 538</a>
       <a href="mailto:vershybalovy@gmail.com">📧 vershybalovy@gmail.com</a>
-      <span style="display:block;font-size:13.5px;margin-bottom:10px">📍 Kraków i Małopolska</span>
+      <span style="display:block;font-size:13.5px;margin-bottom:10px" id="ftLocation">📍 Kraków i Małopolska</span>
     </div>
     <div class="ft2-col">
-      <h4>Informacje</h4>
-      <a href="/polityka-prywatnosci">Polityka prywatności</a>
-      <a href="/regulamin">Regulamin</a>
-      <a href="/polityka-cookies">Polityka cookies</a>
-      <a href="/zalacznik-nr-1-zakres-uslug">Załącznik nr 1 – Zakres usług</a>
+      <h4 id="ftInfoH">Informacje</h4>
+      <a href="/polityka-prywatnosci" id="ftLinkPrywatnosc">Polityka prywatności</a>
+      <a href="/regulamin" id="ftLinkRegulamin">Regulamin</a>
+      <a href="/polityka-cookies" id="ftLinkCookies">Polityka cookies</a>
+      <a href="/zalacznik-nr-1-zakres-uslug" id="ftLinkZalacznik">Załącznik nr 1 – Zakres usług</a>
     </div>
   </div>
   <div class="ft2-tags">
-    <h4>Popularne usługi</h4>
+    <h4 id="ftPopularneH">Popularne usługi</h4>
     <div class="ft2-tag-row">
       <a href="/program-partnerski" class="ft2-tag">Program partnerski Kraków</a>
       <a href="/program-partnerski" class="ft2-tag">Zostań partnerem sprzątania</a>
@@ -410,7 +410,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   </div>
   <div class="ft2-bottom">
     <p class="ft-copy">© 2025 Vershy Property Care · NIP: 6793355668 · REGON: 543849999</p>
-    <p class="ft-copy">Faktury bez VAT · Program partnerski — warunki mogą ulec zmianie</p>
+    <p class="ft-copy" id="ftnote">Faktury bez VAT · Program partnerski — warunki mogą ulec zmianie</p>
   </div>
   </div>
 </footer>
@@ -515,7 +515,16 @@ pl: {
   final_h2:'Gotowy, aby <em style="color:#fbbf24;font-style:normal">zacząć zarabiać?</em>',
   final_p:'Dołączenie do programu partnerskiego zajmuje kilka minut i jest całkowicie bezpłatne. Otrzymaj swój kod jeszcze dziś.',
   final_btn:'🤝 Zostań partnerem →',
-  mtb_home:'Strona główna', mtb_join:'Dołącz', mtb_more:'Więcej', mtb_chat:'Czat', mtb_account:'Konto'
+  mtb_home:'Strona główna', mtb_join:'Dołącz', mtb_more:'Więcej', mtb_chat:'Czat', mtb_account:'Konto',
+  hngMenuTitle:'Menu', hng1:'O nas', hng2:'Opinie', hng3:'Kontakt', hng4:'Mycie okien', hng5:'Sprzątanie mieszkań',
+  hng6:'Po remoncie', hng7:'Po wyprowadzce', hng8:'Po zbieractwie', hng9:'Realizacje', hng10:'FAQ',
+  hng11:'Zarejestruj się', hng12:'Zostań partnerem', hngCallBtn:'📞 ZADZWOŃ DO NAS', hngClose:'Zamknij',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Faktury bez VAT · Program partnerski — warunki mogą ulec zmianie',
+  ftUslugiH:'Usługi', ftLinkMieszkania:'Sprzątanie mieszkań', ftLinkRemont:'Po remoncie', ftLinkWyprowadzka:'Po wyjeździe',
+  ftLinkZbieractwo:'Po zbieractwie', ftLinkOkna:'Mycie okien', ftFirmaH:'Firma', ftLinkPoznaj:'Poznaj nas',
+  ftLinkPartner:'Zostań partnerem', ftLocation:'📍 Kraków i Małopolska', ftInfoH:'Informacje',
+  ftLinkPrywatnosc:'Polityka prywatności', ftLinkRegulamin:'Regulamin', ftLinkCookies:'Polityka cookies',
+  ftLinkZalacznik:'Załącznik nr 1 – Zakres usług', ftPopularneH:'Popularne usługi'
 },
 uk: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>',
@@ -574,7 +583,16 @@ uk: {
   final_h2:'Готовий <em style="color:#fbbf24;font-style:normal">почати заробляти?</em>',
   final_p:'Приєднання до партнерської програми займає кілька хвилин і повністю безкоштовне. Отримай свій код вже сьогодні.',
   final_btn:'🤝 Стати партнером →',
-  mtb_home:'Головна', mtb_join:'Приєднатися', mtb_more:'Ще', mtb_chat:'Чат', mtb_account:'Кабінет'
+  mtb_home:'Головна', mtb_join:'Приєднатися', mtb_more:'Ще', mtb_chat:'Чат', mtb_account:'Кабінет',
+  hngMenuTitle:'Меню', hng1:'Про нас', hng2:'Відгуки', hng3:'Контакти', hng4:'Миття вікон', hng5:'Прибирання квартир',
+  hng6:'Після ремонту', hng7:'Після виїзду', hng8:'Після захаращення', hng9:'Наші роботи', hng10:'Часті питання',
+  hng11:'Зареєструватися', hng12:'Стати партнером', hngCallBtn:'📞 ЗАТЕЛЕФОНУЙТЕ НАМ', hngClose:'Закрити',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Рахунки без ПДВ · Партнерська програма — умови можуть змінюватись',
+  ftUslugiH:'Послуги', ftLinkMieszkania:'Прибирання квартир', ftLinkRemont:'Після ремонту', ftLinkWyprowadzka:'Після виїзду',
+  ftLinkZbieractwo:'Після захаращення', ftLinkOkna:'Миття вікон', ftFirmaH:'Компанія', ftLinkPoznaj:'Про нас',
+  ftLinkPartner:'Стати партнером', ftLocation:'📍 Краків та Малопольща', ftInfoH:'Інформація',
+  ftLinkPrywatnosc:'Політика конфіденційності', ftLinkRegulamin:'Регламент', ftLinkCookies:'Політика cookies',
+  ftLinkZalacznik:'Додаток № 1 – Обсяг послуг', ftPopularneH:'Популярні послуги'
 },
 ru: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>',
@@ -633,7 +651,16 @@ ru: {
   final_h2:'Готов <em style="color:#fbbf24;font-style:normal">начать зарабатывать?</em>',
   final_p:'Присоединение к партнёрской программе занимает несколько минут и полностью бесплатно. Получи свой код уже сегодня.',
   final_btn:'🤝 Стать партнёром →',
-  mtb_home:'Главная', mtb_join:'Присоединиться', mtb_more:'Ещё', mtb_chat:'Чат', mtb_account:'Кабинет'
+  mtb_home:'Главная', mtb_join:'Присоединиться', mtb_more:'Ещё', mtb_chat:'Чат', mtb_account:'Кабинет',
+  hngMenuTitle:'Меню', hng1:'О нас', hng2:'Отзывы', hng3:'Контакты', hng4:'Мытьё окон', hng5:'Уборка квартир',
+  hng6:'После ремонта', hng7:'После выезда', hng8:'После захламления', hng9:'Наши работы', hng10:'Частые вопросы',
+  hng11:'Зарегистрироваться', hng12:'Стать партнёром', hngCallBtn:'📞 ПОЗВОНИТЕ НАМ', hngClose:'Закрыть',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Счета без НДС · Партнёрская программа — условия могут измениться',
+  ftUslugiH:'Услуги', ftLinkMieszkania:'Уборка квартир', ftLinkRemont:'После ремонта', ftLinkWyprowadzka:'После выезда',
+  ftLinkZbieractwo:'После захламления', ftLinkOkna:'Мытьё окон', ftFirmaH:'Компания', ftLinkPoznaj:'О нас',
+  ftLinkPartner:'Стать партнёром', ftLocation:'📍 Краков и Малопольша', ftInfoH:'Информация',
+  ftLinkPrywatnosc:'Политика конфиденциальности', ftLinkRegulamin:'Регламент', ftLinkCookies:'Политика cookies',
+  ftLinkZalacznik:'Приложение № 1 – Перечень услуг', ftPopularneH:'Популярные услуги'
 },
 en: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>',
@@ -692,7 +719,16 @@ en: {
   final_h2:'Ready to <em style="color:#fbbf24;font-style:normal">start earning?</em>',
   final_p:'Joining the partner program takes a few minutes and is completely free. Get your code today.',
   final_btn:'🤝 Become a partner →',
-  mtb_home:'Home', mtb_join:'Join', mtb_more:'More', mtb_chat:'Chat', mtb_account:'Account'
+  mtb_home:'Home', mtb_join:'Join', mtb_more:'More', mtb_chat:'Chat', mtb_account:'Account',
+  hngMenuTitle:'Menu', hng1:'About us', hng2:'Reviews', hng3:'Contact', hng4:'Window cleaning', hng5:'Apartment cleaning',
+  hng6:'Post-renovation', hng7:'Post-move-out', hng8:'Hoarding cleanup', hng9:'Our work', hng10:'FAQ',
+  hng11:'Sign up', hng12:'Become a partner', hngCallBtn:'📞 CALL US', hngClose:'Close',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Invoices without VAT · Partner program — terms may change',
+  ftUslugiH:'Services', ftLinkMieszkania:'Apartment cleaning', ftLinkRemont:'Post-renovation', ftLinkWyprowadzka:'Move-out cleaning',
+  ftLinkZbieractwo:'Hoarding cleanup', ftLinkOkna:'Window cleaning', ftFirmaH:'Company', ftLinkPoznaj:'About us',
+  ftLinkPartner:'Become a partner', ftLocation:'📍 Kraków & Lesser Poland', ftInfoH:'Information',
+  ftLinkPrywatnosc:'Privacy Policy', ftLinkRegulamin:'Terms & Conditions', ftLinkCookies:'Cookie Policy',
+  ftLinkZalacznik:'Appendix 1 – Scope of Services', ftPopularneH:'Popular services'
 }
 };
 
@@ -745,6 +781,28 @@ function applyTranslations(l){
   setHtml('final-h2', t.final_h2); set('final-p', t.final_p); set('final-btn', t.final_btn);
   set('mtb-lbl-home', t.mtb_home); set('mtb-lbl-join', t.mtb_join); set('mtb-lbl-more', t.mtb_more);
   set('mtb-lbl-chat', t.mtb_chat); set('mtb-lbl-account', t.mtb_account);
+
+  set('hngMenuTitle', t.hngMenuTitle);
+  set('hng1', t.hng1); set('hng2', t.hng2); set('hng3', t.hng3); set('hng4', t.hng4);
+  set('hng5', t.hng5); set('hng6', t.hng6); set('hng7', t.hng7); set('hng8', t.hng8);
+  set('hng9', t.hng9); set('hng10', t.hng10); set('hng11', t.hng11); set('hng12', t.hng12);
+  set('hngCallBtn', t.hngCallBtn);
+  set('mtbLoginClient', t.login_client);
+  set('mtbLoginPartner', t.login_partner);
+  set('fslogan', t.fslogan);
+  set('ftnote', t.ftnote);
+  set('ftUslugiH', t.ftUslugiH);
+  set('ftLinkMieszkania', t.ftLinkMieszkania); set('ftLinkRemont', t.ftLinkRemont);
+  set('ftLinkWyprowadzka', t.ftLinkWyprowadzka); set('ftLinkZbieractwo', t.ftLinkZbieractwo);
+  set('ftLinkOkna', t.ftLinkOkna);
+  set('ftFirmaH', t.ftFirmaH); set('ftLinkPoznaj', t.ftLinkPoznaj); set('ftLinkPartner', t.ftLinkPartner);
+  set('ftLocation', t.ftLocation);
+  set('ftInfoH', t.ftInfoH); set('ftLinkPrywatnosc', t.ftLinkPrywatnosc); set('ftLinkRegulamin', t.ftLinkRegulamin);
+  set('ftLinkCookies', t.ftLinkCookies); set('ftLinkZalacznik', t.ftLinkZalacznik);
+  set('ftPopularneH', t.ftPopularneH);
+  var hngCloseBtn = document.getElementById('hngCloseBtn');
+  if (hngCloseBtn) hngCloseBtn.setAttribute('aria-label', t.hngClose || 'Zamknij');
+  if (window.refreshCookieBanner) window.refreshCookieBanner(l);
 }
 
 function SL(l){
@@ -768,8 +826,8 @@ document.addEventListener('DOMContentLoaded', function(){ SL(localStorage.getIte
   <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon">👤</span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
 </nav>
 <div class="mtb-account-menu" id="mtb-account-menu">
-  <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener">👤 Kabinet klienta</a>
-  <a href="https://kabinet.vershclean.pl/partner/login.html" target="_blank" rel="noopener">🤝 Kabinet partnera</a>
+  <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener" id="mtbLoginClient">👤 Kabinet klienta</a>
+  <a href="https://kabinet.vershclean.pl/partner/login.html" target="_blank" rel="noopener" id="mtbLoginPartner">🤝 Kabinet partnera</a>
 </div>
 </body>
 </html>
