@@ -253,6 +253,10 @@
 .mob-bar-chevron{font-size:10px;color:var(--gray);margin-left:6px;transition:transform .2s}
 
 .mobile-order-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:#fff;border-top:1.5px solid var(--brd);padding:10px 16px;box-shadow:0 -4px 20px rgba(0,0,0,.12)}
+/* Сайтовый bottom-tabbar (z-index:1000) добавили позже и перекрывал эту
+   панель заказа — на других страницах (remont.css) для этого уже есть
+   аналогичное правило под .mob-bar, здесь его не было вообще. */
+body.has-mobile-tabbar .mobile-order-bar{bottom:64px}
 
 .mob-order-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:940}
 
