@@ -535,7 +535,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<script src="assets/js/nav.js?v=2"></script>
+<script src="assets/js/nav.js?v=3"></script>
 <script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 <script>
@@ -724,7 +724,8 @@ pl: {
   ftLinkZbieractwo:'Po zbieractwie', ftLinkOkna:'Mycie okien', ftFirmaH:'Firma', ftLinkPoznaj:'Poznaj nas',
   ftLinkPartner:'Zostań partnerem', ftLocation:'📍 Kraków i Małopolska', ftInfoH:'Informacje',
   ftLinkPrywatnosc:'Polityka prywatności', ftLinkRegulamin:'Regulamin', ftLinkCookies:'Polityka cookies',
-  ftLinkZalacznik:'Załącznik nr 1 – Zakres usług', ftPopularneH:'Popularne usługi'
+  ftLinkZalacznik:'Załącznik nr 1 – Zakres usług', ftPopularneH:'Popularne usługi',
+  pageTitle:'Sprzątanie po zbieractwie Kraków — audyt, dezynfekcja, ozonowanie | Vershy Property Care'
 },
 uk: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>',
@@ -825,7 +826,8 @@ uk: {
   ftLinkZbieractwo:'Після захаращення', ftLinkOkna:'Миття вікон', ftFirmaH:'Компанія', ftLinkPoznaj:'Про нас',
   ftLinkPartner:'Стати партнером', ftLocation:'📍 Краків та Малопольща', ftInfoH:'Інформація',
   ftLinkPrywatnosc:'Політика конфіденційності', ftLinkRegulamin:'Регламент', ftLinkCookies:'Політика cookies',
-  ftLinkZalacznik:'Додаток № 1 – Обсяг послуг', ftPopularneH:'Популярні послуги'
+  ftLinkZalacznik:'Додаток № 1 – Обсяг послуг', ftPopularneH:'Популярні послуги',
+  pageTitle:'Прибирання після захаращення Краків — аудит, дезінфекція, озонування | Vershy Property Care'
 },
 ru: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>',
@@ -926,7 +928,8 @@ ru: {
   ftLinkZbieractwo:'После захламления', ftLinkOkna:'Мытьё окон', ftFirmaH:'Компания', ftLinkPoznaj:'О нас',
   ftLinkPartner:'Стать партнёром', ftLocation:'📍 Краков и Малопольша', ftInfoH:'Информация',
   ftLinkPrywatnosc:'Политика конфиденциальности', ftLinkRegulamin:'Регламент', ftLinkCookies:'Политика cookies',
-  ftLinkZalacznik:'Приложение № 1 – Перечень услуг', ftPopularneH:'Популярные услуги'
+  ftLinkZalacznik:'Приложение № 1 – Перечень услуг', ftPopularneH:'Популярные услуги',
+  pageTitle:'Уборка после захламления Краков — аудит, дезинфекция, озонирование | Vershy Property Care'
 },
 en: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>',
@@ -1027,7 +1030,8 @@ en: {
   ftLinkZbieractwo:'Hoarding cleanup', ftLinkOkna:'Window cleaning', ftFirmaH:'Company', ftLinkPoznaj:'About us',
   ftLinkPartner:'Become a partner', ftLocation:'📍 Kraków & Lesser Poland', ftInfoH:'Information',
   ftLinkPrywatnosc:'Privacy Policy', ftLinkRegulamin:'Terms & Conditions', ftLinkCookies:'Cookie Policy',
-  ftLinkZalacznik:'Appendix 1 – Scope of Services', ftPopularneH:'Popular services'
+  ftLinkZalacznik:'Appendix 1 – Scope of Services', ftPopularneH:'Popular services',
+  pageTitle:'Hoarding Cleanup Kraków — Audit, Disinfection, Ozone Treatment | Vershy Property Care'
 }
 };
 
@@ -1147,6 +1151,7 @@ function applyTranslations(l) {
   var hngCloseBtn = document.getElementById('hngCloseBtn');
   if (hngCloseBtn) hngCloseBtn.setAttribute('aria-label', t.hngClose || 'Zamknij');
   if (window.refreshCookieBanner) window.refreshCookieBanner(l);
+  document.title = t.pageTitle;
 }
 
 function SL(l) { applyTranslations(l); }

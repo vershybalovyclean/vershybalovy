@@ -604,6 +604,14 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   opacity:0;pointer-events:none;
   transform:translateY(20px);
 }
+/* Yields (fades out, click-through) whenever nav.js detects it's currently
+   sitting on top of a button/field/accordion/text — see the collision
+   sampler in nav.js. Deliberately a different class from .hidden: mobile
+   has an !important override that forces .hidden to stay visible (by
+   design — see mobile-tabbar.css), and that override must NOT apply here. */
+#float-cta.cta-yield,#float-cta.cta-scrolling{
+  opacity:0;pointer-events:none;
+}
 #float-cta .cta-icon{font-size:14px}
 @media(max-width:600px){
   #float-cta{font-size:11px;padding:8px 13px;bottom:22px;right:68px}

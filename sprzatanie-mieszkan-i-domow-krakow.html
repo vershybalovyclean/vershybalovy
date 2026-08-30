@@ -1081,7 +1081,8 @@ photo_cta_title:"Nie wiesz, którą usługę wybrać?",
   ftLinkZbieractwo:"Po zbieractwie", ftLinkOkna:"Mycie okien", ftFirmaH:"Firma", ftLinkPoznaj:"Poznaj nas",
   ftLinkPartner:"Zostań partnerem", ftLocation:"📍 Kraków i Małopolska", ftInfoH:"Informacje",
   ftLinkPrywatnosc:"Polityka prywatności", ftLinkRegulamin:"Regulamin", ftLinkCookies:"Polityka cookies",
-  ftLinkZalacznik:"Załącznik nr 1 – Zakres usług", ftPopularneH:"Popularne usługi"
+  ftLinkZalacznik:"Załącznik nr 1 – Zakres usług", ftPopularneH:"Popularne usługi",
+  pageTitle:"Sprzątanie mieszkań Kraków — Wspomagające, Generalne, Szczegółowe | Vershy Property Care"
 },
 uk:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>",
@@ -1156,7 +1157,8 @@ photo_cta_title:"Не знаєте, яку послугу обрати?",
   ftLinkZbieractwo:"Після захаращення", ftLinkOkna:"Миття вікон", ftFirmaH:"Компанія", ftLinkPoznaj:"Про нас",
   ftLinkPartner:"Стати партнером", ftLocation:"📍 Краків та Малопольща", ftInfoH:"Інформація",
   ftLinkPrywatnosc:"Політика конфіденційності", ftLinkRegulamin:"Регламент", ftLinkCookies:"Політика cookies",
-  ftLinkZalacznik:"Додаток № 1 – Обсяг послуг", ftPopularneH:"Популярні послуги"
+  ftLinkZalacznik:"Додаток № 1 – Обсяг послуг", ftPopularneH:"Популярні послуги",
+  pageTitle:"Прибирання квартир Краків — Допоміжне, Генеральне, Детальне | Vershy Property Care"
 },
 ru:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>",
@@ -1231,7 +1233,8 @@ photo_cta_title:"Не знаете, какую услугу выбрать?",
   ftLinkZbieractwo:"После захламления", ftLinkOkna:"Мытьё окон", ftFirmaH:"Компания", ftLinkPoznaj:"О нас",
   ftLinkPartner:"Стать партнёром", ftLocation:"📍 Краков и Малопольша", ftInfoH:"Информация",
   ftLinkPrywatnosc:"Политика конфиденциальности", ftLinkRegulamin:"Регламент", ftLinkCookies:"Политика cookies",
-  ftLinkZalacznik:"Приложение № 1 – Перечень услуг", ftPopularneH:"Популярные услуги"
+  ftLinkZalacznik:"Приложение № 1 – Перечень услуг", ftPopularneH:"Популярные услуги",
+  pageTitle:"Уборка квартир Краков — Поддерживающая, Генеральная, Детальная | Vershy Property Care"
 },
 en:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>",
@@ -1305,7 +1308,8 @@ photo_cta_title:"Not sure which service to pick?",
   ftLinkZbieractwo:"Hoarding cleanup", ftLinkOkna:"Window cleaning", ftFirmaH:"Company", ftLinkPoznaj:"About us",
   ftLinkPartner:"Become a partner", ftLocation:"📍 Kraków & Lesser Poland", ftInfoH:"Information",
   ftLinkPrywatnosc:"Privacy Policy", ftLinkRegulamin:"Terms & Conditions", ftLinkCookies:"Cookie Policy",
-  ftLinkZalacznik:"Appendix 1 – Scope of Services", ftPopularneH:"Popular services"
+  ftLinkZalacznik:"Appendix 1 – Scope of Services", ftPopularneH:"Popular services",
+  pageTitle:"Apartment Cleaning Kraków — Maintenance, General, Deep | Vershy Property Care"
 }
 };
 
@@ -1788,6 +1792,7 @@ function applyTranslations(l) {
   var hngCloseBtn = document.getElementById('hngCloseBtn');
   if (hngCloseBtn) hngCloseBtn.setAttribute('aria-label', t.hngClose || 'Zamknij');
   if (window.refreshCookieBanner) window.refreshCookieBanner(l);
+  document.title = t.pageTitle;
 }
 
 function SL(l) {
@@ -3758,7 +3763,7 @@ function addonsToForm() {
   </div>
 </div>
 
-<script src="assets/js/nav.js?v=2"></script>
+<script src="assets/js/nav.js?v=3"></script>
 <script src="assets/js/site-texts-sync.js" defer></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/client-session.js"></script>
