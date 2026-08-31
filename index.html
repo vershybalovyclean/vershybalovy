@@ -2150,7 +2150,14 @@ function escapeHtml(t){
 renderReviews();
 loadLiveReviews();
 
-SL(localStorage.getItem('vc_lang') || "pl");
+// Deferred to 'load': this ran as a bare top-level call before, executing
+// before the footer/mobile-tabbar/#float-cta markup further down the page
+// existed yet — so a returning visitor with a saved non-Polish language
+// saw the bottom nav and call button stuck in Polish until they clicked a
+// language pill again (that click re-runs SL() after everything exists).
+window.addEventListener('load', function(){
+  SL(localStorage.getItem('vc_lang') || "pl");
+});
 renderSrvShort();
 renderQsv();
 renderCalendar();

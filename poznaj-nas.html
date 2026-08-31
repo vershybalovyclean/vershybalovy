@@ -1863,7 +1863,12 @@ function submitReview(){
 initStarButtons();
 renderReviews();
 
-SL(localStorage.getItem('vc_lang') || localStorage.getItem('pn_lang') || localStorage.getItem('lang') || "pl");
+// Deferred to 'load' — see index.html for why: this ran as a bare
+// top-level call before, executing before the footer/mobile-tabbar/
+// #float-cta markup further down the page existed yet.
+window.addEventListener('load', function(){
+  SL(localStorage.getItem('vc_lang') || localStorage.getItem('pn_lang') || localStorage.getItem('lang') || "pl");
+});
 renderSrvShort();
 renderQsv();
 renderCalendar();
