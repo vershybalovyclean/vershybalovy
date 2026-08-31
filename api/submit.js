@@ -196,7 +196,11 @@ async function insertSupabaseRequest(data) {
   // Only real calendar bookings carry a scheduledDate (requests.scheduled_date is NOT NULL
   // in the admin panel's schema) — quick contact/estimate forms don't collect one, so they
   // correctly stay out of the admin panel's "requests" table and keep going to email/Telegram/Sheets only.
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !data.scheduledDate) return false;
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.error("insertSupabaseRequest: missing supabase_url/Supabase_anon_key env vars — booking not written to admin panel");
+    return false;
+  }
+  if (!data.scheduledDate) return false;
   try {
     const partnerId = await resolvePartnerId(data.partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY);
     const serviceId = await resolveServiceId(data.serviceSlug, SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -223,17 +227,27 @@ async function insertSupabaseRequest(data) {
         scheduled_time: data.scheduledTime || null,
         service_label: data.service || null,
         price: data.price || null,
-        notes: data.comment || null,
+        // requests.notes is shown in the admin panel as the client's own comment
+        // (rc_client_comment, quoted verbatim) — data.comment is really the
+        // auto-generated order summary (see booking.js), so the client's actual
+        // note (data.clientNote) is appended last, clearly labeled, instead of
+        // being the whole thing.
+        notes: [data.comment || null, data.clientNote ? "Uwagi: " + data.clientNote : null].filter(Boolean).join("\n") || null,
         partner_id: partnerId,
         service_id: serviceId,
         source: "website"
       })
     });
-    if (r.ok && data.promoCode) {
+    if (!r.ok) {
+      console.error("insertSupabaseRequest failed", r.status, await r.text().catch(() => ""));
+      return false;
+    }
+    if (data.promoCode) {
       await incrementPromoUsage(data.promoCode, SUPABASE_URL, SUPABASE_ANON_KEY);
     }
-    return r.ok;
+    return true;
   } catch (error) {
+    console.error("insertSupabaseRequest threw", error);
     return false;
   }
 }
@@ -243,18 +257,26 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage } = req.body;
+  const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage } = req.body;
 
   if (!name || !phone) {
     return res.status(400).json({ error: "Imię i telefon są wymagane" });
   }
 
+  // The full calendar-booking widget (booking.js) sends `comment` as an
+  // auto-generated order summary (service/addons/price/date/address/...)
+  // and the client's own free-text note separately as `clientNote`, so
+  // "Komentarz:" below shows only what the client actually typed, not the
+  // whole summary. Simpler contact forms never send clientNote — for them
+  // `comment` IS the client's message, exactly as before.
+  const hasClientNote = clientNote !== undefined;
   const text = "Nowe zgłoszenie ze strony Verschybalovy!\n\n" +
     "Imię: " + name + "\n" +
     "Telefon: " + phone + "\n" +
     "Usługa: " + (service || "nie wybrano") + "\n" +
     (partnerCode ? "Kod partnera: " + partnerCode + "\n" : "") +
-    "Komentarz: " + (comment || "brak");
+    (hasClientNote && comment ? "\n" + comment + "\n" : "") +
+    "Komentarz: " + ((hasClientNote ? clientNote : comment) || "brak");
 
   // Real calendar bookings get their id generated here (instead of letting Postgres
   // default it) so it's already known before insertSupabaseRequest ever runs — needed
@@ -265,7 +287,7 @@ export default async function handler(req, res) {
 
   const [emailResult, sheetResult] = await Promise.allSettled([
     sendEmail(text, name),
-    logToSheet({ date: new Date().toISOString(), name: name, phone: phone, service: service || "", partnerCode: partnerCode || "", comment: comment || "" })
+    logToSheet({ date: new Date().toISOString(), name: name, phone: phone, service: service || "", partnerCode: partnerCode || "", comment: (hasClientNote ? clientNote : comment) || "" })
   ]);
 
   // Telegram is handled sequentially, not in the allSettled batch above: for a real
@@ -276,7 +298,7 @@ export default async function handler(req, res) {
   // background execution after the response is sent).
   let telegramOk;
   if (hasBooking) {
-    const inserted = await insertSupabaseRequest({ name, phone, service, comment, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, id: requestId });
+    const inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, id: requestId });
     telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
   } else {
     // Quick contact/estimate forms never become a requests row — same single-recipient

@@ -639,8 +639,11 @@
     var payLabel = bk_selectedPayment?(payMap[bk_selectedPayment]||bk_selectedPayment):'';
     var fullAddress = bk_usingSavedAddress ? bk_savedAddressText : (street+(apt?('/'+apt):'')+', '+postal+' '+city);
 
+    // Usługa i Kod partnera NIE trafiają tutaj — trafiają do Telegrama i tak
+    // jako osobne, górne pola tej samej wiadomości (patrz submit.js), więc
+    // powtarzanie ich tu tylko dublowałoby tekst.
     var comment = 'REZERWACJA TERMINU (' + (document.title.split('|')[0] || '').trim() + ')\n';
-    if(d.service) comment+='Usługa: '+d.service+(d.m2?' ('+d.m2+' m²)':'')+'\n';
+    if(d.m2) comment+='Powierzchnia: '+d.m2+' m²\n';
     if(d.extras) comment+='Dodatki: '+d.extras+'\n';
     if(d.freq) comment+='Częstotliwość: '+d.freq+'\n';
     var nightOn = bk_isNightSlot();
@@ -656,12 +659,15 @@
     var partnerCode = '';
     if(bk_partnerOn){
       partnerCode = document.getElementById('bk-partner-code').value.trim();
-      comment+='Kod partnera: '+partnerCode+'\n';
+      // Kod partnera trafia do Telegrama osobno (patrz submit.js) — nie
+      // dublujemy go tutaj.
     }
     var promoCode = (bk_promoOn && bk_promoApplied) ? bk_promoApplied.code : '';
     if(promoCode) comment+='Kod promocyjny: '+promoCode+'\n';
     if(email) comment+='E-mail: '+email+'\n';
-    if(notes) comment+='Uwagi: '+notes;
+    // Prawdziwa uwaga klienta NIE trafia tutaj — jest wysyłana osobno jako
+    // clientNote, żeby "Komentarz:" w Telegramie pokazywał wyłącznie to,
+    // co klient faktycznie napisał, a nie całe to podsumowanie zamówienia.
 
     var btn = document.getElementById('bk-submitBtn');
     btn.disabled = true;
@@ -672,7 +678,7 @@
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, partnerCode:partnerCode,
+        name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, clientNote:notes, partnerCode:partnerCode,
         promoCode:promoCode, serviceSlug:d.serviceSlug||'',
         email:email||'', address:fullAddress,
         scheduledDate:bk_isoDate(bk_selectedDate), scheduledTime:(slotObj?slotObj.start:''),
