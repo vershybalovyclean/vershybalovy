@@ -2750,6 +2750,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <p class="add-hint"><span id="win-addon-hint">👆 Kliknij aby dodać mycie okien — cena z ramami i parapetem</span></p>
         <ul class="add-list">
           <li onclick="toggleAddWindow(this,'wl1-mieszkan')" data-name-id="wl1" data-price="25"><div class="add-check">✓</div><span class="ai-n">Mycie okien (sezonowe)</span><span class="ai-p">25 zł/m²</span><div class="win-picker-wrap" id="wp-wl1-mieszkan" onclick="event.stopPropagation()"></div></li>
+          <li onclick="toggleAdd(this)" data-name-id="wl2" data-price="20"><div class="add-check">✓</div><span class="ai-n">Balustrady</span><span class="ai-p">20 zł</span><div class="qty-wrap"><button class="qty-btn" onclick="qtyChange(event,this,-1)">−</button><span class="qty-val">1</span><button class="qty-btn" onclick="qtyChange(event,this,1)">+</button><span class="qty-unit">szt</span></div></li>
         </ul>
         <p id="win-info-txt" style="font-size:11px;color:var(--gray);margin-top:8px">☀️ Sezon (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Zima (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Min: <strong>199 zł</strong> &nbsp;|&nbsp; Cena za m² okna z ramą</p>
       </div>
