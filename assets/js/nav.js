@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function(){
     '.hero-calc-menu-item,.msw-card,.srv-short-btn,.btn-prim,.btn-out,.btn-wa,' +
     '.faq-q,.cb-btn,.cb-btn-reject,.modal,.modal-bg,' +
     '.srv-title,.srv-short-title,.add-col-title,.hng-label,.ft2-col a,' +
-    '.mtb-label,.hero-calc-menu-text,.hero-calc-menu-price';
+    '.mtb-label,.hero-calc-menu-text,.hero-calc-menu-price,.sec-title';
   function sample(){
     if(btn.classList.contains('cta-scrolling')) return;
     var r = btn.getBoundingClientRect();
