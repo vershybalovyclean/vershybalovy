@@ -310,25 +310,11 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
           <span class="qty-unit">szt.</span>
         </div>
       </li>
-    </ul>
-    <p style="font-size:12px;color:var(--gray);margin-top:16px" id="extras-note">
-      ℹ️ Ceny dodatków uwzględniają się automatycznie w zamówieniu poniżej.
-    </p>
-  </div>
-</section>
-
-<div class="div"></div>
-
-<!-- CZYSZCZENIE CHEMICZNE -->
-<section class="sec-alt" id="chem-section" style="padding-bottom:24px">
-  <div class="wrap">
-    <div class="sec-lbl" id="chem-lbl">Na życzenie</div>
-    <div class="add-col-head add-col-toggle" id="chem-h2-toggle" onclick="toggleChemSection()">
-      <div class="add-col-title" id="chem-h2">🧽 Czyszczenie chemiczne</div>
-      <span class="add-col-arrow-txt" id="chem-arrow" style="margin-left:auto">▼</span>
-    </div>
-    <div id="chem-body" style="display:none">
-    <p class="sec-sub" id="chem-hint">👆 Kliknij aby wybrać usługę</p>
+      <li onclick="toggleChemSection()" style="flex-wrap:wrap">
+        <span class="ai-n" id="chem-h2">🧽 Czyszczenie chemiczne</span>
+        <span class="ai-p" id="chem-arrow">▼</span>
+        <div id="chem-body" style="display:none;flex-basis:100%;width:100%;margin-top:10px" onclick="event.stopPropagation()">
+    <p class="chem-hint" id="chem-hint">👆 Kliknij aby wybrać usługę</p>
     <ul class="add-list">
       <li class="add-group-label-row" id="chem-g1">Dywany i wykładziny</li>
       <li onclick="toggleAddon(this,'cc1',10,'m²',1)">
@@ -497,7 +483,12 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </li>
     </ul>
     <p class="chem-min-note" id="chem-min-note">ℹ️ Zamówienie minimalne: 100 zł</p>
-    </div>
+        </div>
+      </li>
+    </ul>
+    <p style="font-size:12px;color:var(--gray);margin-top:16px" id="extras-note">
+      ℹ️ Ceny dodatków uwzględniają się automatycznie w zamówieniu poniżej.
+    </p>
   </div>
 </section>
 
@@ -1340,7 +1331,7 @@ function applyTranslations(l) {
   setTxt('extra7', '🧼 '+t.extra7); setTxt('extra8', '🔧 '+t.extra8); setTxt('extraOzon', '🌬️ '+t.ozon_extra);
   setTxt('extras-note', t.extras_note);
 
-  setTxt('chem-lbl', t.chem_lbl); set('chem-h2', '🧽 '+t.chem_h2); setTxt('chem-hint', t.chem_hint);
+  set('chem-h2', '🧽 '+t.chem_h2); setTxt('chem-hint', t.chem_hint);
   setTxt('chem-g1', t.chem_g1); setTxt('chem-g2', '🛋️ '+t.chem_g2); setTxt('chem-g3', '🛏️ '+t.chem_g3);
   setTxt('chem-min-note', 'ℹ️ '+t.chem_min_note);
   setTxt('cc1-name', '🟫 '+t.cc1); setTxt('cc2-name', '🟤 '+t.cc2); setTxt('cc3-name', '🪑 '+t.cc3);
