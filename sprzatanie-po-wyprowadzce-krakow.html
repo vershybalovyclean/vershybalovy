@@ -323,10 +323,10 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <section class="sec-alt" id="chem-section" style="padding-bottom:24px">
   <div class="wrap">
     <div class="sec-lbl" id="chem-lbl">Na życzenie</div>
-    <h2 class="sec-title" id="chem-h2-toggle" onclick="toggleChemSection()" style="cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:center;gap:10px">
-      <span id="chem-h2">🧽 Czyszczenie chemiczne</span>
-      <span class="add-col-arrow-txt" id="chem-arrow">▼</span>
-    </h2>
+    <div class="add-col-head add-col-toggle" id="chem-h2-toggle" onclick="toggleChemSection()">
+      <div class="add-col-title" id="chem-h2">🧽 Czyszczenie chemiczne</div>
+      <span class="add-col-arrow-txt" id="chem-arrow" style="margin-left:auto">▼</span>
+    </div>
     <div id="chem-body" style="display:none">
     <p class="sec-sub" id="chem-hint">👆 Kliknij aby wybrać usługę</p>
     <ul class="add-list">
