@@ -201,7 +201,7 @@ async function insertSupabaseRequest(data, debug) {
     if (debug) debug.reason = "missing_env";
     return false;
   }
-  if (debug) debug.keyPrefix = SUPABASE_ANON_KEY.slice(0, 12);
+  if (debug) { debug.keyPrefix = SUPABASE_ANON_KEY.slice(0, 12); debug.keyLen = SUPABASE_ANON_KEY.length; debug.url = SUPABASE_URL; }
   if (!data.scheduledDate) return false;
   try {
     const partnerId = await resolvePartnerId(data.partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -252,7 +252,11 @@ async function insertSupabaseRequest(data, debug) {
     return true;
   } catch (error) {
     console.error("insertSupabaseRequest threw", error);
-    if (debug) { debug.reason = "threw"; debug.message = String(error && error.message || error); }
+    if (debug) {
+      debug.reason = "threw";
+      debug.message = String(error && error.message || error);
+      debug.cause = error && error.cause ? String(error.cause.message || error.cause.code || error.cause) : null;
+    }
     return false;
   }
 }
