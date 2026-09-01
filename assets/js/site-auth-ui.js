@@ -19,7 +19,7 @@
       topbarBtn.setAttribute('onclick', '');
       topbarBtn.onclick = function(e){
         e.preventDefault();
-        window.open('https://kabinet.vershclean.pl/client/dashboard.html', '_blank', 'noopener');
+        window.location.href = 'https://kabinet.vershclean.pl/client/dashboard.html';
       };
       topbarBtn.classList.add('login-trigger-active');
       topbarTxt.textContent = name;
@@ -34,7 +34,7 @@
       mtbBtn.setAttribute('onclick', '');
       mtbBtn.onclick = function(e){
         e.preventDefault();
-        window.open('https://kabinet.vershclean.pl/client/dashboard.html', '_blank', 'noopener');
+        window.location.href = 'https://kabinet.vershclean.pl/client/dashboard.html';
       };
       mtbTxt.textContent = name;
       var mtbIcon = mtbBtn.querySelector('.mtb-icon');

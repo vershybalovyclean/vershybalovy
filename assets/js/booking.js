@@ -779,8 +779,8 @@
     if(bk_isAuthenticated){
       btn.textContent = bk_t('myOrdersBtn');
       btn.href = 'https://kabinet.vershclean.pl/client/dashboard.html#myrequests';
-      btn.target = '_blank';
-      btn.rel = 'noopener';
+      btn.removeAttribute('target');
+      btn.removeAttribute('rel');
     } else {
       btn.textContent = bk_t('waBtn');
       btn.href = 'https://wa.me/48514363538';
