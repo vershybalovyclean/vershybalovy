@@ -190,6 +190,35 @@ async function resolvePropertyId(propertyId, clientId, clientToken, SUPABASE_URL
   }
 }
 
+// Covers the gap left by resolvePropertyId above: that one only links a
+// property the client already explicitly picked from their saved-addresses
+// dropdown. Guests, and clients who just typed a fresh address instead of
+// picking a saved one, never got a properties row at all — the admin
+// panel's "Obiekty" section stayed empty regardless of real booking volume
+// (see ТЗ §28 audit). Finds-or-creates via a narrow SECURITY DEFINER RPC
+// (same reasoning as resolvePartnerId above — anon key has no RLS access to
+// properties otherwise) so this is safe to call for every booking that has
+// an address but no already-resolved propertyId.
+async function resolveOrCreatePropertyId(address, clientId, name, phone, SUPABASE_URL, SUPABASE_ANON_KEY) {
+  if (!address || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+  try {
+    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_or_create_property", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({ p_client_id: clientId, p_address: address, p_name: name, p_phone: phone })
+    });
+    if (!r.ok) return null;
+    const id = await r.json();
+    return id || null;
+  } catch (error) {
+    return null;
+  }
+}
+
 async function insertSupabaseRequest(data) {
   const SUPABASE_URL = process.env.supabase_url;
   const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
@@ -205,7 +234,10 @@ async function insertSupabaseRequest(data) {
     const partnerId = await resolvePartnerId(data.partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY);
     const serviceId = await resolveServiceId(data.serviceSlug, SUPABASE_URL, SUPABASE_ANON_KEY);
     const clientId = await resolveClientId(data.clientToken, SUPABASE_URL, SUPABASE_ANON_KEY);
-    const propertyId = clientId ? await resolvePropertyId(data.propertyId, clientId, data.clientToken, SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    let propertyId = clientId ? await resolvePropertyId(data.propertyId, clientId, data.clientToken, SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    if (!propertyId && data.address) {
+      propertyId = await resolveOrCreatePropertyId(data.address, clientId, data.name, data.phone, SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
     const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
       method: "POST",
       headers: {
