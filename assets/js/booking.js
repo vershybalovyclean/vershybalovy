@@ -714,6 +714,17 @@
       bk_applyWaBtnState();
       var gridWrap = document.querySelector('.bk-grid-wrap');
       if(gridWrap) gridWrap.style.display='none';
+      // Service pages with their own inline calculator (see submitOrder() in
+      // e.g. sprzatanie-mieszkan-i-domow-krakow.html) keep a separate, always-
+      // visible order-summary sidebar with its own "Złóż zamówienie" button
+      // (#sb-cta desktop, #mob-cta-btn mobile bar) — that card lives outside
+      // .bk-grid-wrap entirely, so hiding gridWrap above never touched it and
+      // it stayed clickable right next to the "Dziękujemy" success message.
+      // Pages without this calculator simply don't have these ids — no-op there.
+      ['sb-cta', 'mob-cta-btn'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.disabled = true;
+      });
       document.getElementById('bk-successView').classList.remove('bk-hidden');
       document.getElementById('bk-successView').scrollIntoView({behavior:'smooth',block:'start'});
     })
