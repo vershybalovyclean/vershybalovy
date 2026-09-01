@@ -75,11 +75,11 @@ header{
   width:85px;height:auto;display:block;z-index:5;pointer-events:none}
 .logo-svg{width:64px;height:64px;flex-shrink:0}
 .hdr-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;
-  color:var(--blue);line-height:1.2}
+  color:var(--blue);line-height:1.2;white-space:nowrap}
 .hdr-brand small{display:block;font-size:10px;font-weight:500;color:var(--gray);
   letter-spacing:.8px;font-family:'Inter',sans-serif;text-transform:uppercase}
 .hdr-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;
-  color:var(--blue);line-height:1.2}
+  color:var(--blue);line-height:1.2;white-space:nowrap}
 .hdr-brand small{display:block;font-size:10px;font-weight:500;color:var(--gray);
   letter-spacing:.8px;font-family:'Inter',sans-serif;text-transform:uppercase}
 .hdr-nav{display:flex;align-items:center;gap:3px;margin-left:auto}
@@ -98,7 +98,12 @@ header{
 }
 .burger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
 .burger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px}
-@media(max-width:1024px){
+@media(max-width:1460px){
+  /* Collapsing the full inline nav into the burger menu at the same
+     breakpoint the logo/brand already start shrinking at (below) — with
+     .hdr-login now also competing for header space, the two used to be
+     mismatched (nav stayed inline down to 1024px) and the brand name had
+     nowhere near enough room, wrapping across 3 lines. */
   .hdr-nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;
     background:#fff;padding:16px;border-bottom:1px solid var(--brd);z-index:999;
     box-shadow:var(--shadow);padding-right:16px}
@@ -1207,7 +1212,7 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   .hdr-brand{font-size:14px}
   .hdr-brand small{font-size:8px}
 }
-@media(max-width:1024px){
+@media(max-width:1460px){
   .burger{display:flex !important;flex-shrink:0;margin-left:auto}
 }
 
