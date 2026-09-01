@@ -66,13 +66,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <button class="lb" onclick="SL('ru')">RU</button>
       <button class="lb" onclick="SL('en')">EN</button>
     </div>
-    <div class="topbar-login">
-      <button type="button" class="login-trigger" onclick="toggleLoginMenu()">🔑 <span id="loginBtnTxt" class="login-txt">Zaloguj się</span></button>
-      <div class="login-dropdown" id="login-dropdown">
-        <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener" id="loginClient">👤 Kabinet klienta</a>
-        <a href="https://kabinet.vershclean.pl/partner/login.html" target="_blank" rel="noopener" id="loginPartner">🤝 Kabinet partnera</a>
-      </div>
-    </div>
+  </div>
   </div>
 </div>
 
@@ -81,6 +75,13 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <img src="assets/img/logo.png" alt="Vershy Property Care">
     <div class="hdr-brand">Vershy Property Care<small>Premium Cleaning &amp; Property Services</small></div>
   </a>
+  <div class="hdr-login">
+    <button type="button" class="login-trigger" onclick="toggleLoginMenu()">🔑 <span id="loginBtnTxt" class="login-txt">Zaloguj się</span></button>
+    <div class="login-dropdown" id="login-dropdown">
+      <a href="https://kabinet.vershclean.pl/client/login.html" target="_blank" rel="noopener" id="loginClient">👤 Kabinet klienta</a>
+      <a href="https://kabinet.vershclean.pl/partner/login.html" target="_blank" rel="noopener" id="loginPartner">🤝 Kabinet partnera</a>
+    </div>
+  </div>
   <button class="burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
   <div class="hdr-nav-backdrop" onclick="toggleNav()"></div>
   <nav class="hdr-nav" id="hn">

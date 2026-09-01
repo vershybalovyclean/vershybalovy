@@ -47,14 +47,14 @@ body{padding-top:0}
   color:#fff;letter-spacing:.5px;text-align:center}
 .topbar-txt em{font-style:normal;color:#86efac;font-weight:900}
 
-/* ─── LOGIN dropdown (client/partner cabinet) in topbar ─── */
-.topbar-login{position:relative;display:flex;align-items:center;padding:6px 12px;
-  background:rgba(0,0,0,.15);border-left:1px solid rgba(255,255,255,.15);flex-shrink:0}
-.login-trigger{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;
-  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;
+/* ─── LOGIN dropdown (client/partner cabinet) — sits in the header, next
+   to the logo (moved out of the topbar per owner's request) ─── */
+.hdr-login{position:relative;display:flex;align-items:center;flex-shrink:0}
+.login-trigger{background:var(--off);border:1.5px solid var(--brd);color:var(--text2);
+  padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;
   transition:.2s;font-family:'Inter',sans-serif;letter-spacing:.5px;white-space:nowrap}
-.login-trigger:hover,.login-trigger.open{background:rgba(255,255,255,.25);border-color:#fff}
-.login-dropdown{position:absolute;top:100%;right:0;margin-top:8px;background:#fff;
+.login-trigger:hover,.login-trigger.open{background:var(--blue-pale);border-color:var(--blue-light);color:var(--blue2)}
+.login-dropdown{position:absolute;top:100%;left:0;margin-top:8px;background:#fff;
   border-radius:var(--r2);box-shadow:var(--shadow-md);min-width:190px;padding:6px;
   display:none;flex-direction:column;gap:2px;z-index:200}
 .login-dropdown.open{display:flex}
@@ -70,7 +70,7 @@ header{
   box-shadow:0 1px 8px rgba(0,0,0,.06);position:relative;z-index:100;
   overflow:visible;
 }
-.hdr-logo{display:flex;align-items:center;flex-shrink:0;padding-left:99px}
+.hdr-logo{display:flex;align-items:center;flex-shrink:0;padding-left:99px;margin-right:4px}
 .hdr-logo img{position:absolute;left:28px;top:50%;transform:translateY(-50%);
   width:85px;height:auto;display:block;z-index:5;pointer-events:none}
 .logo-svg{width:64px;height:64px;flex-shrink:0}
@@ -503,15 +503,14 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   .topbar-txt{font-size:10px;letter-spacing:0}
   .topbar-langs{padding:2px 8px;gap:3px}
   .lb{padding:0 8px;font-size:10px;min-height:36px;display:inline-flex;align-items:center;justify-content:center}
-  .topbar-login{padding:2px 8px}
   .login-trigger{padding:0 8px;font-size:10px;min-height:36px;display:inline-flex;align-items:center}
   .login-txt{display:none}
-  .login-dropdown{right:-8px;min-width:170px}
-  
+  .login-dropdown{left:-8px;min-width:170px}
+
 
   /* Хедер — компактный */
-  header{height:52px;padding:0 14px;gap:10px}
-  header .hdr-logo{padding-left:56px!important}
+  header{height:52px;padding:0 14px;gap:8px}
+  header .hdr-logo{padding-left:56px!important;margin-right:0}
   header .hdr-logo img{width:42px!important;left:14px}
   .hdr-brand{font-size:13px}
   .hdr-brand small{font-size:9px}
