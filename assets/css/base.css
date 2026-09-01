@@ -510,7 +510,11 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   .lb{padding:0 8px;font-size:10px;min-height:36px;display:inline-flex;align-items:center;justify-content:center}
   .login-trigger{padding:0 8px;font-size:10px;min-height:36px;display:inline-flex;align-items:center}
   .login-txt{display:none}
-  .login-dropdown{left:-8px;min-width:170px}
+  /* Opens right-aligned to the trigger (not left:0 like desktop) — on a
+     narrow viewport the button sits well right of the screen edge (after
+     logo+brand), so a dropdown opening rightward from it overflows off
+     the right edge of the screen entirely. */
+  .login-dropdown{left:auto;right:-8px;min-width:170px;max-width:calc(100vw - 24px)}
 
 
   /* Хедер — компактный */
