@@ -721,7 +721,9 @@
       // .bk-grid-wrap entirely, so hiding gridWrap above never touched it and
       // it stayed clickable right next to the "Dziękujemy" success message.
       // Pages without this calculator simply don't have these ids — no-op there.
-      ['sb-cta', 'mob-cta-btn'].forEach(function(id){
+      // 'order-cta' is the same button, just under a different id on the
+      // po-remoncie page specifically (sb-cta/mob-cta-btn elsewhere).
+      ['sb-cta', 'mob-cta-btn', 'order-cta'].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.disabled = true;
       });
