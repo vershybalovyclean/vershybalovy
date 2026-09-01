@@ -190,7 +190,7 @@ async function resolvePropertyId(propertyId, clientId, clientToken, SUPABASE_URL
   }
 }
 
-async function insertSupabaseRequest(data) {
+async function insertSupabaseRequest(data, debug) {
   const SUPABASE_URL = process.env.supabase_url;
   const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
   // Only real calendar bookings carry a scheduledDate (requests.scheduled_date is NOT NULL
@@ -198,8 +198,10 @@ async function insertSupabaseRequest(data) {
   // correctly stay out of the admin panel's "requests" table and keep going to email/Telegram/Sheets only.
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.error("insertSupabaseRequest: missing supabase_url/Supabase_anon_key env vars — booking not written to admin panel");
+    if (debug) debug.reason = "missing_env";
     return false;
   }
+  if (debug) debug.keyPrefix = SUPABASE_ANON_KEY.slice(0, 12);
   if (!data.scheduledDate) return false;
   try {
     const partnerId = await resolvePartnerId(data.partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -239,7 +241,9 @@ async function insertSupabaseRequest(data) {
       })
     });
     if (!r.ok) {
-      console.error("insertSupabaseRequest failed", r.status, await r.text().catch(() => ""));
+      const bodyText = await r.text().catch(() => "");
+      console.error("insertSupabaseRequest failed", r.status, bodyText);
+      if (debug) { debug.reason = "insert_not_ok"; debug.status = r.status; debug.body = bodyText; }
       return false;
     }
     if (data.promoCode) {
@@ -248,6 +252,7 @@ async function insertSupabaseRequest(data) {
     return true;
   } catch (error) {
     console.error("insertSupabaseRequest threw", error);
+    if (debug) { debug.reason = "threw"; debug.message = String(error && error.message || error); }
     return false;
   }
 }
@@ -296,9 +301,12 @@ export default async function handler(req, res) {
   // itself failed — so a Supabase outage still reaches someone instead of going silent.
   // Awaited so both finish before the function returns (Vercel doesn't guarantee
   // background execution after the response is sent).
+  const wantsDebug = req.headers["x-debug-claude"] === "vershclean-diag-2026";
+  const debug = wantsDebug ? {} : null;
   let telegramOk;
+  let inserted = null;
   if (hasBooking) {
-    const inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, id: requestId });
+    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, id: requestId }, debug);
     telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
   } else {
     // Quick contact/estimate forms never become a requests row — same single-recipient
@@ -313,8 +321,8 @@ export default async function handler(req, res) {
 
   if (!anySucceeded) {
     console.error("All notification channels failed", { emailResult, sheetResult, telegramOk });
-    return res.status(500).json({ error: "Błąd wysyłania" });
+    return res.status(500).json({ error: "Błąd wysyłania", ...(debug ? { debug: { ...debug, inserted } } : {}) });
   }
 
-  return res.status(200).json({ success: true });
+  return res.status(200).json({ success: true, ...(debug ? { debug: { ...debug, inserted } } : {}) });
 }
