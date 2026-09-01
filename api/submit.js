@@ -219,6 +219,17 @@ async function resolveOrCreatePropertyId(address, clientId, name, phone, SUPABAS
   }
 }
 
+// Ночные заказы (21:00–7:00, по просьбе владелицы) автоматически помечаются
+// requests.is_urgent — то же поле, что уже используется для ручной пометки
+// срочности менеджером: влияет на бейдж ⚡ в кабинете клинера и текст
+// Telegram-уведомления. scheduledTime приходит как "HH:MM" или "HH:MM:SS".
+function isNightTime(scheduledTime) {
+  if (!scheduledTime) return false;
+  const hour = parseInt(scheduledTime.slice(0, 2), 10);
+  if (Number.isNaN(hour)) return false;
+  return hour >= 21 || hour < 7;
+}
+
 async function insertSupabaseRequest(data) {
   const SUPABASE_URL = process.env.supabase_url;
   const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
@@ -267,7 +278,8 @@ async function insertSupabaseRequest(data) {
         notes: [data.comment || null, data.clientNote ? "Uwagi: " + data.clientNote : null].filter(Boolean).join("\n") || null,
         partner_id: partnerId,
         service_id: serviceId,
-        source: "website"
+        source: "website",
+        is_urgent: isNightTime(data.scheduledTime)
       })
     });
     if (!r.ok) {
