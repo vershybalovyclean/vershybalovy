@@ -14,6 +14,7 @@
   var bk_savedAddressText = '';
   var bk_savedPropertyId = null;
   var bk_clientToken = null;
+  var bk_isAuthenticated = false;
   // Same anon/publishable key already used server-side in api/submit.js (Supabase_anon_key) —
   // safe to embed client-side, it's the public half by design (RLS + narrow RPC grants gate it).
   var BK_SUPABASE_URL = "https://qwwerfvyscrzwvadgudn.supabase.co";
@@ -64,6 +65,7 @@
       f1:'✔ bez ukrytych dopłat',f2:'✔ własne środki w cenie',f3:'✔ możliwość zmiany terminu',
       successThanks:'Dziękujemy',successP:'Twoja prośba o rezerwację została wysłana. Skontaktujemy się z Tobą w ciągu <strong>15 minut</strong> przez WhatsApp lub telefon.',
       recapDate:'📅 Termin',recapTime:'⏰ Godzina',recapPhone:'📞 Telefon',waBtn:'💬 Otwórz WhatsApp',
+      myOrdersBtn:'📋 Zobacz moje zamówienia',
       bonusNote:'✓ Bonus już wliczony — bez dopłat',
       MONTHS:['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'],
       WDAYS:['Pn','Wt','Śr','Cz','Pt','So','Nd'],
@@ -93,6 +95,7 @@
       f1:'✔ без прихованих доплат',f2:'✔ власні засоби включені',f3:'✔ можливість зміни дати',
       successThanks:'Дякуємо',successP:"Твоя заявка надіслана. Зв'яжемося протягом <strong>15 хвилин</strong> через WhatsApp або телефон.",
       recapDate:'📅 Дата',recapTime:'⏰ Час',recapPhone:'📞 Телефон',waBtn:'💬 Відкрити WhatsApp',
+      myOrdersBtn:'📋 Переглянути мої замовлення',
       bonusNote:'✓ Бонус вже включено — без доплат',
       MONTHS:['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'],
       WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],
@@ -122,6 +125,7 @@
       f1:'✔ без скрытых доплат',f2:'✔ собственные средства в цене',f3:'✔ возможность изменить дату',
       successThanks:'Спасибо',successP:'Ваша заявка на бронирование отправлена. Свяжемся с вами в течение <strong>15 минут</strong> через WhatsApp или по телефону.',
       recapDate:'📅 Дата',recapTime:'⏰ Время',recapPhone:'📞 Телефон',waBtn:'💬 Открыть WhatsApp',
+      myOrdersBtn:'📋 Смотреть мои заказы',
       bonusNote:'✓ Бонус уже включён — без доплат',
       MONTHS:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
       WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
@@ -151,6 +155,7 @@
       f1:'✔ no hidden fees',f2:'✔ our own supplies included',f3:'✔ date can be changed',
       successThanks:'Thank you',successP:"Your booking request has been sent. We'll contact you within <strong>15 minutes</strong> via WhatsApp or phone.",
       recapDate:'📅 Date',recapTime:'⏰ Time',recapPhone:'📞 Phone',waBtn:'💬 Open WhatsApp',
+      myOrdersBtn:'📋 View my orders',
       bonusNote:'✓ Bonus already included — no extra charge',
       MONTHS:['January','February','March','April','May','June','July','August','September','October','November','December'],
       WDAYS:['Mo','Tu','We','Th','Fr','Sa','Su'],
@@ -706,7 +711,7 @@
           partnerRow.classList.add('bk-hidden');
         }
       }
-      document.getElementById('bk-wa-btn').textContent = bk_t('waBtn');
+      bk_applyWaBtnState();
       var gridWrap = document.querySelector('.bk-grid-wrap');
       if(gridWrap) gridWrap.style.display='none';
       document.getElementById('bk-successView').classList.remove('bk-hidden');
@@ -743,13 +748,14 @@
       'bk-partner-label':'partnerLabel','bk-lbl-partner-code':'lblPartnerCode','bk-partner-code-hint':'partnerCodeHint',
       'bk-lbl-notes':'lblNotes','bk-opt2':'opt','bk-submit-txt':'submitTxt',
       'bk-cta-sub':'ctaSub','bk-r-date':'recapDate','bk-r-time':'recapTime',
-      'bk-r-phone':'recapPhone','bk-wa-btn':'waBtn','bk-consent-label':'consentLabel'
+      'bk-r-phone':'recapPhone','bk-consent-label':'consentLabel'
     };
     var richIds = {'bk-sub-txt':1,'bk-consent-label':1};
     Object.keys(ids).forEach(function(id){
       var el = document.getElementById(id);
       if(el){ if(richIds[id]) el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
     });
+    bk_applyWaBtnState();
     var phIds = {
       'bk-name':'phName','bk-phone':'phPhone','bk-email':'phEmail',
       'bk-street':'phStreet','bk-apt':'phApt','bk-postal':'phPostal',
@@ -759,6 +765,28 @@
       var el=document.getElementById(id);
       if(el) el.placeholder=bk_t(phIds[id]);
     });
+  }
+
+  // Confirmation-screen action button: guests get the WhatsApp deep link
+  // (unchanged); a client who was already logged in when they booked gets a
+  // link straight to their own orders list instead — a WhatsApp handoff
+  // makes no sense when we already know exactly who they are and the order
+  // is sitting in their cabinet. #myrequests matches the client cabinet's
+  // own panel id once it supports hash-based deep links (see client.js).
+  function bk_applyWaBtnState(){
+    var btn = document.getElementById('bk-wa-btn');
+    if(!btn) return;
+    if(bk_isAuthenticated){
+      btn.textContent = bk_t('myOrdersBtn');
+      btn.href = 'https://kabinet.vershclean.pl/client/dashboard.html#myrequests';
+      btn.target = '_blank';
+      btn.rel = 'noopener';
+    } else {
+      btn.textContent = bk_t('waBtn');
+      btn.href = 'https://wa.me/48514363538';
+      btn.target = '_blank';
+      btn.rel = 'noreferrer';
+    }
   }
 
   /* ─── LOGGED-IN CLIENT: prefill + saved-address picker ─
@@ -830,6 +858,7 @@
     window.vcGetClientSession().then(function(session){
       if(!session) return;
       bk_clientToken = session.token;
+      bk_isAuthenticated = true;
       var nameEl = document.getElementById('bk-name');
       var phoneEl = document.getElementById('bk-phone');
       var emailEl = document.getElementById('bk-email');
