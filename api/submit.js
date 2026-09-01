@@ -190,7 +190,7 @@ async function resolvePropertyId(propertyId, clientId, clientToken, SUPABASE_URL
   }
 }
 
-async function insertSupabaseRequest(data, debug) {
+async function insertSupabaseRequest(data) {
   const SUPABASE_URL = process.env.supabase_url;
   const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
   // Only real calendar bookings carry a scheduledDate (requests.scheduled_date is NOT NULL
@@ -198,10 +198,8 @@ async function insertSupabaseRequest(data, debug) {
   // correctly stay out of the admin panel's "requests" table and keep going to email/Telegram/Sheets only.
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.error("insertSupabaseRequest: missing supabase_url/Supabase_anon_key env vars — booking not written to admin panel");
-    if (debug) debug.reason = "missing_env";
     return false;
   }
-  if (debug) { debug.keyPrefix = SUPABASE_ANON_KEY.slice(0, 12); debug.keyLen = SUPABASE_ANON_KEY.length; debug.url = SUPABASE_URL; }
   if (!data.scheduledDate) return false;
   try {
     const partnerId = await resolvePartnerId(data.partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -241,9 +239,7 @@ async function insertSupabaseRequest(data, debug) {
       })
     });
     if (!r.ok) {
-      const bodyText = await r.text().catch(() => "");
-      console.error("insertSupabaseRequest failed", r.status, bodyText);
-      if (debug) { debug.reason = "insert_not_ok"; debug.status = r.status; debug.body = bodyText; }
+      console.error("insertSupabaseRequest failed", r.status, await r.text().catch(() => ""));
       return false;
     }
     if (data.promoCode) {
@@ -252,11 +248,6 @@ async function insertSupabaseRequest(data, debug) {
     return true;
   } catch (error) {
     console.error("insertSupabaseRequest threw", error);
-    if (debug) {
-      debug.reason = "threw";
-      debug.message = String(error && error.message || error);
-      debug.cause = error && error.cause ? String(error.cause.message || error.cause.code || error.cause) : null;
-    }
     return false;
   }
 }
@@ -301,16 +292,18 @@ export default async function handler(req, res) {
 
   // Telegram is handled sequentially, not in the allSettled batch above: for a real
   // booking it must fan out via notifyOwnerEvent (which needs the DB row to already
-  // exist), falling back to the single-recipient sendTelegram() only if that insert
-  // itself failed — so a Supabase outage still reaches someone instead of going silent.
+  // exist), falling back to the single-recipient sendTelegram() only as a best-effort
+  // extra channel if that insert itself failed — so a Supabase outage still reaches
+  // someone instead of going silent. It is never allowed to substitute for the insert
+  // in the client-facing success check below: a notification reaching the owner is not
+  // the same as the booking actually being saved, and conflating the two previously let
+  // a client see "Dziękujemy" for a request that was never written to the database.
   // Awaited so both finish before the function returns (Vercel doesn't guarantee
   // background execution after the response is sent).
-  const wantsDebug = req.headers["x-debug-claude"] === "vershclean-diag-2026";
-  const debug = wantsDebug ? {} : null;
   let telegramOk;
   let inserted = null;
   if (hasBooking) {
-    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, id: requestId }, debug);
+    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, id: requestId });
     telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
   } else {
     // Quick contact/estimate forms never become a requests row — same single-recipient
@@ -318,15 +311,26 @@ export default async function handler(req, res) {
     telegramOk = await sendTelegram(text);
   }
 
-  // Same invariant as before: "sent" means a human was actually notified (email/
-  // Telegram/Sheets), never just that the admin-panel database write succeeded.
+  if (hasBooking) {
+    // A real calendar booking is only a success if it was actually saved — the
+    // notification channels above are a best-effort side conversation with the owner,
+    // not proof the client's request exists anywhere.
+    if (!inserted) {
+      console.error("Booking not saved to Supabase", { emailResult, sheetResult, telegramOk });
+      return res.status(500).json({ error: "Nie udało się zapisać rezerwacji. Spróbuj ponownie lub skontaktuj się z nami telefonicznie." });
+    }
+    return res.status(200).json({ success: true });
+  }
+
+  // Quick contact/estimate forms have no database row to check — "sent" means a human
+  // was actually notified via at least one channel (email/Telegram/Sheets).
   const anySucceeded = telegramOk === true
     || [emailResult, sheetResult].some(function (r) { return r.status === "fulfilled" && r.value === true; });
 
   if (!anySucceeded) {
     console.error("All notification channels failed", { emailResult, sheetResult, telegramOk });
-    return res.status(500).json({ error: "Błąd wysyłania", ...(debug ? { debug: { ...debug, inserted } } : {}) });
+    return res.status(500).json({ error: "Błąd wysyłania" });
   }
 
-  return res.status(200).json({ success: true, ...(debug ? { debug: { ...debug, inserted } } : {}) });
+  return res.status(200).json({ success: true });
 }
