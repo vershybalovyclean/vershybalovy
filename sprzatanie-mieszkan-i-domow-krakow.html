@@ -997,7 +997,7 @@ pl:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em>",
   /* NAV */
   nav_home:"🏠 Strona główna", nav_mieszkan:"🧹 Sprzątanie mieszkań",
-  nav_remont:"🏗️ Po remoncie", nav_wyjazd:"🏠 Po wyjeździe", nav_zb:"🏚️ Po zbieractwie", nav_okna:"🪟 Mycie okien", nav_about:"👥 Poznaj nas", nav_cta:"🤝 Zostań partnerem", login_btn:"Zaloguj się", login_client:"👤 Kabinet klienta", login_partner:"🤝 Kabinet partnera",
+  nav_remont:"🏗️ Po remoncie", nav_wyjazd:"🏠 Po wyjeździe", nav_zb:"🏚️ Po zbieractwie", nav_okna:"🪟 Mycie okien", nav_about:"👥 Poznaj nas", nav_cta:"🤝 Zostań partnerem", login_btn:"Zaloguj się", login_client:"👤 Kabinet klienta", login_partner:"🤝 Kabinet partnera", login_register:"📝 Zarejestruj się",
   /* HERO */
   hero_badge:"🏠 Kraków i Małopolska",
   hero_h1:"Profesjonalne sprzątanie mieszkań<br><em>trzy poziomy czystości</em>",
@@ -1087,7 +1087,7 @@ photo_cta_title:"Nie wiesz, którą usługę wybrać?",
 uk:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>",
   nav_home:"🏠 Головна", nav_mieszkan:"🧹 Прибирання квартир",
-  nav_remont:"🏗️ Після ремонту", nav_wyjazd:"🏠 Після виїзду", nav_zb:"🏚️ Після захаращення", nav_okna:"🪟 Миття вікон", nav_about:"👥 Про нас", nav_cta:"🤝 Стати партнером", login_btn:"Увійти", login_client:"👤 Кабінет клієнта", login_partner:"🤝 Кабінет партнера",
+  nav_remont:"🏗️ Після ремонту", nav_wyjazd:"🏠 Після виїзду", nav_zb:"🏚️ Після захаращення", nav_okna:"🪟 Миття вікон", nav_about:"👥 Про нас", nav_cta:"🤝 Стати партнером", login_btn:"Увійти", login_client:"👤 Кабінет клієнта", login_partner:"🤝 Кабінет партнера", login_register:"📝 Зареєструватися",
   hero_badge:"🏠 Краків і Малопольща",
   hero_h1:"Професійне прибирання квартир<br><em>три рівні чистоти</em>",
   hero_sub:"Від швидкого освіження до глибокого прибирання кожного куточка — підберемо обсяг під ваші потреби.",
@@ -1163,7 +1163,7 @@ photo_cta_title:"Не знаєте, яку послугу обрати?",
 ru:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>",
   nav_home:"🏠 Главная", nav_mieszkan:"🧹 Уборка квартир",
-  nav_remont:"🏗️ После ремонта", nav_wyjazd:"🏠 После выезда", nav_zb:"🏚️ После захламления", nav_okna:"🪟 Мытьё окон", nav_about:"👥 О нас", nav_cta:"🤝 Стать партнёром", login_btn:"Войти", login_client:"👤 Кабинет клиента", login_partner:"🤝 Кабинет партнёра",
+  nav_remont:"🏗️ После ремонта", nav_wyjazd:"🏠 После выезда", nav_zb:"🏚️ После захламления", nav_okna:"🪟 Мытьё окон", nav_about:"👥 О нас", nav_cta:"🤝 Стать партнёром", login_btn:"Войти", login_client:"👤 Кабинет клиента", login_partner:"🤝 Кабинет партнёра", login_register:"📝 Зарегистрироваться",
   hero_badge:"🏠 Краков и Малопольша",
   hero_h1:"Профессиональная уборка квартир<br><em>три уровня чистоты</em>",
   hero_sub:"От быстрого освежения до глубокой чистки каждого уголка — подберём объём под ваши потребности.",
@@ -1239,7 +1239,7 @@ photo_cta_title:"Не знаете, какую услугу выбрать?",
 en:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>",
   nav_home:"🏠 Home", nav_mieszkan:"🧹 Apartment cleaning",
-  nav_remont:"🏗️ Post-renovation", nav_wyjazd:"🏠 Post-checkout", nav_zb:"🏚️ Hoarding cleanup", nav_okna:"🪟 Window cleaning", nav_about:"👥 Meet us", nav_cta:"🤝 Become a partner", login_btn:"Sign in", login_client:"👤 Client cabinet", login_partner:"🤝 Partner cabinet",
+  nav_remont:"🏗️ Post-renovation", nav_wyjazd:"🏠 Post-checkout", nav_zb:"🏚️ Hoarding cleanup", nav_okna:"🪟 Window cleaning", nav_about:"👥 Meet us", nav_cta:"🤝 Become a partner", login_btn:"Sign in", login_client:"👤 Client cabinet", login_partner:"🤝 Partner cabinet", login_register:"📝 Register",
   hero_badge:"🏠 Kraków & Małopolska",
   hero_h1:"Professional apartment cleaning<br><em>three levels of cleanliness</em>",
   hero_sub:"From a quick refresh to deep cleaning every corner — we'll tailor the scope to your needs.",
@@ -1342,6 +1342,7 @@ function applyTranslations(l) {
   setTxt('loginBtnTxt', t.login_btn);
   setTxt('loginClient', t.login_client);
   setTxt('loginPartner', t.login_partner);
+  setTxt('loginRegister', t.login_register);
 
   // Hero
   set('hero-badge', t.hero_badge);
@@ -1820,12 +1821,20 @@ function applyTranslations(l) {
 function SL(l) {
   lang = l;
   localStorage.setItem('vc_lang', l);
+  document.documentElement.lang = l;
   document.querySelectorAll('.lb').forEach(function(b,i){
     b.classList.toggle('on', ['pl','uk','ru','en'][i] === l);
   });
   applyTranslations(l);
 }
-window.addEventListener('load', function(){ initWindowPicker(); SL(localStorage.getItem('vc_lang') || 'pl'); });
+window.addEventListener('load', function(){
+  initWindowPicker();
+  SL(localStorage.getItem('vc_lang') || 'pl');
+  // SL() resets the login button to the translated "log in" default — if a
+  // client session was already detected before this late-firing handler ran
+  // (see assets/js/site-auth-ui.js), re-assert it so the name isn't lost.
+  if (window.vcReapplySiteAuth) window.vcReapplySiteAuth();
+});
 
 </script>
 <noscript><img height="1" width="1" style="display:none"

@@ -632,7 +632,7 @@ var TX = {
 pl: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em>',
   nav_mieszkan:'🧹 Sprzątanie mieszkań', nav_remont:'🏗️ Po remoncie', nav_wyjazd:'🏠 Po wyjeździe',
-  nav_zb:'🏚️ Po zbieractwie', nav_okna:'🪟 Mycie okien', nav_about:'👥 Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera',
+  nav_zb:'🏚️ Po zbieractwie', nav_okna:'🪟 Mycie okien', nav_about:'👥 Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera', login_register:'📝 Zarejestruj się',
   hero_badge:'🏚️ Trudne przypadki',
   hero_h1:'Profesjonalne sprzątanie po <em>zbieractwie</em> w Krakowie',
   hero_sub:'Profesjonalne sprzątanie mieszkań po zbieractwie, wieloletnim zaniedbaniu i skrajnym zabrudzeniu.',
@@ -734,7 +734,7 @@ pl: {
 uk: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>',
   nav_mieszkan:'🧹 Прибирання квартир', nav_remont:'🏗️ Після ремонту', nav_wyjazd:'🏠 Після виїзду',
-  nav_zb:'🏚️ Після захаращення', nav_okna:'🪟 Миття вікон', nav_about:'👥 Про нас', hdr_cta:'🤝 Стати партнером', login_btn:'Увійти', login_client:'👤 Кабінет клієнта', login_partner:'🤝 Кабінет партнера',
+  nav_zb:'🏚️ Після захаращення', nav_okna:'🪟 Миття вікон', nav_about:'👥 Про нас', hdr_cta:'🤝 Стати партнером', login_btn:'Увійти', login_client:'👤 Кабінет клієнта', login_partner:'🤝 Кабінет партнера', login_register:'📝 Зареєструватися',
   hero_badge:'🏚️ Складні випадки',
   hero_h1:'Професійне прибирання після <em>патологічного захаращення</em>',
   hero_sub:'Повертаємо квартири до життя — після багаторічного занедбання, захаращення та екстремального забруднення. Озонування, професійна дезінфекція та повна конфіденційність.',
@@ -836,7 +836,7 @@ uk: {
 ru: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>',
   nav_mieszkan:'🧹 Уборка квартир', nav_remont:'🏗️ После ремонта', nav_wyjazd:'🏠 После выезда',
-  nav_zb:'🏚️ После захламления', nav_okna:'🪟 Мытьё окон', nav_about:'👥 О нас', hdr_cta:'🤝 Стать партнёром', login_btn:'Войти', login_client:'👤 Кабинет клиента', login_partner:'🤝 Кабинет партнёра',
+  nav_zb:'🏚️ После захламления', nav_okna:'🪟 Мытьё окон', nav_about:'👥 О нас', hdr_cta:'🤝 Стать партнёром', login_btn:'Войти', login_client:'👤 Кабинет клиента', login_partner:'🤝 Кабинет партнёра', login_register:'📝 Зарегистрироваться',
   hero_badge:'🏚️ Сложные случаи',
   hero_h1:'Профессиональная уборка после <em>патологического захламления</em>',
   hero_sub:'Возвращаем квартиры к жизни — после многолетней запущенности, захламления и экстремального загрязнения. Озонирование, профессиональная дезинфекция и полная конфиденциальность.',
@@ -938,7 +938,7 @@ ru: {
 en: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>',
   nav_mieszkan:'🧹 Apartment cleaning', nav_remont:'🏗️ Post-renovation', nav_wyjazd:'🏠 Post-checkout',
-  nav_zb:'🏚️ Hoarding cleanup', nav_okna:'🪟 Window cleaning', nav_about:'👥 Meet us', hdr_cta:'🤝 Become a partner', login_btn:'Sign in', login_client:'👤 Client cabinet', login_partner:'🤝 Partner cabinet',
+  nav_zb:'🏚️ Hoarding cleanup', nav_okna:'🪟 Window cleaning', nav_about:'👥 Meet us', hdr_cta:'🤝 Become a partner', login_btn:'Sign in', login_client:'👤 Client cabinet', login_partner:'🤝 Partner cabinet', login_register:'📝 Register',
   hero_badge:'🏚️ Difficult cases',
   hero_h1:'Professional Hoarding & <em>Extreme Cleaning</em> Service',
   hero_sub:'We bring homes back to life — after years of neglect, hoarding, or extreme contamination. Ozone treatment, professional disinfection and full discretion.',
@@ -1045,6 +1045,7 @@ function setTxt(id, txt) { var el = document.getElementById(id); if (el) el.text
 function applyTranslations(l) {
   lang = l;
   localStorage.setItem('vc_lang', l);
+  document.documentElement.lang = l;
   var t = TX[l] || TX.pl;
   document.querySelectorAll('.lb').forEach(function(b, i) {
     b.classList.toggle('on', ['pl','uk','ru','en'][i] === l);
@@ -1054,7 +1055,7 @@ function applyTranslations(l) {
   setTxt('nav-mieszkan', t.nav_mieszkan); setTxt('nav-remont', t.nav_remont);
   setTxt('nav-wyjazd', t.nav_wyjazd); setTxt('nav-zb', t.nav_zb);
   setTxt('nav-okna', t.nav_okna); setTxt('nav-about', t.nav_about); setTxt('hdr-cta', t.hdr_cta);
-  setTxt('loginBtnTxt', t.login_btn); setTxt('loginClient', t.login_client); setTxt('loginPartner', t.login_partner);
+  setTxt('loginBtnTxt', t.login_btn); setTxt('loginClient', t.login_client); setTxt('loginPartner', t.login_partner); setTxt('loginRegister', t.login_register);
 
   setTxt('hero-badge', t.hero_badge); set('hero-h1', t.hero_h1); setTxt('hero-sub', t.hero_sub);
   setTxt('hero-btn1', t.hero_btn1); setTxt('hero-btn2', t.hero_btn2);

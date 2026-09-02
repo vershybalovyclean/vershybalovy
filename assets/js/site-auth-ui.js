@@ -49,6 +49,14 @@
     });
   }
 
+  // Exposed so pages whose language-apply function runs late (deferred to
+  // window 'load' — see the comment above SL()/applyTranslations() on pages
+  // with heavier hero imagery) can re-assert an already-detected client
+  // session after resetting the login button text to the translated
+  // default. vcGetClientSession() caches its result, so calling this again
+  // is cheap and makes no extra network request.
+  window.vcReapplySiteAuth = init;
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
