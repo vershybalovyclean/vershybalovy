@@ -72,13 +72,30 @@ async function notifyOwnerEvent(requestId) {
 // (Telegram), never send-push, so owner/manager got no push for a new booking
 // coming from the public site (client-cabinet repeat bookings were fine,
 // see client.js's own notifyPush('new_request', ...) call).
+//
+// Needs an Authorization header, unlike notify-owner-event right above it:
+// send-push's own header comment claims verify_jwt=false ("Публичная...
+// вызывается из всех 4 кабинетов"), but the deployed function actually
+// enforces verify_jwt=true at the gateway — every existing caller is a
+// logged-in cabinet using supabase-js's functions.invoke(), which attaches
+// the user's session JWT automatically, so this was never visible until an
+// anonymous (no-session) caller tried it and got a 401
+// UNAUTHORIZED_NO_AUTH_HEADER before the function body ever ran. Reusing the
+// same server-side anon key insertSupabaseRequest() already uses below is
+// enough to pass that gate — send-push resolves the real recipient from the
+// {event, id} row itself, not from whoever's key was on the request.
 async function notifyPushOwner(requestId) {
   const SUPABASE_URL = process.env.supabase_url;
-  if (!SUPABASE_URL || !requestId) return false;
+  const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !requestId) return false;
   try {
     const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/send-push", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+      },
       body: JSON.stringify({ event: "new_request", id: requestId })
     });
     return r.ok;
