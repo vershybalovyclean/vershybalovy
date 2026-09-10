@@ -941,6 +941,18 @@ function submitOrder(){
     serviceSlug: (order.tier === 'bez') ? 'sprzatanie-po-remoncie' : 'remont-z-meblami',
     area: order.m2 ? order.m2 + ' m²' : '',
     extras: extrasArr.join(', '),
+    // Structured snapshot alongside the display strings above (see booking.js) —
+    // selectedAddons already holds the raw {nameId, qty, price} per item.
+    addons: selectedAddons.filter(function(a){ return a.price > 0; }).map(function(a){
+      return { key: 'pr:' + a.nameId, qty: a.qty, price: a.price };
+    }),
+    areaM2: order.m2 || null,
+    // serviceLines carries the SERVICE-only price (order.price, before addons)
+    // so admin-side request_services isn't polluted by the addons total in `price`.
+    serviceLines: (order.price > 0) ? [{
+      slug: (order.tier === 'bez') ? 'sprzatanie-po-remoncie' : 'remont-z-meblami',
+      m2: order.m2 || 0, price: order.price, qty: 1
+    }] : null,
     price: total
   };
   bk_renderOrder();

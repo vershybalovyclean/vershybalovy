@@ -1205,6 +1205,18 @@ function submitOrder(){
     serviceSlug: (SEL && SEL.cat === 'bezmeb') ? 'wyprowadzka-bez-mebli' : 'sprzatanie-po-wyprowadzce',
     area: (SEL && SEL.m2) ? SEL.m2 + ' m²' : '',
     extras: extrasArr.join(', '),
+    // Structured snapshot alongside the display strings above (see booking.js) —
+    // selectedAddons already holds the raw {id, qty, price} per item. serviceLines
+    // carries the SERVICE-only price (SEL.price, before addonsTotal) so admin-side
+    // request_services isn't polluted by the addons total baked into `price` below.
+    addons: selectedAddons.filter(function(a){ return a.price > 0; }).map(function(a){
+      return { key: 'wp:' + a.id, qty: a.qty, price: a.price };
+    }),
+    areaM2: (SEL && SEL.m2) ? SEL.m2 : null,
+    serviceLines: (SEL && SEL.price > 0) ? [{
+      slug: (SEL.cat === 'bezmeb') ? 'wyprowadzka-bez-mebli' : 'sprzatanie-po-wyprowadzce',
+      m2: SEL.m2 || 0, price: SEL.price, qty: 1
+    }] : null,
     price: total
   };
   bk_renderOrder();

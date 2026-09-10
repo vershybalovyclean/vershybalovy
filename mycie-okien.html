@@ -745,6 +745,11 @@ function submitOrder(){
     service: SEL.service,
     area: SEL.m2 ? SEL.m2 + ' m²' : '',
     extras: balustradyTotal>0 ? (_t('addon_balustrady')+' ('+balQty+' szt.)') : '',
+    // Structured snapshot alongside the display strings above (see booking.js) —
+    // balustrady is priced season vs. winter depending on SEL.idx (see balStep()
+    // above), so the key itself picks the matching catalog row.
+    addons: balustradyTotal>0 ? [{ key: SEL.idx===1 ? 'ok:balustrady-winter' : 'ok:balustrady-season', qty: balQty, price: balPrice }] : [],
+    areaM2: SEL.m2 || null,
     price: (SEL.price || 0) + balustradyTotal
   };
   bk_renderOrder();

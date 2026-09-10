@@ -219,6 +219,35 @@ async function resolveOrCreatePropertyId(address, clientId, name, phone, SUPABAS
   }
 }
 
+// Resolves site_key -> addon_services.id via a narrow SECURITY DEFINER RPC —
+// anon has no direct SELECT on addon_services (staff/client only, see schema.sql),
+// and addon_services itself has no slug column since one site_key like "al7" can
+// mean a different real addon depending on which page sent it (page-prefixed,
+// see site_addon_map). Returns a {site_key: addon_service_id} map; any key with
+// no match (typo, retired addon) is simply absent from the result, not an error —
+// insertRequestAddons below skips those rather than failing the whole booking.
+async function resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY) {
+  if (!Array.isArray(keys) || !keys.length || !SUPABASE_URL || !SUPABASE_ANON_KEY) return {};
+  try {
+    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_addon_service_ids", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({ p_keys: keys })
+    });
+    if (!r.ok) return {};
+    const rows = await r.json();
+    const map = {};
+    for (const row of rows) map[row.site_key] = row.addon_service_id;
+    return map;
+  } catch (error) {
+    return {};
+  }
+}
+
 // Ночные заказы (21:00–7:00, по просьбе владелицы) автоматически помечаются
 // requests.is_urgent — то же поле, что уже используется для ручной пометки
 // срочности менеджером: влияет на бейдж ⚡ в кабинете клинера и текст
@@ -249,6 +278,19 @@ async function insertSupabaseRequest(data) {
     if (!propertyId && data.address) {
       propertyId = await resolveOrCreatePropertyId(data.address, clientId, data.name, data.phone, SUPABASE_URL, SUPABASE_ANON_KEY);
     }
+    // notes = only the client's own words, matching how manual/client-cabinet
+    // requests already work. hasClientNote mirrors the same flag the Telegram
+    // text below already uses correctly — the full calendar widget (booking.js)
+    // always sends clientNote (possibly ''), so this resolves to clientNote-or-null
+    // for every real booking; comment (the auto-generated summary) is no longer
+    // used as a fallback for those. Simple contact forms that never send
+    // clientNote at all keep today's behavior (comment IS the message) — but
+    // those never reach this function anyway (no scheduledDate, see guard above).
+    const hasClientNote = data.clientNote !== undefined;
+    const notes = hasClientNote ? (data.clientNote || null) : (data.comment || null);
+
+    const freqTimes = (typeof data.freqTimes === "number" && data.freqTimes > 1) ? data.freqTimes : 1;
+
     const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
       method: "POST",
       headers: {
@@ -270,16 +312,17 @@ async function insertSupabaseRequest(data) {
         scheduled_time: data.scheduledTime || null,
         service_label: data.service || null,
         price: data.price || null,
-        // requests.notes is shown in the admin panel as the client's own comment
-        // (rc_client_comment, quoted verbatim) — data.comment is really the
-        // auto-generated order summary (see booking.js), so the client's actual
-        // note (data.clientNote) is appended last, clearly labeled, instead of
-        // being the whole thing.
-        notes: [data.comment || null, data.clientNote ? "Uwagi: " + data.clientNote : null].filter(Boolean).join("\n") || null,
+        notes: notes,
         partner_id: partnerId,
         service_id: serviceId,
         source: "website",
-        is_urgent: isNightTime(data.scheduledTime)
+        is_urgent: isNightTime(data.scheduledTime),
+        area_m2: (typeof data.areaM2 === "number") ? data.areaM2 : null,
+        orders_per_month: freqTimes,
+        requested_payment_method: data.paymentMethod || null,
+        invoice_requested: !!data.invoiceRequested,
+        promo_code: data.promoCode || null,
+        promo_discount_amount: (typeof data.promoDiscountAmount === "number") ? data.promoDiscountAmount : 0
       })
     });
     if (!r.ok) {
@@ -289,6 +332,60 @@ async function insertSupabaseRequest(data) {
     if (data.promoCode) {
       await incrementPromoUsage(data.promoCode, SUPABASE_URL, SUPABASE_ANON_KEY);
     }
+
+    // request_services — one row per selected tier (MIXED-capable, see
+    // sprzatanie-mieszkan-i-domow-krakow.html); each line's own slug is resolved
+    // independently since a MIXED order has no single services.id for the whole
+    // request. price is the TOTAL for the line (qty × rate), matching how
+    // request_services.price is documented/used everywhere else (recalcRequestPanel
+    // in the admin's app.js does the same qty×rate snapshot).
+    if (Array.isArray(data.serviceLines) && data.serviceLines.length) {
+      const lineRows = [];
+      for (const line of data.serviceLines) {
+        const lineServiceId = await resolveServiceId(line.slug, SUPABASE_URL, SUPABASE_ANON_KEY);
+        if (!lineServiceId) continue; // no matching catalog row — skip rather than violate the not-null FK
+        const qty = line.qty || 1;
+        lineRows.push({
+          request_id: data.id, service_id: lineServiceId, qty: qty,
+          area_m2: line.m2 || null, price: (line.price || 0) * qty, sort_order: lineRows.length
+        });
+      }
+      if (lineRows.length) {
+        const rsRes = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/request_services", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY,
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(lineRows)
+        });
+        if (!rsRes.ok) console.error("request_services insert failed", rsRes.status, await rsRes.text().catch(() => ""));
+      }
+    }
+
+    // request_addons — resolved via site_addon_map (see resolveAddonServiceIds).
+    // price/qty are the SITE's own booking-time snapshot (data.addons[].price),
+    // never re-derived from the current addon_services.price — the catalog price
+    // can move independently of what this specific client actually saw and paid.
+    if (Array.isArray(data.addons) && data.addons.length) {
+      const keys = data.addons.map(a => a.key).filter(Boolean);
+      const idMap = await resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY);
+      const addonRows = data.addons
+        .filter(a => a.key && idMap[a.key] && a.price > 0)
+        .map(a => ({ request_id: data.id, addon_service_id: idMap[a.key], price: a.price, qty: a.qty || 1 }));
+      if (addonRows.length) {
+        const raRes = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/request_addons", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY,
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(addonRows)
+        });
+        if (!raRes.ok) console.error("request_addons insert failed", raRes.status, await raRes.text().catch(() => ""));
+      }
+    }
+
     return true;
   } catch (error) {
     console.error("insertSupabaseRequest threw", error);
@@ -301,7 +398,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage } = req.body;
+  const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount } = req.body;
 
   if (!name || !phone) {
     return res.status(400).json({ error: "Imię i telefon są wymagane" });
@@ -347,7 +444,7 @@ export default async function handler(req, res) {
   let telegramOk;
   let inserted = null;
   if (hasBooking) {
-    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, id: requestId });
+    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount, id: requestId });
     telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
   } else {
     // Quick contact/estimate forms never become a requests row — same single-recipient

@@ -240,6 +240,18 @@
     }
     return p;
   }
+  // Snapshot promo discount amount for structured storage — mirrors bk_finalPrice's
+  // own math exactly (without touching it) so requests.promo_discount_amount always
+  // matches what was actually subtracted from price at booking time, not a later
+  // recompute against the promo code's current conditions.
+  function bk_promoDiscountAmount(basePrice){
+    if(!bk_promoApplied) return 0;
+    var p = bk_isNightSlot() ? basePrice*2 : basePrice;
+    var after = p;
+    if(bk_promoApplied.discount_type === 'percent') after = p * (1 - bk_promoApplied.discount_value/100);
+    else if(bk_promoApplied.discount_type === 'fixed') after = Math.max(0, p - bk_promoApplied.discount_value);
+    return Math.round(p) - Math.round(after);
+  }
 
   /* ─── RENDER ORDER SUMMARY ─────────────────────────── */
   window.bk_renderOrder = function() {
@@ -689,7 +701,18 @@
         scheduledDate:bk_isoDate(bk_selectedDate), scheduledTime:(slotObj?slotObj.start:''),
         price:d.price?bk_finalPrice(d.price):null,
         clientToken:bk_clientToken||'', propertyId:bk_savedPropertyId||'',
-        clientLanguage: (typeof localStorage!=='undefined' && localStorage.getItem('vc_lang')) || bk_lang || 'pl'
+        clientLanguage: (typeof localStorage!=='undefined' && localStorage.getItem('vc_lang')) || bk_lang || 'pl',
+        // Structured booking-time snapshot — raw values the page already computed
+        // for pricing/display, sent alongside (not instead of) comment/extras/freq
+        // so the admin side can store them in the same model a manual request uses,
+        // without parsing the display strings above.
+        addons: Array.isArray(d.addons) ? d.addons : [],
+        areaM2: (typeof d.areaM2 === 'number') ? d.areaM2 : null,
+        freqTimes: (typeof d.freqTimes === 'number' && d.freqTimes > 0) ? d.freqTimes : 1,
+        serviceLines: Array.isArray(d.serviceLines) ? d.serviceLines : null,
+        paymentMethod: bk_selectedPayment || null,
+        invoiceRequested: !!bk_invoiceOn,
+        promoDiscountAmount: d.price ? bk_promoDiscountAmount(d.price) : 0
       })
     })
     .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })

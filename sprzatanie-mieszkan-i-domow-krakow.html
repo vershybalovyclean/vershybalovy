@@ -3765,11 +3765,31 @@ function submitOrder() {
   if(totalAmt > 0) params.set('price', totalAmt);
 
   // Populate booking section with order data
+  // Structured snapshot alongside the display strings above — raw values already
+  // computed here (acM2/acPrice/freqTimes/selectedAddons), not parsed back out of
+  // serviceLines/extrasLabels/freqLabel. TAB_TO_SLUG gives each tier its own real
+  // services.slug even in MIXED orders (service_id itself stays null server-side
+  // when >1 tier, same as today — see orderServiceSlug above).
+  var structuredServiceLines = orderedTabKeys.map(function(key){
+    return {
+      slug: TAB_TO_SLUG[key] || null,
+      m2: acM2[key] || 0,
+      price: acPrice[key] || 0,
+      qty: (orderedTabKeys.length === 1 && freqTimes > 1) ? freqTimes : 1
+    };
+  });
+  var structuredAddons = addons.filter(function(a){ return a.price > 0; }).map(function(a){
+    return { key: 'ms:' + a.nameId, qty: a.qty, price: a.price };
+  });
   bk_orderData = {
     service: serviceLines.join('|') || 'Sprzątanie mieszkania',
     serviceSlug: orderServiceSlug,
     freq: (freqLabel && freqLabel !== 'Jednorazowo') ? freqLabel : '',
+    freqTimes: (orderedTabKeys.length === 1) ? freqTimes : 1,
     extras: extrasLabels.join(', '),
+    addons: structuredAddons,
+    areaM2: (orderedTabKeys.length === 1) ? (acM2[orderedTabKeys[0]] || 0) : null,
+    serviceLines: structuredServiceLines,
     price: totalAmt
   };
   bk_renderOrder();
