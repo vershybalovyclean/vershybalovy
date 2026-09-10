@@ -62,6 +62,31 @@ async function notifyOwnerEvent(requestId) {
   }
 }
 
+// Web Push counterpart to notifyOwnerEvent() above — same {event, id} contract
+// as send-push's other callers (client.js/app.js/cleaner.js/partner.js, see
+// supabase/functions/send-push/index.ts), just reached here via a raw fetch
+// instead of the supabase-js client those use, since this is an anonymous
+// server-side request with no user session to invoke functions.invoke() with.
+// Staging smoke test (10.09) found this call was simply never added when the
+// push rework shipped — site bookings only ever reached notifyOwnerEvent
+// (Telegram), never send-push, so owner/manager got no push for a new booking
+// coming from the public site (client-cabinet repeat bookings were fine,
+// see client.js's own notifyPush('new_request', ...) call).
+async function notifyPushOwner(requestId) {
+  const SUPABASE_URL = process.env.supabase_url;
+  if (!SUPABASE_URL || !requestId) return false;
+  try {
+    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/send-push", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event: "new_request", id: requestId })
+    });
+    return r.ok;
+  } catch (error) {
+    return false;
+  }
+}
+
 async function logToSheet(data) {
   const URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
   if (!URL) return false;
@@ -446,6 +471,7 @@ export default async function handler(req, res) {
   if (hasBooking) {
     inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount, id: requestId });
     telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
+    if (inserted) await notifyPushOwner(requestId);
   } else {
     // Quick contact/estimate forms never become a requests row — same single-recipient
     // channel as before, nothing to fan out via a row that doesn't exist.
