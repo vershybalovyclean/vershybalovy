@@ -320,16 +320,20 @@ async function insertSupabaseRequest(data) {
     if (!propertyId && data.address) {
       propertyId = await resolveOrCreatePropertyId(data.address, clientId, data.name, data.phone, SUPABASE_URL, SUPABASE_ANON_KEY);
     }
-    // notes = only the client's own words, matching how manual/client-cabinet
-    // requests already work. hasClientNote mirrors the same flag the Telegram
-    // text below already uses correctly — the full calendar widget (booking.js)
-    // always sends clientNote (possibly ''), so this resolves to clientNote-or-null
-    // for every real booking; comment (the auto-generated summary) is no longer
-    // used as a fallback for those. Simple contact forms that never send
-    // clientNote at all keep today's behavior (comment IS the message) — but
-    // those never reach this function anyway (no scheduledDate, see guard above).
+    // client_comment = only the client's own words, matching how manual/
+    // client-cabinet requests already work. hasClientNote mirrors the same
+    // flag the Telegram text below already uses correctly — the full calendar
+    // widget (booking.js) always sends clientNote (possibly ''), so this
+    // resolves to clientNote-or-null for every real booking; comment (the
+    // auto-generated summary) is no longer used as a fallback for those.
+    // Simple contact forms that never send clientNote at all keep today's
+    // behavior (comment IS the message) — but those never reach this function
+    // anyway (no scheduledDate, see guard above).
+    // Client Full QA GO (18.09): renamed from requests.notes (client-only vs
+    // staff-only internal_notes split) — this write path is 100% client text,
+    // never staff-authored, so it always goes into client_comment.
     const hasClientNote = data.clientNote !== undefined;
-    const notes = hasClientNote ? (data.clientNote || null) : (data.comment || null);
+    const clientComment = hasClientNote ? (data.clientNote || null) : (data.comment || null);
 
     const freqTimes = (typeof data.freqTimes === "number" && data.freqTimes > 1) ? data.freqTimes : 1;
 
@@ -354,7 +358,7 @@ async function insertSupabaseRequest(data) {
         scheduled_time: data.scheduledTime || null,
         service_label: data.service || null,
         price: data.price || null,
-        notes: notes,
+        client_comment: clientComment,
         partner_id: partnerId,
         service_id: serviceId,
         source: "website",
