@@ -1613,19 +1613,19 @@ function applyTranslations(l) {
     pl:{lbl:'\uD83E\uDEAA Dodaj do zam\u00f3wienia',
         title:'Mycie okien \u2014 -10% do 30.09',
         sub:'Od 25 z\u0142/m\u00b2 (z ramami i parapetem) \u00b7 Sezon: 25 z\u0142/m\u00b2 \u00b7 Zima: 40 z\u0142/m\u00b2',
-        btn:'Wi\u0119cej o myciu okien \u2192'},
+        btn:'Dodaj mycie okien do zam\u00f3wienia \u2192'},
     uk:{lbl:'\uD83E\uDEAA Додати до замовлення',
         title:'Миття в\u0456кон \u2014 -10% до 30.09',
         sub:'В\u0456д 25 z\u0142/m\u00b2 (з рамою) \u00b7 Сезон: 25 z\u0142/m\u00b2 \u00b7 Зима: 40 z\u0142/m\u00b2',
-        btn:'Докладн\u0456ше про миття в\u0456кон \u2192'},
+        btn:'Додати миття в\u0456кон до замовлення \u2192'},
     en:{lbl:'\uD83E\uDEAA Add to order',
         title:'Window cleaning \u2014 -10% until 30.09',
         sub:'From 25 z\u0142/m\u00b2 (incl. frame) \u00b7 Season: 25 z\u0142/m\u00b2 \u00b7 Winter: 40 z\u0142/m\u00b2',
-        btn:'More about window cleaning \u2192'},
+        btn:'Add window cleaning to your order \u2192'},
     ru:{lbl:'\uD83E\uDE9F \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0437\u0430\u043A\u0430\u0437',
         title:'\u041C\u044B\u0442\u044C\u0451 \u043E\u043A\u043E\u043D \u2014 -10% \u0434\u043E 30.09',
         sub:'\u041E\u0442 25 z\u0142/m\u00b2 (\u0441 \u0440\u0430\u043C\u043E\u0439 \u0438 \u043F\u043E\u0434\u043E\u043A\u043E\u043D\u043D\u0438\u043A\u043E\u043C) \u00b7 \u0421\u0435\u0437\u043E\u043D: 25 z\u0142/m\u00b2 \u00b7 \u0417\u0438\u043C\u0430: 40 z\u0142/m\u00b2',
-        btn:'\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435 \u043E \u043C\u044B\u0442\u044C\u0435 \u043E\u043A\u043E\u043D \u2192'}
+        btn:'Добавить мытьё окон в заказ \u2192'}
   };
   var wt = winTx[l]||winTx.pl;
   set('win-upsell-lbl', wt.lbl);
@@ -3071,7 +3071,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <p id="win-upsell-sub" style="color:rgba(255,255,255,.8);font-size:13px">Od 25 zł/m² (z ramami i parapetem) · Sezon: 25 zł/m² · Zima: 40 zł/m²</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
-      <a href="/mycie-okien" class="btn-prim" id="win-upsell-btn" style="text-align:center">Więcej o myciu okien →</a>
+      <a href="#uslugi-dodatkowe" class="btn-prim" id="win-upsell-btn" style="text-align:center">Dodaj mycie okien do zamówienia →</a>
     </div>
   </div>
 </div>
