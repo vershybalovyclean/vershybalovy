@@ -74,15 +74,23 @@ async function sendEmail(text, name) {
   }
 }
 
-async function sendTelegram(text) {
-  const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-  const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-  if (!TOKEN || !CHAT_ID) return false;
+// Legacy Telegram migration (26.09): quick-contact/estimate submissions (no
+// requests row at all) and the booking-DB-insert-failure fallback both used to
+// go through sendTelegram() below, straight to a single hardcoded personal
+// chat (TELEGRAM_CHAT_ID) — a completely separate destination from the v2
+// admin group/topics system. Both now route through notify-owner-event's
+// site_contact/site_booking_failed events into the same "🔥 Требует внимания"
+// (TELEGRAM_TOPIC_ATTENTION) topic every other attention-needing event already
+// uses — no new topic, no fake request row, no fake id. sendTelegram() itself
+// and TELEGRAM_CHAT_ID are retired below now that nothing calls them.
+async function notifySiteEvent(eventBody) {
+  const SUPABASE_URL = process.env.supabase_url;
+  if (!SUPABASE_URL) return false;
   try {
-    const r = await fetch("https://api.telegram.org/bot" + TOKEN + "/sendMessage", {
+    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/notify-owner-event", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+      body: JSON.stringify(eventBody)
     });
     return r.ok;
   } catch (error) {
@@ -536,9 +544,9 @@ export default async function handler(req, res) {
 
   // Telegram is handled sequentially, not in the allSettled batch above: for a real
   // booking it must fan out via notifyOwnerEvent (which needs the DB row to already
-  // exist), falling back to the single-recipient sendTelegram() only as a best-effort
-  // extra channel if that insert itself failed — so a Supabase outage still reaches
-  // someone instead of going silent. It is never allowed to substitute for the insert
+  // exist), falling back to notifySiteEvent's site_booking_failed (v2 ATTENTION topic)
+  // only as a best-effort extra channel if that insert itself failed — so a Supabase
+  // outage still reaches someone instead of going silent. It is never allowed to substitute for the insert
   // in the client-facing success check below: a notification reaching the owner is not
   // the same as the booking actually being saved, and conflating the two previously let
   // a client see "Dziękujemy" for a request that was never written to the database.
@@ -548,12 +556,22 @@ export default async function handler(req, res) {
   let inserted = null;
   if (hasBooking) {
     inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
-    telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
+    telegramOk = inserted ? await notifyOwnerEvent(requestId) : await notifySiteEvent({
+      event: "site_booking_failed",
+      name, phone, service: service || null,
+      date: scheduledDate || null, address: address || null,
+      comment: (hasClientNote ? clientNote : comment) || null
+    });
     if (inserted) await notifyPushOwner(requestId);
   } else {
-    // Quick contact/estimate forms never become a requests row — same single-recipient
-    // channel as before, nothing to fan out via a row that doesn't exist.
-    telegramOk = await sendTelegram(text);
+    // Quick contact/estimate forms never become a requests row — routed to the
+    // v2 admin group's ATTENTION topic instead of the old single personal chat.
+    telegramOk = await notifySiteEvent({
+      event: "site_contact",
+      name, phone, service: service || null,
+      comment: (hasClientNote ? clientNote : comment) || null,
+      source: (req.headers && (req.headers.referer || req.headers.referrer)) || null
+    });
   }
 
   if (hasBooking) {
