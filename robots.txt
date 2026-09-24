@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://vershclean.pl/sitemap.xml
+Sitemap: https://www.vershclean.pl/sitemap.xml
