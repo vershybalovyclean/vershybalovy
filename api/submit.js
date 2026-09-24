@@ -1,5 +1,55 @@
 import { randomUUID } from "node:crypto";
 
+// Phase 3 (24.09) attribution enrichment — minimal normalization, no validation
+// framework. Every helper below fails to null rather than throwing: a malformed or
+// oversized attribution value must never fail a real booking, only get dropped.
+function cleanAttrString(v, maxLen) {
+  if (typeof v !== "string") return null;
+  const trimmed = v.trim();
+  if (!trimmed) return null;
+  return trimmed.length > maxLen ? trimmed.slice(0, maxLen) : trimmed;
+}
+
+// Same-site path only — never an absolute URL (no "://"), always starts with "/".
+// A landing page is just "which page did they land on", never a place to smuggle
+// an external redirect target.
+function cleanLandingPage(v) {
+  const s = cleanAttrString(v, 500);
+  if (!s) return null;
+  if (s.includes("://") || !s.startsWith("/")) return null;
+  return s;
+}
+
+// Must round-trip through Date/toISOString and land in a sane range — not in the
+// future, not absurdly old — otherwise it's dropped rather than stored as garbage.
+function cleanIsoTimestamp(v) {
+  if (typeof v !== "string" || !v) return null;
+  const d = new Date(v);
+  if (Number.isNaN(d.getTime())) return null;
+  const now = Date.now();
+  const tenYearsMs = 10 * 365 * 24 * 60 * 60 * 1000;
+  if (d.getTime() > now + 60000 || d.getTime() < now - tenYearsMs) return null;
+  return d.toISOString();
+}
+
+// Pulls and normalizes all 10 first-touch attribution fields from a request body —
+// shared by the booking-insert path below. Every field is independently optional;
+// missing/invalid ones simply come back null, same as any other optional booking field.
+function extractAttribution(body) {
+  return {
+    gclid: cleanAttrString(body.gclid, 200),
+    gbraid: cleanAttrString(body.gbraid, 200),
+    wbraid: cleanAttrString(body.wbraid, 200),
+    utm_source: cleanAttrString(body.utm_source, 255),
+    utm_medium: cleanAttrString(body.utm_medium, 255),
+    utm_campaign: cleanAttrString(body.utm_campaign, 255),
+    utm_term: cleanAttrString(body.utm_term, 255),
+    utm_content: cleanAttrString(body.utm_content, 255),
+    landing_page: cleanLandingPage(body.landing_page),
+    first_visit_at: cleanIsoTimestamp(body.first_visit_at)
+  };
+}
+
 async function sendEmail(text, name) {
   const RESEND_API_KEY = process.env.Resend_api_key;
   const TO_EMAIL = process.env.to_email;
@@ -337,6 +387,12 @@ async function insertSupabaseRequest(data) {
 
     const freqTimes = (typeof data.freqTimes === "number" && data.freqTimes > 1) ? data.freqTimes : 1;
 
+    // Phase 3 (24.09): first-touch ad/UTM attribution, forwarded only by booking.js
+    // (the sole caller that ever reaches this function — see the scheduledDate guard
+    // above). Every field independently normalizes to null on anything malformed/
+    // oversized; a missing or invalid attribution value never blocks the booking itself.
+    const attribution = extractAttribution(data);
+
     const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
       method: "POST",
       headers: {
@@ -368,7 +424,8 @@ async function insertSupabaseRequest(data) {
         requested_payment_method: data.paymentMethod || null,
         invoice_requested: !!data.invoiceRequested,
         promo_code: data.promoCode || null,
-        promo_discount_amount: (typeof data.promoDiscountAmount === "number") ? data.promoDiscountAmount : 0
+        promo_discount_amount: (typeof data.promoDiscountAmount === "number") ? data.promoDiscountAmount : 0,
+        ...attribution
       })
     });
     if (!r.ok) {
@@ -444,7 +501,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount } = req.body;
+  const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at } = req.body;
 
   if (!name || !phone) {
     return res.status(400).json({ error: "Imię i telefon są wymagane" });
@@ -490,7 +547,7 @@ export default async function handler(req, res) {
   let telegramOk;
   let inserted = null;
   if (hasBooking) {
-    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount, id: requestId });
+    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
     telegramOk = inserted ? await notifyOwnerEvent(requestId) : await sendTelegram(text);
     if (inserted) await notifyPushOwner(requestId);
   } else {

@@ -22,6 +22,18 @@
   var bk_viewYear, bk_viewMonth;
   var bk_blockedDates = {}; // isoDate -> true, from cabinet's Календарь → заблокированные даты
 
+  // Phase 3 (24.09): reads the first-touch ad/UTM attribution captured by
+  // assets/js/cookie-consent.js (vc_first_touch) — booking.js is the only flow that
+  // ever creates a real requests row (see scheduledDate below), so it's the only place
+  // this needs forwarding to /api/submit. Returns {} if nothing was ever captured
+  // (organic/direct visit, or localStorage unavailable) — never blocks the booking.
+  function bk_getFirstTouch(){
+    try {
+      var raw = localStorage.getItem('vc_first_touch');
+      return raw ? JSON.parse(raw) : {};
+    } catch(e) { return {}; }
+  }
+
   var now = new Date();
   bk_viewYear = now.getFullYear();
   bk_viewMonth = now.getMonth();
@@ -694,7 +706,7 @@
     fetch('/api/submit',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
+      body:JSON.stringify(Object.assign({
         name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, clientNote:notes, partnerCode:partnerCode,
         promoCode:promoCode, serviceSlug:d.serviceSlug||'',
         email:email||'', address:fullAddress,
@@ -713,7 +725,7 @@
         paymentMethod: bk_selectedPayment || null,
         invoiceRequested: !!bk_invoiceOn,
         promoDiscountAmount: d.price ? bk_promoDiscountAmount(d.price) : 0
-      })
+      }, bk_getFirstTouch()))
     })
     .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })
     .then(function(res){

@@ -18,6 +18,35 @@
     ad_personalization: 'denied'
   });
 
+  // Phase 3 (24.09): first-touch ad/UTM attribution — approved technical model, not a
+  // legal/consent-mode determination. Captured as early as possible (before the banner
+  // even renders) so a click-through from an ad survives normal on-site navigation up
+  // until the visitor eventually books (see assets/js/booking.js, the only flow that
+  // creates a real requests row). Stored as plain first-party localStorage, unconditionally
+  // — same precedent as vc_lang/vc_cookie_consent right here in this file. Never sent to
+  // Google/Meta by this code; only ever forwarded to our own /api/submit if the visitor
+  // voluntarily submits a booking. Write-once: an existing first touch is never overwritten
+  // by a later visit, matching first-touch (not last-touch) attribution. Does not read or
+  // write any _gcl_* cookie and does not touch Consent Mode in any way.
+  var ATTR_KEY = 'vc_first_touch';
+  var ATTR_FIELDS = ['gclid','gbraid','wbraid','utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  (function captureFirstTouch(){
+    try {
+      if(localStorage.getItem(ATTR_KEY)) return;
+      var params = new URLSearchParams(window.location.search);
+      var found = {};
+      var hasAny = false;
+      ATTR_FIELDS.forEach(function(k){
+        var v = params.get(k);
+        if(v){ found[k] = v; hasAny = true; }
+      });
+      if(!hasAny) return;
+      found.landing_page = window.location.pathname;
+      found.first_visit_at = new Date().toISOString();
+      localStorage.setItem(ATTR_KEY, JSON.stringify(found));
+    } catch(e) { /* localStorage unavailable (private mode/blocked) — best-effort, never fatal */ }
+  })();
+
   var CB_TX = {
     pl:{text:'Ta strona wykorzystuje pliki cookies analityczne i marketingowe. Więcej informacji znajdziesz w <a href="/polityka-cookies">Polityce cookies</a>.', btn:'OK, rozumiem', reject:'Odrzuć'},
     uk:{text:'Цей сайт використовує аналітичні та рекламні файли cookie. Більше інформації в <a href="/polityka-cookies">Політиці cookies</a>.', btn:'ОК, зрозуміло', reject:'Відхилити'},
@@ -29,15 +58,15 @@
     return CB_TX[l] ? l : 'pl';
   }
 
+  // Phase 3 (24.09): GA4 (G-Q484FKHNVE) used to be loaded/configured TWICE — once here
+  // via a standalone gtag.js + gtag('config',...), and once more by GTM's own internal
+  // GA4 Configuration tag (confirmed live: two separate gtag/js?id=G-Q484FKHNVE fetches
+  // per page load). GTM is the single source of truth now; this function only bootstraps
+  // GTM itself. Consent Mode defaults/updates above are untouched — they govern what any
+  // tag sends, not whether GTM loads, so removing this duplicate changes nothing about
+  // consent behavior.
   function loadGoogleTags(){
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PLMP4PG5');
-
-    var ga = document.createElement('script');
-    ga.async = true;
-    ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-Q484FKHNVE';
-    document.head.appendChild(ga);
-    gtag('js', new Date());
-    gtag('config', 'G-Q484FKHNVE');
   }
 
   function loadMetaPixel(){
