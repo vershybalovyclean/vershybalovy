@@ -40,13 +40,19 @@
     return cached;
   };
 
-  // Manager return-navigation (targeted fix, 25.09): same cookie-mirroring
-  // technique as vc_at above, separate cookie (vc_mgr_at) written by
-  // vershy-admin's app.js only for role='manager' — kept distinct from vc_at
-  // so a manager and a client logged in on the same browser never collide
-  // (and so this never shows the client cabinet link to a manager or
-  // vice versa). Re-checks the role server-side rather than trusting the
-  // cookie's mere presence, same defensive pattern as the client check above.
+  // Admin return-navigation (targeted fix, 25.09 — corrected same day): same
+  // cookie-mirroring technique as vc_at above, separate cookie (vc_mgr_at)
+  // written by vershy-admin's app.js for role='owner' OR role='manager' —
+  // kept distinct from vc_at so an owner/manager and a client logged in on
+  // the same browser never collide. Originally written for 'manager' only:
+  // "управляющая" in the product's own UI language turned out to mean the
+  // technical role 'owner', a separate role from 'manager' — both are real,
+  // both need this. The role returned here is always freshly re-verified
+  // against Supabase with the cookie's token; the cookie's mere presence
+  // never grants anything on its own, and the caller must route each role
+  // to its own distinct login entry point (see site-auth-ui.js) rather than
+  // assume a single shared destination — dashboard.html is shared, but each
+  // role's own login page is what safely re-establishes/rejects a session.
   var cachedMgr = null;
   window.vcGetManagerSession = function(){
     if (cachedMgr) return cachedMgr;
@@ -60,8 +66,8 @@
         if (!profRes.ok) return null;
         var profRows = await profRes.json();
         var profile = profRows[0];
-        if (!profile || profile.role !== 'manager') return null;
-        return { token: token };
+        if (!profile || (profile.role !== 'manager' && profile.role !== 'owner')) return null;
+        return { token: token, role: profile.role };
       } catch (e) {
         return null;
       }

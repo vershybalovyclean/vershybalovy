@@ -42,20 +42,34 @@
     }
   }
 
-  // Manager return-navigation (targeted fix, 25.09): "Manager cabinet → На
-  // сайт" had no way back. Reuses this exact topbar/mobile-tabbar slot —
-  // same pattern as applyClientSession() above — instead of adding new
-  // header chrome. Mutually exclusive with the client button: only checked
-  // when no client session was found, so a manager who happens to also hold
-  // a stale client cookie still sees their own cabinet link, not the other.
+  // Admin return-navigation (targeted fix, 25.09 — corrected same day): "Owner/
+  // Manager cabinet → На сайт" had no way back. Reuses this exact topbar/
+  // mobile-tabbar slot — same pattern as applyClientSession() above — instead
+  // of adding new header chrome. Mutually exclusive with the client button:
+  // only checked when no client session was found, so an owner/manager who
+  // happens to also hold a stale client cookie still sees their own cabinet
+  // link, not the other.
+  //
+  // Destination depends on the server-verified role, not a shared guess:
+  // dashboard.html is the same file for both roles, but each role has its
+  // own login entry point (index.html for owner, manager/login.html for
+  // manager) that (a) auto-forwards straight to dashboard.html if that
+  // role's session is still valid, or (b) shows that role's own correct
+  // login form if it isn't — jumping straight to dashboard.html would, on an
+  // expired session, bounce a manager to the owner-only index.html instead.
   var MANAGER_BTN_LABEL = { pl: 'Wróć do panelu', ru: 'Вернуться в кабинет', uk: 'Повернутися до кабінету', en: 'Back to dashboard' };
   function managerLabel(){
     var l = localStorage.getItem('vc_lang');
     return MANAGER_BTN_LABEL[l] || MANAGER_BTN_LABEL.pl;
   }
+  function adminDestForRole(role){
+    return role === 'owner'
+      ? 'https://admin.vershclean.pl/index.html'
+      : 'https://admin.vershclean.pl/manager/login.html';
+  }
 
-  function applyManagerSession(){
-    var dest = 'https://admin.vershclean.pl/dashboard.html';
+  function applyManagerSession(role){
+    var dest = adminDestForRole(role);
 
     var topbarBtn = document.querySelector('.login-trigger');
     var topbarTxt = topbarBtn && topbarBtn.querySelector('.login-txt');
@@ -97,7 +111,7 @@
       if (session && session.name !== undefined) { applyClientSession(session); return; }
       if (window.vcGetManagerSession) {
         window.vcGetManagerSession().then(function(mgrSession){
-          if (mgrSession) applyManagerSession();
+          if (mgrSession) applyManagerSession(mgrSession.role);
         });
       }
     });
