@@ -1036,12 +1036,18 @@ var OZON_BASE = 199;
     .catch(function(){});
 })();
 
+// Finalna zatwierdzona siatka taryfowa (26.09): stała cena PRZEDZIAŁU metrażu,
+// NIE cena za m² — poprzednia liniowa ekstrapolacja powyżej 100 m² była błędna.
 function ozonTierPrice(m2) {
   if(m2<=30) return OZON_BASE;
   if(m2<=50) return 269;
   if(m2<=75) return 349;
   if(m2<=100) return 439;
-  return Math.round(499 + (m2-100)*5);
+  if(m2<=110) return 499;
+  if(m2<=129) return 549;
+  if(m2<=149) return 649;
+  if(m2<=199) return 749;
+  return 999;
 }
 
 function ozonCalc(input) {
