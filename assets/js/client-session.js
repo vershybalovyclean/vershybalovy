@@ -39,4 +39,33 @@
     })();
     return cached;
   };
+
+  // Manager return-navigation (targeted fix, 25.09): same cookie-mirroring
+  // technique as vc_at above, separate cookie (vc_mgr_at) written by
+  // vershy-admin's app.js only for role='manager' — kept distinct from vc_at
+  // so a manager and a client logged in on the same browser never collide
+  // (and so this never shows the client cabinet link to a manager or
+  // vice versa). Re-checks the role server-side rather than trusting the
+  // cookie's mere presence, same defensive pattern as the client check above.
+  var cachedMgr = null;
+  window.vcGetManagerSession = function(){
+    if (cachedMgr) return cachedMgr;
+    cachedMgr = (async function(){
+      var token = getCookie('vc_mgr_at');
+      if (!token) return null;
+      try {
+        var profRes = await fetch(SUPABASE_URL + '/rest/v1/profiles?select=role', {
+          headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + token }
+        });
+        if (!profRes.ok) return null;
+        var profRows = await profRes.json();
+        var profile = profRows[0];
+        if (!profile || profile.role !== 'manager') return null;
+        return { token: token };
+      } catch (e) {
+        return null;
+      }
+    })();
+    return cachedMgr;
+  };
 })();

@@ -25,7 +25,7 @@
     font-family:inherit;cursor:pointer;padding:4px 2px;min-height:48px;
   }
   .mtb-icon{font-size:20px;line-height:1}
-  .mtb-label{font-size:10px;font-weight:600;white-space:nowrap}
+  .mtb-label{font-size:10px;font-weight:600;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 
   .mtb-cta{position:relative;color:var(--blue2,#2563eb)}
   .mtb-cta .mtb-cta-icon{
