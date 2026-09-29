@@ -431,6 +431,7 @@ async function insertSupabaseRequest(data) {
         orders_per_month: freqTimes,
         requested_payment_method: data.paymentMethod || null,
         invoice_requested: !!data.invoiceRequested,
+        marketing_photo_consent: typeof data.marketingPhotoConsent === "boolean" ? data.marketingPhotoConsent : null,
         promo_code: data.promoCode || null,
         promo_discount_amount: (typeof data.promoDiscountAmount === "number") ? data.promoDiscountAmount : 0,
         ...attribution
@@ -509,7 +510,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at } = req.body;
+  const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at } = req.body;
 
   if (!name || !phone) {
     return res.status(400).json({ error: "Imię i telefon są wymagane" });
@@ -555,7 +556,7 @@ export default async function handler(req, res) {
   let telegramOk;
   let inserted = null;
   if (hasBooking) {
-    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
+    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
     telegramOk = inserted ? await notifyOwnerEvent(requestId) : await notifySiteEvent({
       event: "site_booking_failed",
       name, phone, service: service || null,

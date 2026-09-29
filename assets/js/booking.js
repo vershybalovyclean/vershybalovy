@@ -7,6 +7,11 @@
   var bk_selectedSlot = null;
   var bk_selectedPayment = null;
   var bk_invoiceOn = false;
+  // Marketing photo consent (Блок 10, GO §5) — null = not yet chosen (required,
+  // but the CHOICE itself may be "deny"; refusal never blocks the booking).
+  // Same mandatory-radio-group pattern as bk_selectedPayment above, not a
+  // pre-checked checkbox — neither option is selected by default.
+  var bk_marketingConsent = null;
   var bk_partnerOn = false;
   var bk_promoOn = false;
   var bk_promoApplied = null; // {discount_type, discount_value, min_order_amount} once a valid code is confirmed
@@ -61,6 +66,9 @@
       lblStreet:'Ulica i numer domu *',lblApt:'Numer mieszkania',lblPostal:'Kod pocztowy *',lblCity:'Miejscowość *',
       lblPayment:'Sposób płatności *',payTransfer:'Przelew na konto',payBlik:'BLIK',payCash:'Płatność gotówką',
       invoiceLabel:'Chcę otrzymać fakturę',
+      lblMarketingConsent:'Zgoda na zdjęcia w marketingu *',
+      marketingConsentLabel:'Zgadzam się, aby VershClean wykorzystywał zanonimizowane zdjęcia „przed/po” wykonanego sprzątania w portfolio i materiałach reklamowych. Zdjęcia nie będą zawierać wizerunku osób, dokumentów, adresu ani innych danych pozwalających zidentyfikować klienta. Zgodę można wycofać.',
+      marketingConsentAllow:'Zgadzam się',marketingConsentDeny:'Nie zgadzam się',
       consentLabel:'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu realizacji zgłoszenia — zgodnie z <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Polityką prywatności</a>. *',
       partnerLabel:'Zamówienie w ramach programu partnerskiego',
       lblPartnerCode:'Kod partnera *',partnerCodeHint:'Format: VC- i 4 cyfry, np. VC-4821.',
@@ -91,6 +99,9 @@
       lblStreet:'Вулиця та номер будинку *',lblApt:'Номер квартири',lblPostal:'Поштовий індекс *',lblCity:'Населений пункт *',
       lblPayment:'Спосіб оплати *',payTransfer:'Банківський переказ',payBlik:'BLIK',payCash:'Оплата готівкою',
       invoiceLabel:'Хочу отримати рахунок-фактуру',
+      lblMarketingConsent:'Згода на фото в маркетингу *',
+      marketingConsentLabel:'Дозволяю VershClean використовувати знеособлені фотографії „до/після“ виконаного прибирання в портфоліо та рекламних матеріалах. Фотографії не міститимуть зображення людей, документів, адреси або інших даних, що дозволяють ідентифікувати клієнта. Згоду можна відкликати.',
+      marketingConsentAllow:'Дозволяю',marketingConsentDeny:'Не дозволяю',
       consentLabel:'Я даю згоду на обробку моїх персональних даних з метою обробки заявки — відповідно до <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Політики конфіденційності</a>. *',
       partnerLabel:'Замовлення в рамках партнерської програми',
       lblPartnerCode:'Код партнера *',partnerCodeHint:'Формат: VC- і 4 цифри, напр. VC-4821.',
@@ -121,6 +132,9 @@
       lblStreet:'Улица и номер дома *',lblApt:'Номер квартиры',lblPostal:'Почтовый индекс *',lblCity:'Населённый пункт *',
       lblPayment:'Способ оплаты *',payTransfer:'Банковский перевод',payBlik:'BLIK',payCash:'Оплата наличными',
       invoiceLabel:'Хочу получить счёт-фактуру',
+      lblMarketingConsent:'Согласие на фото в маркетинге *',
+      marketingConsentLabel:'Разрешаю VershClean использовать обезличенные фотографии „до/после“ выполненной уборки в портфолио и рекламных материалах. Фотографии не будут содержать изображения людей, документов, адреса или других данных, позволяющих идентифицировать клиента. Согласие можно отозвать.',
+      marketingConsentAllow:'Разрешаю',marketingConsentDeny:'Не разрешаю',
       consentLabel:'Я даю согласие на обработку моих персональных данных для обработки заявки — согласно <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Политике конфиденциальности</a>. *',
       partnerLabel:'Заказ в рамках партнёрской программы',
       lblPartnerCode:'Код партнёра *',partnerCodeHint:'Формат: VC- и 4 цифры, напр. VC-4821.',
@@ -151,6 +165,9 @@
       lblStreet:'Street and house number *',lblApt:'Apartment number',lblPostal:'Postal code *',lblCity:'City *',
       lblPayment:'Payment method *',payTransfer:'Bank transfer',payBlik:'BLIK',payCash:'Cash payment',
       invoiceLabel:"I'd like an invoice",
+      lblMarketingConsent:'Marketing photo consent *',
+      marketingConsentLabel:'I allow VershClean to use de-identified "before/after" photos of the completed cleaning in its portfolio and advertising materials. The photos will not show people, documents, addresses, or other information that could identify the client. Consent can be withdrawn.',
+      marketingConsentAllow:'I allow',marketingConsentDeny:"I don't allow",
       consentLabel:'I consent to the processing of my personal data to handle this request — in accordance with the <a href="/polityka-prywatnosci" target="_blank" rel="noopener">Privacy Policy</a>. *',
       partnerLabel:'Order under the partner program',
       lblPartnerCode:'Partner code *',partnerCodeHint:'Format: VC- plus 4 digits, e.g. VC-4821.',
@@ -389,6 +406,7 @@
     var consentEl = document.getElementById('bk-consent');
     var consentOk = !consentEl || consentEl.checked;
     var ok = bk_selectedDate && bk_selectedSlot && bk_selectedPayment
+      && bk_marketingConsent !== null
       && document.getElementById('bk-name').value.trim()
       && document.getElementById('bk-phone').value.trim()
       && document.getElementById('bk-street').value.trim()
@@ -409,7 +427,7 @@
   }
 
   function bk_clearInvalid(){
-    ['bk-calDays','bk-slotsContainer','bk-consent-wrap'].forEach(function(id){
+    ['bk-calDays','bk-slotsContainer','bk-consent-wrap','bk-marketingConsentGroup'].forEach(function(id){
       var el = document.getElementById(id); if(el) el.classList.remove('bk-invalid');
     });
     var payGroup = bk_payGroupEl(); if(payGroup) payGroup.classList.remove('bk-invalid');
@@ -430,6 +448,7 @@
     if(!bk_selectedDate){ markInvalid(document.getElementById('bk-calDays')); ok = false; }
     if(!bk_selectedSlot){ markInvalid(document.getElementById('bk-slotsContainer')); ok = false; }
     if(!bk_selectedPayment){ markInvalid(bk_payGroupEl()); ok = false; }
+    if(bk_marketingConsent === null){ markInvalid(document.getElementById('bk-marketingConsentGroup')); ok = false; }
     ['bk-name','bk-phone','bk-street','bk-postal','bk-city'].forEach(function(id){
       var el = document.getElementById(id);
       if(el && !el.value.trim()){ markInvalid(el, true); ok = false; }
@@ -453,6 +472,16 @@
       document.querySelectorAll('.bk-pay-opt').forEach(function(b){ b.classList.toggle('bk-pay-active', b===btn); });
       bk_checkForm();
       var payEl = bk_payGroupEl(); if(payEl) payEl.classList.remove('bk-invalid');
+    });
+  });
+
+  /* ─── MARKETING PHOTO CONSENT ──────────────────────── */
+  document.querySelectorAll('.bk-consent-photo-opt').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      bk_marketingConsent = btn.dataset.value === 'allow';
+      document.querySelectorAll('.bk-consent-photo-opt').forEach(function(b){ b.classList.toggle('bk-pay-active', b===btn); });
+      bk_checkForm();
+      var grp = document.getElementById('bk-marketingConsentGroup'); if(grp) grp.classList.remove('bk-invalid');
     });
   });
 
@@ -724,6 +753,7 @@
         serviceLines: Array.isArray(d.serviceLines) ? d.serviceLines : null,
         paymentMethod: bk_selectedPayment || null,
         invoiceRequested: !!bk_invoiceOn,
+        marketingPhotoConsent: bk_marketingConsent,
         promoDiscountAmount: d.price ? bk_promoDiscountAmount(d.price) : 0
       }, bk_getFirstTouch()))
     })
@@ -793,12 +823,14 @@
       'bk-lbl-apt':'lblApt','bk-lbl-postal':'lblPostal','bk-lbl-city':'lblCity',
       'bk-lbl-payment':'lblPayment','bk-pay-transfer':'payTransfer','bk-pay-blik':'payBlik',
       'bk-pay-cash':'payCash','bk-invoice-label':'invoiceLabel',
+      'bk-lbl-marketing-consent':'lblMarketingConsent','bk-marketing-consent-label':'marketingConsentLabel',
+      'bk-marketing-consent-allow':'marketingConsentAllow','bk-marketing-consent-deny':'marketingConsentDeny',
       'bk-partner-label':'partnerLabel','bk-lbl-partner-code':'lblPartnerCode','bk-partner-code-hint':'partnerCodeHint',
       'bk-lbl-notes':'lblNotes','bk-opt2':'opt','bk-submit-txt':'submitTxt',
       'bk-cta-sub':'ctaSub','bk-r-date':'recapDate','bk-r-time':'recapTime',
       'bk-r-phone':'recapPhone','bk-consent-label':'consentLabel'
     };
-    var richIds = {'bk-sub-txt':1,'bk-consent-label':1};
+    var richIds = {'bk-sub-txt':1,'bk-consent-label':1,'bk-marketing-consent-label':1};
     Object.keys(ids).forEach(function(id){
       var el = document.getElementById(id);
       if(el){ if(richIds[id]) el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
