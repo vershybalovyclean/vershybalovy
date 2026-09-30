@@ -85,11 +85,27 @@ header{
    только высота самой картинки внутри него. 2 класса в селекторе намеренно
    (выше specificity любого из .hdr-logo img/header .hdr-logo img ниже и в
    медиа-блоках, включая их !important, — не зависит от порядка объявлений).*/
-.hdr-logo.halloween-campaign{padding-left:0!important}
+.hdr-logo.halloween-campaign{padding-left:0!important;align-self:flex-start!important}
 .hdr-logo.halloween-campaign img{position:static!important;left:auto!important;
-  top:auto!important;transform:none!important;width:auto!important;height:auto!important;
-  max-height:48px!important;max-width:230px!important;object-fit:contain}
+  top:auto!important;transform:none!important;width:280px!important;height:auto!important;
+  max-width:none!important;max-height:none!important;object-fit:contain}
 .hdr-logo.halloween-campaign .hdr-brand{display:none}
+/* Позиция + высота header (30.09, правки №3-6, финал подтверждён Owner):
+   только desktop (>1460px, брейкпоинт burger-меню) — mobile/tablet не
+   затрагиваются (у них свои margin-top в соответствующих медиа-блоках).
+   header ниже (56px вместо 64px, login-trigger 42.7px по-прежнему
+   комфортно помещается, ~6.6px сверху/снизу) — login/hamburger не
+   двигаются и не ресайзятся, просто header сам через align-items:center
+   центрирует их по новой высоте. Картинка (93.4px) по-прежнему выше
+   header — margin-top:-52px поднимает блок так, что видимый контент файла
+   (без прозрачных полей сверху/снизу — см. реальные пиксели, не bounding
+   box) не обрезается topbar и не залезает в hero. Сами topbar/hero/login
+   не трогаются — hero просто естественно поднимается вместе с нижним
+   краем похудевшего header. */
+@media(min-width:1461px){
+  header{height:56px}
+  .hdr-logo.halloween-campaign{margin-top:-52px!important}
+}
 .logo-svg{width:64px;height:64px;flex-shrink:0}
 .hdr-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;
   color:var(--blue);line-height:1.2;white-space:nowrap}
@@ -540,10 +556,13 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   header .hdr-logo img{width:42px!important;left:14px}
   .hdr-brand{font-size:13px}
   .hdr-brand small{font-size:9px}
-  /* Halloween campaign — компактный header 52px здесь, композиция ниже 52px */
-  header .hdr-logo.halloween-campaign{padding-left:0!important}
-  header .hdr-logo.halloween-campaign img{width:auto!important;height:auto!important;
-    max-height:32px!important;max-width:150px!important;left:auto!important}
+  /* Halloween campaign — компактный header 52px: 178px подобрано отдельно
+     под мобильный (не масштаб desktop-варианта) — по пропорциям ~59px,
+     чуть выше 52px header, поэтому overflow вниз (align-self:flex-start),
+     как на desktop — не задевает topbar сверху. */
+  header .hdr-logo.halloween-campaign{padding-left:0!important;align-self:flex-start!important;margin-top:-11px!important}
+  header .hdr-logo.halloween-campaign img{width:178px!important;height:auto!important;
+    max-width:none!important;max-height:none!important;left:auto!important}
 
   /* Hero — меньше отступы */
   .hero{padding:48px 16px 40px;min-height:auto}
@@ -1249,10 +1268,20 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   .hdr-logo img{width:85px !important;height:auto !important;left:14px}
   .hdr-brand{font-size:14px}
   .hdr-brand small{font-size:8px}
-  /* Halloween campaign — планшет/мобильный (header ещё 64px на этом брейкпоинте) */
-  .hdr-logo.halloween-campaign{min-width:0;padding-left:0!important}
-  .hdr-logo.halloween-campaign img{width:auto!important;height:auto!important;
-    max-height:40px!important;max-width:190px!important;left:auto!important}
+  /* Halloween campaign — планшет/промежуточная ширина (601-1460px, header
+     тут ещё 64px, burger уже показан) — 228px, overflow вниз (align-self:
+     flex-start на родителе выше). ВАЖНО: это отдельный от >1460px десктопа
+     брейкпоинт — margin-top ниже подобран для ЭТОЙ высоты header (64px) и
+     размера картинки (228px), не скопирован из десктопного -52px (там
+     header 56px и 280px картинка — другая геометрия). Без этой правки здесь
+     margin-top оставался 0 (правки №3-5 выше все жили только в
+     @media(min-width:1461px)) — поэтому на любом окне уже ⩽1460px CSS-px
+     логотип visually не поднимался вообще, хотя на true-desktop всё было
+     ок — это и оказалось причиной «опять не то» на скриншоте владельца. */
+  .hdr-logo.halloween-campaign{min-width:0;padding-left:0!important;
+    align-self:flex-start!important;margin-top:-13px!important}
+  .hdr-logo.halloween-campaign img{width:228px!important;height:auto!important;
+    max-width:none!important;max-height:none!important;left:auto!important}
 }
 @media(max-width:1460px){
   .burger{display:flex !important;flex-shrink:0;margin-left:auto}
