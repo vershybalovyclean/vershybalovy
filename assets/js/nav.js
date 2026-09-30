@@ -1,3 +1,22 @@
+// Сезонная кампания шапки (ТЗ №1, Halloween, 30.09): ЕДИНСТВЕННЫЙ
+// переключатель — halloweenLogo:false возвращает обычный логотип+надпись
+// сразу на всех страницах (правка в этом одном месте, без редактирования
+// разметки по страницам). Переданный halloween-файл — уже полная композиция
+// (V + Vershy + PROPERTY CARE + декор), поэтому вместе с подменой src у
+// .hdr-logo img скрывается и соседняя текстовая надпись .hdr-brand — иначе
+// название дублировалось бы. Сам logo.png и разметка .hdr-brand не
+// удаляются, только скрываются классом на время кампании (см. base.css
+// правила для .hdr-logo.halloween-campaign).
+var SEASONAL_CAMPAIGN = { halloweenLogo: true };
+(function(){
+  if (!SEASONAL_CAMPAIGN.halloweenLogo) return;
+  document.querySelectorAll('.hdr-logo').forEach(function(a){
+    var img = a.querySelector('img');
+    if (img) img.src = 'assets/img/logo-halloween.webp';
+    a.classList.add('halloween-campaign');
+  });
+})();
+
 // VershClean — mobile nav toggle + auto-close on scroll
 // On mobile this nav renders as a bottom sheet (see index-mobile.css) — the
 // body class drives its dark backdrop and hides the floating call button
