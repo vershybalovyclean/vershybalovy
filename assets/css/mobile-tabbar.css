@@ -101,8 +101,18 @@
      768px excluded... no tab bar there either) get the plain 20px from the
      base ≤1460px rule instead — that used to be a flat 84px everywhere,
      which on tablet/laptop widths (no tab bar to clear) was just dead
-     white space at the bottom of the panel. */
-  #hn.hdr-nav{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+     white space at the bottom of the panel.
+     HOTFIX 01.10: 84px wasn't quite enough — the tab bar itself is ~65px
+     tall AND its center "More" icon floats margin-top:-22px ABOVE the bar
+     (see .mtb-cta-icon), so the real covered zone is ~87px, not 65px. CALL
+     US's own bottom edge was landing 3px inside that zone. 110px gives real
+     clearance with a safety margin, not just the bar's own height. */
+  /* !important — this ≤768px block comes BEFORE the ≤1460px sheet block in
+     this file; that block's own `padding:0 0 20px` shorthand has the exact
+     same selector (#hn.hdr-nav), so equal specificity means source order
+     decides and the LATER rule (20px) was silently winning over this one.
+     Confirmed via computed style — not a hypothetical. */
+  #hn.hdr-nav{padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}
 }
 
 /* "Więcej"/burger menu — a real bottom sheet: dark backdrop, slides up from
@@ -137,7 +147,17 @@
     left:50%!important;right:auto!important;bottom:0;
     width:calc(100% - 32px);max-width:480px;
     flex-direction:column;
-    max-height:min(82vh,620px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+    /* HOTFIX 01.10: vh on real mobile browsers is the LAYOUT viewport
+       (includes the area the address bar can cover), not what's actually
+       visible — 82vh can reserve less height than really available, or the
+       sheet can end up taller than the real visible area depending on
+       chrome state. dvh is the dynamic viewport (updates as chrome
+       shows/hides) — second declaration wins in browsers that support it,
+       first line is the fallback for ones that don't (invalid-unit
+       declarations are ignored, not applied as 0). */
+    max-height:min(82vh,620px);
+    max-height:min(82dvh,620px);
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
     background:#fff;border-radius:20px 20px 0 0;
     box-shadow:0 -12px 40px rgba(15,23,42,.25);
     padding:0 0 20px;
