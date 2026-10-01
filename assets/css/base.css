@@ -97,7 +97,7 @@ header{
    медиа-блоках, включая их !important, — не зависит от порядка объявлений).*/
 .hdr-logo.halloween-campaign{padding-left:0!important;align-self:flex-start!important}
 .hdr-logo.halloween-campaign img{position:static!important;left:auto!important;
-  top:auto!important;transform:none!important;width:280px!important;height:auto!important;
+  top:auto!important;transform:none!important;width:238px!important;height:auto!important;
   max-width:none!important;max-height:none!important;object-fit:contain}
 .hdr-logo.halloween-campaign .hdr-brand{display:none}
 /* Позиция + высота header (01.10, правка по Owner reference + Owner decision
@@ -110,7 +110,7 @@ header{
    PENDING — размер/позиция окончательно утверждает Owner. */
 @media(min-width:1461px){
   header{height:56px}
-  .hdr-logo.halloween-campaign{margin-top:-38px!important}
+  .hdr-logo.halloween-campaign{margin-top:-32px!important}
 }
 /* NEW CLASSIC FULL LOGO (01.10) — постоянный default после отключения
    Halloween campaign. СВОЯ геометрия, полностью отдельная от
@@ -578,7 +578,7 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
      мобильный. 01.10: увеличено по Owner reference — та же пропорция
      контент/topbar+header, посчитанная для мобильных topbar(~40px)+
      header(52px). */
-  header .hdr-logo.halloween-campaign{padding-left:0!important;align-self:flex-start!important;margin-top:-40px!important}
+  header .hdr-logo.halloween-campaign{padding-left:0!important;align-self:flex-start!important;margin-top:-24px!important}
   header .hdr-logo.halloween-campaign img{width:175px!important;height:auto!important;
     max-width:none!important;max-height:none!important;left:auto!important}
   /* NEW CLASSIC FULL LOGO — своя геометрия для мобильного header (52px),
