@@ -61,8 +61,9 @@ body{padding-top:0}
    before the nav links/CTA — same effect, one consistent rule. */
 .hdr-login{position:relative;display:flex;align-items:center;flex-shrink:0;margin-left:auto}
 .login-trigger{background:var(--blue-pale);border:2px solid var(--blue-light);color:var(--blue2);
-  padding:10px 20px;border-radius:24px;font-size:14px;font-weight:800;cursor:pointer;
-  transition:.2s;font-family:'Inter',sans-serif;letter-spacing:.3px;white-space:nowrap;
+  width:44px;height:44px;padding:0;border-radius:50%;font-size:18px;font-weight:800;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:.2s;font-family:'Inter',sans-serif;
   box-shadow:0 2px 10px rgba(37,99,235,.12)}
 .login-trigger:hover,.login-trigger.open{background:var(--blue2);border-color:var(--blue2);color:#fff;
   box-shadow:0 4px 16px rgba(37,99,235,.28)}
@@ -559,7 +560,7 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   .topbar-txt{font-size:10px;letter-spacing:0}
   .topbar-langs{padding:2px 8px;gap:3px}
   .lb{padding:0 8px;font-size:10px;min-height:36px;display:inline-flex;align-items:center;justify-content:center}
-  .login-trigger{padding:0 8px;font-size:10px;min-height:36px;display:inline-flex;align-items:center}
+  .login-trigger{width:36px;height:36px;padding:0;font-size:16px;display:flex;align-items:center;justify-content:center}
   .login-txt{display:none}
   /* Opens right-aligned to the trigger (not left:0 like desktop) — on a
      narrow viewport the button sits well right of the screen edge (after
