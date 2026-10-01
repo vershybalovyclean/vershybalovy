@@ -99,7 +99,7 @@
      otherwise cover the sheet's last row/CALL US button — reserve space for
      it only here, where the tab bar actually exists. Wider widths (601-
      768px excluded... no tab bar there either) get the plain 20px from the
-     base ≤1399px rule instead — that used to be a flat 84px everywhere,
+     base ≤1279px rule instead — that used to be a flat 84px everywhere,
      which on tablet/laptop widths (no tab bar to clear) was just dead
      white space at the bottom of the panel.
      HOTFIX 01.10: 84px wasn't quite enough — the tab bar itself is ~65px
@@ -107,7 +107,7 @@
      (see .mtb-cta-icon), so the real covered zone is ~87px, not 65px. CALL
      US's own bottom edge was landing 3px inside that zone. 110px gives real
      clearance with a safety margin, not just the bar's own height. */
-  /* !important — this ≤768px block comes BEFORE the ≤1399px sheet block in
+  /* !important — this ≤768px block comes BEFORE the ≤1279px sheet block in
      this file; that block's own `padding:0 0 20px` shorthand has the exact
      same selector (#hn.hdr-nav), so equal specificity means source order
      decides and the LATER rule (20px) was silently winning over this one.
@@ -119,14 +119,14 @@
    the bottom edge with rounded top corners, instead of dropping down from
    the header. Shared by every page's #hn nav.
    01.10 (Owner fix): this used to live inside the 768px block above, so the
-   burger (still visible 769-1399px, .burger only hides at ≤768 — bottom tab
+   burger (still visible 769-1279px, .burger only hides at ≤768 — bottom tab
    bar replaces it there) opened the OLD plain absolute-dropdown menu defined
-   in base.css's own ≤1399px block instead of this approved sheet design —
+   in base.css's own ≤1279px block instead of this approved sheet design —
    real-window screenshots caught it (menu looked "old" on tablet widths).
-   Extending the breakpoint to match the burger's own 1399px range fixes it
+   Extending the breakpoint to match the burger's own 1279px range fixes it
    without redesigning anything — same sheet, same grid, just available
    wherever the burger itself is. */
-@media(max-width:1399px){
+@media(max-width:1279px){
   .hdr-nav-backdrop{display:none}
   body.nav-sheet-open .hdr-nav-backdrop{
     display:block;position:fixed;inset:0;background:rgba(15,23,42,.55);
@@ -135,7 +135,7 @@
   @keyframes hdrBackdropIn{from{opacity:0}to{opacity:1}}
 
   /* 01.10 (Owner fix): panel used to be left:0;right:0 — full viewport
-     width, so on any width up to 1399px (now that the sheet covers that
+     width, so on any width up to 1279px (now that the sheet covers that
      whole burger range, see fix above) it stretched into a mostly-empty
      white wall with 4 huge cards spread thin. Width is now capped to what
      the 4-column card grid actually needs and centered — backdrop (above)
