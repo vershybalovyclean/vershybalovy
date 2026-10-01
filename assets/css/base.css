@@ -49,7 +49,17 @@ body{padding-top:0}
 
 /* ─── LOGIN dropdown (client/partner cabinet) — sits in the header, next
    to the logo (moved out of the topbar per owner's request) ─── */
-.hdr-login{position:relative;display:flex;align-items:center;flex-shrink:0}
+/* LOGO | FLEX SPACE | ACCOUNT ACTION | HAMBURGER (30.09/01.10, Owner fix):
+   margin-left:auto lives HERE now, not on .burger — account action must be
+   anchored to the right side with nav/burger, never bunched up against a
+   logo whose width now varies a lot (Halloween campaign vs standard). With
+   .hdr-nav out of normal flow whenever it's the overlay/sheet (≤1460px,
+   display:none or position:fixed), .hdr-login's auto margin is what pushes
+   IT (and .burger right after it, via header's own gap) to the right edge;
+   on true desktop .hdr-nav is still an inline flex item with its own
+   margin-left:auto, so both end up flush together at the right, login just
+   before the nav links/CTA — same effect, one consistent rule. */
+.hdr-login{position:relative;display:flex;align-items:center;flex-shrink:0;margin-left:auto}
 .login-trigger{background:var(--blue-pale);border:2px solid var(--blue-light);color:var(--blue2);
   padding:10px 20px;border-radius:24px;font-size:14px;font-weight:800;cursor:pointer;
   transition:.2s;font-family:'Inter',sans-serif;letter-spacing:.3px;white-space:nowrap;
@@ -90,22 +100,30 @@ header{
   top:auto!important;transform:none!important;width:280px!important;height:auto!important;
   max-width:none!important;max-height:none!important;object-fit:contain}
 .hdr-logo.halloween-campaign .hdr-brand{display:none}
-/* Позиция + высота header (30.09, правки №3-6, финал подтверждён Owner):
-   только desktop (>1460px, брейкпоинт burger-меню) — mobile/tablet не
-   затрагиваются (у них свои margin-top в соответствующих медиа-блоках).
-   header ниже (56px вместо 64px, login-trigger 42.7px по-прежнему
-   комфортно помещается, ~6.6px сверху/снизу) — login/hamburger не
-   двигаются и не ресайзятся, просто header сам через align-items:center
-   центрирует их по новой высоте. Картинка (93.4px) по-прежнему выше
-   header — margin-top:-52px поднимает блок так, что видимый контент файла
-   (без прозрачных полей сверху/снизу — см. реальные пиксели, не bounding
-   box) не обрезается topbar и не залезает в hero. Сами topbar/hero/login
-   не трогаются — hero просто естественно поднимается вместе с нижним
-   краем похудевшего header. */
+/* Позиция + высота header (01.10, правка по Owner reference + Owner decision
+   про компромисс размера): только desktop (>1460px) — header держим 56px
+   (компактный, по явному решению Owner), поэтому логотип такого размера,
+   который реально нужен для "существенно крупнее", физически не помещается
+   без лёгкого захода низа в hero (~14px) — это принятый компромисс, а не
+   недосмотр. mobile/tablet свои значения в соответствующих медиа-блоках,
+   там запас по высоте есть, заход в hero не нужен. Статус: VISUAL QA
+   PENDING — размер/позиция окончательно утверждает Owner. */
 @media(min-width:1461px){
   header{height:56px}
-  .hdr-logo.halloween-campaign{margin-top:-52px!important}
+  .hdr-logo.halloween-campaign{margin-top:-38px!important}
 }
+/* NEW CLASSIC FULL LOGO (01.10) — постоянный default после отключения
+   Halloween campaign. СВОЯ геометрия, полностью отдельная от
+   .halloween-campaign (ТЗ п.3: "same CSS + different src" запрещён явно) —
+   никакого margin-top/align-self:flex-start/overlap в topbar, обычный
+   центрированный логотип внутри header, без выхода за его границы. Файл
+   почти без прозрачных полей (0.4%/1.1% сверху/снизу, аспект 2.309) —
+   ширина посчитана на ~71-72% высоты header на каждом брейкпоинте. */
+.hdr-logo.classic-logo{padding-left:0!important}
+.hdr-logo.classic-logo img{position:static!important;left:auto!important;
+  top:auto!important;transform:none!important;width:92px!important;height:auto!important;
+  max-width:none!important;max-height:none!important;object-fit:contain}
+.hdr-logo.classic-logo .hdr-brand{display:none}
 .logo-svg{width:64px;height:64px;flex-shrink:0}
 .hdr-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;
   color:var(--blue);line-height:1.2;white-space:nowrap}
@@ -115,7 +133,7 @@ header{
   color:var(--blue);line-height:1.2;white-space:nowrap}
 .hdr-brand small{display:block;font-size:10px;font-weight:500;color:var(--gray);
   letter-spacing:.8px;font-family:'Inter',sans-serif;text-transform:uppercase}
-.hdr-nav{display:flex;align-items:center;gap:3px;margin-left:auto}
+.hdr-nav{display:flex;align-items:center;gap:3px}
 .hdr-nav a{font-size:12px;color:var(--text3);padding:6px 8px;border-radius:8px;
   font-weight:600;transition:.2s;white-space:nowrap;
   background:var(--off);border:1px solid var(--brd)}
@@ -556,12 +574,17 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   header .hdr-logo img{width:42px!important;left:14px}
   .hdr-brand{font-size:13px}
   .hdr-brand small{font-size:9px}
-  /* Halloween campaign — компактный header 52px: 178px подобрано отдельно
-     под мобильный (не масштаб desktop-варианта) — по пропорциям ~59px,
-     чуть выше 52px header, поэтому overflow вниз (align-self:flex-start),
-     как на desktop — не задевает topbar сверху. */
-  header .hdr-logo.halloween-campaign{padding-left:0!important;align-self:flex-start!important;margin-top:-11px!important}
-  header .hdr-logo.halloween-campaign img{width:178px!important;height:auto!important;
+  /* Halloween campaign — компактный header 52px, подобрано отдельно под
+     мобильный. 01.10: увеличено по Owner reference — та же пропорция
+     контент/topbar+header, посчитанная для мобильных topbar(~40px)+
+     header(52px). */
+  header .hdr-logo.halloween-campaign{padding-left:0!important;align-self:flex-start!important;margin-top:-40px!important}
+  header .hdr-logo.halloween-campaign img{width:175px!important;height:auto!important;
+    max-width:none!important;max-height:none!important;left:auto!important}
+  /* NEW CLASSIC FULL LOGO — своя геометрия для мобильного header (52px),
+     отдельно от Halloween (см. комментарий у desktop-версии выше). */
+  header .hdr-logo.classic-logo{padding-left:0!important}
+  header .hdr-logo.classic-logo img{width:85px!important;height:auto!important;
     max-width:none!important;max-height:none!important;left:auto!important}
 
   /* Hero — меньше отступы */
@@ -1269,22 +1292,22 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   .hdr-brand{font-size:14px}
   .hdr-brand small{font-size:8px}
   /* Halloween campaign — планшет/промежуточная ширина (601-1460px, header
-     тут ещё 64px, burger уже показан) — 228px, overflow вниз (align-self:
-     flex-start на родителе выше). ВАЖНО: это отдельный от >1460px десктопа
-     брейкпоинт — margin-top ниже подобран для ЭТОЙ высоты header (64px) и
-     размера картинки (228px), не скопирован из десктопного -52px (там
-     header 56px и 280px картинка — другая геометрия). Без этой правки здесь
-     margin-top оставался 0 (правки №3-5 выше все жили только в
-     @media(min-width:1461px)) — поэтому на любом окне уже ⩽1460px CSS-px
-     логотип visually не поднимался вообще, хотя на true-desktop всё было
-     ок — это и оказалось причиной «опять не то» на скриншоте владельца. */
+     тут ещё 64px, burger уже показан) — отдельный от >1460px десктопа
+     брейкпоинт, свой margin-top под эту высоту header. 01.10: увеличено по
+     Owner reference (см. комментарий у desktop-версии выше) — та же
+     пропорция контент/topbar+header, посчитанная для 64px header здесь. */
   .hdr-logo.halloween-campaign{min-width:0;padding-left:0!important;
-    align-self:flex-start!important;margin-top:-13px!important}
-  .hdr-logo.halloween-campaign img{width:228px!important;height:auto!important;
+    align-self:flex-start!important;margin-top:-37px!important}
+  .hdr-logo.halloween-campaign img{width:229px!important;height:auto!important;
+    max-width:none!important;max-height:none!important;left:auto!important}
+  /* NEW CLASSIC FULL LOGO — своя геометрия для планшетного header (64px),
+     отдельно от Halloween (см. комментарий у desktop-версии выше). */
+  .hdr-logo.classic-logo{min-width:0;padding-left:0!important}
+  .hdr-logo.classic-logo img{width:106px!important;height:auto!important;
     max-width:none!important;max-height:none!important;left:auto!important}
 }
 @media(max-width:1460px){
-  .burger{display:flex !important;flex-shrink:0;margin-left:auto}
+  .burger{display:flex !important;flex-shrink:0}
 }
 
 /* Scope-of-work grid (used on sprzatanie-po-wyprowadzce-krakow) */

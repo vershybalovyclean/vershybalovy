@@ -1,19 +1,44 @@
-// Сезонная кампания шапки (ТЗ №1, Halloween, 30.09): ЕДИНСТВЕННЫЙ
-// переключатель — halloweenLogo:false возвращает обычный логотип+надпись
-// сразу на всех страницах (правка в этом одном месте, без редактирования
-// разметки по страницам). Переданный halloween-файл — уже полная композиция
-// (V + Vershy + PROPERTY CARE + декор), поэтому вместе с подменой src у
-// .hdr-logo img скрывается и соседняя текстовая надпись .hdr-brand — иначе
-// название дублировалось бы. Сам logo.png и разметка .hdr-brand не
-// удаляются, только скрываются классом на время кампании (см. base.css
-// правила для .hdr-logo.halloween-campaign).
+// Сезонная кампания шапки (01.10, финал): ЕДИНСТВЕННЫЙ переключатель для
+// ОБА состояния — не только "включить Halloween", но и "какой постоянный
+// branding показывать, когда Halloween выключен". С этого ТЗ старый
+// logo.png + отдельная надпись .hdr-brand (легаси-разметка в HTML) больше
+// НЕ является тем, что реально показывается ни в одном состоянии — это
+// просто noscript/до-JS fallback на случай, если этот файл не выполнился.
+// И Halloween, и новый classic full logo — цельные композиции (герб+
+// Vershy+PROPERTY CARE), поэтому в обоих случаях .hdr-brand скрывается и
+// src меняется, но КАЖДОЕ состояние получает СВОЙ класс (halloween-campaign
+// / classic-logo) со своей геометрией в base.css — Halloween-specific
+// offsets/overlap/margin-top никогда не применяются к classic logo и
+// наоборот (см. ТЗ п.3: "same CSS + different src" запрещён явно).
 var SEASONAL_CAMPAIGN = { halloweenLogo: true };
 (function(){
-  if (!SEASONAL_CAMPAIGN.halloweenLogo) return;
   document.querySelectorAll('.hdr-logo').forEach(function(a){
     var img = a.querySelector('img');
-    if (img) img.src = 'assets/img/logo-halloween.webp';
-    a.classList.add('halloween-campaign');
+    if (SEASONAL_CAMPAIGN.halloweenLogo) {
+      if (img) img.src = 'assets/img/logo-halloween.webp';
+      a.classList.add('halloween-campaign');
+      a.classList.remove('classic-logo');
+    } else {
+      if (img) img.src = 'assets/img/logo-classic-full.webp';
+      a.classList.add('classic-logo');
+      a.classList.remove('halloween-campaign');
+    }
+  });
+  // Компактный brand-V — тот же принцип: Halloween ON использует
+  // предоставленный Owner файл (своя геометрия, см. .halloween-v-icon в
+  // mobile-tabbar.css), Halloween OFF — исходный logo.png, уже стоящий в
+  // разметке по умолчанию, с исходным 66%-box (никакого класса не нужно).
+  // Единственное другое публичное место со стандартным compact-V — кнопка
+  // "Więcej"/More в нижнем таббаре; footer (100px) и JSON-LD schema.image
+  // это не тот же кейс и не переключаются.
+  document.querySelectorAll('.mtb-cta-icon img').forEach(function(img){
+    if (SEASONAL_CAMPAIGN.halloweenLogo) {
+      img.src = 'assets/img/logo-halloween-v.webp';
+      img.classList.add('halloween-v-icon');
+    } else {
+      img.src = 'assets/img/logo.png';
+      img.classList.remove('halloween-v-icon');
+    }
   });
 })();
 

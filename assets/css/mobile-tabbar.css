@@ -38,6 +38,15 @@
     overflow:hidden;
   }
   .mtb-cta .mtb-cta-icon img{width:66%;height:66%;object-fit:contain}
+  /* 01.10: Halloween V — Owner-provided файл это уже готовый круглый бейдж
+     (свой фон-круг внутри изображения), не голый значок на прозрачном
+     фоне, как обычный logo.png. При стандартных 66% его собственный круг
+     заметно меньше белого круга кнопки — виден лишний белый зазор между
+     бейджем и внешним синим кольцом. Для этого файла — 100%, кружки
+     совпадают с краем кнопки один в один (кольцо кнопки остаётся снаружи,
+     overflow:hidden никак не обрезает — background:#fff самой кнопки
+     полностью перекрыт круглым бейджем). */
+  .mtb-cta .mtb-cta-icon img.halloween-v-icon{width:100%;height:100%}
 
   body.has-mobile-tabbar{padding-bottom:64px}
   /* #btt (back-to-top) stays hidden — no separate control needed on mobile.
@@ -84,9 +93,30 @@
   /* Language switcher: show only the active language; tap it to reveal the rest. */
   .topbar-langs:not(.expanded) .lb:not(.on){display:none}
 
-  /* "Więcej" menu — a real bottom sheet: dark backdrop, slides up from the
-     bottom edge with rounded top corners, instead of dropping down from the
-     header. Shared by every page's #hn nav. */
+  body.nav-sheet-open #float-cta{display:none!important}
+
+  /* Bottom tab bar (mobile-only, sits above the sheet at z-index:1000) would
+     otherwise cover the sheet's last row/CALL US button — reserve space for
+     it only here, where the tab bar actually exists. Wider widths (601-
+     768px excluded... no tab bar there either) get the plain 20px from the
+     base ≤1460px rule instead — that used to be a flat 84px everywhere,
+     which on tablet/laptop widths (no tab bar to clear) was just dead
+     white space at the bottom of the panel. */
+  #hn.hdr-nav{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+}
+
+/* "Więcej"/burger menu — a real bottom sheet: dark backdrop, slides up from
+   the bottom edge with rounded top corners, instead of dropping down from
+   the header. Shared by every page's #hn nav.
+   01.10 (Owner fix): this used to live inside the 768px block above, so the
+   burger (still visible 769-1460px, .burger only hides at ≤768 — bottom tab
+   bar replaces it there) opened the OLD plain absolute-dropdown menu defined
+   in base.css's own ≤1460px block instead of this approved sheet design —
+   real-window screenshots caught it (menu looked "old" on tablet widths).
+   Extending the breakpoint to match the burger's own 1460px range fixes it
+   without redesigning anything — same sheet, same grid, just available
+   wherever the burger itself is. */
+@media(max-width:1460px){
   .hdr-nav-backdrop{display:none}
   body.nav-sheet-open .hdr-nav-backdrop{
     display:block;position:fixed;inset:0;background:rgba(15,23,42,.55);
@@ -94,18 +124,28 @@
   }
   @keyframes hdrBackdropIn{from{opacity:0}to{opacity:1}}
 
+  /* 01.10 (Owner fix): panel used to be left:0;right:0 — full viewport
+     width, so on any width up to 1460px (now that the sheet covers that
+     whole burger range, see fix above) it stretched into a mostly-empty
+     white wall with 4 huge cards spread thin. Width is now capped to what
+     the 4-column card grid actually needs and centered — backdrop (above)
+     stays the only full-viewport element. Height was already content-based
+     (no fixed height, only max-height as a safety cap for short viewports)
+     — that part didn't need fixing, just the width. */
   #hn.hdr-nav{
-    display:flex!important;position:fixed!important;top:auto!important;left:0;right:0;bottom:0;
+    display:flex!important;position:fixed!important;top:auto!important;
+    left:50%!important;right:auto!important;bottom:0;
+    width:calc(100% - 32px);max-width:480px;
     flex-direction:column;
-    max-height:82vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    max-height:min(82vh,620px);overflow-y:auto;-webkit-overflow-scrolling:touch;
     background:#fff;border-radius:20px 20px 0 0;
     box-shadow:0 -12px 40px rgba(15,23,42,.25);
-    padding:0 0 calc(84px + env(safe-area-inset-bottom));
+    padding:0 0 20px;
     z-index:999;
-    transform:translateY(105%);
+    transform:translateX(-50%) translateY(105%);
     transition:transform .32s cubic-bezier(.32,.72,0,1);
   }
-  #hn.hdr-nav.open{transform:translateY(0)}
+  #hn.hdr-nav.open{transform:translateX(-50%) translateY(0)}
   .hdr-nav-handle{
     width:36px;height:4px;border-radius:2px;background:var(--brd,#e2e8f0);
     margin:10px auto 2px;flex-shrink:0;
@@ -120,8 +160,7 @@
     background:var(--off);border:none;border-radius:50%;width:32px;height:32px;
     font-size:15px;color:var(--gray);cursor:pointer;
   }
-  body.nav-sheet-open #float-cta{display:none!important}
-  /* Old horizontal-nav links stay for desktop only; mobile gets one unified grid below. */
+  /* Old horizontal-nav links stay for desktop only; sheet gets one unified grid below. */
   #hn > a:not(.hdr-nav-call){display:none}
   .hdr-cta{display:none}
 
