@@ -98,8 +98,13 @@ header{
    медиа-блоках, включая их !important, — не зависит от порядка объявлений).*/
 .hdr-logo.halloween-campaign{padding-left:0!important;align-self:flex-start!important}
 .hdr-logo.halloween-campaign img{position:static!important;left:auto!important;
-  top:auto!important;transform:none!important;width:238px!important;height:auto!important;
-  max-width:none!important;max-height:none!important;object-fit:contain}
+  top:auto!important;transform:none!important;height:auto!important;
+  max-width:none!important;max-height:none!important;object-fit:contain;
+  /* Плавное масштабирование вместо скачка на брейкпоинте (01.10, по
+     просьбе Owner — лого должно меняться при любом изменении ширины/зума,
+     не только на 1280px). 229px(на 1280px)->238px(на 1600px+), держит
+     фиксированный 238px для desktop >=1600px, как и было раньше. */
+  width:clamp(229px, calc(229px + (100vw - 1280px) * 9 / 320), 238px)!important;}
 .hdr-logo.halloween-campaign .hdr-brand{display:none}
 /* Позиция + высота header (01.10, правка по Owner reference + Owner decision
    про компромисс размера): только desktop (>1279px) — header держим 56px
@@ -111,7 +116,7 @@ header{
    PENDING — размер/позиция окончательно утверждает Owner. */
 @media(min-width:1280px){
   header{height:56px}
-  .hdr-logo.halloween-campaign{margin-top:-32px!important}
+  .hdr-logo.halloween-campaign{margin-top:clamp(-37px, calc(-37px + (100vw - 1280px) * 5 / 320), -32px)!important}
 }
 /* NEW CLASSIC FULL LOGO (01.10) — постоянный default после отключения
    Halloween campaign. СВОЯ геометрия, полностью отдельная от
@@ -122,8 +127,11 @@ header{
    ширина посчитана на ~71-72% высоты header на каждом брейкпоинте. */
 .hdr-logo.classic-logo{padding-left:0!important}
 .hdr-logo.classic-logo img{position:static!important;left:auto!important;
-  top:auto!important;transform:none!important;width:92px!important;height:auto!important;
-  max-width:none!important;max-height:none!important;object-fit:contain}
+  top:auto!important;transform:none!important;height:auto!important;
+  max-width:none!important;max-height:none!important;object-fit:contain;
+  /* Плавное масштабирование, см. комментарий у halloween-campaign выше.
+     106px(на 1280px)->92px(на 1600px+) — тут размер УМЕНЬШАЕТСЯ с шириной. */
+  width:clamp(92px, calc(106px + (100vw - 1280px) * -14 / 320), 106px)!important;}
 .hdr-logo.classic-logo .hdr-brand{display:none}
 .logo-svg{width:64px;height:64px;flex-shrink:0}
 .hdr-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;
@@ -1298,14 +1306,21 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
      Owner reference (см. комментарий у desktop-версии выше) — та же
      пропорция контент/topbar+header, посчитанная для 64px header здесь. */
   .hdr-logo.halloween-campaign{min-width:0;padding-left:0!important;
-    align-self:flex-start!important;margin-top:-37px!important}
-  .hdr-logo.halloween-campaign img{width:229px!important;height:auto!important;
-    max-width:none!important;max-height:none!important;left:auto!important}
+    align-self:flex-start!important;
+    /* Плавное масштабирование 601-1279px: -24px(на 601px, стык с mobile)
+       -> -37px(на 1279px, стык с desktop-сегментом). */
+    margin-top:clamp(-37px, calc(-24px + (100vw - 601px) * -13 / 678), -24px)!important}
+  .hdr-logo.halloween-campaign img{height:auto!important;
+    max-width:none!important;max-height:none!important;left:auto!important;
+    /* Плавное масштабирование 601-1279px: 175px(на 601px)->229px(на 1279px). */
+    width:clamp(175px, calc(175px + (100vw - 601px) * 54 / 678), 229px)!important;}
   /* NEW CLASSIC FULL LOGO — своя геометрия для планшетного header (64px),
      отдельно от Halloween (см. комментарий у desktop-версии выше). */
   .hdr-logo.classic-logo{min-width:0;padding-left:0!important}
-  .hdr-logo.classic-logo img{width:106px!important;height:auto!important;
-    max-width:none!important;max-height:none!important;left:auto!important}
+  .hdr-logo.classic-logo img{height:auto!important;
+    max-width:none!important;max-height:none!important;left:auto!important;
+    /* Плавное масштабирование 601-1279px: 85px(на 601px)->106px(на 1279px). */
+    width:clamp(85px, calc(85px + (100vw - 601px) * 21 / 678), 106px)!important;}
 }
 @media(max-width:1279px){
   .burger{display:flex !important;flex-shrink:0}
