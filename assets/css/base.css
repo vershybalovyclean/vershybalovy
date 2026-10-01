@@ -53,7 +53,7 @@ body{padding-top:0}
    margin-left:auto lives HERE now, not on .burger — account action must be
    anchored to the right side with nav/burger, never bunched up against a
    logo whose width now varies a lot (Halloween campaign vs standard). With
-   .hdr-nav out of normal flow whenever it's the overlay/sheet (≤1460px,
+   .hdr-nav out of normal flow whenever it's the overlay/sheet (≤1399px,
    display:none or position:fixed), .hdr-login's auto margin is what pushes
    IT (and .burger right after it, via header's own gap) to the right edge;
    on true desktop .hdr-nav is still an inline flex item with its own
@@ -102,14 +102,14 @@ header{
   max-width:none!important;max-height:none!important;object-fit:contain}
 .hdr-logo.halloween-campaign .hdr-brand{display:none}
 /* Позиция + высота header (01.10, правка по Owner reference + Owner decision
-   про компромисс размера): только desktop (>1460px) — header держим 56px
+   про компромисс размера): только desktop (>1399px) — header держим 56px
    (компактный, по явному решению Owner), поэтому логотип такого размера,
    который реально нужен для "существенно крупнее", физически не помещается
    без лёгкого захода низа в hero (~14px) — это принятый компромисс, а не
    недосмотр. mobile/tablet свои значения в соответствующих медиа-блоках,
    там запас по высоте есть, заход в hero не нужен. Статус: VISUAL QA
    PENDING — размер/позиция окончательно утверждает Owner. */
-@media(min-width:1461px){
+@media(min-width:1400px){
   header{height:56px}
   .hdr-logo.halloween-campaign{margin-top:-32px!important}
 }
@@ -144,13 +144,13 @@ header{
   border-color:transparent!important;
   box-shadow:0 2px 12px rgba(37,99,235,.3)!important}
 .hdr-cta:hover{background:var(--blue)!important}
-@media(max-width:1460px){
+@media(max-width:1399px){
   header{gap:12px}
   .hdr-brand small{display:none}
 }
 .burger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
 .burger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px}
-@media(max-width:1460px){
+@media(max-width:1399px){
   /* Collapsing the full inline nav into the burger menu at the same
      breakpoint the logo/brand already start shrinking at (below) — with
      .hdr-login now also competing for header space, the two used to be
@@ -1286,14 +1286,14 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
 
 /* Mobile burger visibility fix */
 /* --- Mobile burger visibility fix (guarantees the button is never clipped) --- */
-@media(max-width:1460px){
+@media(max-width:1399px){
   header{padding-left:14px !important;padding-right:14px !important}
   .hdr-logo{min-width:0;flex-shrink:1;padding-left:99px}
   .hdr-logo img{width:85px !important;height:auto !important;left:14px}
   .hdr-brand{font-size:14px}
   .hdr-brand small{font-size:8px}
-  /* Halloween campaign — планшет/промежуточная ширина (601-1460px, header
-     тут ещё 64px, burger уже показан) — отдельный от >1460px десктопа
+  /* Halloween campaign — планшет/промежуточная ширина (601-1399px, header
+     тут ещё 64px, burger уже показан) — отдельный от >1399px десктопа
      брейкпоинт, свой margin-top под эту высоту header. 01.10: увеличено по
      Owner reference (см. комментарий у desktop-версии выше) — та же
      пропорция контент/topbar+header, посчитанная для 64px header здесь. */
@@ -1307,7 +1307,7 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
   .hdr-logo.classic-logo img{width:106px!important;height:auto!important;
     max-width:none!important;max-height:none!important;left:auto!important}
 }
-@media(max-width:1460px){
+@media(max-width:1399px){
   .burger{display:flex !important;flex-shrink:0}
 }
 
