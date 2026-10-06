@@ -211,9 +211,13 @@ header{
 @media(max-width:860px){.hero{min-height:54vh}.hero::before{background:linear-gradient(180deg,rgba(15,23,42,.55) 0%,rgba(15,23,42,.78) 100%)}}
 
 /* ─── TRUST ─── */
-.trust{background:var(--blue2);padding:16px 28px}
-.trust-in{max-width:1100px;margin:0 auto;display:flex;gap:28px;flex-wrap:wrap;justify-content:center}
-.trust-item{display:flex;align-items:center;gap:8px;color:#fff;font-size:13px;font-weight:500}
+/* 10.02: thinned from padding:16px to 9px (plus a tighter line-height and a
+   smaller row-gap for when the 5 items wrap to 2 lines) so this reads as a
+   slim info strip, not its own section — text/icons/order/background/
+   functionality untouched. */
+.trust{background:var(--blue2);padding:9px 28px}
+.trust-in{max-width:1100px;margin:0 auto;display:flex;gap:6px 28px;flex-wrap:wrap;justify-content:center}
+.trust-item{display:flex;align-items:center;gap:8px;color:#fff;font-size:13px;font-weight:500;line-height:1.2}
 
 /* ─── SECTIONS ─── */
 section{padding:72px 28px}
@@ -1171,25 +1175,164 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
 .pet-banner-btn:hover{background:#f59e0b;color:#fff}
 @media(max-width:640px){.pet-banner{min-height:340px}.pet-banner-body{padding:28px 22px;max-width:100%}}
 
-/* ─── PROMO BANNER (reusable — swap text/href per campaign, no restructuring needed) ─── */
-/* 01.10: old "mycie okien -10%" campaign retired, Halloween promo not
-   ready yet — display:none hides it with zero layout footprint (no
-   gap/margin left behind) while keeping this slot + all its markup/ids
-   intact. To launch the next campaign: swap the text in index.html's
-   #promo-label/#promo-headline/#promo-desc/#promo-expiry/#promo-cta and
-   remove this display:none — no restructuring needed. */
-.promo-banner{display:none;background:linear-gradient(120deg,#0c4a6e 0%,#0369a1 55%,#0284c7 100%);padding:22px 28px}
-.promo-banner-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.promo-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:6px}
-.promo-headline{font-family:'Montserrat',sans-serif;font-size:clamp(17px,2.4vw,22px);font-weight:900;color:#fff;margin-bottom:4px}
-.promo-headline strong{color:#7dd3fc}
-.promo-desc{color:rgba(255,255,255,.85);font-size:13px;margin:0}
-.promo-expiry{color:rgba(255,255,255,.65);font-size:11.5px;margin-top:4px}
-.promo-cta{flex-shrink:0;white-space:nowrap}
-@media(max-width:600px){
-  .promo-banner{padding:18px 16px}
-  .promo-banner-in{flex-direction:column;align-items:stretch;text-align:center;gap:14px}
-  .promo-cta{width:100%;text-align:center}
+/* ─── PROMO BANNER SLOT (reusable — same #promo-banner section every campaign uses) ─── */
+.promo-banner{overflow:hidden}
+
+/* 01.10 v3: Halloween campaign for this slot. User picks a service straight
+   off the banner now — no generic "see offers" CTA/anchor, each of the 3
+   compact offer pills below links directly to its real service page/tab.
+   Swap/retire the same way the old window-discount banner was: this
+   section's own markup + CSS.
+   10.02: now visible at ALL widths — mobile has its own Owner asset +
+   layout (.hwp-m-*, mobile-first below); desktop keeps its own frozen
+   .hwp-stage (inside @media(min-width:601px) further down, unchanged). */
+.halloween-promo{position:relative;padding:0}
+/* Mobile-first: desktop's .hwp-stage is hidden by default and only shown
+   inside the existing @media(min-width:601px) block below (where it's
+   flipped back to display:block) — same breakpoint the rest of the project
+   already uses for mobile/desktop. */
+.hwp-stage{display:none}
+/* Mobile Halloween visual — separate Owner asset (halloween-promo-mobile.webp,
+   1122x1402, native 4:5), NOT the desktop background. First pass: shown at
+   its natural aspect (no crop) per brief — "HALLOWEEN", hat, bats, web,
+   ghost-cleaner, spray bottle, pumpkins, interior are all baked into this
+   image already, so none of it is recreated in HTML. Text column sits in the
+   plain/blurred left-hand zone (sofa side), clear of the ghost's face, arm
+   and spray bottle (verified by pixel-sampling the actual asset — ghost's
+   body/arm reaches to ~x:48% at its leftmost); offers sit lower, spanning
+   wider, over the counter/pumpkin zone, which is the lowest-priority area to
+   cover per the brief's own crop-priority order. */
+.hwp-m-stage{display:block;position:relative;width:100%;
+  aspect-ratio:1122/1402;container-type:inline-size;overflow:hidden;
+  --hwp-m-fade-in:rgba(15,23,42,.78);--hwp-m-fade-out:var(--off,#f8fafc)}
+.hwp-m-stage::before{content:'';position:absolute;inset:0;
+  background:url(../img/halloween-promo-mobile.webp) center/contain no-repeat}
+/* 10.03: soft mobile-only seam so the page doesn't cut hard into the photo.
+   --hwp-m-fade-in/--hwp-m-fade-out are the two colors either side of this
+   banner — set once here as the homepage's actual values (hero's own dark
+   overlay above; .reviews-section's --off below) and meant to be overridden
+   per page via these same two variables, not rewritten per page. A single
+   ::after with two stacked, non-repeating gradient bands (top 40px, bottom
+   25px — comfortably clear of "HALLOWEEN", which starts ~73px down at this
+   image's composition) does both fades without touching banner height or
+   the asset itself; no blur/filter, no separate spacer element. */
+.hwp-m-stage::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,var(--hwp-m-fade-in) 0%,transparent 100%) top/100% 40px no-repeat,
+    linear-gradient(180deg,transparent 0%,var(--hwp-m-fade-out) 100%) bottom/100% 25px no-repeat}
+.hwp-m-text{position:absolute;left:4%;top:32%;width:44%;z-index:2}
+.hwp-m-text h2{font-family:'Montserrat',sans-serif;font-weight:900;color:var(--text,#0f172a);
+  line-height:1.15;margin:0 0 1.2cqw;font-size:4.4cqw;
+  text-shadow:0 1px 3px rgba(22,163,74,.65),0 2px 14px rgba(22,163,74,.65)}
+.hwp-m-text h2 span{color:var(--green,#16a34a);display:block;
+  text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 14px rgba(0,0,0,.65)}
+.hwp-m-text p{font-weight:700;color:var(--text2,#334155);margin:0 0 1cqw;font-size:2.6cqw;line-height:1.25;
+  text-shadow:0 1px 3px rgba(255,255,255,.8),0 2px 12px rgba(255,255,255,.8)}
+.hwp-m-period{font-weight:700;color:#c2410c;margin:0;font-size:2.4cqw;line-height:1.25;
+  text-shadow:0 1px 3px rgba(255,255,255,.8),0 2px 12px rgba(255,255,255,.8)}
+.hwp-m-period strong{font-weight:900}
+/* Offers sit in their own wider block (not confined to the narrow text
+   column) — per brief these may use most of the banner's width, just not
+   touch the screen edges. Slightly more contrast than desktop's pills since
+   the mobile photo is busier right where these sit. */
+.hwp-m-offers{position:absolute;left:4%;right:4%;top:68%;z-index:2;
+  display:flex;flex-direction:column;gap:1.4cqw}
+.hwp-m-offer{display:block;background:rgba(255,255,255,.92);
+  border:1.5px solid rgba(15,23,42,.28);border-left:4px solid var(--green,#16a34a);
+  border-radius:1.8cqw;box-shadow:0 1cqw 3cqw rgba(15,23,42,.22);
+  padding:1.8cqw 3.2cqw;text-decoration:none;transition:.15s}
+.hwp-m-offer:active{background:#fff;border-color:var(--green,#16a34a)}
+.hwp-m-offer-name{display:block;font-weight:900;color:#0b1220;
+  font-size:3cqw;line-height:1.25}
+.hwp-m-offer-gift{display:block;font-weight:700;color:var(--green,#16a34a);
+  font-size:2.6cqw;line-height:1.3;margin-top:.3cqw}
+
+@media(min-width:601px){
+  /* Owner background (halloween-promo-v2.webp, same 1983x793 canvas as the
+     v1 asset it replaced — logo dropped since the real header logo already
+     sits above the banner): "HALLOWEEN" lettering, hat, bats, web, pumpkins,
+     ghost-cleaner, interior are baked in. container-type:inline-size + cqw
+     below size every overlay relative to this box, not the page, so content
+     stays pinned to the free light zone at any desktop width. */
+  .halloween-promo{display:block}
+  /* 10.01 v4: compact variant — aspect-ratio shortened from the native
+     1983x793 (height trimmed ~15%: 793->674) so the banner reads as a promo
+     strip, not a second hero. Image is NOT squashed: background-size is
+     locked to 100% width/auto height (same scale as before), so it renders
+     at its native proportions and is simply clipped top+bottom by the
+     shorter box. background-position-y 33% biases the crop so only ~5% of
+     the original top (pure headroom above the logo, verified via pixel
+     sampling — logo itself starts at 5.5%) and ~10% of the original bottom
+     (counter/shadow below the main pumpkin, which sampling showed ends
+     ~87-90%) are trimmed; logo, HALLOWEEN lettering, ghost and the main
+     pumpkins all stay fully inside the visible window. No horizontal crop
+     at all (width stays 100%/100%). */
+  .hwp-stage{display:block;position:relative;width:100%;
+    aspect-ratio:1983/674;container-type:inline-size;overflow:hidden}
+  .hwp-stage::before{content:'';position:absolute;inset:0;
+    background:url(../img/halloween-promo-v2.webp) center 33%/100% auto no-repeat}
+  /* left 17%/width 46% unchanged (horizontal position from the last pass).
+     top nudged back down from 49% to 46% (~20px at a 1920px-wide desktop) —
+     49% had left a bit more air below the baked-in "HALLOWEEN" lettering
+     than needed; 46% keeps a clearly visible gap without going back to the
+     old 42%-in-the-tall-stage spacing that used to read as touching. */
+  .hwp-text{position:absolute;left:17%;top:46%;width:46%;z-index:1}
+  /* Soft brand-green glow (not an outline/neon halo) so the dark text keeps
+     separating from busy/light parts of the photo. Two layers — a tight one
+     for edge contrast, a wider soft one for the glow itself; strengthened
+     from the first pass (which read as barely-there) while still staying a
+     glow, not a halo/outline. CTAs are untouched since they already sit on
+     their own light pill background. */
+  .hwp-text h2{font-family:'Montserrat',sans-serif;font-weight:900;color:var(--text,#0f172a);
+    line-height:1.15;margin:0 0 .9cqw;font-size:2.3cqw;
+    text-shadow:0 1px 3px rgba(22,163,74,.65),0 2px 14px rgba(22,163,74,.65)}
+  /* span (already green) gets a black glow instead of green-on-green,
+     which gave it almost no contrast lift; p/period get a white glow since
+     they sit over darker/busier parts of the photo. */
+  .hwp-text h2 span{color:var(--green,#16a34a);display:block;
+    text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 14px rgba(0,0,0,.65)}
+  .hwp-text p{font-weight:700;color:var(--text2,#334155);margin:0 0 .7cqw;font-size:1.25cqw;line-height:1.25;
+    text-shadow:0 1px 3px rgba(255,255,255,.8),0 2px 12px rgba(255,255,255,.8)}
+  /* Campaign date window — the gift validity period (by cleaning date), not
+     the banner's own display period. Smaller than the headline, roughly
+     subtitle-sized, pumpkin-orange accent on the dates only; no separate
+     plaque/background, doesn't add banner height. */
+  .hwp-period{font-weight:700;color:#c2410c;margin:0 0 .7cqw;font-size:1.05cqw;line-height:1.25;
+    text-shadow:0 1px 3px rgba(255,255,255,.8),0 2px 12px rgba(255,255,255,.8)}
+  .hwp-period strong{font-weight:900}
+  /* Compact clickable pills, NOT big cards — name + gift stacked tight,
+     small padding/radius, light semi-transparent bg so the visual (ghost,
+     interior) stays the focus, not these. Owner explicitly asked these
+     stay small; do not enlarge for "visibility" without a new GO.
+     One row on desktop (not a column): width is content-driven per pill
+     (max-width:fit-content), not stretched/equal — if a row runs tight,
+     shrink padding/gap/gift font first rather than wrapping to a column. */
+  .hwp-offers{display:flex;flex-direction:row;flex-wrap:nowrap;gap:.45cqw}
+  /* flex:0 1 auto + min-width:0 lets a pill shrink (and its own two lines of
+     text wrap further if truly needed) when a longer-language translation
+     (RU/UK run noticeably longer than PL) would otherwise push the row past
+     its box — keeps the row itself from ever overflowing into the ghost,
+     without reverting to a column. */
+  /* 10.01 v5: same footprint (padding/size untouched), stronger contrast so
+     these read as clickable pills, not flat text — more opaque background,
+     a visible (not just tinted) border, a small lift-shadow, a brand-green
+     left accent as a click affordance, and a bolder name. */
+  .hwp-offer{display:block;background:rgba(255,255,255,.85);
+    border:1.5px solid rgba(15,23,42,.24);border-left:3px solid var(--green,#16a34a);
+    border-radius:.6cqw;box-shadow:0 .18cqw .55cqw rgba(15,23,42,.14);
+    padding:.4cqw .65cqw;text-decoration:none;
+    transition:background .15s,border-color .15s,box-shadow .15s,transform .15s;
+    max-width:fit-content;flex:0 1 auto;min-width:0}
+  .hwp-offer:hover,.hwp-offer:focus-visible{background:#fff;
+    border-color:var(--green,#16a34a);box-shadow:0 .3cqw .85cqw rgba(22,163,74,.28);
+    transform:translateY(-2px)}
+  .hwp-offer-name{display:block;font-weight:900;color:#0b1220;
+    font-size:1.02cqw;line-height:1.25}
+  .hwp-offer-gift{display:block;font-weight:700;color:var(--green,#16a34a);
+    font-size:.82cqw;line-height:1.25}
+  /* 10.02 addition only — hides the new mobile visual on desktop; nothing
+     above this line in the block was touched. */
+  .hwp-m-stage{display:none}
 }
 
 /* ─── NAVIGATION ─── */

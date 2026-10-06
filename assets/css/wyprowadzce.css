@@ -1,3 +1,15 @@
+/* This page's trust-bar phrases (e.g. "Czystość bez zastrzeżeń przy
+   odbiorze") run noticeably longer than the homepage's — they already use
+   the shared compact .trust/.trust-in/.trust-item styling from base.css
+   (padding:9px 28px, line-height:1.2 etc; not a missing-inheritance bug),
+   but base.css's shared .trust-in{max-width:1100px} is too narrow for these
+   5 items to fit on one line, so they wrap to two. Widening max-width here
+   (page-scoped, loads after base.css) lets them fit on one line at normal
+   desktop widths without touching the homepage's own 1100px cap or
+   redesigning the bar; narrower viewports still wrap naturally since this
+   is only an upper bound. */
+.trust-in{max-width:1420px}
+
 .ac-row.ac-fixed .ac-body{display:none!important}
 
 .ac-cancel{display:none;background:none;border:none;color:var(--gray);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:underline;padding:4px 0;margin-top:6px}
@@ -453,3 +465,88 @@ body.has-order{padding-bottom:76px}
 }
 .sb-form input,.sb-form textarea{width:100%;border:1.5px solid var(--brd);border-radius:10px;padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;margin-bottom:8px;outline:none;transition:.2s}
 .sb-form textarea{resize:vertical;min-height:60px}
+
+/* ─── HALLOWEEN PROMO (this page only) ───────────────────────────────────
+   Same technique as the homepage Halloween promo (aspect-ratio-locked stage,
+   cqw-sized text overlay, 601px breakpoint swaps desktop/mobile Owner
+   assets) — own classes/images since the background differs per page. No
+   crop on this first pass (brief: show the natural composition before
+   cropping); no CTA (user is already on this service's page). */
+.wyp-promo{position:relative;overflow:hidden;padding:0}
+.wyp-hwp-stage{display:none}
+
+/* Mobile (default — Owner asset halloween-wyprowadzka-mobile.webp, 1122x1402
+   native, shown uncropped). Text sits left, clear of the ghost/cleaner/
+   before-after circle which sit right-of-center in this composition (same
+   left-column approach as the homepage mobile promo). Soft top/bottom fade
+   reused from the homepage treatment — same two-gradient ::after, colors
+   set via variables for this page's actual neighbors (trust bar blue above,
+   off-white "Dla kogo" section below). */
+.wyp-hwp-m-stage{display:block;position:relative;width:100%;
+  aspect-ratio:1122/1402;container-type:inline-size;overflow:hidden;
+  --wyp-fade-in:var(--blue2,#2563eb);--wyp-fade-out:var(--off,#f8fafc)}
+.wyp-hwp-m-stage::before{content:'';position:absolute;inset:0;
+  background:url(../img/halloween-wyprowadzka-mobile.webp) center/contain no-repeat}
+/* 10.03 v2: both bands now in the 35-55px "reusable Halloween transition"
+   range (was 40/25 — bottom bumped up so top/bottom read as one consistent
+   principle, not a homepage-specific asymmetry). */
+.wyp-hwp-m-stage::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,var(--wyp-fade-in) 0%,transparent 100%) top/100% 45px no-repeat,
+    linear-gradient(180deg,transparent 0%,var(--wyp-fade-out) 100%) bottom/100% 40px no-repeat}
+.wyp-hwp-m-text{position:absolute;left:4%;top:34%;width:58%;z-index:2}
+/* 10.03 v3: first pass at these clamp() floors (24-32/20-23/17-19/15-17)
+   overflowed the banner — at a 50%-wide column, "Czyszczenie fug..." alone
+   wrapped to 3 lines. Tightened margins/line-heights and nudged the clamp
+   floors down slightly (brief: these are starting points, tune to the real
+   390px preview) so the whole block fits with margin to spare while staying
+   clearly larger than the first pass. Still clears "HALLOWEEN" (ends
+   ~31.5%) above and the ghost/machine/before-after circle to the right. */
+.wyp-hwp-m-text h2{font-family:'Montserrat',sans-serif;font-weight:900;color:var(--text,#0f172a);
+  line-height:1.12;margin:0 0 4px;font-size:clamp(23px,6.6vw,30px);
+  text-shadow:0 1px 3px rgba(22,163,74,.65),0 2px 14px rgba(22,163,74,.65)}
+.wyp-hwp-m-text h2 span{color:var(--green,#16a34a);display:block;
+  text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 14px rgba(0,0,0,.65)}
+.wyp-hwp-m-bonus{font-weight:800;color:var(--text,#0f172a);margin:0 0 3px;font-size:clamp(18px,5vw,21px);line-height:1.15;
+  text-shadow:0 1px 3px rgba(255,255,255,.8),0 2px 12px rgba(255,255,255,.8)}
+.wyp-hwp-m-gratis{color:var(--green,#16a34a);font-weight:900}
+.wyp-hwp-m-gift{font-weight:600;color:var(--text2,#334155);margin:0 0 4px;font-size:clamp(15px,4.2vw,17px);line-height:1.2;
+  text-shadow:0 1px 3px rgba(255,255,255,.8),0 2px 12px rgba(255,255,255,.8)}
+/* 10.03 v4: bumped up and given its own stronger glow — it was getting lost
+   against the photo at the previous size/weight despite the orange color. */
+.wyp-hwp-m-period{font-weight:800;color:#c2410c;margin:0;font-size:clamp(16px,4.4vw,19px);line-height:1.2;
+  text-shadow:0 1px 2px rgba(255,255,255,.95),0 1px 5px rgba(255,255,255,.95),0 2px 14px rgba(255,255,255,.7)}
+.wyp-hwp-m-period strong{font-weight:900}
+
+@media(min-width:601px){
+  .wyp-hwp-m-stage{display:none}
+  /* Desktop (Owner asset halloween-wyprowadzka-desktop.webp, 1983x793
+     native, shown uncropped — same "natural composition first" approach).
+     "HALLOWEEN" sits top-left (~24-43% of height); text column starts below
+     it, clear of the cleaning wand/ghost/before-after circle which occupy
+     the right ~55%+ of the frame. */
+  .wyp-hwp-stage{display:block;position:relative;width:100%;
+    aspect-ratio:1983/793;container-type:inline-size;overflow:hidden}
+  .wyp-hwp-stage::before{content:'';position:absolute;inset:0;
+    background:url(../img/halloween-wyprowadzka-desktop.webp) center/contain no-repeat}
+  /* 10.03 v2: left/top kept as the starting point (brief: small adjustment
+     only); width nudged 42%->44% and text sized up since it read too small
+     against this large a visual — still clear of the wand/ghost/before-
+     after circle, which start past ~55% in this composition. */
+  .wyp-hwp-text{position:absolute;left:4%;top:48%;width:44%;z-index:1}
+  .wyp-hwp-text h2{font-family:'Montserrat',sans-serif;font-weight:900;color:var(--text,#0f172a);
+    line-height:1.15;margin:0 0 .8cqw;font-size:2.7cqw;
+    text-shadow:0 1px 3px rgba(22,163,74,.65),0 2px 14px rgba(22,163,74,.65)}
+  .wyp-hwp-text h2 span{color:var(--green,#16a34a);display:block;
+    text-shadow:0 1px 3px rgba(0,0,0,.65),0 2px 14px rgba(0,0,0,.65)}
+  .wyp-hwp-bonus{font-weight:800;color:var(--text,#0f172a);margin:0 0 .4cqw;font-size:1.7cqw;line-height:1.25;
+    text-shadow:0 1px 3px rgba(255,255,255,.8),0 2px 12px rgba(255,255,255,.8)}
+  .wyp-hwp-gratis{color:var(--green,#16a34a);font-weight:900}
+  .wyp-hwp-gift{font-weight:600;color:var(--text2,#334155);margin:0 0 .6cqw;font-size:1.3cqw;line-height:1.3;
+    text-shadow:0 1px 3px rgba(255,255,255,.8),0 2px 12px rgba(255,255,255,.8)}
+  /* 10.03 v4: bumped up and given its own stronger glow — same issue as
+     mobile, it was reading as barely-there against the photo. */
+  .wyp-hwp-period{font-weight:800;color:#c2410c;margin:0;font-size:1.55cqw;line-height:1.3;
+    text-shadow:0 1px 2px rgba(255,255,255,.95),0 1px 5px rgba(255,255,255,.95),0 2px 14px rgba(255,255,255,.7)}
+  .wyp-hwp-period strong{font-weight:900}
+}

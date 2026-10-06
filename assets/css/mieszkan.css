@@ -491,3 +491,108 @@
      the total at all. Lift it to sit just above the tab bar. */
   body.has-mobile-tabbar .mobile-order-bar{bottom:64px}
 }
+
+/* ─── HALLOWEEN PROMO (this page only: generalne + szczegółowe) ──────────
+   10.03 v3: the baked-in bright-green strips are too short for this much
+   copy (title + emphasis line + 1-2 detail lines), so each offer now gets
+   its own HTML/CSS rounded green card that deliberately covers the drawn
+   strip — brief explicitly allows this. Card bounds are NOT the drawn
+   strip's bounds; they're measured off the actual asset pixels as
+   "everything between the 4 appliance photos' bottom edge and the colored
+   panel's own bottom edge", so the card only ever eats free space, never
+   the photos. Same aspect-ratio-locked-stage + 601px-breakpoint technique
+   as the other Halloween promos; same reusable mobile top/bottom fade. */
+.mies-promo{position:relative;overflow:hidden;padding:0}
+.mies-hwp-stage{display:none}
+
+/* Mobile (default) — Owner asset halloween-mieszkan-mobile.webp, 1092x1440
+   native, shown uncropped. Generalne (top) panel: photos end ~67.75%, the
+   panel itself ends ~75% (szczegółowe's own content starts right after,
+   no gap) — only ~7pts to work with, so mobile typography is deliberately
+   more compact than desktop. Szczegółowe (bottom) panel: photos end ~89%,
+   panel ends ~96% (pumpkins after that). */
+.mies-hwp-m-stage{display:block;position:relative;width:100%;
+  aspect-ratio:1092/1440;container-type:inline-size;overflow:hidden;
+  --mies-fade-in:var(--blue2,#2563eb);--mies-fade-out:var(--off,#f8fafc)}
+.mies-hwp-m-stage::before{content:'';position:absolute;inset:0;
+  background:url(../img/halloween-mieszkan-mobile.webp) center/contain no-repeat}
+.mies-hwp-m-stage::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,var(--mies-fade-in) 0%,transparent 100%) top/100% 45px no-repeat,
+    linear-gradient(180deg,transparent 0%,var(--mies-fade-out) 100%) bottom/100% 40px no-repeat}
+.mies-hwp-m-gen-card{position:absolute;left:15%;right:15%;top:67%;height:8.5%;z-index:2}
+.mies-hwp-m-szc-card{position:absolute;left:15%;right:15%;top:88.6%;height:7.9%;z-index:2}
+
+@media(min-width:601px){
+  .mies-hwp-m-stage{display:none}
+  /* Desktop — Owner asset halloween-mieszkan-desktop.webp, 1983x793 native,
+     shown uncropped. Both panels: the 4 appliance photos end ~72.5-73%
+     (consistent across both), the colored panel itself ends ~86% — a full
+     ~13pts of genuinely free space to work with (vs the drawn strip's own
+     ~7-11pts), confirmed by sampling the pixel column at several x's per
+     panel, not assumed. */
+  .mies-hwp-stage{display:block;position:relative;width:100%;
+    aspect-ratio:1983/793;container-type:inline-size;overflow:hidden}
+  .mies-hwp-stage::before{content:'';position:absolute;inset:0;
+    background:url(../img/halloween-mieszkan-desktop.webp) center/contain no-repeat}
+  /* 10.06 fix: text was already perfectly centered WITHIN these boxes
+     (verified via getBoundingClientRect — symmetric left/right gaps), but
+     the boxes themselves weren't centered on the actual green/blue panel
+     drawn in the asset. Re-sampled the panel's real horizontal bounds
+     (multiple rows across the icon/photo zone): left panel ~1.5-37.25%,
+     right panel ~38-81.5%. left/width below now match those, so the
+     already-correct internal centering lines up with the real panel too. */
+  .mies-hwp-gen-card{position:absolute;left:1.5%;width:35.75%;top:73%;height:13%;z-index:1}
+  /* 10.06 fix: width was keyed off the blue panel's bounds in the icon/
+     photo zone (y:45-65%, ~38-82.6%), but the panel itself narrows lower
+     down — re-measured at the card's own vertical zone (y:70-85%, where
+     the panel's right edge is consistently ~73.8%, not 82%) and sized to
+     that, with a small symmetric inset so the card sits just inside the
+     panel rather than flush against it. */
+  .mies-hwp-szc-card{position:absolute;left:38.5%;width:34.8%;top:73%;height:13%;z-index:1}
+}
+
+/* The card itself: a lime-green gradient continuing the Owner asset's own
+   palette (sampled strip color ~rgb(100,240,10)), rounded, a thin light
+   top highlight, a very soft glow — meant to read as part of the banner's
+   own design, not a bolted-on HTML box. No glass/white, no heavy shadow. */
+.mies-hwp-gen-card,.mies-hwp-szc-card,
+.mies-hwp-m-gen-card,.mies-hwp-m-szc-card{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:linear-gradient(165deg,#9dff5c 0%,#5de32a 55%,#3fc914 100%);
+  border-radius:1.2cqw;border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 0 1.6cqw rgba(74,222,30,.45),inset 0 1px 0 rgba(255,255,255,.4);
+  padding:.5cqw 1cqw}
+.mies-hwp-card-title{font-family:'Montserrat',sans-serif;font-weight:700;color:#0f172a;
+  opacity:.85;line-height:1.15}
+.mies-hwp-card-accent{font-family:'Montserrat',sans-serif;font-weight:900;color:#0f172a;
+  line-height:1.15;letter-spacing:.01em}
+.mies-hwp-card-sub{font-family:'Montserrat',sans-serif;font-weight:600;color:#0f172a;
+  opacity:.88;line-height:1.2}
+
+.mies-hwp-gen-card,.mies-hwp-szc-card{border-radius:.9cqw;gap:.15cqw}
+.mies-hwp-gen-card .mies-hwp-card-title,.mies-hwp-szc-card .mies-hwp-card-title{font-size:.85cqw}
+.mies-hwp-gen-card .mies-hwp-card-accent,.mies-hwp-szc-card .mies-hwp-card-accent{font-size:1.15cqw}
+.mies-hwp-gen-card .mies-hwp-card-sub,.mies-hwp-szc-card .mies-hwp-card-sub{font-size:.72cqw}
+
+.mies-hwp-m-gen-card,.mies-hwp-m-szc-card{border-radius:3cqw;gap:.25cqw}
+.mies-hwp-m-gen-card .mies-hwp-card-title{font-size:clamp(9px,2.3cqw,11px)}
+.mies-hwp-m-gen-card .mies-hwp-card-accent{font-size:clamp(11px,3cqw,13px)}
+.mies-hwp-m-gen-card .mies-hwp-card-sub{font-size:clamp(8px,2vw,9.5px)}
+/* Szczegółowe has one more line (4 vs generalne's 3) in slightly less room
+   (the panel's own bottom edge sits closer to its photos than generalne's
+   does), so its mobile type is a notch smaller — still legible, not
+   microscopic. */
+.mies-hwp-m-szc-card .mies-hwp-card-title{font-size:clamp(8px,2vw,9.5px)}
+.mies-hwp-m-szc-card .mies-hwp-card-accent{font-size:clamp(9.5px,2.5cqw,11px)}
+.mies-hwp-m-szc-card .mies-hwp-card-sub{font-size:clamp(7.5px,1.8vw,8.5px);line-height:1.1}
+
+/* Period — one shared line, placed in normal flow right below the stage
+   (desktop AND mobile), not overlaid on the photo: both assets are busy
+   with pumpkins at the very bottom with no safe spot for it, and this
+   still reads as "part of the banner" while guaranteeing zero overlap.
+   Background matches --mies-fade-out so the mobile fade blends straight
+   into it with no visible seam. */
+.mies-hwp-period{background:var(--off,#f8fafc);text-align:center;
+  padding:10px 16px;font-weight:800;color:#c2410c;font-size:clamp(14px,2.2vw,17px);line-height:1.25}
+.mies-hwp-period strong{font-weight:900}
