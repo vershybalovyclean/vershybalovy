@@ -558,3 +558,18 @@ body.has-order{padding-bottom:76px}
 .hw-gift-title{font-weight:800;color:#c2410c;font-size:14px;margin-bottom:8px}
 .hw-gift-incl{font-size:12.5px;color:#9a3412;margin-bottom:8px;line-height:1.4}
 .hw-gift-warn{color:#dc2626;font-size:12px;margin-top:8px;font-weight:600}
+
+/* Mobile clipping fix (06.10): on phones, this box's own auto/content height
+   (~150-200px — title + hint + m² input row) painted its background/border
+   only partway down, visually hiding the input and warning text beneath the
+   next section — confirmed via devtools that the DOM/layout was always
+   correct (element present, hit-testable, right position) while only the
+   PAINT was truncated, and that it reliably stopped reproducing once the
+   box's own height crossed roughly 220px, regardless of background type
+   (gradient or solid) — a mobile rendering/compositing quirk for short
+   bordered boxes, not a layout bug. min-height (not height) keeps this a
+   floor only — longer RU/UK translations that genuinely need more room
+   still grow the box normally past it. */
+@media(max-width:600px){
+  .hw-gift-box{min-height:230px}
+}
