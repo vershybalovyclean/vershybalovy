@@ -596,3 +596,19 @@
 .mies-hwp-period{background:var(--off,#f8fafc);text-align:center;
   padding:10px 16px;font-weight:800;color:#c2410c;font-size:clamp(14px,2.2vw,17px);line-height:1.25}
 .mies-hwp-period strong{font-weight:900}
+
+/* Halloween gift picker — functional widget inside the Generalne/Szczegółowe
+   tab content (NOT part of the approved promo banner above; visibility
+   follows .tab-content.active automatically, plus the shared
+   SEASONAL_CAMPAIGN.halloweenLogo on/off toggle set in the inline script). */
+.hw-gift-box{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1.5px solid #fb923c;
+  border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.hw-gift-title{font-weight:800;color:#c2410c;font-size:14px;margin-bottom:8px}
+.hw-gift-incl{font-size:12.5px;color:#9a3412;margin-bottom:8px;line-height:1.4}
+.hw-gift-choose{font-weight:700;color:#9a3412;font-size:13px;margin-bottom:6px}
+.hw-gift-opts{display:flex;flex-wrap:wrap;gap:8px}
+.hw-gift-opt{display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #fed7aa;
+  border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;color:#7c2d12;cursor:pointer;transition:.15s}
+.hw-gift-opt:has(input:checked){border-color:#ea580c;background:#fff1e6;box-shadow:0 0 0 1px #ea580c inset}
+.hw-gift-opt input{accent-color:#ea580c;margin:0}
+.hw-gift-warn{color:#dc2626;font-size:12px;margin-top:8px;font-weight:600}

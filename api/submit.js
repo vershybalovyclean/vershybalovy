@@ -348,6 +348,18 @@ async function resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY) {
   }
 }
 
+// Halloween campaign (26.10–07.11.2026 inclusive) GRATIS add-ons: eligibility is
+// re-checked here against the booking's actual scheduled_date (never trusted from
+// the client alone) before any addon.isGift is allowed to reach request_addons at
+// price 0 — a request for a date outside the window has its gift flags stripped
+// (forced back to a real price-only addon, which the normal price>0 filter below
+// then drops like any other zero/invalid line).
+const HALLOWEEN_GIFT_START = "2026-10-26";
+const HALLOWEEN_GIFT_END = "2026-11-07";
+function isHalloweenGiftEligible(scheduledDate) {
+  return typeof scheduledDate === "string" && scheduledDate >= HALLOWEEN_GIFT_START && scheduledDate <= HALLOWEEN_GIFT_END;
+}
+
 // Ночные заказы (21:00–7:00, по просьбе владелицы) автоматически помечаются
 // requests.is_urgent — то же поле, что уже используется для ручной пометки
 // срочности менеджером: влияет на бейдж ⚡ в кабинете клинера и текст
@@ -480,11 +492,12 @@ async function insertSupabaseRequest(data) {
     // never re-derived from the current addon_services.price — the catalog price
     // can move independently of what this specific client actually saw and paid.
     if (Array.isArray(data.addons) && data.addons.length) {
+      const giftsAllowed = isHalloweenGiftEligible(data.scheduledDate);
       const keys = data.addons.map(a => a.key).filter(Boolean);
       const idMap = await resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY);
       const addonRows = data.addons
-        .filter(a => a.key && idMap[a.key] && a.price > 0)
-        .map(a => ({ request_id: data.id, addon_service_id: idMap[a.key], price: a.price, qty: a.qty || 1 }));
+        .filter(a => a.key && idMap[a.key] && (a.price > 0 || (a.isGift && giftsAllowed)))
+        .map(a => ({ request_id: data.id, addon_service_id: idMap[a.key], price: a.price || 0, qty: a.qty || 1, is_gift: !!(a.isGift && giftsAllowed) }));
       if (addonRows.length) {
         const raRes = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/request_addons", {
           method: "POST",

@@ -255,6 +255,25 @@
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   }
 
+  /* ─── HALLOWEEN GIFT ELIGIBILITY (26.10–07.11.2026 inclusive) ──────────
+     Eligibility is always keyed to the CLEANING date the client picks on the
+     calendar below (bk_selectedDate), never to today's date — a client
+     booking today for a date inside the window still qualifies; a client
+     booking today for a date outside it does not. Pages that implement a
+     Halloween gift (see sprzatanie-mieszkan-i-domow-krakow.html /
+     sprzatanie-po-wyprowadzce-krakow.html) hook in via the three optional
+     window.bk_halloween* functions below — booking.js itself stays generic
+     and carries no page-specific gift logic. */
+  var HW_GIFT_START = '2026-10-26';
+  var HW_GIFT_END = '2026-11-07';
+  function bk_isHalloweenEligible(isoDate){
+    return !!isoDate && isoDate >= HW_GIFT_START && isoDate <= HW_GIFT_END;
+  }
+  window.bk_isHalloweenEligible = bk_isHalloweenEligible;
+  window.bk_hwEligibleNow = function(){
+    return bk_isHalloweenEligible(bk_selectedDate ? bk_isoDate(bk_selectedDate) : null);
+  };
+
   /* ─── NIGHT SURCHARGE (po 21:00 → +100%) ───────────── */
   function bk_isNightSlot(){
     var s = BK_SLOTS.find(function(x){return x.id===bk_selectedSlot;});
@@ -290,6 +309,10 @@
     if(d.service) { d.service.split('|').forEach(function(l){ rows.push([bk_t('ordService'), l.trim()]); }); }
     if(d.extras) rows.push([bk_t('ordExtras'), d.extras]);
     if(d.freq) rows.push([bk_t('ordFreq'), d.freq]);
+    if(typeof window.bk_halloweenGiftLine === 'function'){
+      var hwLine = window.bk_halloweenGiftLine(window.bk_hwEligibleNow());
+      if(hwLine) rows.push(['🎃 Halloween', hwLine]);
+    }
     var nightOn = bk_isNightSlot();
     if(nightOn && d.price) rows.push([bk_t('ordNight'), '+'+d.price+' zł']);
     function _set(id, val, html) {
@@ -347,6 +370,10 @@
     bk_renderSlots();
     bk_updateBonus();
     bk_checkForm();
+    // Re-render immediately so a page-level Halloween gift pick (made before any
+    // date was selected) shows/hides its GRATIS line as soon as the picked date
+    // moves in or out of the eligibility window — not only at final submit.
+    if(typeof window.bk_renderOrder === 'function') window.bk_renderOrder();
     var calEl = document.getElementById('bk-calDays'); if(calEl) calEl.classList.remove('bk-invalid');
   };
 
@@ -684,6 +711,14 @@
     var slotLabel = slotObj?slotObj.label:'';
     var dateLabel = bk_selectedDate.toLocaleDateString(locale,{weekday:'long',day:'numeric',month:'long'});
     var d = window.bk_orderData||{};
+    var hwEligible = bk_isHalloweenEligible(bk_isoDate(bk_selectedDate));
+    if(typeof window.bk_applyHalloweenGiftToAddons === 'function'){
+      // Returning false means the page found a required gift choice missing
+      // (e.g. eligible date but no "pick 1 free add-on" radio selected yet) and
+      // has already highlighted/scrolled to it itself — abort this submit the
+      // same way bk_validateAndHighlight()'s own false return does below.
+      if(window.bk_applyHalloweenGiftToAddons(hwEligible, d) === false) return;
+    }
 
     var name = document.getElementById('bk-name').value.trim();
     var phone = document.getElementById('bk-phone').value.trim();
@@ -711,6 +746,10 @@
     comment+='Godzina: '+slotLabel+'\n';
     var bonus = bk_getBonus(bk_selectedDate);
     if(bonus) comment+='🎁 Bonus dnia: '+(bonus.pl)+'\n';
+    if(typeof window.bk_halloweenGiftLine === 'function'){
+      var hwCommentLine = window.bk_halloweenGiftLine(hwEligible);
+      if(hwCommentLine) comment+='🎃 Halloween GRATIS: '+hwCommentLine+'\n';
+    }
     comment+='Adres: '+fullAddress+'\n';
     comment+='Sposób płatności: '+payLabel+'\n';
     comment+='Faktura: '+(bk_invoiceOn?'TAK':'nie')+'\n';

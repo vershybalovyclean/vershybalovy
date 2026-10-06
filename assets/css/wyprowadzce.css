@@ -550,3 +550,11 @@ body.has-order{padding-bottom:76px}
     text-shadow:0 1px 2px rgba(255,255,255,.95),0 1px 5px rgba(255,255,255,.95),0 2px 14px rgba(255,255,255,.7)}
   .wyp-hwp-period strong{font-weight:900}
 }
+
+/* Halloween gift — functional m² input, separate from the frozen visual
+   banner above (same .hw-gift-box pattern as mieszkan.css's gift picker). */
+.hw-gift-box{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1.5px solid #fb923c;
+  border-radius:12px;padding:14px 16px}
+.hw-gift-title{font-weight:800;color:#c2410c;font-size:14px;margin-bottom:8px}
+.hw-gift-incl{font-size:12.5px;color:#9a3412;margin-bottom:8px;line-height:1.4}
+.hw-gift-warn{color:#dc2626;font-size:12px;margin-top:8px;font-weight:600}

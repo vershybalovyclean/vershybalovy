@@ -673,6 +673,23 @@ function updateSidebar() {
     }
   });
 
+  // Halloween gift pick — informational only here (never added to total; the
+  // actual 0-zł addon rows are only built at final submit, see
+  // window.bk_applyHalloweenGiftToAddons in assets/js/booking.js). Shown
+  // whenever the campaign is on and the relevant tier is active, regardless
+  // of the calendar date — that eligibility check happens later, once a date
+  // is actually picked, same as the booking-step recap this mirrors.
+  if(window.HW_GIFT_ENABLED !== false){
+    if(hwGenActive() && hwGenGift){
+      items.push({label: '🎃 ' + hwAddonName(HW_GEN_MAP[hwGenGift]), val: 'GRATIS', cls:'discount'});
+    }
+    if(hwSzcActive()){
+      var szcGiftParts = [hwAddonName('kl8'), hwAddonName('kl11')];
+      if(hwSzcGift) szcGiftParts.push(hwAddonName(HW_SZC_CHOICE_MAP[hwSzcGift]));
+      items.push({label: '🎃 Kitchen Pack: ' + szcGiftParts.join(' + '), val: 'GRATIS', cls:'discount'});
+    }
+  }
+
   // Window item — shown separately. Discount (below) applies ONLY for one-time orders (freqTimes === 1).
   var windowDiscountApplied = false;
   var winDiscLbl = {pl:'Rabat na zamówienie z myciem okien', uk:'Знижка на замовлення з миттям вікон', ru:'Скидка на заказ с мытьём окон', en:'Discount for order with window cleaning'}[lang] || 'Rabat na zamówienie z myciem okien';
@@ -1016,6 +1033,8 @@ pl:{
   mies_szc_strip:"Sprzątanie szczegółowe — Halloween Kitchen Pack <span class=\"mies-hwp-gratis-em\">GRATIS</span>",
   mies_gen_accent:"WYBIERZ 1 USŁUGĘ GRATIS", mies_szc_accent:"HALLOWEEN KITCHEN PACK GRATIS",
   mies_szc_sub1:"okap + 1 szafka", mies_szc_sub2:"+ mikrofalówka lub czajnik",
+  hw_gift_gen_title:"🎃 Halloween: wybierz 1 usługę GRATIS", hw_gift_opt_kettle:"Czajnik", hw_gift_opt_microwave:"Kuchenka mikrofalowa", hw_gift_opt_coffee:"Ekspres do kawy", hw_gift_opt_dishwasher:"Zmywarka", hw_gift_gen_warn:"⚠️ Wybierz jedną usługę GRATIS, aby skorzystać z promocji.",
+  hw_gift_szc_title:"🎃 Halloween Kitchen Pack GRATIS", hw_gift_szc_incl:"W pakiecie zawsze: okap (czyszczenie wewnątrz) + 1 szafka kuchenna (czyszczenie wewnątrz).", hw_gift_szc_choose:"Wybierz jeszcze jedno urządzenie GRATIS:", hw_gift_szc_warn:"⚠️ Wybierz mikrofalówkę lub czajnik, aby skorzystać z pakietu.",
   /* TABS */
   tabs_lbl:"Trzy poziomy czystości", tabs_h2:"Wybierz <em>rodzaj sprzątania</em>",
   tabs_sub:"Każda opcja to inny zakres prac — sprawdź co odpowiada Twoim potrzebom.",
@@ -1113,6 +1132,8 @@ uk:{
   mies_szc_strip:"Прибирання детальне — Halloween Kitchen Pack <span class=\"mies-hwp-gratis-em\">ГРАТІС</span>",
   mies_gen_accent:"ОБЕРИ 1 ПОСЛУГУ ГРАТІС", mies_szc_accent:"HALLOWEEN KITCHEN PACK ГРАТІС",
   mies_szc_sub1:"витяжка + 1 шафка", mies_szc_sub2:"+ мікрохвильовка або чайник",
+  hw_gift_gen_title:"🎃 Halloween: оберіть 1 послугу ГРАТІС", hw_gift_opt_kettle:"Чайник", hw_gift_opt_microwave:"Мікрохвильова піч", hw_gift_opt_coffee:"Кавоварка", hw_gift_opt_dishwasher:"Посудомийна машина", hw_gift_gen_warn:"⚠️ Оберіть одну послугу ГРАТІС, щоб скористатися промоакцією.",
+  hw_gift_szc_title:"🎃 Halloween Kitchen Pack ГРАТІС", hw_gift_szc_incl:"У пакеті завжди: витяжка (чищення всередині) + 1 шафка кухонна (чищення всередині).", hw_gift_szc_choose:"Оберіть ще один прилад ГРАТІС:", hw_gift_szc_warn:"⚠️ Оберіть мікрохвильовку або чайник, щоб скористатися пакетом.",
   tabs_lbl:"Три рівні чистоти", tabs_h2:"Оберіть <em>вид прибирання</em>",
   tabs_sub:"Кожен варіант — різний обсяг робіт. Перевірте, що підходить вам.",
   tab1:"🪣 Підтримуюче", tab2:"✨ Генеральне", tab3:"🔬 Детальне",
@@ -1198,6 +1219,8 @@ ru:{
   mies_szc_strip:"Уборка детальная — Halloween Kitchen Pack <span class=\"mies-hwp-gratis-em\">БЕСПЛАТНО</span>",
   mies_gen_accent:"ВЫБЕРИ 1 УСЛУГУ БЕСПЛАТНО", mies_szc_accent:"HALLOWEEN KITCHEN PACK БЕСПЛАТНО",
   mies_szc_sub1:"вытяжка + 1 шкафчик", mies_szc_sub2:"+ микроволновка или чайник",
+  hw_gift_gen_title:"🎃 Halloween: выберите 1 услугу БЕСПЛАТНО", hw_gift_opt_kettle:"Чайник", hw_gift_opt_microwave:"Микроволновка", hw_gift_opt_coffee:"Кофемашина", hw_gift_opt_dishwasher:"Посудомоечная машина", hw_gift_gen_warn:"⚠️ Выберите одну услугу БЕСПЛАТНО, чтобы воспользоваться акцией.",
+  hw_gift_szc_title:"🎃 Halloween Kitchen Pack БЕСПЛАТНО", hw_gift_szc_incl:"В пакете всегда: вытяжка (чистка внутри) + 1 кухонный шкафчик (чистка внутри).", hw_gift_szc_choose:"Выберите ещё один прибор БЕСПЛАТНО:", hw_gift_szc_warn:"⚠️ Выберите микроволновку или чайник, чтобы воспользоваться пакетом.",
   tabs_lbl:"Три уровня чистоты", tabs_h2:"Выберите <em>вид уборки</em>",
   tabs_sub:"Каждый вариант — это разный объём работ. Проверьте, что подходит именно вам.",
   tab1:"🪣 Поддерживающая", tab2:"✨ Генеральная", tab3:"🔬 Детальная",
@@ -1283,6 +1306,8 @@ en:{
   mies_szc_strip:"Detailed cleaning — Halloween Kitchen Pack <span class=\"mies-hwp-gratis-em\">FREE</span>",
   mies_gen_accent:"CHOOSE 1 FREE SERVICE", mies_szc_accent:"HALLOWEEN KITCHEN PACK FREE",
   mies_szc_sub1:"hood + 1 cabinet", mies_szc_sub2:"+ microwave or kettle",
+  hw_gift_gen_title:"🎃 Halloween: pick 1 free add-on", hw_gift_opt_kettle:"Kettle", hw_gift_opt_microwave:"Microwave", hw_gift_opt_coffee:"Coffee machine", hw_gift_opt_dishwasher:"Dishwasher", hw_gift_gen_warn:"⚠️ Pick one free add-on to use this promo.",
+  hw_gift_szc_title:"🎃 Halloween Kitchen Pack FREE", hw_gift_szc_incl:"Always included: extractor hood (cleaned inside) + 1 kitchen cabinet (cleaned inside).", hw_gift_szc_choose:"Pick one more appliance for free:", hw_gift_szc_warn:"⚠️ Pick microwave or kettle to use this pack.",
   tabs_lbl:"Three levels of cleanliness", tabs_h2:"Choose <em>type of cleaning</em>",
   tabs_sub:"Each option covers a different scope — check what matches your needs.",
   tab1:"🪣 Maintenance", tab2:"✨ General", tab3:"🔬 Detailed",
@@ -1404,6 +1429,21 @@ function applyTranslations(l) {
   set('mies-promo-szc-sub1', t.mies_szc_sub1); set('mies-promo-szc-sub1-m', t.mies_szc_sub1);
   set('mies-promo-szc-sub2', t.mies_szc_sub2); set('mies-promo-szc-sub2-m', t.mies_szc_sub2);
   set('mies-promo-period', t.mies_promo_period);
+
+  // Halloween gift picker (functional widget, not the promo banner above)
+  set('hw-gift-gen-title', t.hw_gift_gen_title);
+  set('hw-gift-gen-kettle', t.hw_gift_opt_kettle);
+  set('hw-gift-gen-microwave', t.hw_gift_opt_microwave);
+  set('hw-gift-gen-coffee', t.hw_gift_opt_coffee);
+  set('hw-gift-gen-dishwasher', t.hw_gift_opt_dishwasher);
+  set('hw-gift-gen-warn', t.hw_gift_gen_warn);
+  set('hw-gift-szc-title', t.hw_gift_szc_title);
+  set('hw-gift-szc-incl', t.hw_gift_szc_incl);
+  set('hw-gift-szc-choose', t.hw_gift_szc_choose);
+  set('hw-gift-szc-kettle', t.hw_gift_opt_kettle);
+  set('hw-gift-szc-microwave', t.hw_gift_opt_microwave);
+  set('hw-gift-szc-warn', t.hw_gift_szc_warn);
+  if(typeof hwRefreshGiftUI === 'function') hwRefreshGiftUI();
 
   // Tabs section
   set('tabs-lbl', t.tabs_lbl);
@@ -1916,7 +1956,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 </script>
   <link rel="stylesheet" href="assets/css/base.css?v=20261001g">
   <link rel="stylesheet" href="assets/css/booking.css?v=1">
-  <link rel="stylesheet" href="assets/css/mieszkan.css?v=10">
+  <link rel="stylesheet" href="assets/css/mieszkan.css?v=11">
   <link rel="stylesheet" href="assets/css/window-picker.css?v=1">
   <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261001c">
   <link rel="stylesheet" href="assets/css/mieszkan-mobile.css?v=1">
@@ -2053,6 +2093,12 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     if (typeof SEASONAL_CAMPAIGN !== 'undefined' && !SEASONAL_CAMPAIGN.halloweenLogo) {
       var mp = document.getElementById('mies-promo');
       if (mp) mp.style.display = 'none';
+      window.HW_GIFT_ENABLED = false;
+      ['hw-gift-gen','hw-gift-szc'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    } else {
+      window.HW_GIFT_ENABLED = true;
+      var gen = document.getElementById('hw-gift-gen'); if(gen) gen.style.display='block';
+      var szc = document.getElementById('hw-gift-szc'); if(szc) szc.style.display='block';
     }
   });
 </script>
@@ -2160,6 +2206,16 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <p id="gen-meta" style="font-size:13px;color:var(--gray)">⏱ ok. 2–6 godzin &nbsp;·&nbsp; 🧴 Środki w cenie &nbsp;·&nbsp; ✅ Zawiera zakres wspomagającego</p>
       </div>
       <div style="max-width:580px;margin:0 auto">
+        <div class="hw-gift-box" id="hw-gift-gen" style="display:none">
+          <p class="hw-gift-title" id="hw-gift-gen-title">🎃 Halloween: wybierz 1 usługę GRATIS</p>
+          <div class="hw-gift-opts" id="hw-gift-gen-opts">
+            <label class="hw-gift-opt"><input type="radio" name="hw-gift-gen" value="kettle" onchange="hwSetGenGift('kettle')"><span id="hw-gift-gen-kettle">Czajnik</span></label>
+            <label class="hw-gift-opt"><input type="radio" name="hw-gift-gen" value="microwave" onchange="hwSetGenGift('microwave')"><span id="hw-gift-gen-microwave">Kuchenka mikrofalowa</span></label>
+            <label class="hw-gift-opt"><input type="radio" name="hw-gift-gen" value="coffee" onchange="hwSetGenGift('coffee')"><span id="hw-gift-gen-coffee">Ekspres do kawy</span></label>
+            <label class="hw-gift-opt"><input type="radio" name="hw-gift-gen" value="dishwasher" onchange="hwSetGenGift('dishwasher')"><span id="hw-gift-gen-dishwasher">Zmywarka</span></label>
+          </div>
+          <p class="hw-gift-warn" id="hw-gift-gen-warn" style="display:none">⚠️ Wybierz jedną usługę GRATIS, aby skorzystać z promocji.</p>
+        </div>
         <div class="area-calc-box" id="area-calc-generalne">
   <p style="font-size:12px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px" id="gen-kompl-head">🔵 Kompleksowe całe mieszkanie</p>
   <div class="ac-ranges">
@@ -2286,6 +2342,16 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <p id="szc-meta" style="font-size:13px;color:var(--gray)">⏱ ok. 5–12 godzin &nbsp;·&nbsp; 🧴 Środki w cenie &nbsp;·&nbsp; ✅ Zawiera zakres generalnego</p>
       </div>
       <div style="max-width:580px;margin:0 auto">
+        <div class="hw-gift-box" id="hw-gift-szc" style="display:none">
+          <p class="hw-gift-title" id="hw-gift-szc-title">🎃 Halloween Kitchen Pack GRATIS</p>
+          <p class="hw-gift-incl" id="hw-gift-szc-incl">W pakiecie zawsze: okap (czyszczenie wewnątrz) + 1 szafka kuchenna (czyszczenie wewnątrz).</p>
+          <p class="hw-gift-choose" id="hw-gift-szc-choose">Wybierz jeszcze jedno urządzenie GRATIS:</p>
+          <div class="hw-gift-opts" id="hw-gift-szc-opts">
+            <label class="hw-gift-opt"><input type="radio" name="hw-gift-szc" value="kettle" onchange="hwSetSzcGift('kettle')"><span id="hw-gift-szc-kettle">Czajnik</span></label>
+            <label class="hw-gift-opt"><input type="radio" name="hw-gift-szc" value="microwave" onchange="hwSetSzcGift('microwave')"><span id="hw-gift-szc-microwave">Kuchenka mikrofalowa</span></label>
+          </div>
+          <p class="hw-gift-warn" id="hw-gift-szc-warn" style="display:none">⚠️ Wybierz mikrofalówkę lub czajnik, aby skorzystać z pakietu.</p>
+        </div>
         <div class="area-calc-box" id="area-calc-szczegolowe">
   <p style="font-size:12px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px" id="szc-kompl-head">🔵 Kompleksowe całe mieszkanie</p>
   <div class="ac-ranges">
@@ -3816,6 +3882,109 @@ var orderState = {
 
 // updateSidebar defined in freq section below
 
+/* ─── HALLOWEEN GIFT MECHANIC (Generalne / Szczegółowe) ────────────────
+   The promo banner above (.mies-promo, b80d01e) is frozen visuals only —
+   this is the separate functional widget (inside each tab's own content,
+   so visibility already follows .tab-content.active) that actually makes
+   one existing paid add-on free. Reuses the SAME site_addon_map keys
+   (kl1/kl2/kl8/kl9/kl11/kl13, 'ms:' prefix) the normal paid add-on list
+   already resolves through — a gift pick IS that catalog item, just at
+   0 zł, not a separate catalog entry, so it can never double up with the
+   client separately paying for the same physical item (see dedupe below).
+   Actual eligibility (campaign window vs the picked calendar date) is
+   decided in booking.js via the window.bk_halloween* hooks; this block only
+   tracks WHICH item the client chose and whether the tier is even active. */
+var hwGenGift = null;   // 'kettle'|'microwave'|'coffee'|'dishwasher'|null
+var hwSzcGift = null;   // 'kettle'|'microwave'|null
+var HW_GEN_MAP = { kettle:'kl1', microwave:'kl2', coffee:'kl13', dishwasher:'kl9' };
+var HW_SZC_CHOICE_MAP = { kettle:'kl1', microwave:'kl2' };
+var HW_SZC_FIXED = ['kl8', 'kl11']; // okap, 1 szafka kuchenna — always included, no choice
+
+function hwSetGenGift(v){
+  hwGenGift = v;
+  var warn = document.getElementById('hw-gift-gen-warn'); if(warn) warn.style.display = 'none';
+  updateSidebar();
+}
+function hwSetSzcGift(v){
+  hwSzcGift = v;
+  var warn = document.getElementById('hw-gift-szc-warn'); if(warn) warn.style.display = 'none';
+  updateSidebar();
+}
+// Re-checks the radio matching current state — needed after SL()/applyTranslations()
+// re-sets label text (the <input> itself is untouched by that, but this keeps the
+// widget correct if it's ever rebuilt some other way).
+function hwRefreshGiftUI(){
+  if(hwGenGift){ var r=document.querySelector('input[name="hw-gift-gen"][value="'+hwGenGift+'"]'); if(r) r.checked = true; }
+  if(hwSzcGift){ var r2=document.querySelector('input[name="hw-gift-szc"][value="'+hwSzcGift+'"]'); if(r2) r2.checked = true; }
+}
+function hwAddonName(key){
+  var namesTx = (typeof ADDONS_TX !== 'undefined') ? (ADDONS_TX[lang] || ADDONS_TX.pl) : {};
+  return namesTx[key] || key;
+}
+function hwGenActive(){ return (typeof acPrice !== 'undefined') && (acPrice.generalne || 0) > 0; }
+function hwSzcActive(){ return (typeof acPrice !== 'undefined') && (acPrice.szczegolowe || 0) > 0; }
+
+// Human-readable gift summary for the booking-widget order recap + the
+// Telegram/email comment (assets/js/booking.js calls this) — null = nothing to show.
+window.bk_halloweenGiftLine = function(eligible){
+  if(!eligible || window.HW_GIFT_ENABLED === false) return null;
+  var parts = [];
+  if(hwGenActive() && hwGenGift) parts.push(hwAddonName(HW_GEN_MAP[hwGenGift]) + ' GRATIS');
+  if(hwSzcActive()){
+    var pack = [hwAddonName('kl8'), hwAddonName('kl11')];
+    if(hwSzcGift) pack.push(hwAddonName(HW_SZC_CHOICE_MAP[hwSzcGift]));
+    parts.push('Kitchen Pack GRATIS (' + pack.join(' + ') + ')');
+  }
+  return parts.length ? parts.join('; ') : null;
+};
+
+// Mutates orderData.addons in place for the final submit payload. Returns false
+// (and highlights the missing choice) only when the date turned out eligible AND
+// the tier is active AND the client never made a required gift choice — otherwise
+// true. Always rebuilds from a clean slate (strips any isGift row for a gift-
+// capable key first) so re-running after a date change never accumulates stale
+// entries, and dedupes against a matching PAID selection for the same key (the
+// gift IS that item, free — never two rows for one physical task).
+var HW_ALL_GIFT_CAPABLE_KEYS = ['ms:kl1','ms:kl2','ms:kl8','ms:kl9','ms:kl11','ms:kl13'];
+window.bk_applyHalloweenGiftToAddons = function(eligible, orderData){
+  if(!orderData) return true;
+  var addons = (Array.isArray(orderData.addons) ? orderData.addons : []).filter(function(a){
+    return !(a && a.isGift && HW_ALL_GIFT_CAPABLE_KEYS.indexOf(a.key) !== -1);
+  });
+  var ok = true;
+  if(eligible && window.HW_GIFT_ENABLED !== false){
+    if(hwGenActive()){
+      if(!hwGenGift){
+        ok = false;
+        var gw = document.getElementById('hw-gift-gen-warn');
+        if(gw){ gw.style.display='block'; gw.scrollIntoView({behavior:'smooth', block:'center'}); }
+      } else if(HW_GEN_MAP[hwGenGift]){
+        var genKey = 'ms:'+HW_GEN_MAP[hwGenGift];
+        addons = addons.filter(function(a){ return a.key !== genKey; });
+        addons.push({ key:genKey, qty:1, price:0, isGift:true });
+      }
+    }
+    if(hwSzcActive()){
+      HW_SZC_FIXED.forEach(function(k){
+        var fixedKey = 'ms:'+k;
+        addons = addons.filter(function(a){ return a.key !== fixedKey; });
+        addons.push({ key:fixedKey, qty:1, price:0, isGift:true });
+      });
+      if(!hwSzcGift){
+        ok = false;
+        var sw = document.getElementById('hw-gift-szc-warn');
+        if(sw){ sw.style.display='block'; sw.scrollIntoView({behavior:'smooth', block:'center'}); }
+      } else if(HW_SZC_CHOICE_MAP[hwSzcGift]){
+        var szcKey = 'ms:'+HW_SZC_CHOICE_MAP[hwSzcGift];
+        addons = addons.filter(function(a){ return a.key !== szcKey; });
+        addons.push({ key:szcKey, qty:1, price:0, isGift:true });
+      }
+    }
+  }
+  orderData.addons = addons;
+  return ok;
+};
+
 function submitOrder() {
   // --- Collect all selected services from acPrice ---
   var _tn = getTabNames();
@@ -3953,7 +4122,7 @@ function addonsToForm() {
 <script src="assets/js/analytics.js?v=1"></script>
 <script src="assets/js/client-session.js?v=1"></script>
 <script src="assets/js/site-auth-ui.js?v=1"></script>
-<script src="assets/js/booking.js?v=1"></script>
+<script src="assets/js/booking.js?v=2"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>
