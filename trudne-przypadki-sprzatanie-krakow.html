@@ -80,7 +80,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="login-dropdown" id="login-dropdown">
       <a href="https://kabinet.vershclean.pl/client/login.html" id="loginClient">👤 Kabinet klienta</a>
       <a href="https://kabinet.vershclean.pl/partner/login.html" id="loginPartner">🤝 Kabinet partnera</a>
-      <a href="https://kabinet.vershclean.pl/client/login.html" id="loginRegister">📝 Zarejestruj się</a>
+      <a href="https://kabinet.vershclean.pl/client/login.html#register" id="loginRegister">📝 Zarejestruj się</a>
       <a href="/program-partnerski" id="hdr-cta">🤝 Zostań partnerem</a>
     </div>
   </div>
@@ -100,7 +100,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label" id="hng8">Trudne przypadki</span></a>
       <a href="/#przed-po"><span class="hng-icon">📸</span><span class="hng-label" id="hng9">Realizacje</span></a>
       <a href="#faq-lbl"><span class="hng-icon">❓</span><span class="hng-label" id="hng10">FAQ</span></a>
-      <a href="https://kabinet.vershclean.pl/client/login.html"><span class="hng-icon">📝</span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
+      <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon">📝</span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
       <a href="/program-partnerski"><span class="hng-icon">🤝</span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
     <a href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
@@ -545,7 +545,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <div class="zb-proc-num">5</div>
         <div class="zb-proc-body">
           <h3 id="procz5-t">Ozonowanie — opcjonalnie, jeśli jest zasadne</h3>
-          <p id="procz5-i">Jeśli sytuacja tego wymaga, proponujemy ozonowanie jako dodatkowy etap — nie jest to standardowy element każdego zlecenia i samo w sobie nie usuwa sadzy ani osadu.</p>
+          <p id="procz5-i">Jeśli sytuacja tego wymaga, proponujemy ozonowanie jako dodatkowy etap — nie jest to standardowy element każdego zlecenia i samo w sobie nie usuwa sadzy ani osadu. Podczas ozonowania w pomieszczeniu nie mogą przebywać ludzie ani zwierzęta. Po zakończeniu zabiegu pomieszczenie musi zostać odpowiednio wywietrzone przed ponownym wejściem.</p>
         </div>
       </div>
       <div class="zb-proc-item">
@@ -601,7 +601,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
       <div class="faq-item">
         <div class="faq-q" id="faq-q8" onclick="toggleFaq(this)">Czy można dodatkowo wykonać ozonowanie? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a" id="faq-a8">Tak, ozonowanie możemy zaproponować jako dodatkowy etap, jeśli jest to zasadne w danym przypadku — nie jest to standardowy element każdego zlecenia i samo w sobie nie usuwa sadzy ani osadu.</div>
+        <div class="faq-a" id="faq-a8">Tak, ozonowanie możemy zaproponować jako dodatkowy etap, jeśli jest to zasadne w danym przypadku — nie jest to standardowy element każdego zlecenia i samo w sobie nie usuwa sadzy ani osadu. Podczas ozonowania w pomieszczeniu nie mogą przebywać ludzie ani zwierzęta. Po zakończeniu zabiegu pomieszczenie musi zostać odpowiednio wywietrzone przed ponownym wejściem.</div>
       </div>
     </div>
   </div>
@@ -682,8 +682,8 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     </div>
   </div>
   <div class="ft2-bottom">
-    <p class="ft-copy">© 2025 Vershy Property Care · NIP: 6793355668 · REGON: 543849999</p>
-    <p class="ft-copy" id="ftnote">Faktury bez VAT · Wycena indywidualna po audycie</p>
+    <p class="ft-copy">© 2026 Vershy Property Care · NIP: 6793355668 · REGON: 543849999</p>
+    <p class="ft-copy" id="ftnote">Ceny końcowe · Wycena indywidualna po audycie</p>
   </div>
 </footer>
 
@@ -947,7 +947,7 @@ pl: {
   procz4_t:'Neutralizacja zapachu',
   procz4_i:'Stosujemy sprawdzone metody ograniczania utrzymującego się zapachu dymu w pomieszczeniu.',
   procz5_t:'Ozonowanie — opcjonalnie, jeśli jest zasadne',
-  procz5_i:'Jeśli sytuacja tego wymaga, proponujemy ozonowanie jako dodatkowy etap — nie jest to standardowy element każdego zlecenia i samo w sobie nie usuwa sadzy ani osadu.',
+  procz5_i:'Jeśli sytuacja tego wymaga, proponujemy ozonowanie jako dodatkowy etap — nie jest to standardowy element każdego zlecenia i samo w sobie nie usuwa sadzy ani osadu. Podczas ozonowania w pomieszczeniu nie mogą przebywać ludzie ani zwierzęta. Po zakończeniu zabiegu pomieszczenie musi zostać odpowiednio wywietrzone przed ponownym wejściem.',
   procz6_t:'Sprzątanie finalne',
   procz6_i:'Kończymy końcowym sprzątaniem pomieszczenia, tak aby efekt był widoczny i estetyczny.',
   faq_lbl:'FAQ', faq_h2:'Najczęstsze <em>pytania</em>',
@@ -960,7 +960,7 @@ pl: {
     ['Czy sprzątacie mieszkania i domy po zadymieniu?','Tak, pracujemy zarówno w mieszkaniach, jak i domach jednorodzinnych — zakres prac zawsze dopasowujemy do rzeczywistego stanu konkretnych powierzchni.'],
     ['Czy usuwacie sadzę i osad z dymu?','Tak, usuwamy sadzę i osad z dostępnych powierzchni, dobierając metodę czyszczenia do rodzaju materiału. Zakres możliwej do osiągnięcia poprawy oceniamy indywidualnie dla każdej powierzchni.'],
     ['Jak ustalana jest cena sprzątania po zadymieniu?','Cena jest zawsze indywidualna i zależy od zakresu zabrudzeń, metrażu oraz stanu poszczególnych powierzchni. Skontaktuj się z nami, aby omówić sytuację — w razie potrzeby zaproponujemy dodatkową ocenę na miejscu.'],
-    ['Czy można dodatkowo wykonać ozonowanie?','Tak, ozonowanie możemy zaproponować jako dodatkowy etap, jeśli jest to zasadne w danym przypadku — nie jest to standardowy element każdego zlecenia i samo w sobie nie usuwa sadzy ani osadu.']
+    ['Czy można dodatkowo wykonać ozonowanie?','Tak, ozonowanie możemy zaproponować jako dodatkowy etap, jeśli jest to zasadne w danym przypadku — nie jest to standardowy element każdego zlecenia i samo w sobie nie usuwa sadzy ani osadu. Podczas ozonowania w pomieszczeniu nie mogą przebywać ludzie ani zwierzęta. Po zakończeniu zabiegu pomieszczenie musi zostać odpowiednio wywietrzone przed ponownym wejściem.']
   ],
   final_h2:'Gotowy na <em style="color:#86efac;font-style:normal">pierwszy krok?</em>',
   final_p:'Umów bezpłatny kontakt — opowiemy jak wygląda proces i odpowiemy na pytania. Zakres prac i cenę ustalamy zawsze indywidualnie, po ocenie sytuacji.',
@@ -968,7 +968,7 @@ pl: {
   hngMenuTitle:'Menu', hng1:'O nas', hng2:'Opinie', hng3:'Kontakt', hng4:'Mycie okien', hng5:'Sprzątanie mieszkań i domów',
   hng6:'Po remoncie', hng7:'Po wyprowadzce', hng8:'Trudne przypadki', hng9:'Realizacje', hng10:'FAQ',
   hng11:'Zarejestruj się', hng12:'Zostań partnerem', hngCallBtn:'📞 ZADZWOŃ DO NAS', hngClose:'Zamknij',
-  fslogan:'Premium Cleaning & Property Services', ftnote:'Faktury bez VAT · Wycena indywidualna po audycie',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Ceny końcowe · Wycena indywidualna po audycie',
   ftUslugiH:'Usługi', ftLinkMieszkania:'Sprzątanie mieszkań i domów', ftLinkRemont:'Po remoncie', ftLinkWyprowadzka:'Po wyjeździe',
   ftLinkZbieractwo:'Trudne przypadki', ftLinkOkna:'Mycie okien', ftFirmaH:'Firma', ftLinkPoznaj:'Poznaj nas',
   ftLinkPartner:'Zostań partnerem', ftLocation:'📍 Kraków i Małopolska', ftInfoH:'Informacje',
@@ -1093,7 +1093,7 @@ uk: {
   procz4_t:'Нейтралізація запаху',
   procz4_i:'Застосовуємо перевірені методи зменшення стійкого запаху диму в приміщенні.',
   procz5_t:'Озонування — опційно, якщо це доцільно',
-  procz5_i:'Якщо ситуація цього вимагає, пропонуємо озонування як додатковий етап — це не стандартний елемент кожного замовлення і саме по собі не видаляє кіптяву чи осад.',
+  procz5_i:'Якщо ситуація цього вимагає, пропонуємо озонування як додатковий етап — це не стандартний елемент кожного замовлення і саме по собі не видаляє кіптяву чи осад. Під час озонування у приміщенні не можуть перебувати люди чи тварини. Після завершення процедури приміщення потрібно належно провітрити перед повторним входом.',
   procz6_t:'Фінальне прибирання',
   procz6_i:'Завершуємо фінальним прибиранням приміщення, щоб результат був помітним та естетичним.',
   faq_lbl:'FAQ', faq_h2:'Часті <em>запитання</em>',
@@ -1106,7 +1106,7 @@ uk: {
     ['Чи прибираєте квартири і будинки після задимлення?','Так, ми працюємо як у квартирах, так і в приватних будинках — обсяг робіт завжди підлаштовуємо під реальний стан конкретних поверхонь.'],
     ['Чи видаляєте кіптяву та осад від диму?','Так, видаляємо кіптяву та осад з доступних поверхонь, підбираючи метод чищення відповідно до типу матеріалу. Можливий результат оцінюємо індивідуально для кожної поверхні.'],
     ['Як визначається ціна прибирання після задимлення?','Ціна завжди індивідуальна і залежить від обсягу забруднень, площі та стану окремих поверхонь. Зв\'яжіться з нами, щоб обговорити ситуацію — за потреби запропонуємо додаткову оцінку на місці.'],
-    ['Чи можна додатково зробити озонування?','Так, ми можемо запропонувати озонування як додатковий етап, якщо це доцільно у конкретному випадку — це не стандартний елемент кожного замовлення і саме по собі не видаляє кіптяву чи осад.']
+    ['Чи можна додатково зробити озонування?','Так, ми можемо запропонувати озонування як додатковий етап, якщо це доцільно у конкретному випадку — це не стандартний елемент кожного замовлення і саме по собі не видаляє кіптяву чи осад. Під час озонування у приміщенні не можуть перебувати люди чи тварини. Після завершення процедури приміщення потрібно належно провітрити перед повторним входом.']
   ],
   final_h2:'Готові до <em style="color:#86efac;font-style:normal">першого кроку?</em>',
   final_p:'Замовте безкоштовний контакт — розповімо як виглядає процес і відповімо на запитання. Обсяг робіт та ціну завжди визначаємо індивідуально, після оцінки ситуації.',
@@ -1114,7 +1114,7 @@ uk: {
   hngMenuTitle:'Меню', hng1:'Про нас', hng2:'Відгуки', hng3:'Контакти', hng4:'Миття вікон', hng5:'Прибирання квартир і будинків',
   hng6:'Після ремонту', hng7:'Після виїзду', hng8:'Складні випадки', hng9:'Наші роботи', hng10:'Часті питання',
   hng11:'Зареєструватися', hng12:'Стати партнером', hngCallBtn:'📞 ЗАТЕЛЕФОНУЙТЕ НАМ', hngClose:'Закрити',
-  fslogan:'Premium Cleaning & Property Services', ftnote:'Рахунки без ПДВ · Індивідуальна оцінка після аудиту',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Кінцеві ціни · Індивідуальна оцінка після аудиту',
   ftUslugiH:'Послуги', ftLinkMieszkania:'Прибирання квартир і будинків', ftLinkRemont:'Після ремонту', ftLinkWyprowadzka:'Після виїзду',
   ftLinkZbieractwo:'Складні випадки', ftLinkOkna:'Миття вікон', ftFirmaH:'Компанія', ftLinkPoznaj:'Про нас',
   ftLinkPartner:'Стати партнером', ftLocation:'📍 Краків та Малопольща', ftInfoH:'Інформація',
@@ -1239,7 +1239,7 @@ ru: {
   procz4_t:'Нейтрализация запаха',
   procz4_i:'Применяем проверенные методы снижения стойкого запаха дыма в помещении.',
   procz5_t:'Озонирование — опционально, если это целесообразно',
-  procz5_i:'Если ситуация этого требует, предлагаем озонирование как дополнительный этап — это не стандартный элемент каждого заказа и само по себе не удаляет копоть или осадок.',
+  procz5_i:'Если ситуация этого требует, предлагаем озонирование как дополнительный этап — это не стандартный элемент каждого заказа и само по себе не удаляет копоть или осадок. Во время озонирования в помещении не должны находиться люди и животные. После завершения процедуры помещение необходимо тщательно проветрить перед повторным входом.',
   procz6_t:'Финальная уборка',
   procz6_i:'Завершаем финальной уборкой помещения, чтобы результат был заметным и эстетичным.',
   faq_lbl:'Частые вопросы', faq_h2:'Часто задаваемые <em>вопросы</em>',
@@ -1252,7 +1252,7 @@ ru: {
     ['Убираете ли вы квартиры и дома после задымления?','Да, мы работаем как в квартирах, так и в частных домах — объём работ всегда подстраиваем под реальное состояние конкретных поверхностей.'],
     ['Удаляете ли вы копоть и осадок от дыма?','Да, удаляем копоть и осадок с доступных поверхностей, подбирая метод чистки в зависимости от типа материала. Возможный результат оцениваем индивидуально для каждой поверхности.'],
     ['Как определяется цена уборки после задымления?','Цена всегда индивидуальна и зависит от объёма загрязнений, площади и состояния отдельных поверхностей. Свяжитесь с нами, чтобы обсудить ситуацию — при необходимости предложим дополнительную оценку на месте.'],
-    ['Можно ли дополнительно сделать озонирование?','Да, мы можем предложить озонирование как дополнительный этап, если это целесообразно в конкретном случае — это не стандартный элемент каждого заказа и само по себе не удаляет копоть или осадок.']
+    ['Можно ли дополнительно сделать озонирование?','Да, мы можем предложить озонирование как дополнительный этап, если это целесообразно в конкретном случае — это не стандартный элемент каждого заказа и само по себе не удаляет копоть или осадок. Во время озонирования в помещении не должны находиться люди и животные. После завершения процедуры помещение необходимо тщательно проветрить перед повторным входом.']
   ],
   final_h2:'Готовы к <em style="color:#86efac;font-style:normal">первому шагу?</em>',
   final_p:'Закажите бесплатный контакт — расскажем, как выглядит процесс, и ответим на вопросы. Объём работ и цену всегда определяем индивидуально, после оценки ситуации.',
@@ -1260,7 +1260,7 @@ ru: {
   hngMenuTitle:'Меню', hng1:'О нас', hng2:'Отзывы', hng3:'Контакты', hng4:'Мытьё окон', hng5:'Уборка квартир и домов',
   hng6:'После ремонта', hng7:'После выезда', hng8:'Сложные случаи', hng9:'Наши работы', hng10:'Частые вопросы',
   hng11:'Зарегистрироваться', hng12:'Стать партнёром', hngCallBtn:'📞 ПОЗВОНИТЕ НАМ', hngClose:'Закрыть',
-  fslogan:'Premium Cleaning & Property Services', ftnote:'Счета без НДС · Индивидуальная оценка после аудита',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Итоговые цены · Индивидуальная оценка после аудита',
   ftUslugiH:'Услуги', ftLinkMieszkania:'Уборка квартир и домов', ftLinkRemont:'После ремонта', ftLinkWyprowadzka:'После выезда',
   ftLinkZbieractwo:'Сложные случаи', ftLinkOkna:'Мытьё окон', ftFirmaH:'Компания', ftLinkPoznaj:'О нас',
   ftLinkPartner:'Стать партнёром', ftLocation:'📍 Краков и Малопольша', ftInfoH:'Информация',
@@ -1385,7 +1385,7 @@ en: {
   procz4_t:'Odor neutralization',
   procz4_i:'We apply proven methods to reduce the persistent smoke smell in the room.',
   procz5_t:'Ozone treatment — optional, if justified',
-  procz5_i:'If the situation calls for it, we offer ozone treatment as an additional step — it is not a standard part of every job and does not by itself remove soot or residue.',
+  procz5_i:'If the situation calls for it, we offer ozone treatment as an additional step — it is not a standard part of every job and does not by itself remove soot or residue. During ozone treatment, no people or pets may be present in the room. After the treatment, the room must be properly ventilated before anyone re-enters.',
   procz6_t:'Final cleaning',
   procz6_i:'We finish with a final clean of the room so the result is visible and presentable.',
   faq_lbl:'FAQ', faq_h2:'Frequently asked <em>questions</em>',
@@ -1398,7 +1398,7 @@ en: {
     ['Do you clean apartments and houses after smoke damage?','Yes, we work in both apartments and houses — the scope of work is always matched to the real condition of the specific surfaces.'],
     ['Do you remove soot and smoke residue?','Yes, we remove soot and residue from accessible surfaces, choosing the cleaning method to match the material. We assess the achievable result individually for each surface.'],
     ['How is the price for smoke-damage cleaning determined?','The price is always individual and depends on the extent of the contamination, the area, and the condition of each surface. Contact us to discuss your situation — if needed, we\'ll propose an additional on-site assessment.'],
-    ['Can ozone treatment be added?','Yes, we can offer ozone treatment as an additional step where it\'s justified for the specific case — it is not a standard part of every job and does not by itself remove soot or residue.']
+    ['Can ozone treatment be added?','Yes, we can offer ozone treatment as an additional step where it\'s justified for the specific case — it is not a standard part of every job and does not by itself remove soot or residue. During ozone treatment, no people or pets may be present in the room. After the treatment, the room must be properly ventilated before anyone re-enters.']
   ],
   final_h2:'Ready for the <em style="color:#86efac;font-style:normal">first step?</em>',
   final_p:'Request a free contact — we\'ll walk you through the process and answer your questions. We always set the scope of work and the price individually, after assessing the situation.',
@@ -1406,7 +1406,7 @@ en: {
   hngMenuTitle:'Menu', hng1:'About us', hng2:'Reviews', hng3:'Contact', hng4:'Window cleaning', hng5:'Apartment & house cleaning',
   hng6:'Post-renovation', hng7:'Post-move-out', hng8:'Difficult cases', hng9:'Our work', hng10:'FAQ',
   hng11:'Sign up', hng12:'Become a partner', hngCallBtn:'📞 CALL US', hngClose:'Close',
-  fslogan:'Premium Cleaning & Property Services', ftnote:'Invoices without VAT · Individual quote after audit',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Final prices · Individual quote after audit',
   ftUslugiH:'Services', ftLinkMieszkania:'Apartment & house cleaning', ftLinkRemont:'Post-renovation', ftLinkWyprowadzka:'Move-out cleaning',
   ftLinkZbieractwo:'Difficult cases', ftLinkOkna:'Window cleaning', ftFirmaH:'Company', ftLinkPoznaj:'About us',
   ftLinkPartner:'Become a partner', ftLocation:'📍 Kraków & Lesser Poland', ftInfoH:'Information',

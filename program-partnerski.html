@@ -60,7 +60,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="login-dropdown" id="login-dropdown">
       <a href="https://kabinet.vershclean.pl/client/login.html" id="loginClient">👤 Kabinet klienta</a>
       <a href="https://kabinet.vershclean.pl/partner/login.html" id="loginPartner">🤝 Kabinet partnera</a>
-      <a href="https://kabinet.vershclean.pl/client/login.html" id="loginRegister">📝 Zarejestruj się</a>
+      <a href="https://kabinet.vershclean.pl/client/login.html#register" id="loginRegister">📝 Zarejestruj się</a>
       <a href="#dolacz" id="hdr-cta">🤝 Zostań partnerem</a>
     </div>
   </div>
@@ -77,17 +77,17 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon">🧹</span><span class="hng-label" id="hng5">Sprzątanie mieszkań</span></a>
       <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon">🏗️</span><span class="hng-label" id="hng6">Po remoncie</span></a>
       <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon">🏠</span><span class="hng-label" id="hng7">Po wyprowadzce</span></a>
-      <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label" id="hng8">Po zbieractwie</span></a>
+      <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label" id="hng8">Trudne przypadki</span></a>
       <a href="/#przed-po"><span class="hng-icon">📸</span><span class="hng-label" id="hng9">Realizacje</span></a>
       <a href="#faq-lbl"><span class="hng-icon">❓</span><span class="hng-label" id="hng10">FAQ</span></a>
-      <a href="https://kabinet.vershclean.pl/client/login.html"><span class="hng-icon">📝</span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
+      <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon">📝</span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
       <a href="/program-partnerski"><span class="hng-icon">🤝</span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
     <a href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
     <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">🧹 Sprzątanie mieszkań</a>
     <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">🏗️ Po remoncie</a>
-    <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">🏠 Po wyjeździe</a>
-    <a href="/trudne-przypadki-sprzatanie-krakow" id="nav-zb">🏚️ Po zbieractwie</a>
+    <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">🏠 Po wyprowadzce</a>
+    <a href="/trudne-przypadki-sprzatanie-krakow" id="nav-zb">🏚️ Trudne przypadki</a>
     <a href="/mycie-okien" id="nav-okna">🪟 Mycie okien</a>
     <a href="/poznaj-nas" class="hdr-back" id="nav-about">👥 Poznaj nas</a>
   </nav>
@@ -372,8 +372,8 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <h4 id="ftUslugiH">Usługi</h4>
       <a href="/sprzatanie-mieszkan-i-domow-krakow" id="ftLinkMieszkania">Sprzątanie mieszkań</a>
       <a href="/sprzatanie-po-remoncie-krakow" id="ftLinkRemont">Po remoncie</a>
-      <a href="/sprzatanie-po-wyprowadzce-krakow" id="ftLinkWyprowadzka">Po wyjeździe</a>
-      <a href="/trudne-przypadki-sprzatanie-krakow" id="ftLinkZbieractwo">Po zbieractwie</a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow" id="ftLinkWyprowadzka">Po wyprowadzce</a>
+      <a href="/trudne-przypadki-sprzatanie-krakow" id="ftLinkZbieractwo">Trudne przypadki</a>
       <a href="/mycie-okien" id="ftLinkOkna">Mycie okien</a>
     </div>
     <div class="ft2-col">
@@ -405,8 +405,8 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     </div>
   </div>
   <div class="ft2-bottom">
-    <p class="ft-copy">© 2025 Vershy Property Care · NIP: 6793355668 · REGON: 543849999</p>
-    <p class="ft-copy" id="ftnote">Faktury bez VAT · Program partnerski — warunki mogą ulec zmianie</p>
+    <p class="ft-copy">© 2026 Vershy Property Care · NIP: 6793355668 · REGON: 543849999</p>
+    <p class="ft-copy" id="ftnote">Ceny końcowe · Program partnerski — warunki mogą ulec zmianie</p>
   </div>
   </div>
 </footer>
@@ -458,8 +458,8 @@ var lang = 'pl';
 var TX = {
 pl: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em>',
-  nav_mieszkan:'🧹 Sprzątanie mieszkań', nav_remont:'🏗️ Po remoncie', nav_wyjazd:'🏠 Po wyjeździe',
-  nav_zb:'🏚️ Po zbieractwie', nav_okna:'🪟 Mycie okien', nav_about:'👥 Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera', login_register:'📝 Zarejestruj się',
+  nav_mieszkan:'🧹 Sprzątanie mieszkań', nav_remont:'🏗️ Po remoncie', nav_wyjazd:'🏠 Po wyprowadzce',
+  nav_zb:'🏚️ Trudne przypadki', nav_okna:'🪟 Mycie okien', nav_about:'👥 Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera', login_register:'📝 Zarejestruj się',
   hero_badge:'🤝 Program Partnerski',
   hero_h1:'Polecaj sprzątanie.<br><em>Zarabiaj 10–15%</em> od każdego zlecenia.',
   hero_sub:'Dołącz do programu partnerskiego Vershy Property Care. Otrzymaj unikalny kod, przekaż go swoim klientom lub kontaktom biznesowym — a za każde zrealizowane zlecenie otrzymasz prowizję. Bez inwestycji, bez limitu poleceń.',
@@ -514,11 +514,11 @@ pl: {
   final_btn:'🤝 Zostań partnerem →',
   mtb_home:'Strona główna', mtb_join:'Dołącz', mtb_more:'Więcej', mtb_chat:'Czat', mtb_account:'Konto',
   hngMenuTitle:'Menu', hng1:'O nas', hng2:'Opinie', hng3:'Kontakt', hng4:'Mycie okien', hng5:'Sprzątanie mieszkań',
-  hng6:'Po remoncie', hng7:'Po wyprowadzce', hng8:'Po zbieractwie', hng9:'Realizacje', hng10:'FAQ',
+  hng6:'Po remoncie', hng7:'Po wyprowadzce', hng8:'Trudne przypadki', hng9:'Realizacje', hng10:'FAQ',
   hng11:'Zarejestruj się', hng12:'Zostań partnerem', hngCallBtn:'📞 ZADZWOŃ DO NAS', hngClose:'Zamknij',
-  fslogan:'Premium Cleaning & Property Services', ftnote:'Faktury bez VAT · Program partnerski — warunki mogą ulec zmianie',
-  ftUslugiH:'Usługi', ftLinkMieszkania:'Sprzątanie mieszkań', ftLinkRemont:'Po remoncie', ftLinkWyprowadzka:'Po wyjeździe',
-  ftLinkZbieractwo:'Po zbieractwie', ftLinkOkna:'Mycie okien', ftFirmaH:'Firma', ftLinkPoznaj:'Poznaj nas',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Ceny końcowe · Program partnerski — warunki mogą ulec zmianie',
+  ftUslugiH:'Usługi', ftLinkMieszkania:'Sprzątanie mieszkań', ftLinkRemont:'Po remoncie', ftLinkWyprowadzka:'Po wyprowadzce',
+  ftLinkZbieractwo:'Trudne przypadki', ftLinkOkna:'Mycie okien', ftFirmaH:'Firma', ftLinkPoznaj:'Poznaj nas',
   ftLinkPartner:'Zostań partnerem', ftLocation:'📍 Kraków i Małopolska', ftInfoH:'Informacje',
   ftLinkPrywatnosc:'Polityka prywatności', ftLinkRegulamin:'Regulamin', ftLinkCookies:'Polityka cookies',
   ftLinkZalacznik:'Załącznik nr 1 – Zakres usług', ftPopularneH:'Popularne usługi',
@@ -527,7 +527,7 @@ pl: {
 uk: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>',
   nav_mieszkan:'🧹 Прибирання квартир', nav_remont:'🏗️ Після ремонту', nav_wyjazd:'🏠 Після виїзду',
-  nav_zb:'🏚️ Після захаращення', nav_okna:'🪟 Миття вікон', nav_about:'👥 Про нас', hdr_cta:'🤝 Стати партнером', login_btn:'Увійти', login_client:'👤 Кабінет клієнта', login_partner:'🤝 Кабінет партнера', login_register:'📝 Зареєструватися',
+  nav_zb:'🏚️ Складні випадки', nav_okna:'🪟 Миття вікон', nav_about:'👥 Про нас', hdr_cta:'🤝 Стати партнером', login_btn:'Увійти', login_client:'👤 Кабінет клієнта', login_partner:'🤝 Кабінет партнера', login_register:'📝 Зареєструватися',
   hero_badge:'🤝 Партнерська програма',
   hero_h1:'Рекомендуй прибирання.<br><em>Заробляй 10–15%</em> з кожного замовлення.',
   hero_sub:'Приєднайся до партнерської програми Vershy Property Care. Отримай унікальний код, передай його своїм клієнтам або бізнес-контактам — і за кожне виконане замовлення отримаєш комісію. Без інвестицій, без ліміту рекомендацій.',
@@ -582,11 +582,11 @@ uk: {
   final_btn:'🤝 Стати партнером →',
   mtb_home:'Головна', mtb_join:'Приєднатися', mtb_more:'Ще', mtb_chat:'Чат', mtb_account:'Кабінет',
   hngMenuTitle:'Меню', hng1:'Про нас', hng2:'Відгуки', hng3:'Контакти', hng4:'Миття вікон', hng5:'Прибирання квартир',
-  hng6:'Після ремонту', hng7:'Після виїзду', hng8:'Після захаращення', hng9:'Наші роботи', hng10:'Часті питання',
+  hng6:'Після ремонту', hng7:'Після виїзду', hng8:'Складні випадки', hng9:'Наші роботи', hng10:'Часті питання',
   hng11:'Зареєструватися', hng12:'Стати партнером', hngCallBtn:'📞 ЗАТЕЛЕФОНУЙТЕ НАМ', hngClose:'Закрити',
-  fslogan:'Premium Cleaning & Property Services', ftnote:'Рахунки без ПДВ · Партнерська програма — умови можуть змінюватись',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Кінцеві ціни · Партнерська програма — умови можуть змінюватись',
   ftUslugiH:'Послуги', ftLinkMieszkania:'Прибирання квартир', ftLinkRemont:'Після ремонту', ftLinkWyprowadzka:'Після виїзду',
-  ftLinkZbieractwo:'Після захаращення', ftLinkOkna:'Миття вікон', ftFirmaH:'Компанія', ftLinkPoznaj:'Про нас',
+  ftLinkZbieractwo:'Складні випадки', ftLinkOkna:'Миття вікон', ftFirmaH:'Компанія', ftLinkPoznaj:'Про нас',
   ftLinkPartner:'Стати партнером', ftLocation:'📍 Краків та Малопольща', ftInfoH:'Інформація',
   ftLinkPrywatnosc:'Політика конфіденційності', ftLinkRegulamin:'Регламент', ftLinkCookies:'Політика cookies',
   ftLinkZalacznik:'Додаток № 1 – Обсяг послуг', ftPopularneH:'Популярні послуги',
@@ -595,7 +595,7 @@ uk: {
 ru: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>',
   nav_mieszkan:'🧹 Уборка квартир', nav_remont:'🏗️ После ремонта', nav_wyjazd:'🏠 После выезда',
-  nav_zb:'🏚️ После захламления', nav_okna:'🪟 Мытьё окон', nav_about:'👥 О нас', hdr_cta:'🤝 Стать партнёром', login_btn:'Войти', login_client:'👤 Кабинет клиента', login_partner:'🤝 Кабинет партнёра', login_register:'📝 Зарегистрироваться',
+  nav_zb:'🏚️ Сложные случаи', nav_okna:'🪟 Мытьё окон', nav_about:'👥 О нас', hdr_cta:'🤝 Стать партнёром', login_btn:'Войти', login_client:'👤 Кабинет клиента', login_partner:'🤝 Кабинет партнёра', login_register:'📝 Зарегистрироваться',
   hero_badge:'🤝 Партнёрская программа',
   hero_h1:'Рекомендуй уборку.<br><em>Зарабатывай 10–15%</em> с каждого заказа.',
   hero_sub:'Присоединяйся к партнёрской программе Vershy Property Care. Получи уникальный код, передай его своим клиентам или бизнес-контактам — и за каждый выполненный заказ будешь получать комиссию. Без вложений, без лимита рекомендаций.',
@@ -650,11 +650,11 @@ ru: {
   final_btn:'🤝 Стать партнёром →',
   mtb_home:'Главная', mtb_join:'Присоединиться', mtb_more:'Ещё', mtb_chat:'Чат', mtb_account:'Кабинет',
   hngMenuTitle:'Меню', hng1:'О нас', hng2:'Отзывы', hng3:'Контакты', hng4:'Мытьё окон', hng5:'Уборка квартир',
-  hng6:'После ремонта', hng7:'После выезда', hng8:'После захламления', hng9:'Наши работы', hng10:'Частые вопросы',
+  hng6:'После ремонта', hng7:'После выезда', hng8:'Сложные случаи', hng9:'Наши работы', hng10:'Частые вопросы',
   hng11:'Зарегистрироваться', hng12:'Стать партнёром', hngCallBtn:'📞 ПОЗВОНИТЕ НАМ', hngClose:'Закрыть',
-  fslogan:'Premium Cleaning & Property Services', ftnote:'Счета без НДС · Партнёрская программа — условия могут измениться',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Итоговые цены · Партнёрская программа — условия могут измениться',
   ftUslugiH:'Услуги', ftLinkMieszkania:'Уборка квартир', ftLinkRemont:'После ремонта', ftLinkWyprowadzka:'После выезда',
-  ftLinkZbieractwo:'После захламления', ftLinkOkna:'Мытьё окон', ftFirmaH:'Компания', ftLinkPoznaj:'О нас',
+  ftLinkZbieractwo:'Сложные случаи', ftLinkOkna:'Мытьё окон', ftFirmaH:'Компания', ftLinkPoznaj:'О нас',
   ftLinkPartner:'Стать партнёром', ftLocation:'📍 Краков и Малопольша', ftInfoH:'Информация',
   ftLinkPrywatnosc:'Политика конфиденциальности', ftLinkRegulamin:'Регламент', ftLinkCookies:'Политика cookies',
   ftLinkZalacznik:'Приложение № 1 – Перечень услуг', ftPopularneH:'Популярные услуги',
@@ -662,8 +662,8 @@ ru: {
 },
 en: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>',
-  nav_mieszkan:'🧹 Apartment cleaning', nav_remont:'🏗️ Post-renovation', nav_wyjazd:'🏠 Post-checkout',
-  nav_zb:'🏚️ Hoarding cleanup', nav_okna:'🪟 Window cleaning', nav_about:'👥 Meet us', hdr_cta:'🤝 Become a partner', login_btn:'Sign in', login_client:'👤 Client cabinet', login_partner:'🤝 Partner cabinet', login_register:'📝 Register',
+  nav_mieszkan:'🧹 Apartment cleaning', nav_remont:'🏗️ Post-renovation', nav_wyjazd:'🏠 Post-move-out',
+  nav_zb:'🏚️ Difficult cases', nav_okna:'🪟 Window cleaning', nav_about:'👥 Meet us', hdr_cta:'🤝 Become a partner', login_btn:'Sign in', login_client:'👤 Client cabinet', login_partner:'🤝 Partner cabinet', login_register:'📝 Register',
   hero_badge:'🤝 Partner Program',
   hero_h1:'Recommend cleaning.<br><em>Earn 10–15%</em> of every order.',
   hero_sub:'Join the Vershy Property Care partner program. Get a unique code, share it with your clients or business contacts — and earn a commission on every completed order. No investment, no referral limit.',
@@ -687,7 +687,7 @@ en: {
   usl_lbl:'Program scope', usl_h2:'Which services are covered by the <em>partner program</em>',
   usl_sub:'You earn 10–15% commission on orders for the services below, placed with your partner code.',
   usl1_t:'Post-renovation cleaning', usl1_d:'With and without furniture — cleaning after construction and finishing works are completed.',
-  usl2_t:'Post-checkout cleaning', usl2_d:'With and without furniture — cleaning an apartment before or after moving.',
+  usl2_t:'Post-move-out cleaning', usl2_d:'With and without furniture — cleaning an apartment before or after moving.',
   usl4_t:'Window cleaning', usl4_d:'Seasonal, winter, and post-renovation window cleaning — both sides, including frames and sills.',
   who_lbl:'Who this program is for', who_h2:'Example <em>partners</em>',
   who_sub:'The partner program works for anyone in contact with people who need cleaning services.',
@@ -718,11 +718,11 @@ en: {
   final_btn:'🤝 Become a partner →',
   mtb_home:'Home', mtb_join:'Join', mtb_more:'More', mtb_chat:'Chat', mtb_account:'Account',
   hngMenuTitle:'Menu', hng1:'About us', hng2:'Reviews', hng3:'Contact', hng4:'Window cleaning', hng5:'Apartment cleaning',
-  hng6:'Post-renovation', hng7:'Post-move-out', hng8:'Hoarding cleanup', hng9:'Our work', hng10:'FAQ',
+  hng6:'Post-renovation', hng7:'Post-move-out', hng8:'Difficult cases', hng9:'Our work', hng10:'FAQ',
   hng11:'Sign up', hng12:'Become a partner', hngCallBtn:'📞 CALL US', hngClose:'Close',
-  fslogan:'Premium Cleaning & Property Services', ftnote:'Invoices without VAT · Partner program — terms may change',
-  ftUslugiH:'Services', ftLinkMieszkania:'Apartment cleaning', ftLinkRemont:'Post-renovation', ftLinkWyprowadzka:'Move-out cleaning',
-  ftLinkZbieractwo:'Hoarding cleanup', ftLinkOkna:'Window cleaning', ftFirmaH:'Company', ftLinkPoznaj:'About us',
+  fslogan:'Premium Cleaning & Property Services', ftnote:'Final prices · Partner program — terms may change',
+  ftUslugiH:'Services', ftLinkMieszkania:'Apartment cleaning', ftLinkRemont:'Post-renovation', ftLinkWyprowadzka:'Post-move-out',
+  ftLinkZbieractwo:'Difficult cases', ftLinkOkna:'Window cleaning', ftFirmaH:'Company', ftLinkPoznaj:'About us',
   ftLinkPartner:'Become a partner', ftLocation:'📍 Kraków & Lesser Poland', ftInfoH:'Information',
   ftLinkPrywatnosc:'Privacy Policy', ftLinkRegulamin:'Terms & Conditions', ftLinkCookies:'Cookie Policy',
   ftLinkZalacznik:'Appendix 1 – Scope of Services', ftPopularneH:'Popular services',
