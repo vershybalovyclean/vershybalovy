@@ -38,7 +38,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   ]
 }
   </script>
-  <link rel="stylesheet" href="assets/css/base.css?v=20261001g">
+  <link rel="stylesheet" href="assets/css/base.css?v=20261007a">
   <link rel="stylesheet" href="assets/css/partnerski.css?v=1">
   <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261001c">
 </head>
@@ -406,16 +406,9 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     </div>
   </div>
   <div class="ft2-tags">
-    <h4 id="ftPopularneH">Popularne usługi</h4>
-    <div class="ft2-tag-row">
-      <a href="/program-partnerski" class="ft2-tag">Program partnerski Kraków</a>
-      <a href="/program-partnerski" class="ft2-tag">Zostań partnerem sprzątania</a>
-      <a href="/sprzatanie-mieszkan-i-domow-krakow" class="ft2-tag">Sprzątanie mieszkań Kraków</a>
-      <a href="/sprzatanie-po-remoncie-krakow" class="ft2-tag">Sprzątanie po remoncie Kraków</a>
-      <a href="/sprzatanie-po-wyprowadzce-krakow" class="ft2-tag">Sprzątanie po wyprowadzce Kraków</a>
-      <a href="/mycie-okien" class="ft2-tag">Mycie okien Kraków</a>
-      <a href="/poznaj-nas" class="ft2-tag">O nas</a>
-    </div>
+    <h4 id="ftAreaH">Obsługiwany obszar</h4>
+    <p class="ft2-area-main" id="ftAreaMain">Kraków i Małopolska</p>
+    <p class="ft2-area-towns">Wieliczka • Skawina • Niepołomice • Zabierzów • Zielonki • Krzeszowice • Michałowice • Świątniki Górne • Mogilany • Myślenice</p>
   </div>
   <div class="ft2-bottom">
     <p class="ft-copy">© 2026 Vershy Property Care · NIP: 6793355668 · REGON: 543849999</p>
@@ -534,7 +527,7 @@ pl: {
   ftLinkZbieractwo:'Trudne przypadki', ftLinkOkna:'Mycie okien', ftFirmaH:'Firma', ftLinkPoznaj:'Poznaj nas',
   ftLinkPartner:'Zostań partnerem', ftLocation:'📍 Kraków i Małopolska', ftInfoH:'Informacje',
   ftLinkPrywatnosc:'Polityka prywatności', ftLinkRegulamin:'Regulamin', ftLinkCookies:'Polityka cookies',
-  ftLinkZalacznik:'Załącznik nr 1 – Zakres usług', ftPopularneH:'Popularne usługi',
+  ftLinkZalacznik:'Załącznik nr 1 – Zakres usług', ftAreaH:'Obsługiwany obszar', ftAreaMain:'Kraków i Małopolska',
   pageTitle:'Program Partnerski — zarabiaj polecając sprzątanie | Vershy Property Care'
 },
 uk: {
@@ -602,7 +595,7 @@ uk: {
   ftLinkZbieractwo:'Складні випадки', ftLinkOkna:'Миття вікон', ftFirmaH:'Компанія', ftLinkPoznaj:'Про нас',
   ftLinkPartner:'Стати партнером', ftLocation:'📍 Краків та Малопольща', ftInfoH:'Інформація',
   ftLinkPrywatnosc:'Політика конфіденційності', ftLinkRegulamin:'Регламент', ftLinkCookies:'Політика cookies',
-  ftLinkZalacznik:'Додаток № 1 – Обсяг послуг', ftPopularneH:'Популярні послуги',
+  ftLinkZalacznik:'Додаток № 1 – Обсяг послуг', ftAreaH:'Зона обслуговування', ftAreaMain:'Краків та Малопольща',
   pageTitle:'Партнерська програма — заробляйте, рекомендуючи прибирання | Vershy Property Care'
 },
 ru: {
@@ -670,7 +663,7 @@ ru: {
   ftLinkZbieractwo:'Сложные случаи', ftLinkOkna:'Мытьё окон', ftFirmaH:'Компания', ftLinkPoznaj:'О нас',
   ftLinkPartner:'Стать партнёром', ftLocation:'📍 Краков и Малопольша', ftInfoH:'Информация',
   ftLinkPrywatnosc:'Политика конфиденциальности', ftLinkRegulamin:'Регламент', ftLinkCookies:'Политика cookies',
-  ftLinkZalacznik:'Приложение № 1 – Перечень услуг', ftPopularneH:'Популярные услуги',
+  ftLinkZalacznik:'Приложение № 1 – Перечень услуг', ftAreaH:'Зона обслуживания', ftAreaMain:'Краков и Малопольша',
   pageTitle:'Партнёрская программа — зарабатывайте, рекомендуя уборку | Vershy Property Care'
 },
 en: {
@@ -738,7 +731,7 @@ en: {
   ftLinkZbieractwo:'Difficult cases', ftLinkOkna:'Window cleaning', ftFirmaH:'Company', ftLinkPoznaj:'About us',
   ftLinkPartner:'Become a partner', ftLocation:'📍 Kraków & Lesser Poland', ftInfoH:'Information',
   ftLinkPrywatnosc:'Privacy Policy', ftLinkRegulamin:'Terms & Conditions', ftLinkCookies:'Cookie Policy',
-  ftLinkZalacznik:'Appendix 1 – Scope of Services', ftPopularneH:'Popular services',
+  ftLinkZalacznik:'Appendix 1 – Scope of Services', ftAreaH:'Areas we serve', ftAreaMain:'Kraków & Lesser Poland',
   pageTitle:'Partner Program — Earn by Referring Cleaning | Vershy Property Care'
 }
 };
@@ -809,7 +802,7 @@ function applyTranslations(l){
   set('ftLocation', t.ftLocation);
   set('ftInfoH', t.ftInfoH); set('ftLinkPrywatnosc', t.ftLinkPrywatnosc); set('ftLinkRegulamin', t.ftLinkRegulamin);
   set('ftLinkCookies', t.ftLinkCookies); set('ftLinkZalacznik', t.ftLinkZalacznik);
-  set('ftPopularneH', t.ftPopularneH);
+  set('ftAreaH', t.ftAreaH); set('ftAreaMain', t.ftAreaMain);
   var hngCloseBtn = document.getElementById('hngCloseBtn');
   if (hngCloseBtn) hngCloseBtn.setAttribute('aria-label', t.hngClose || 'Zamknij');
   if (window.refreshCookieBanner) window.refreshCookieBanner(l);
