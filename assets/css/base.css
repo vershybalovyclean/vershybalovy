@@ -740,6 +740,7 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
 .add-group-label-row{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--brd);list-style:none}
 .add-group-label-row:first-child{margin-top:0;padding-top:0;border-top:none}
 .ai-n{flex:1;font-size:13px}
+.ai-ico{width:19px;height:19px;flex-shrink:0;color:var(--blue2,#2563eb);margin-right:2px}
 .add-summary{background:#fff;border:1.5px solid var(--green2);border-radius:var(--r);
   padding:16px 20px;margin-top:20px;display:none}
 .add-summary.show{display:block}

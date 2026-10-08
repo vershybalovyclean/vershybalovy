@@ -52,6 +52,10 @@
 .zb-type-btn{border:1.5px solid var(--brd);border-radius:12px;background:#fff;padding:16px;
   cursor:pointer;text-align:center;transition:.2s;font-family:'Inter',sans-serif}
 .zb-type-btn .zb-type-icon{font-size:24px;display:block;margin-bottom:6px}
+.zb-type-icon svg,.zb-step-icon svg,.zb-scenario-icon svg{color:var(--text3,#334155);display:block}
+.zb-type-icon svg{width:24px;height:24px;margin:0 auto}
+.zb-step-icon svg{width:26px;height:26px;margin:0 auto}
+.zb-scenario-icon svg{width:30px;height:30px}
 .zb-type-btn .zb-type-name{font-size:14px;font-weight:700;color:var(--text)}
 .zb-type-btn:hover{border-color:var(--blue2);background:var(--blue-pale)}
 .zb-type-btn.selected{border-color:var(--blue2);background:var(--blue-pale);box-shadow:0 2px 12px rgba(37,99,235,.15)}

@@ -68,6 +68,8 @@
 .ac-zones{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 
 .add-circle.a1{background:#eff6ff}.add-circle.a2{background:#f0fdf4}.add-circle.a3{background:#fef3c7}.add-circle.a4{background:#fce7f3}
+.add-circle svg{width:19px;height:19px;display:block}
+.add-circle.a1 svg{color:#2563eb}.add-circle.a2 svg{color:#16a34a}.add-circle.a3 svg{color:#d97706}.add-circle.a4 svg{color:#db2777}
 
 .add-group-label{grid-column:1/-1;font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--brd)}
 .add-group-label:first-child{margin-top:0;padding-top:0;border-top:none}

@@ -61,11 +61,37 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   ]
 }
 </script>
-  <link rel="stylesheet" href="assets/css/base.css?v=20261007a">
-  <link rel="stylesheet" href="assets/css/zbierackosc.css?v=2">
-  <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261001c">
+  <link rel="stylesheet" href="assets/css/base.css?v=20261008a">
+  <link rel="stylesheet" href="assets/css/zbierackosc.css?v=3">
+  <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261008a">
 </head>
 <body class="has-mobile-tabbar scenario-zb" id="page-body">
+<svg style="display:none" aria-hidden="true">
+<defs>
+<symbol id="nic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,11 12,4 20,11"/><path d="M6 10v9h5v-5h2v5h5v-9"/></symbol>
+<symbol id="nic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="15" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="8" y1="3.5" x2="8" y2="7.5"/><line x1="16" y1="3.5" x2="16" y2="7.5"/></symbol>
+<symbol id="nic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V6z"/></symbol>
+<symbol id="nic-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1-4 4-6.5 7-6.5s6 2.5 7 6.5"/></symbol>
+<symbol id="nic-team" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.6"/><circle cx="16.5" cy="9.5" r="2"/><path d="M3.3 19c.7-3.3 2.9-5.2 5.7-5.2s5 1.9 5.7 5.2"/><path d="M14.8 19c.4-2.3 1.7-4 3.5-4.6"/></symbol>
+<symbol id="nic-broom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="4" x2="10" y2="12"/><path d="M10 12l-5.5 7 2.5 1.6 2.2-3.1 3-2.2z"/></symbol>
+<symbol id="nic-build" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="10" height="5" rx="1"/><line x1="14" y1="8.5" x2="20" y2="8.5"/><line x1="20" y1="5" x2="20" y2="12"/></symbol>
+<symbol id="nic-moving" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="8" height="8"/><line x1="4" y1="13" x2="12" y2="13"/><line x1="8" y1="9" x2="8" y2="17"/><rect x="13" y="6" width="7" height="6"/><line x1="13" y1="9" x2="20" y2="9"/></symbol>
+<symbol id="nic-window" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="4" y1="12" x2="20" y2="12"/></symbol>
+<symbol id="nic-partner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></symbol>
+<symbol id="nic-case" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="1.5"/><path d="M9 7V5.5a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5V7"/></symbol>
+<symbol id="nic-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><polygon points="12,3 14.7,9.2 21.4,9.8 16.3,14.1 17.9,20.6 12,17.1 6.1,20.6 7.7,14.1 2.6,9.8 9.3,9.2"/></symbol>
+<symbol id="nic-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h3l1.3 4L8.5 9c.9 2.8 2.2 4.1 5 5l2-1.8 4 1.3V17a2 2 0 0 1-2 2C10.5 19 5 13.5 5 7a2 2 0 0 1 1-2z"/></symbol>
+<symbol id="nic-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2"/><circle cx="12" cy="13" r="3.3"/><rect x="8.5" y="4" width="4" height="3" rx="0.8"/></symbol>
+<symbol id="nic-question" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.5 2.5 0 1 1 3.8 2.1c-.9.6-1.3 1.2-1.3 2.3"/><circle cx="12" cy="17" r="0.9" fill="currentColor" stroke="none"/></symbol>
+<symbol id="nic-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l0.9-4.3L15.4 5.2l3.4 3.4L8.3 19.1 4 20z"/><line x1="13.6" y1="6.6" x2="17" y2="10"/></symbol>
+<symbol id="nic-smoke" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21c0-3 3-3 3-6s-3-3-3-6 3-3 3-6"/><path d="M12 21c0-3 3-3 3-6s-3-3-3-6 3-3 3-6"/><path d="M18 21c0-2.3 2-2.6 2-4.6"/></symbol>
+<symbol id="nic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.3" y1="15.3" x2="20.5" y2="20.5"/></symbol>
+<symbol id="nic-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><path d="M6 7V4.5a1.5 1.5 0 0 1 1.5-1.5h9A1.5 1.5 0 0 1 18 4.5V7"/><path d="M6.5 7l1 13h9l1-13"/><line x1="10" y1="11" x2="10" y2="16"/><line x1="14" y1="11" x2="14" y2="16"/></symbol>
+<symbol id="nic-spray" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="9" width="8" height="12" rx="1.5"/><path d="M9.5 9V5.5h3V9"/><path d="M12.5 4l4-1.3M13 6.3l4.3-.5M12.2 2.2l2.8 2.8"/></symbol>
+<symbol id="nic-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12.5h14.5a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 17h9a2 2 0 1 1-2 2"/></symbol>
+<symbol id="nic-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="M12 8.5L13.3 11l2.5 1.3-2.5 1.3L12 16l-1.3-2.4L8.2 12.3l2.5-1.3z"/></symbol>
+</defs>
+</svg>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -107,31 +133,31 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="hdr-nav-handle"></div>
     <div class="hdr-nav-mhead"><span id="hngMenuTitle">Menu</span><button type="button" onclick="toggleNav()" id="hngCloseBtn" aria-label="Zamknij">✕</button></div>
     <div class="hdr-nav-grid">
-      <a href="/poznaj-nas"><span class="hng-icon">🏠</span><span class="hng-label" id="hng1">O nas</span></a>
-      <a href="/#opinie"><span class="hng-icon">⭐</span><span class="hng-label" id="hng2">Opinie</span></a>
-      <a href="#kontakt"><span class="hng-icon">📞</span><span class="hng-label" id="hng3">Kontakt</span></a>
-      <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon">🧹</span><span class="hng-label" id="hng5">Sprzątanie mieszkań i domów</span></a>
-      <a href="/mycie-okien"><span class="hng-icon">🪟</span><span class="hng-label" id="hng4">Mycie okien</span></a>
-      <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon">🏗️</span><span class="hng-label" id="hng6">Po remoncie</span></a>
-      <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon">🏠</span><span class="hng-label" id="hng7">Po wyprowadzce</span></a>
-      <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label" id="hng8">Trudne przypadki</span></a>
-      <a href="/#przed-po"><span class="hng-icon">📸</span><span class="hng-label" id="hng9">Realizacje</span></a>
-      <a href="#faq-lbl"><span class="hng-icon">❓</span><span class="hng-label" id="hng10">FAQ</span></a>
-      <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon">📝</span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
-      <a href="/program-partnerski"><span class="hng-icon">🤝</span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
+      <a href="/poznaj-nas"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-team"></use></svg></span><span class="hng-label" id="hng1">O nas</span></a>
+      <a href="/#opinie"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-star"></use></svg></span><span class="hng-label" id="hng2">Opinie</span></a>
+      <a href="#kontakt"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="hng-label" id="hng3">Kontakt</span></a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-broom"></use></svg></span><span class="hng-label" id="hng5">Sprzątanie mieszkań i domów</span></a>
+      <a href="/mycie-okien"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-window"></use></svg></span><span class="hng-label" id="hng4">Mycie okien</span></a>
+      <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-build"></use></svg></span><span class="hng-label" id="hng6">Po remoncie</span></a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-moving"></use></svg></span><span class="hng-label" id="hng7">Po wyprowadzce</span></a>
+      <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-case"></use></svg></span><span class="hng-label" id="hng8">Trudne przypadki</span></a>
+      <a href="/#przed-po"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-camera"></use></svg></span><span class="hng-label" id="hng9">Realizacje</span></a>
+      <a href="#faq-lbl"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-question"></use></svg></span><span class="hng-label" id="hng10">FAQ</span></a>
+      <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-pencil"></use></svg></span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
+      <a href="/program-partnerski"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
     <a href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
-    <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">🧹 Sprzątanie mieszkań i domów</a>
-    <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">🏗️ Po remoncie</a>
-    <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">🏠 Po wyjeździe</a>
-    <a href="/trudne-przypadki-sprzatanie-krakow" class="active" id="nav-zb">🏚️ Trudne przypadki</a>
-    <a href="/mycie-okien" id="nav-okna">🪟 Mycie okien</a>
-    <a href="/poznaj-nas" class="hdr-back" id="nav-about">👥 Poznaj nas</a>
+    <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">Sprzątanie mieszkań i domów</a>
+    <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">Po remoncie</a>
+    <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">Po wyjeździe</a>
+    <a href="/trudne-przypadki-sprzatanie-krakow" class="active" id="nav-zb">Trudne przypadki</a>
+    <a href="/mycie-okien" id="nav-okna">Mycie okien</a>
+    <a href="/poznaj-nas" class="hdr-back" id="nav-about">Poznaj nas</a>
   </nav>
 </header>
 
 <div class="hero-zb"><img src="assets/img/zbierackosc-hero.webp" alt="" loading="eager" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;z-index:0"><div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(15,23,42,.88) 0%,rgba(15,23,42,.68) 38%,rgba(15,23,42,.3) 65%,rgba(15,23,42,.1) 100%);z-index:1"></div><div style="position:relative;z-index:2">
-  <div class="hero-badge" id="hero-badge" style="margin-bottom:6px;padding:3px 12px;font-size:11px">🏚️ Trudne przypadki</div>
+  <div class="hero-badge" id="hero-badge" style="margin-bottom:6px;padding:3px 12px;font-size:11px">Trudne przypadki</div>
   <h1 id="hero-h1" style="font-size:clamp(19px,2.4vw,27px);margin-bottom:5px">Trudne przypadki sprzątania w <em>Krakowie</em></h1>
   <p class="hero-sub" id="hero-sub" style="max-width:520px;margin:0 auto 12px;font-size:14px;line-height:1.5">Zbieractwo, długotrwałe zaniedbanie, zadymienie i sadza po dymie — każdy przypadek oceniamy indywidualnie i przygotowujemy wycenę dopasowaną do rzeczywistej sytuacji.</p>
   <div class="hero-btns" style="margin-bottom:0">
@@ -162,7 +188,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
     <div class="zb-scenario-grid">
       <div class="zb-scenario-card" data-scenario="zbieractwo" id="scn-card-zb">
-        <span class="zb-scenario-icon">🏚️</span>
+        <span class="zb-scenario-icon"><svg aria-hidden="true"><use href="#nic-case"></use></svg></span>
         <div class="zb-scenario-title" id="scn-zb-title">Zbieractwo i długotrwałe zaniedbanie</div>
         <ul>
           <li id="scn-zb-b0">Nagromadzone przedmioty i wieloletnie zaniedbanie</li>
@@ -174,7 +200,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <button type="button" class="zb-scenario-btn" id="scn-zb-btn" onclick="zbSelectScenario('zbieractwo',true)">Wybieram ten przypadek</button>
       </div>
       <div class="zb-scenario-card" data-scenario="zadymienie" id="scn-card-zd">
-        <span class="zb-scenario-icon">💨</span>
+        <span class="zb-scenario-icon"><svg aria-hidden="true"><use href="#nic-smoke"></use></svg></span>
         <div class="zb-scenario-title" id="scn-zd-title">Zadymienie, sadza i osad z dymu</div>
         <ul>
           <li id="scn-zd-b0">Sadza, osad po dymie i osmolenie na powierzchniach</li>
@@ -194,7 +220,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <!-- EMPATHY / PAIN POINT (Zbieractwo) -->
 <section class="zb-empathy zb-only-zb">
   <div class="wrap">
-    <div class="sec-lbl" id="emp-tag" style="margin-bottom:6px">🏚️ Zbieractwo i długotrwałe zaniedbanie</div>
+    <div class="sec-lbl" id="emp-tag" style="margin-bottom:6px">Zbieractwo i długotrwałe zaniedbanie</div>
     <div class="sec-lbl" id="emp-lbl">Rozumiemy sytuację</div>
     <h2 class="sec-title" id="emp-h2">Nie oceniamy. <em>Pomagamy.</em></h2>
     <p class="zb-empathy-text" id="emp-text">Zbieractwo, wieloletnie zaniedbanie, sytuacja po stracie bliskiej osoby — to trudne chwile, w których ostatnią rzeczą, jakiej potrzebujesz, jest ocena. Pracujemy z szacunkiem i pełną dyskrecją, traktując każdy przedmiot i każdą sytuację indywidualnie. Naszym zadaniem jest przywrócić mieszkanie do życia — Twoim jest tylko podjęcie pierwszego kroku.</p>
@@ -204,7 +230,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <!-- INTRO (Zadymienie) -->
 <section class="zb-empathy zb-only-zd">
   <div class="wrap">
-    <div class="sec-lbl" id="smk-tag" style="margin-bottom:6px">💨 Zadymienie, sadza i osad z dymu</div>
+    <div class="sec-lbl" id="smk-tag" style="margin-bottom:6px">Zadymienie, sadza i osad z dymu</div>
     <div class="sec-lbl" id="smk-lbl">Rozumiemy sytuację</div>
     <h2 class="sec-title" id="smk-h2">Sprzątanie po zadymieniu, <em>sadzy i osadzie z dymu</em></h2>
     <p class="zb-empathy-text" id="smk-text1">Zajmujemy się sytuacjami, w których na ścianach, meblach i innych powierzchniach pojawił się osad z dymu, sadza lub osmolenie — również wtedy, gdy źródło zadymienia znajdowało się w sąsiednim lokalu lub innym miejscu poza Twoim mieszkaniem czy domem, a w pomieszczeniu utrzymuje się nieprzyjemny zapach dymu.</p>
@@ -227,11 +253,11 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <label class="zb-field-lbl" id="sel-case-lbl">📋 Rodzaj przypadku</label>
         <div class="zb-type-row">
           <div class="zb-type-btn" data-scenario="zbieractwo" id="sel-case-zb" onclick="zbSelectScenario('zbieractwo',false)">
-            <span class="zb-type-icon">🏚️</span>
+            <span class="zb-type-icon"><svg aria-hidden="true"><use href="#nic-case"></use></svg></span>
             <span class="zb-type-name" id="sel-case-zb-name">Zbieractwo i zaniedbanie</span>
           </div>
           <div class="zb-type-btn" data-scenario="zadymienie" id="sel-case-zd" onclick="zbSelectScenario('zadymienie',false)">
-            <span class="zb-type-icon">💨</span>
+            <span class="zb-type-icon"><svg aria-hidden="true"><use href="#nic-smoke"></use></svg></span>
             <span class="zb-type-name" id="sel-case-zd-name">Zadymienie i sadza</span>
           </div>
         </div>
@@ -276,7 +302,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       </div>
 
       <div class="zb-field zb-only-zd" id="sel-smoke-field">
-        <label class="zb-field-lbl" id="sel-smoke-lbl">💨 Źródło zadymienia</label>
+        <label class="zb-field-lbl" id="sel-smoke-lbl">Źródło zadymienia</label>
         <div class="zb-smoke-row">
           <div class="zb-smoke-btn" data-source="zewnetrzne" onclick="zbSelectSmokeSource(this)" id="smk-src-0">Sąsiedni lokal / źródło zewnętrzne</div>
           <div class="zb-smoke-btn" data-source="wewnatrz" onclick="zbSelectSmokeSource(this)" id="smk-src-1">Wewnątrz obiektu</div>
@@ -320,7 +346,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <!-- PROCESS STEPS (Zbieractwo) -->
 <section class="sec-alt zb-only-zb">
   <div class="wrap" style="text-align:center">
-    <div class="sec-lbl" id="steps-tag" style="margin-bottom:2px">🏚️ Zbieractwo i długotrwałe zaniedbanie</div>
+    <div class="sec-lbl" id="steps-tag" style="margin-bottom:2px">Zbieractwo i długotrwałe zaniedbanie</div>
     <div class="sec-lbl" id="steps-lbl">Jak działamy</div>
     <h2 class="sec-title" id="steps-h2">Etapy do <em>czystego mieszkania</em></h2>
     <p class="sec-sub" id="steps-sub" style="margin:0 auto 32px">Pracujemy krok po kroku — od oceny sytuacji po finalny blask.</p>
@@ -328,35 +354,35 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="zb-steps">
       <div class="zb-step">
         <div class="zb-step-num">0</div>
-        <span class="zb-step-icon">🔍</span>
+        <span class="zb-step-icon"><svg aria-hidden="true"><use href="#nic-search"></use></svg></span>
         <div class="zb-step-title" id="step0-t">Audyt techniczny</div>
         <div class="zb-step-desc" id="step0-d">Wizja lokalna, ocena zakresu, dokumentacja fotograficzna, kosztorys.</div>
         <div class="zb-step-price" id="step0-p">300 zł (odliczane od zamówienia)</div>
       </div>
       <div class="zb-step">
         <div class="zb-step-num">1</div>
-        <span class="zb-step-icon">🗑️</span>
+        <span class="zb-step-icon"><svg aria-hidden="true"><use href="#nic-trash"></use></svg></span>
         <div class="zb-step-title" id="step1-t">Sortowanie i wynos</div>
         <div class="zb-step-desc" id="step1-d">Segregacja rzeczy, pakowanie wartościowych przedmiotów, wywóz odpadów.</div>
         <div class="zb-step-price" id="step1-p">od 800 zł</div>
       </div>
       <div class="zb-step">
         <div class="zb-step-num">2</div>
-        <span class="zb-step-icon">🧴</span>
+        <span class="zb-step-icon"><svg aria-hidden="true"><use href="#nic-spray"></use></svg></span>
         <div class="zb-step-title" id="step2-t">Głębokie czyszczenie</div>
         <div class="zb-step-desc" id="step2-d">Para, mechaniczne usuwanie pleśni, dezynfekcja wszystkich powierzchni.</div>
         <div class="zb-step-price" id="step2-p">min. 1500 zł</div>
       </div>
       <div class="zb-step">
         <div class="zb-step-num">3</div>
-        <span class="zb-step-icon">🌬️</span>
+        <span class="zb-step-icon"><svg aria-hidden="true"><use href="#nic-wind"></use></svg></span>
         <div class="zb-step-title" id="step3-t">Neutralizacja zapachu</div>
         <div class="zb-step-desc" id="step3-d">Ozonowanie, zimna mgła, certyfikowane neutralizatory zapachów.</div>
         <div class="zb-step-price" id="step3-p">od 300 zł</div>
       </div>
       <div class="zb-step">
         <div class="zb-step-num">4</div>
-        <span class="zb-step-icon">✨</span>
+        <span class="zb-step-icon"><svg aria-hidden="true"><use href="#nic-sparkle"></use></svg></span>
         <div class="zb-step-title" id="step4-t">Sprzątanie finalne</div>
         <div class="zb-step-desc" id="step4-d">Mycie okien, polerowanie, przygotowanie pod zamieszkanie lub sprzedaż.</div>
         <div class="zb-step-price" id="step4-p">od 400 zł</div>
@@ -370,7 +396,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <!-- DETAILED PROCESS (Zbieractwo) -->
 <section id="proces" class="zb-only-zb">
   <div class="wrap">
-    <div class="sec-lbl" id="proc-tag" style="text-align:center;margin-bottom:2px">🏚️ Zbieractwo i długotrwałe zaniedbanie</div>
+    <div class="sec-lbl" id="proc-tag" style="text-align:center;margin-bottom:2px">Zbieractwo i długotrwałe zaniedbanie</div>
     <div class="sec-lbl" id="proc-lbl" style="text-align:center">Nasza metoda</div>
     <h2 class="sec-title" id="proc-h2" style="text-align:center">Jak przywracamy mieszkania <em>do życia</em></h2>
     <p class="sec-sub" id="proc-sub" style="max-width:700px;margin:0 auto 32px;text-align:center">Każda sytuacja jest inna, ale nasze działanie zawsze opiera się na sprawdzonej, wieloetapowej metodzie. Nie zostawiamy miejsca na improwizację — od pierwszej wizyty po finalny odbiór działamy według jasnego protokołu.</p>
@@ -524,7 +550,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <!-- DETAILED PROCESS (Zadymienie) -->
 <section id="proces-zd" class="zb-only-zd">
   <div class="wrap">
-    <div class="sec-lbl" id="procz-tag" style="text-align:center;margin-bottom:2px">💨 Zadymienie, sadza i osad z dymu</div>
+    <div class="sec-lbl" id="procz-tag" style="text-align:center;margin-bottom:2px">Zadymienie, sadza i osad z dymu</div>
     <div class="sec-lbl" id="procz-lbl" style="text-align:center">Nasza metoda</div>
     <h2 class="sec-title" id="procz-h2" style="text-align:center">Jak sprzątamy <em>po zadymieniu</em></h2>
     <p class="sec-sub" id="procz-sub" style="max-width:700px;margin:0 auto 32px;text-align:center">Zakres i technika czyszczenia zależą od rodzaju powierzchni i stopnia zabrudzenia — dlatego każdy etap poprzedzamy oceną sytuacji.</p>
@@ -838,9 +864,9 @@ var lang = 'pl';
 var TX = {
 pl: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em>',
-  nav_mieszkan:'🧹 Sprzątanie mieszkań i domów', nav_remont:'🏗️ Po remoncie', nav_wyjazd:'🏠 Po wyjeździe',
-  nav_zb:'🏚️ Trudne przypadki', nav_okna:'🪟 Mycie okien', nav_about:'👥 Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera', login_register:'📝 Zarejestruj się',
-  hero_badge:'🏚️ Trudne przypadki',
+  nav_mieszkan:'Sprzątanie mieszkań i domów', nav_remont:'Po remoncie', nav_wyjazd:'Po wyjeździe',
+  nav_zb:'Trudne przypadki', nav_okna:'Mycie okien', nav_about:'Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera', login_register:'📝 Zarejestruj się',
+  hero_badge:'Trudne przypadki',
   hero_h1:'Trudne przypadki sprzątania w <em>Krakowie</em>',
   hero_sub:'Zbieractwo, długotrwałe zaniedbanie, zadymienie i sadza po dymie — każdy przypadek oceniamy indywidualnie i przygotowujemy wycenę dopasowaną do rzeczywistej sytuacji.',
   hero_btn1:'Opisz swoją sytuację →', hero_btn2:'💬 Skontaktuj się z menedżerem',
@@ -858,10 +884,10 @@ pl: {
   scn_zd_b2:'Utrzymujący się zapach dymu', scn_zd_b3:'Ocena stanu powierzchni przed rozpoczęciem prac',
   scn_zd_b4:'Wycena indywidualna po ocenie sytuacji',
   scn_btn:'Wybieram ten przypadek',
-  emp_tag:'🏚️ Zbieractwo i długotrwałe zaniedbanie',
+  emp_tag:'Zbieractwo i długotrwałe zaniedbanie',
   emp_lbl:'Rozumiemy sytuację', emp_h2:'Nie oceniamy. <em>Pomagamy.</em>',
   emp_text:'Zbieractwo, wieloletnie zaniedbanie, sytuacja po stracie bliskiej osoby — to trudne chwile, w których ostatnią rzeczą, jakiej potrzebujesz, jest ocena. Pracujemy z szacunkiem i pełną dyskrecją, traktując każdy przedmiot i każdą sytuację indywidualnie. Naszym zadaniem jest przywrócić mieszkanie do życia — Twoim jest tylko podjęcie pierwszego kroku.',
-  smk_tag:'💨 Zadymienie, sadza i osad z dymu',
+  smk_tag:'Zadymienie, sadza i osad z dymu',
   smk_h2:'Sprzątanie po zadymieniu, <em>sadzy i osadzie z dymu</em>',
   smk_text1:'Zajmujemy się sytuacjami, w których na ścianach, meblach i innych powierzchniach pojawił się osad z dymu, sadza lub osmolenie — również wtedy, gdy źródło zadymienia znajdowało się w sąsiednim lokalu lub innym miejscu poza Twoim mieszkaniem czy domem, a w pomieszczeniu utrzymuje się nieprzyjemny zapach dymu.',
   smk_text2:'Przed rozpoczęciem prac zawsze oceniamy skalę zabrudzenia, stan poszczególnych powierzchni oraz to, czy dany materiał można bezpiecznie oczyścić — dopiero na tej podstawie ustalamy rzeczywisty zakres prac i wycenę indywidualną.',
@@ -871,7 +897,7 @@ pl: {
   sel_case_lbl:'📋 Rodzaj przypadku', sel_case_zb_name:'Zbieractwo i zaniedbanie', sel_case_zd_name:'Zadymienie i sadza',
   sel_type_lbl:'🏠 Typ nieruchomości', sel_type_flat:'Mieszkanie', sel_type_house:'Dom',
   sel_area_lbl:'📐 Metraż (m²)', sel_degree_lbl:'🗑️ Stopień zaniedbania',
-  sel_degree_lbl_zd:'💨 Stopień zadymienia / zakres zabrudzeń',
+  sel_degree_lbl_zd:'Stopień zadymienia / zakres zabrudzeń',
   sel_degree_hint:'Stopień ma charakter wyłącznie opisowy i nie wpływa automatycznie na cenę — wycenę przygotowujemy indywidualnie.',
   deg_lekka_t:'Lekkie', deg_lekka_d:'Kilka worków śmieci, wolne przejście, zabałaganienie do wysokości pasa.',
   deg_srednia_t:'Średnie', deg_srednia_d:'Zagracone 1–2 pomieszczenia, rzeczy warstwami, wąskie przejścia.',
@@ -879,7 +905,7 @@ pl: {
   deg_lekka_d_zd:'Miejscowy, niewielki osad w ograniczonym zakresie, możliwy lekki zapach dymu.',
   deg_srednia_d_zd:'Widoczna sadza lub osad na kilku powierzchniach albo w kilku pomieszczeniach, potrzebne dokładniejsze czyszczenie.',
   deg_ciezka_d_zd:'Znaczne zabrudzenie sadzą lub osadem na wielu powierzchniach, utrzymujący się zapach dymu, duży zakres prac.',
-  sel_smoke_lbl:'💨 Źródło zadymienia',
+  sel_smoke_lbl:'Źródło zadymienia',
   smk_src_0:'Sąsiedni lokal / źródło zewnętrzne', smk_src_1:'Wewnątrz obiektu', smk_src_2:'Inne / nie wiem',
   sum_title:'📋 Twoje zgłoszenie', sum_type:'Typ: ', sum_area:'Metraż: ', sum_degree:'Stopień: ', sum_partner:'Kod partnera: ', sum_smoke_source:'Źródło zadymienia: ',
   zb_partner_label:'Zamówienie w ramach programu partnerskiego', zb_partner_code_hint:'Format: VC- i 4 cyfry, np. VC-4821.',
@@ -984,9 +1010,9 @@ pl: {
 },
 uk: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>',
-  nav_mieszkan:'🧹 Прибирання квартир і будинків', nav_remont:'🏗️ Після ремонту', nav_wyjazd:'🏠 Після виїзду',
-  nav_zb:'🏚️ Складні випадки', nav_okna:'🪟 Миття вікон', nav_about:'👥 Про нас', hdr_cta:'🤝 Стати партнером', login_btn:'Увійти', login_client:'👤 Кабінет клієнта', login_partner:'🤝 Кабінет партнера', login_register:'📝 Зареєструватися',
-  hero_badge:'🏚️ Складні випадки',
+  nav_mieszkan:'Прибирання квартир і будинків', nav_remont:'Після ремонту', nav_wyjazd:'Після виїзду',
+  nav_zb:'Складні випадки', nav_okna:'Миття вікон', nav_about:'Про нас', hdr_cta:'🤝 Стати партнером', login_btn:'Увійти', login_client:'👤 Кабінет клієнта', login_partner:'🤝 Кабінет партнера', login_register:'📝 Зареєструватися',
+  hero_badge:'Складні випадки',
   hero_h1:'Складні випадки прибирання у <em>Кракові</em>',
   hero_sub:'Захаращення, багаторічна занедбаність, задимлення та кіптява після диму — кожен випадок оцінюємо індивідуально та готуємо вартість, що відповідає реальній ситуації.',
   hero_btn1:'Опишіть свою ситуацію →', hero_btn2:'💬 Зв\'язатися з менеджером',
@@ -1004,10 +1030,10 @@ uk: {
   scn_zd_b2:'Стійкий запах диму', scn_zd_b3:'Оцінка стану поверхонь перед початком робіт',
   scn_zd_b4:'Індивідуальна вартість після оцінки ситуації',
   scn_btn:'Обираю цей випадок',
-  emp_tag:'🏚️ Захаращення і тривала занедбаність',
+  emp_tag:'Захаращення і тривала занедбаність',
   emp_lbl:'Ми розуміємо ситуацію', emp_h2:'Не оцінюємо. <em>Допомагаємо.</em>',
   emp_text:'Захаращення, багаторічне занедбання, ситуація після втрати близької людини — це важкі моменти, коли остання річ, яка потрібна — це оцінка. Ми працюємо з повагою та повною конфіденційністю, ставлячись до кожної речі та ситуації індивідуально. Наше завдання — повернути квартиру до життя, ваше — лише зробити перший крок.',
-  smk_tag:'💨 Задимлення, кіптява та осад від диму',
+  smk_tag:'Задимлення, кіптява та осад від диму',
   smk_h2:'Прибирання після задимлення, <em>кіптяви та осаду від диму</em>',
   smk_text1:'Ми беремося за ситуації, коли на стінах, меблях та інших поверхнях з\'явився осад від диму, кіптява чи обгорілі плями — навіть якщо джерело задимлення знаходилося в сусідньому приміщенні або іншому місці поза вашою квартирою чи будинком, а в приміщенні залишається неприємний запах диму.',
   smk_text2:'Перед початком робіт ми завжди оцінюємо масштаб забруднення, стан окремих поверхонь та те, чи можна безпечно очистити даний матеріал — лише на цій основі визначаємо реальний обсяг робіт та індивідуальну вартість.',
@@ -1017,7 +1043,7 @@ uk: {
   sel_case_lbl:'📋 Вид випадку', sel_case_zb_name:'Захаращення і занедбаність', sel_case_zd_name:'Задимлення і кіптява',
   sel_type_lbl:'🏠 Тип нерухомості', sel_type_flat:'Квартира', sel_type_house:'Будинок',
   sel_area_lbl:'📐 Площа (м²)', sel_degree_lbl:'🗑️ Ступінь занедбаності',
-  sel_degree_lbl_zd:'💨 Ступінь задимлення / обсяг забруднень',
+  sel_degree_lbl_zd:'Ступінь задимлення / обсяг забруднень',
   sel_degree_hint:'Ступінь має виключно описовий характер і не впливає автоматично на ціну — вартість готуємо індивідуально.',
   deg_lekka_t:'Легкий', deg_lekka_d:'Кілька мішків сміття, вільний прохід, безлад до рівня поясу.',
   deg_srednia_t:'Середній', deg_srednia_d:'Захаращені 1–2 кімнати, речі шарами, вузькі проходи.',
@@ -1025,7 +1051,7 @@ uk: {
   deg_lekka_d_zd:'Локальний, невеликий осад в обмеженій зоні, можливий легкий запах диму.',
   deg_srednia_d_zd:'Помітна кіптява або осад на кількох поверхнях чи в кількох приміщеннях, потрібне ретельніше чищення.',
   deg_ciezka_d_zd:'Значне забруднення кіптявою або осадом на багатьох поверхнях, стійкий запах диму, великий обсяг робіт.',
-  sel_smoke_lbl:'💨 Джерело задимлення',
+  sel_smoke_lbl:'Джерело задимлення',
   smk_src_0:'Сусіднє приміщення / зовнішнє джерело', smk_src_1:'Всередині об\'єкта', smk_src_2:'Інше / не знаю',
   sum_title:'📋 Ваша заявка', sum_type:'Тип: ', sum_area:'Площа: ', sum_degree:'Ступінь: ', sum_partner:'Код партнера: ', sum_smoke_source:'Джерело задимлення: ',
   zb_partner_label:'Замовлення в рамках партнерської програми', zb_partner_code_hint:'Формат: VC- і 4 цифри, напр. VC-4821.',
@@ -1130,9 +1156,9 @@ uk: {
 },
 ru: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>',
-  nav_mieszkan:'🧹 Уборка квартир и домов', nav_remont:'🏗️ После ремонта', nav_wyjazd:'🏠 После выезда',
-  nav_zb:'🏚️ Сложные случаи', nav_okna:'🪟 Мытьё окон', nav_about:'👥 О нас', hdr_cta:'🤝 Стать партнёром', login_btn:'Войти', login_client:'👤 Кабинет клиента', login_partner:'🤝 Кабинет партнёра', login_register:'📝 Зарегистрироваться',
-  hero_badge:'🏚️ Сложные случаи',
+  nav_mieszkan:'Уборка квартир и домов', nav_remont:'После ремонта', nav_wyjazd:'После выезда',
+  nav_zb:'Сложные случаи', nav_okna:'Мытьё окон', nav_about:'О нас', hdr_cta:'🤝 Стать партнёром', login_btn:'Войти', login_client:'👤 Кабинет клиента', login_partner:'🤝 Кабинет партнёра', login_register:'📝 Зарегистрироваться',
+  hero_badge:'Сложные случаи',
   hero_h1:'Сложные случаи уборки в <em>Кракове</em>',
   hero_sub:'Захламление, многолетняя запущенность, задымление и копоть после дыма — каждый случай оцениваем индивидуально и готовим стоимость, соответствующую реальной ситуации.',
   hero_btn1:'Опишите свою ситуацию →', hero_btn2:'💬 Связаться с менеджером',
@@ -1150,10 +1176,10 @@ ru: {
   scn_zd_b2:'Стойкий запах дыма', scn_zd_b3:'Оценка состояния поверхностей перед началом работ',
   scn_zd_b4:'Индивидуальная стоимость после оценки ситуации',
   scn_btn:'Выбираю этот случай',
-  emp_tag:'🏚️ Захламление и длительная запущенность',
+  emp_tag:'Захламление и длительная запущенность',
   emp_lbl:'Мы понимаем ситуацию', emp_h2:'Не осуждаем. <em>Помогаем.</em>',
   emp_text:'Захламление, многолетняя запущенность, ситуация после потери близкого человека — это трудные моменты, когда последнее, что нужно — это осуждение. Мы работаем с уважением и полной конфиденциальностью, относясь к каждой вещи и ситуации индивидуально. Наша задача — вернуть квартиру к жизни, ваша — сделать только первый шаг.',
-  smk_tag:'💨 Задымление, копоть и осадок от дыма',
+  smk_tag:'Задымление, копоть и осадок от дыма',
   smk_h2:'Уборка после задымления, <em>копоти и осадка от дыма</em>',
   smk_text1:'Мы беремся за ситуации, когда на стенах, мебели и других поверхностях появился осадок от дыма, копоть или закопчённые пятна — в том числе когда источник задымления находился в соседнем помещении или ином месте за пределами вашей квартиры или дома, а в помещении сохраняется неприятный запах дыма.',
   smk_text2:'Перед началом работ мы всегда оцениваем масштаб загрязнения, состояние отдельных поверхностей и то, можно ли безопасно очистить данный материал — только на этой основе определяем реальный объём работ и индивидуальную стоимость.',
@@ -1163,7 +1189,7 @@ ru: {
   sel_case_lbl:'📋 Тип случая', sel_case_zb_name:'Захламление и запущенность', sel_case_zd_name:'Задымление и копоть',
   sel_type_lbl:'🏠 Тип недвижимости', sel_type_flat:'Квартира', sel_type_house:'Дом',
   sel_area_lbl:'📐 Площадь (м²)', sel_degree_lbl:'🗑️ Степень запущенности',
-  sel_degree_lbl_zd:'💨 Степень задымления / объём загрязнений',
+  sel_degree_lbl_zd:'Степень задымления / объём загрязнений',
   sel_degree_hint:'Степень носит исключительно описательный характер и не влияет автоматически на цену — стоимость готовим индивидуально.',
   deg_lekka_t:'Лёгкая', deg_lekka_d:'Несколько мешков мусора, свободный проход, беспорядок до уровня пояса.',
   deg_srednia_t:'Средняя', deg_srednia_d:'Захламлены 1–2 комнаты, вещи слоями, узкие проходы.',
@@ -1171,7 +1197,7 @@ ru: {
   deg_lekka_d_zd:'Локальный, небольшой осадок в ограниченной зоне, возможен лёгкий запах дыма.',
   deg_srednia_d_zd:'Заметная копоть или осадок на нескольких поверхностях либо в нескольких помещениях, нужна более тщательная чистка.',
   deg_ciezka_d_zd:'Значительное загрязнение копотью или осадком на многих поверхностях, стойкий запах дыма, большой объём работ.',
-  sel_smoke_lbl:'💨 Источник задымления',
+  sel_smoke_lbl:'Источник задымления',
   smk_src_0:'Соседнее помещение / внешний источник', smk_src_1:'Внутри объекта', smk_src_2:'Другое / не знаю',
   sum_title:'📋 Ваша заявка', sum_type:'Тип: ', sum_area:'Площадь: ', sum_degree:'Степень: ', sum_partner:'Код партнёра: ', sum_smoke_source:'Источник задымления: ',
   zb_partner_label:'Заказ в рамках партнёрской программы', zb_partner_code_hint:'Формат: VC- и 4 цифры, напр. VC-4821.',
@@ -1276,9 +1302,9 @@ ru: {
 },
 en: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>',
-  nav_mieszkan:'🧹 Apartment & house cleaning', nav_remont:'🏗️ Post-renovation', nav_wyjazd:'🏠 Post-checkout',
-  nav_zb:'🏚️ Difficult cases', nav_okna:'🪟 Window cleaning', nav_about:'👥 Meet us', hdr_cta:'🤝 Become a partner', login_btn:'Sign in', login_client:'👤 Client cabinet', login_partner:'🤝 Partner cabinet', login_register:'📝 Register',
-  hero_badge:'🏚️ Difficult cases',
+  nav_mieszkan:'Apartment & house cleaning', nav_remont:'Post-renovation', nav_wyjazd:'Post-checkout',
+  nav_zb:'Difficult cases', nav_okna:'Window cleaning', nav_about:'Meet us', hdr_cta:'🤝 Become a partner', login_btn:'Sign in', login_client:'👤 Client cabinet', login_partner:'🤝 Partner cabinet', login_register:'📝 Register',
+  hero_badge:'Difficult cases',
   hero_h1:'Difficult Cleaning Cases in <em>Kraków</em>',
   hero_sub:'Hoarding, long-term neglect, smoke damage and soot residue — we assess every case individually and prepare a quote matched to the real situation.',
   hero_btn1:'Describe your situation →', hero_btn2:'💬 Contact the manager',
@@ -1296,10 +1322,10 @@ en: {
   scn_zd_b2:'Persistent smoke smell', scn_zd_b3:'Assessment of surface condition before work begins',
   scn_zd_b4:'Individual quote after an assessment',
   scn_btn:'I choose this case',
-  emp_tag:'🏚️ Hoarding & long-term neglect',
+  emp_tag:'Hoarding & long-term neglect',
   emp_lbl:'We understand', emp_h2:'No judgment. <em>Just help.</em>',
   emp_text:'Hoarding, long-term neglect, situations following the loss of a loved one — these are difficult moments, and the last thing you need is judgment. We work with respect and full discretion, treating every item and every situation individually. Our job is to bring the home back to life — yours is only to take the first step.',
-  smk_tag:'💨 Smoke damage, soot & smoke residue',
+  smk_tag:'Smoke damage, soot & smoke residue',
   smk_h2:'Cleaning After Smoke Damage, <em>Soot & Smoke Residue</em>',
   smk_text1:'We handle situations where soot, smoke residue or scorching has appeared on walls, furniture and other surfaces — including when the source of the smoke was in a neighboring unit or another location outside your apartment or house, and an unpleasant smoke smell lingers in the room.',
   smk_text2:'Before starting work, we always assess the extent of the contamination, the condition of each surface and whether the material can be safely cleaned — only then do we determine the actual scope of work and an individual quote.',
@@ -1309,7 +1335,7 @@ en: {
   sel_case_lbl:'📋 Type of case', sel_case_zb_name:'Hoarding & neglect', sel_case_zd_name:'Smoke damage & soot',
   sel_type_lbl:'🏠 Property type', sel_type_flat:'Apartment', sel_type_house:'House',
   sel_area_lbl:'📐 Area (m²)', sel_degree_lbl:'🗑️ Degree of neglect',
-  sel_degree_lbl_zd:'💨 Degree of smoke damage / extent of soiling',
+  sel_degree_lbl_zd:'Degree of smoke damage / extent of soiling',
   sel_degree_hint:'The degree is descriptive only and does not automatically set the price — we always prepare an individual quote.',
   deg_lekka_t:'Light', deg_lekka_d:'A few bags of trash, clear passage, clutter up to waist height.',
   deg_srednia_t:'Moderate', deg_srednia_d:'1–2 cluttered rooms, layered belongings, narrow passages.',
@@ -1317,7 +1343,7 @@ en: {
   deg_lekka_d_zd:'Localized, minor residue in a limited area, possibly a slight smoke smell.',
   deg_srednia_d_zd:'Visible soot or residue on several surfaces or in several rooms, requiring more thorough cleaning.',
   deg_ciezka_d_zd:'Significant soot or residue across many surfaces, persistent smoke smell, large scope of work.',
-  sel_smoke_lbl:'💨 Source of the smoke',
+  sel_smoke_lbl:'Source of the smoke',
   smk_src_0:'Neighboring unit / external source', smk_src_1:'Inside the property', smk_src_2:'Other / not sure',
   sum_title:'📋 Your request', sum_type:'Type: ', sum_area:'Area: ', sum_degree:'Degree: ', sum_partner:'Partner code: ', sum_smoke_source:'Source of smoke: ',
   zb_partner_label:'Order under the partner program', zb_partner_code_hint:'Format: VC- plus 4 digits, e.g. VC-4821.',
@@ -1585,11 +1611,11 @@ document.addEventListener('DOMContentLoaded', function(){ applyTranslations(loca
 
 <!-- MOBILE TAB BAR -->
 <nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
-  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label" id="mtb-lbl-home">Strona główna</span></a>
-  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon">📞</span><span class="mtb-label" id="mtb-lbl-call">Zadzwoń</span></a>
+  <a href="/" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-home"></use></svg></span><span class="mtb-label" id="mtb-lbl-home">Strona główna</span></a>
+  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-call">Zadzwoń</span></a>
   <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label" id="mtb-lbl-more">Więcej</span></button>
-  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon">💬</span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
-  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon">👤</span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
+  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
+  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-user"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
 </nav>
 <div class="mtb-account-menu" id="mtb-account-menu">
   <a href="https://kabinet.vershclean.pl/client/login.html" id="mtbLoginClient">👤 Kabinet klienta</a>

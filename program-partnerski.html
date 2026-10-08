@@ -38,11 +38,31 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   ]
 }
   </script>
-  <link rel="stylesheet" href="assets/css/base.css?v=20261007a">
+  <link rel="stylesheet" href="assets/css/base.css?v=20261008a">
   <link rel="stylesheet" href="assets/css/partnerski.css?v=1">
-  <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261001c">
+  <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261008a">
 </head>
 <body class="has-mobile-tabbar">
+<svg style="display:none" aria-hidden="true">
+<defs>
+<symbol id="nic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,11 12,4 20,11"/><path d="M6 10v9h5v-5h2v5h5v-9"/></symbol>
+<symbol id="nic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="15" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="8" y1="3.5" x2="8" y2="7.5"/><line x1="16" y1="3.5" x2="16" y2="7.5"/></symbol>
+<symbol id="nic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4v-4H6a2 2 0 0 1-2-2V6z"/></symbol>
+<symbol id="nic-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1-4 4-6.5 7-6.5s6 2.5 7 6.5"/></symbol>
+<symbol id="nic-team" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.6"/><circle cx="16.5" cy="9.5" r="2"/><path d="M3.3 19c.7-3.3 2.9-5.2 5.7-5.2s5 1.9 5.7 5.2"/><path d="M14.8 19c.4-2.3 1.7-4 3.5-4.6"/></symbol>
+<symbol id="nic-broom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="4" x2="10" y2="12"/><path d="M10 12l-5.5 7 2.5 1.6 2.2-3.1 3-2.2z"/></symbol>
+<symbol id="nic-build" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="10" height="5" rx="1"/><line x1="14" y1="8.5" x2="20" y2="8.5"/><line x1="20" y1="5" x2="20" y2="12"/></symbol>
+<symbol id="nic-moving" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="8" height="8"/><line x1="4" y1="13" x2="12" y2="13"/><line x1="8" y1="9" x2="8" y2="17"/><rect x="13" y="6" width="7" height="6"/><line x1="13" y1="9" x2="20" y2="9"/></symbol>
+<symbol id="nic-window" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="4" y1="12" x2="20" y2="12"/></symbol>
+<symbol id="nic-partner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></symbol>
+<symbol id="nic-case" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="1.5"/><path d="M9 7V5.5a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5V7"/></symbol>
+<symbol id="nic-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><polygon points="12,3 14.7,9.2 21.4,9.8 16.3,14.1 17.9,20.6 12,17.1 6.1,20.6 7.7,14.1 2.6,9.8 9.3,9.2"/></symbol>
+<symbol id="nic-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h3l1.3 4L8.5 9c.9 2.8 2.2 4.1 5 5l2-1.8 4 1.3V17a2 2 0 0 1-2 2C10.5 19 5 13.5 5 7a2 2 0 0 1 1-2z"/></symbol>
+<symbol id="nic-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2"/><circle cx="12" cy="13" r="3.3"/><rect x="8.5" y="4" width="4" height="3" rx="0.8"/></symbol>
+<symbol id="nic-question" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.5 2.5 0 1 1 3.8 2.1c-.9.6-1.3 1.2-1.3 2.3"/><circle cx="12" cy="17" r="0.9" fill="currentColor" stroke="none"/></symbol>
+<symbol id="nic-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l0.9-4.3L15.4 5.2l3.4 3.4L8.3 19.1 4 20z"/><line x1="13.6" y1="6.6" x2="17" y2="10"/></symbol>
+</defs>
+</svg>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -83,26 +103,26 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <div class="hdr-nav-handle"></div>
     <div class="hdr-nav-mhead"><span id="hngMenuTitle">Menu</span><button type="button" onclick="toggleNav()" id="hngCloseBtn" aria-label="Zamknij">✕</button></div>
     <div class="hdr-nav-grid">
-      <a href="/poznaj-nas"><span class="hng-icon">🏠</span><span class="hng-label" id="hng1">O nas</span></a>
-      <a href="/#opinie"><span class="hng-icon">⭐</span><span class="hng-label" id="hng2">Opinie</span></a>
-      <a href="#kontakt"><span class="hng-icon">📞</span><span class="hng-label" id="hng3">Kontakt</span></a>
-      <a href="/mycie-okien"><span class="hng-icon">🪟</span><span class="hng-label" id="hng4">Mycie okien</span></a>
-      <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon">🧹</span><span class="hng-label" id="hng5">Sprzątanie mieszkań</span></a>
-      <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon">🏗️</span><span class="hng-label" id="hng6">Po remoncie</span></a>
-      <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon">🏠</span><span class="hng-label" id="hng7">Po wyprowadzce</span></a>
-      <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon">🏚️</span><span class="hng-label" id="hng8">Trudne przypadki</span></a>
-      <a href="/#przed-po"><span class="hng-icon">📸</span><span class="hng-label" id="hng9">Realizacje</span></a>
-      <a href="#faq-lbl"><span class="hng-icon">❓</span><span class="hng-label" id="hng10">FAQ</span></a>
-      <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon">📝</span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
-      <a href="/program-partnerski"><span class="hng-icon">🤝</span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
+      <a href="/poznaj-nas"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-team"></use></svg></span><span class="hng-label" id="hng1">O nas</span></a>
+      <a href="/#opinie"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-star"></use></svg></span><span class="hng-label" id="hng2">Opinie</span></a>
+      <a href="#kontakt"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="hng-label" id="hng3">Kontakt</span></a>
+      <a href="/mycie-okien"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-window"></use></svg></span><span class="hng-label" id="hng4">Mycie okien</span></a>
+      <a href="/sprzatanie-mieszkan-i-domow-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-broom"></use></svg></span><span class="hng-label" id="hng5">Sprzątanie mieszkań</span></a>
+      <a href="/sprzatanie-po-remoncie-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-build"></use></svg></span><span class="hng-label" id="hng6">Po remoncie</span></a>
+      <a href="/sprzatanie-po-wyprowadzce-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-moving"></use></svg></span><span class="hng-label" id="hng7">Po wyprowadzce</span></a>
+      <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-case"></use></svg></span><span class="hng-label" id="hng8">Trudne przypadki</span></a>
+      <a href="/#przed-po"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-camera"></use></svg></span><span class="hng-label" id="hng9">Realizacje</span></a>
+      <a href="#faq-lbl"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-question"></use></svg></span><span class="hng-label" id="hng10">FAQ</span></a>
+      <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-pencil"></use></svg></span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
+      <a href="/program-partnerski"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
     <a href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
-    <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">🧹 Sprzątanie mieszkań</a>
-    <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">🏗️ Po remoncie</a>
-    <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">🏠 Po wyprowadzce</a>
-    <a href="/trudne-przypadki-sprzatanie-krakow" id="nav-zb">🏚️ Trudne przypadki</a>
-    <a href="/mycie-okien" id="nav-okna">🪟 Mycie okien</a>
-    <a href="/poznaj-nas" class="hdr-back" id="nav-about">👥 Poznaj nas</a>
+    <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">Sprzątanie mieszkań</a>
+    <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">Po remoncie</a>
+    <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">Po wyprowadzce</a>
+    <a href="/trudne-przypadki-sprzatanie-krakow" id="nav-zb">Trudne przypadki</a>
+    <a href="/mycie-okien" id="nav-okna">Mycie okien</a>
+    <a href="/poznaj-nas" class="hdr-back" id="nav-about">Poznaj nas</a>
   </nav>
 </header>
 
@@ -464,8 +484,8 @@ var lang = 'pl';
 var TX = {
 pl: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em>',
-  nav_mieszkan:'🧹 Sprzątanie mieszkań', nav_remont:'🏗️ Po remoncie', nav_wyjazd:'🏠 Po wyprowadzce',
-  nav_zb:'🏚️ Trudne przypadki', nav_okna:'🪟 Mycie okien', nav_about:'👥 Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera', login_register:'📝 Zarejestruj się',
+  nav_mieszkan:'Sprzątanie mieszkań', nav_remont:'Po remoncie', nav_wyjazd:'Po wyprowadzce',
+  nav_zb:'Trudne przypadki', nav_okna:'Mycie okien', nav_about:'Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera', login_register:'📝 Zarejestruj się',
   hero_badge:'🤝 Program Partnerski',
   hero_h1:'Polecaj sprzątanie.<br><em>Zarabiaj 10–15%</em> od każdego zlecenia.',
   hero_sub:'Dołącz do programu partnerskiego Vershy Property Care. Otrzymaj unikalny kod, przekaż go swoim klientom lub kontaktom biznesowym — a za każde zrealizowane zlecenie otrzymasz prowizję. Bez inwestycji, bez limitu poleceń.',
@@ -532,8 +552,8 @@ pl: {
 },
 uk: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Єдина якість. Єдиний стандарт.</em>',
-  nav_mieszkan:'🧹 Прибирання квартир', nav_remont:'🏗️ Після ремонту', nav_wyjazd:'🏠 Після виїзду',
-  nav_zb:'🏚️ Складні випадки', nav_okna:'🪟 Миття вікон', nav_about:'👥 Про нас', hdr_cta:'🤝 Стати партнером', login_btn:'Увійти', login_client:'👤 Кабінет клієнта', login_partner:'🤝 Кабінет партнера', login_register:'📝 Зареєструватися',
+  nav_mieszkan:'Прибирання квартир', nav_remont:'Після ремонту', nav_wyjazd:'Після виїзду',
+  nav_zb:'Складні випадки', nav_okna:'Миття вікон', nav_about:'Про нас', hdr_cta:'🤝 Стати партнером', login_btn:'Увійти', login_client:'👤 Кабінет клієнта', login_partner:'🤝 Кабінет партнера', login_register:'📝 Зареєструватися',
   hero_badge:'🤝 Партнерська програма',
   hero_h1:'Рекомендуй прибирання.<br><em>Заробляй 10–15%</em> з кожного замовлення.',
   hero_sub:'Приєднайся до партнерської програми Vershy Property Care. Отримай унікальний код, передай його своїм клієнтам або бізнес-контактам — і за кожне виконане замовлення отримаєш комісію. Без інвестицій, без ліміту рекомендацій.',
@@ -600,8 +620,8 @@ uk: {
 },
 ru: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Одно качество. Один стандарт.</em>',
-  nav_mieszkan:'🧹 Уборка квартир', nav_remont:'🏗️ После ремонта', nav_wyjazd:'🏠 После выезда',
-  nav_zb:'🏚️ Сложные случаи', nav_okna:'🪟 Мытьё окон', nav_about:'👥 О нас', hdr_cta:'🤝 Стать партнёром', login_btn:'Войти', login_client:'👤 Кабинет клиента', login_partner:'🤝 Кабинет партнёра', login_register:'📝 Зарегистрироваться',
+  nav_mieszkan:'Уборка квартир', nav_remont:'После ремонта', nav_wyjazd:'После выезда',
+  nav_zb:'Сложные случаи', nav_okna:'Мытьё окон', nav_about:'О нас', hdr_cta:'🤝 Стать партнёром', login_btn:'Войти', login_client:'👤 Кабинет клиента', login_partner:'🤝 Кабинет партнёра', login_register:'📝 Зарегистрироваться',
   hero_badge:'🤝 Партнёрская программа',
   hero_h1:'Рекомендуй уборку.<br><em>Зарабатывай 10–15%</em> с каждого заказа.',
   hero_sub:'Присоединяйся к партнёрской программе Vershy Property Care. Получи уникальный код, передай его своим клиентам или бизнес-контактам — и за каждый выполненный заказ будешь получать комиссию. Без вложений, без лимита рекомендаций.',
@@ -668,8 +688,8 @@ ru: {
 },
 en: {
   topbar:'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>One quality. One standard.</em>',
-  nav_mieszkan:'🧹 Apartment cleaning', nav_remont:'🏗️ Post-renovation', nav_wyjazd:'🏠 Post-move-out',
-  nav_zb:'🏚️ Difficult cases', nav_okna:'🪟 Window cleaning', nav_about:'👥 Meet us', hdr_cta:'🤝 Become a partner', login_btn:'Sign in', login_client:'👤 Client cabinet', login_partner:'🤝 Partner cabinet', login_register:'📝 Register',
+  nav_mieszkan:'Apartment cleaning', nav_remont:'Post-renovation', nav_wyjazd:'Post-move-out',
+  nav_zb:'Difficult cases', nav_okna:'Window cleaning', nav_about:'Meet us', hdr_cta:'🤝 Become a partner', login_btn:'Sign in', login_client:'👤 Client cabinet', login_partner:'🤝 Partner cabinet', login_register:'📝 Register',
   hero_badge:'🤝 Partner Program',
   hero_h1:'Recommend cleaning.<br><em>Earn 10–15%</em> of every order.',
   hero_sub:'Join the Vershy Property Care partner program. Get a unique code, share it with your clients or business contacts — and earn a commission on every completed order. No investment, no referral limit.',
@@ -824,11 +844,11 @@ document.addEventListener('DOMContentLoaded', function(){ SL(localStorage.getIte
 
 <!-- MOBILE TAB BAR -->
 <nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
-  <a href="/" class="mtb-item"><span class="mtb-icon">🏠</span><span class="mtb-label" id="mtb-lbl-home">Strona główna</span></a>
-  <a href="#dolacz" class="mtb-item"><span class="mtb-icon">🤝</span><span class="mtb-label" id="mtb-lbl-join">Dołącz</span></a>
+  <a href="/" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-home"></use></svg></span><span class="mtb-label" id="mtb-lbl-home">Strona główna</span></a>
+  <a href="#dolacz" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="mtb-label" id="mtb-lbl-join">Dołącz</span></a>
   <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label" id="mtb-lbl-more">Więcej</span></button>
-  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon">💬</span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
-  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon">👤</span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
+  <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
+  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-user"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
 </nav>
 <div class="mtb-account-menu" id="mtb-account-menu">
   <a href="https://kabinet.vershclean.pl/client/login.html" id="mtbLoginClient">👤 Kabinet klienta</a>
