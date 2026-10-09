@@ -196,43 +196,43 @@
 
   /* ─── BONUS DATES ──────────────────────────────────── */
   var BK_BONUSES = {
-    "2026-06-25":{pl:"Bezpłatna pielęgnacja luster i powierzchni chromowanych",uk:"Безкоштовна обробка дзеркал і хромованих поверхонь",en:"Free treatment of mirrors and chrome surfaces"},
-    "2026-06-26":{pl:"Bezpłatna pielęgnacja luster i powierzchni chromowanych",uk:"Безкоштовна обробка дзеркал і хромованих поверхонь",en:"Free treatment of mirrors and chrome surfaces"},
-    "2026-06-27":{pl:"Bezpłatna pielęgnacja luster i powierzchni chromowanych",uk:"Безкоштовна обробка дзеркал і хромованих поверхонь",en:"Free treatment of mirrors and chrome surfaces"},
-    "2026-06-30":{pl:"Aromatyzacja pomieszczenia po sprzątaniu",uk:"Ароматизація приміщення після прибирання",en:"Room fragrance after cleaning"},
-    "2026-07-04":{pl:"Pielęgnacja fartucha kuchennego w prezencie",uk:"Догляд за кухонним фартухом у подарунок",en:"Kitchen backsplash care as a gift"},
-    "2026-07-05":{pl:"Pielęgnacja fartucha kuchennego w prezencie",uk:"Догляд за кухонним фартухом у подарунок",en:"Kitchen backsplash care as a gift"},
-    "2026-07-06":{pl:"Pielęgnacja fartucha kuchennego w prezencie",uk:"Догляд за кухонним фартухом у подарунок",en:"Kitchen backsplash care as a gift"},
-    "2026-07-09":{pl:"Priorytetowe okno rezerwacji — wczesny wybór godziny",uk:"Пріоритетне вікно запису — ранній вибір часу",en:"Priority booking window — early time selection"},
-    "2026-07-12":{pl:"Bezpłatne czyszczenie wnętrza kuchenki mikrofalowej",uk:"Безкоштовне прибирання всередині мікрохвильової печі",en:"Free cleaning inside the microwave"},
-    "2026-07-13":{pl:"Bezpłatne czyszczenie wnętrza kuchenki mikrofalowej",uk:"Безкоштовне прибирання всередині мікрохвильової печі",en:"Free cleaning inside the microwave"},
-    "2026-07-14":{pl:"Bezpłatne czyszczenie wnętrza kuchenki mikrofalowej",uk:"Безкоштовне прибирання всередині мікрохвильової печі",en:"Free cleaning inside the microwave"},
-    "2026-07-18":{pl:"Upominek dla domu po sprzątaniu",uk:"Комплімент для дому після прибирання",en:"Home compliment after cleaning"},
-    "2026-07-22":{pl:"Szczególna uwaga na detale: klamki, włączniki, małe strefy",uk:"Особлива увага до деталей: ручки, вимикачі, малі зони",en:"Extra attention to details: handles, switches, small areas"},
-    "2026-07-23":{pl:"Szczególna uwaga na detale: klamki, włączniki, małe strefy",uk:"Особлива увага до деталей: ручки, вимикачі, малі зони",en:"Extra attention to details: handles, switches, small areas"},
-    "2026-07-24":{pl:"Szczególna uwaga na detale: klamki, włączniki, małe strefy",uk:"Особлива увага до деталей: ручки, вимикачі, малі зони",en:"Extra attention to details: handles, switches, small areas"},
-    "2026-07-29":{pl:"Bezpłatna pielęgnacja powierzchni szklanych",uk:"Безкоштовна обробка скляних поверхонь",en:"Free treatment of glass surfaces"},
-    "2026-08-03":{pl:"Dodatkowy czas na finalne wykończenie",uk:"Додатковий час на фінальну деталізацію",en:"Extra time for final detailing"},
-    "2026-08-04":{pl:"Dodatkowy czas na finalne wykończenie",uk:"Додатковий час на фінальну деталізацію",en:"Extra time for final detailing"},
-    "2026-08-05":{pl:"Dodatkowy czas na finalne wykończenie",uk:"Додатковий час на фінальну деталізацію",en:"Extra time for final detailing"},
-    "2026-08-08":{pl:"Mini-organizacja jednej otwartej strefy",uk:"Міні-організація однієї відкритої зони",en:"Mini-organization of one open area"},
-    "2026-08-13":{pl:"Wzmocniona pielęgnacja armatury sanitarnej",uk:"Посилений догляд за сантехнікою",en:"Enhanced sanitary fixtures care"},
-    "2026-08-14":{pl:"Wzmocniona pielęgnacja armatury sanitarnej",uk:"Посилений догляд за сантехнікою",en:"Enhanced sanitary fixtures care"},
-    "2026-08-15":{pl:"Wzmocniona pielęgnacja armatury sanitarnej",uk:"Посилений догляд за сантехнікою",en:"Enhanced sanitary fixtures care"},
-    "2026-08-20":{pl:"Priorytetowa rezerwacja kolejnej wizyty",uk:"Пріоритетне бронювання наступного візиту",en:"Priority booking for next visit"},
-    "2026-08-26":{pl:"Bezpłatna pielęgnacja frontów kuchennych",uk:"Безкоштовна обробка кухонних фасадів",en:"Free kitchen cabinet fronts treatment"},
-    "2026-08-27":{pl:"Bezpłatna pielęgnacja frontów kuchennych",uk:"Безкоштовна обробка кухонних фасадів",en:"Free kitchen cabinet fronts treatment"},
-    "2026-09-02":{pl:"Wykończenie premium — dekoracyjna aranżacja przestrzeni",uk:"Преміальний фінал прибирання — декоративне оформлення",en:"Premium finishing — decorative space arrangement"},
-    "2026-09-06":{pl:"Czyszczenie trudno dostępnych stref w prezencie",uk:"Очищення важкодоступних зон у подарунок",en:"Cleaning hard-to-reach areas as a gift"},
-    "2026-09-07":{pl:"Czyszczenie trudno dostępnych stref w prezencie",uk:"Очищення важкодоступних зон у подарунок",en:"Cleaning hard-to-reach areas as a gift"},
-    "2026-09-08":{pl:"Czyszczenie trudno dostępnych stref w prezencie",uk:"Очищення важкодоступних зон у подарунок",en:"Cleaning hard-to-reach areas as a gift"},
-    "2026-09-13":{pl:"Pielęgnacja listew przypodłogowych",uk:"Догляд за плінтусами",en:"Baseboard care included"},
-    "2026-09-18":{pl:"Bezpłatne głębokie czyszczenie jednej małej strefy",uk:"Безкоштовне глибоке очищення однієї невеликої зони",en:"Free deep cleaning of one small area"},
-    "2026-09-19":{pl:"Bezpłatne głębokie czyszczenie jednej małej strefy",uk:"Безкоштовне глибоке очищення однієї невеликої зони",en:"Free deep cleaning of one small area"},
-    "2026-09-20":{pl:"Bezpłatne głębokie czyszczenie jednej małej strefy",uk:"Безкоsztowne głęboke czyszczenie jednej małej strefy",en:"Free deep cleaning of one small area"},
-    "2026-09-24":{pl:"Upominek dla stałych klientów",uk:"Комплімент постійним клієнтам",en:"Gift for regular clients"},
-    "2026-09-29":{pl:"Ostatnie dni bonusów sezonowych Vershy",uk:"Фінальні дні сезонних бонусів Vershy",en:"Last days of Vershy seasonal bonuses"},
-    "2026-09-30":{pl:"Ostatnie dni bonusów sezonowych Vershy",uk:"Фінальні дні сезонних бонусів Vershy",en:"Last days of Vershy seasonal bonuses"}
+    "2026-06-25":{pl:"Bezpłatna pielęgnacja luster i powierzchni chromowanych",uk:"Безкоштовна обробка дзеркал і хромованих поверхонь",ru:"Бесплатный уход за зеркалами и хромированными поверхностями",en:"Free treatment of mirrors and chrome surfaces"},
+    "2026-06-26":{pl:"Bezpłatna pielęgnacja luster i powierzchni chromowanych",uk:"Безкоштовна обробка дзеркал і хромованих поверхонь",ru:"Бесплатный уход за зеркалами и хромированными поверхностями",en:"Free treatment of mirrors and chrome surfaces"},
+    "2026-06-27":{pl:"Bezpłatna pielęgnacja luster i powierzchni chromowanych",uk:"Безкоштовна обробка дзеркал і хромованих поверхонь",ru:"Бесплатный уход за зеркалами и хромированными поверхностями",en:"Free treatment of mirrors and chrome surfaces"},
+    "2026-06-30":{pl:"Aromatyzacja pomieszczenia po sprzątaniu",uk:"Ароматизація приміщення після прибирання",ru:"Ароматизация помещения после уборки",en:"Room fragrance after cleaning"},
+    "2026-07-04":{pl:"Pielęgnacja fartucha kuchennego w prezencie",uk:"Догляд за кухонним фартухом у подарунок",ru:"Уход за кухонным фартуком в подарок",en:"Kitchen backsplash care as a gift"},
+    "2026-07-05":{pl:"Pielęgnacja fartucha kuchennego w prezencie",uk:"Догляд за кухонним фартухом у подарунок",ru:"Уход за кухонным фартуком в подарок",en:"Kitchen backsplash care as a gift"},
+    "2026-07-06":{pl:"Pielęgnacja fartucha kuchennego w prezencie",uk:"Догляд за кухонним фартухом у подарунок",ru:"Уход за кухонным фартуком в подарок",en:"Kitchen backsplash care as a gift"},
+    "2026-07-09":{pl:"Priorytetowe okno rezerwacji — wczesny wybór godziny",uk:"Пріоритетне вікно запису — ранній вибір часу",ru:"Приоритетное окно бронирования — ранний выбор времени",en:"Priority booking window — early time selection"},
+    "2026-07-12":{pl:"Bezpłatne czyszczenie wnętrza kuchenki mikrofalowej",uk:"Безкоштовне прибирання всередині мікрохвильової печі",ru:"Бесплатная чистка микроволновой печи внутри",en:"Free cleaning inside the microwave"},
+    "2026-07-13":{pl:"Bezpłatne czyszczenie wnętrza kuchenki mikrofalowej",uk:"Безкоштовне прибирання всередині мікрохвильової печі",ru:"Бесплатная чистка микроволновой печи внутри",en:"Free cleaning inside the microwave"},
+    "2026-07-14":{pl:"Bezpłatne czyszczenie wnętrza kuchenki mikrofalowej",uk:"Безкоштовне прибирання всередині мікрохвильової печі",ru:"Бесплатная чистка микроволновой печи внутри",en:"Free cleaning inside the microwave"},
+    "2026-07-18":{pl:"Upominek dla domu po sprzątaniu",uk:"Комплімент для дому після прибирання",ru:"Комплимент для дома после уборки",en:"Home compliment after cleaning"},
+    "2026-07-22":{pl:"Szczególna uwaga na detale: klamki, włączniki, małe strefy",uk:"Особлива увага до деталей: ручки, вимикачі, малі зони",ru:"Особое внимание деталям: ручки, выключатели, небольшие зоны",en:"Extra attention to details: handles, switches, small areas"},
+    "2026-07-23":{pl:"Szczególna uwaga na detale: klamki, włączniki, małe strefy",uk:"Особлива увага до деталей: ручки, вимикачі, малі зони",ru:"Особое внимание деталям: ручки, выключатели, небольшие зоны",en:"Extra attention to details: handles, switches, small areas"},
+    "2026-07-24":{pl:"Szczególna uwaga na detale: klamki, włączniki, małe strefy",uk:"Особлива увага до деталей: ручки, вимикачі, малі зони",ru:"Особое внимание деталям: ручки, выключатели, небольшие зоны",en:"Extra attention to details: handles, switches, small areas"},
+    "2026-07-29":{pl:"Bezpłatna pielęgnacja powierzchni szklanych",uk:"Безкоштовна обробка скляних поверхонь",ru:"Бесплатный уход за стеклянными поверхностями",en:"Free treatment of glass surfaces"},
+    "2026-08-03":{pl:"Dodatkowy czas na finalne wykończenie",uk:"Додатковий час на фінальну деталізацію",ru:"Дополнительное время на финальную отделку",en:"Extra time for final detailing"},
+    "2026-08-04":{pl:"Dodatkowy czas na finalne wykończenie",uk:"Додатковий час на фінальну деталізацію",ru:"Дополнительное время на финальную отделку",en:"Extra time for final detailing"},
+    "2026-08-05":{pl:"Dodatkowy czas na finalne wykończenie",uk:"Додатковий час на фінальну деталізацію",ru:"Дополнительное время на финальную отделку",en:"Extra time for final detailing"},
+    "2026-08-08":{pl:"Mini-organizacja jednej otwartej strefy",uk:"Міні-організація однієї відкритої зони",ru:"Мини-организация одной открытой зоны",en:"Mini-organization of one open area"},
+    "2026-08-13":{pl:"Wzmocniona pielęgnacja armatury sanitarnej",uk:"Посилений догляд за сантехнікою",ru:"Усиленный уход за сантехникой",en:"Enhanced sanitary fixtures care"},
+    "2026-08-14":{pl:"Wzmocniona pielęgnacja armatury sanitarnej",uk:"Посилений догляд за сантехнікою",ru:"Усиленный уход за сантехникой",en:"Enhanced sanitary fixtures care"},
+    "2026-08-15":{pl:"Wzmocniona pielęgnacja armatury sanitarnej",uk:"Посилений догляд за сантехнікою",ru:"Усиленный уход за сантехникой",en:"Enhanced sanitary fixtures care"},
+    "2026-08-20":{pl:"Priorytetowa rezerwacja kolejnej wizyty",uk:"Пріоритетне бронювання наступного візиту",ru:"Приоритетное бронирование следующего визита",en:"Priority booking for next visit"},
+    "2026-08-26":{pl:"Bezpłatna pielęgnacja frontów kuchennych",uk:"Безкоштовна обробка кухонних фасадів",ru:"Бесплатный уход за кухонными фасадами",en:"Free kitchen cabinet fronts treatment"},
+    "2026-08-27":{pl:"Bezpłatna pielęgnacja frontów kuchennych",uk:"Безкоштовна обробка кухонних фасадів",ru:"Бесплатный уход за кухонными фасадами",en:"Free kitchen cabinet fronts treatment"},
+    "2026-09-02":{pl:"Wykończenie premium — dekoracyjna aranżacja przestrzeni",uk:"Преміальний фінал прибирання — декоративне оформлення",ru:"Премиальная отделка — декоративное оформление пространства",en:"Premium finishing — decorative space arrangement"},
+    "2026-09-06":{pl:"Czyszczenie trudno dostępnych stref w prezencie",uk:"Очищення важкодоступних зон у подарунок",ru:"Чистка труднодоступных зон в подарок",en:"Cleaning hard-to-reach areas as a gift"},
+    "2026-09-07":{pl:"Czyszczenie trudno dostępnych stref w prezencie",uk:"Очищення важкодоступних зон у подарунок",ru:"Чистка труднодоступных зон в подарок",en:"Cleaning hard-to-reach areas as a gift"},
+    "2026-09-08":{pl:"Czyszczenie trudno dostępnych stref w prezencie",uk:"Очищення важкодоступних зон у подарунок",ru:"Чистка труднодоступных зон в подарок",en:"Cleaning hard-to-reach areas as a gift"},
+    "2026-09-13":{pl:"Pielęgnacja listew przypodłogowych",uk:"Догляд за плінтусами",ru:"Уход за плинтусами",en:"Baseboard care included"},
+    "2026-09-18":{pl:"Bezpłatne głębokie czyszczenie jednej małej strefy",uk:"Безкоштовне глибоке очищення однієї невеликої зони",ru:"Бесплатная глубокая чистка одной небольшой зоны",en:"Free deep cleaning of one small area"},
+    "2026-09-19":{pl:"Bezpłatne głębokie czyszczenie jednej małej strefy",uk:"Безкоштовне глибоке очищення однієї невеликої зони",ru:"Бесплатная глубокая чистка одной небольшой зоны",en:"Free deep cleaning of one small area"},
+    "2026-09-20":{pl:"Bezpłatne głębokie czyszczenie jednej małej strefy",uk:"Безкоштовне глибоке очищення однієї невеликої зони",ru:"Бесплатная глубокая чистка одной небольшой зоны",en:"Free deep cleaning of one small area"},
+    "2026-09-24":{pl:"Upominek dla stałych klientów",uk:"Комплімент постійним клієнтам",ru:"Комплимент постоянным клиентам",en:"Gift for regular clients"},
+    "2026-09-29":{pl:"Ostatnie dni bonusów sezonowych Vershy",uk:"Фінальні дні сезонних бонусів Vershy",ru:"Последние дни сезонных бонусов Vershy",en:"Last days of Vershy seasonal bonuses"},
+    "2026-09-30":{pl:"Ostatnie dni bonusów sezonowych Vershy",uk:"Фінальні дні сезонних бонусів Vershy",ru:"Последние дни сезонных бонусов Vershy",en:"Last days of Vershy seasonal bonuses"}
   };
 
   function bk_getBonus(date) {
@@ -493,10 +493,14 @@
   }
 
   /* ─── PAYMENT BUTTONS ──────────────────────────────── */
-  document.querySelectorAll('.bk-pay-opt').forEach(function(btn){
+  // :not(.bk-consent-photo-opt) — the marketing-photo-consent buttons below reuse this
+  // same class purely for shared button styling (no separate CSS rule exists for them),
+  // so without this exclusion this handler also binds to them and clicking consent
+  // overwrites bk_selectedPayment with 'allow'/'deny' and un-highlights the real choice.
+  document.querySelectorAll('.bk-pay-opt:not(.bk-consent-photo-opt)').forEach(function(btn){
     btn.addEventListener('click',function(){
       bk_selectedPayment = btn.dataset.value;
-      document.querySelectorAll('.bk-pay-opt').forEach(function(b){ b.classList.toggle('bk-pay-active', b===btn); });
+      document.querySelectorAll('.bk-pay-opt:not(.bk-consent-photo-opt)').forEach(function(b){ b.classList.toggle('bk-pay-active', b===btn); });
       bk_checkForm();
       var payEl = bk_payGroupEl(); if(payEl) payEl.classList.remove('bk-invalid');
     });

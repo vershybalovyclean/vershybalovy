@@ -707,6 +707,11 @@ en:[["Are cleaning supplies included in the price?","Yes, always. We use eco-fri
 
 var lang="pl";
 function t(k){return TX[lang][k]||TX.pl[k]||"";}
+// Shared "od "/"from " price-prefix word, language-aware — used wherever the
+// quick-quote calculator below writes a fresh "od 150 zł"-style price label
+// via JS (addon toggle/qty change, running total), since that text is
+// generated after the fact and never goes through the static TX re-render.
+function vcOdWord(){ return {pl:'od ',uk:'від ',ru:'от ',en:'from '}[lang] || 'od '; }
 
 function SL(l){
  lang=l;
@@ -1053,7 +1058,7 @@ function toggleAdd(li) {
     if(qtyInput) qty = parseInt(qtyInput.value)||1;
     var totalPrice = basePrice * qty;
     var displayName = qty > 1 ? name + ' x' + qty + (unit?' '+unit:'') : name + (unit?' (1 '+unit+')':'');
-    selectedAddons.push({nameId: nameId, name: displayName, price: totalPrice, priceStr: 'od '+totalPrice+' zł', qty: qty, basePrice: basePrice, unit: unit});
+    selectedAddons.push({nameId: nameId, name: displayName, price: totalPrice, priceStr: vcOdWord()+totalPrice+' zł', qty: qty, basePrice: basePrice, unit: unit});
   } else {
     selectedAddons = selectedAddons.filter(function(a){ return a.nameId !== nameId; });
   }
@@ -1078,7 +1083,7 @@ function qtyChange(e, btn, delta) {
     selectedAddons = selectedAddons.map(function(a){
       if(a.nameId === nameId){
         var displayName = newVal > 1 ? name+' x'+newVal+(unitStr?' '+unitStr:'') : name+(unitStr?' (1 '+unitStr+')':'');
-        return {nameId:nameId, name:displayName, price:basePrice*newVal, priceStr:'od '+(basePrice*newVal)+' zł', qty:newVal, basePrice:basePrice, unit:unitStr};
+        return {nameId:nameId, name:displayName, price:basePrice*newVal, priceStr:vcOdWord()+(basePrice*newVal)+' zł', qty:newVal, basePrice:basePrice, unit:unitStr};
       }
       return a;
     });
@@ -1099,7 +1104,7 @@ function qtyInputChange(input) {
     selectedAddons = selectedAddons.map(function(a){
       if(a.nameId === nameId){
         var displayName = name+' — '+qty+' '+unitStr;
-        return {nameId:nameId, name:displayName, price:Math.round(basePrice*qty), priceStr:'od '+Math.round(basePrice*qty)+' zł', qty:qty, basePrice:basePrice, unit:unitStr};
+        return {nameId:nameId, name:displayName, price:Math.round(basePrice*qty), priceStr:vcOdWord()+Math.round(basePrice*qty)+' zł', qty:qty, basePrice:basePrice, unit:unitStr};
       }
       return a;
     });
@@ -1124,7 +1129,7 @@ function updateAddonSummary() {
     return '<li><span>' + a.name + '</span><span style="color:var(--blue2);font-weight:700">' + a.priceStr + '</span></li>';
   }).join('');
 
-  total.textContent = 'od ' + totalPrice + ' zł';
+  total.textContent = vcOdWord() + totalPrice + ' zł';
 }
 
 function clearAddons() {
@@ -1691,12 +1696,12 @@ function updatePriceSummary() {
   var addRow = document.getElementById('ps-addons-row');
   if(addonsTotal > 0) {
     addRow.style.display='flex';
-    document.getElementById('ps-add-val').textContent = 'od '+addonsTotal+' zł';
+    document.getElementById('ps-add-val').textContent = vcOdWord()+addonsTotal+' zł';
   } else {
     addRow.style.display='none';
   }
-  
-  document.getElementById('ps-total-val').textContent = totalPrice > 0 ? 'od '+totalPrice+' zł' : 'wycena indywidualna';
+
+  document.getElementById('ps-total-val').textContent = totalPrice > 0 ? (vcOdWord()+totalPrice+' zł') : ({pl:'wycena indywidualna',uk:'індивідуальна оцінка',ru:'индивидуальная оценка',en:'individual quote'}[lang] || 'wycena indywidualna');
   ps.classList.add('show');
 }
 

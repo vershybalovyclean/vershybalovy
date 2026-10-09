@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', function(){
   <div class="order-card" id="formularz">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
       <h3 id="sidebar-title" style="margin:0">📋 Twoje zamówienie</h3>
-      <button type="button" class="order-reset-btn" id="order-reset-btn" onclick="if(confirm('Wyczyścić cały wybór?')) location.href = location.pathname;">🗑 Wyczyść</button>
+      <button type="button" class="order-reset-btn" id="order-reset-btn" onclick="if(confirm({pl:'Wyczyścić cały wybór?',uk:'Очистити весь вибір?',ru:'Очистить весь выбор?',en:'Clear your whole selection?'}[typeof lang!=='undefined'?lang:'pl'] || 'Wyczyścić cały wybór?')) location.href = location.pathname;">🗑 Wyczyść</button>
     </div>
     <div class="order-sub" id="sidebar-sub">Wybierz usługi powyżej — cena aktualizuje się na bieżąco</div>
     <div class="order-lines" id="order-lines">
@@ -757,6 +757,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <script>
 function toggleFaq(el){el.parentNode.classList.toggle('open');}
+
+// Shared "od "/"from " price-prefix word, language-aware — used wherever this
+// calculator writes a fresh "od 199 zł"-style price label via JS (addon
+// toggle/qty change, async ozonation-price sync), since that text is generated
+// after the fact and never goes through applyTranslations()'s static-text pass.
+function vcOdWord(){ return {pl:'od ',uk:'від ',ru:'от ',en:'from '}[typeof lang!=='undefined'?lang:'pl'] || 'od '; }
 
 // ===== TARIFFS =====
 var TIERS = {
@@ -1101,7 +1107,7 @@ function toggleAdd(li) {
     selectedAddons = selectedAddons.filter(function(a){ return a.nameId !== nameId; });
     if(nameId === 'ozon1'){
       var priceEl = li.querySelector('.ai-p');
-      if(priceEl) priceEl.textContent = 'od '+basePrice+' zł';
+      if(priceEl) priceEl.textContent = vcOdWord()+basePrice+' zł';
     }
   }
   updateOrder();
@@ -1129,7 +1135,7 @@ var OZON_BASE = 199;
         li.setAttribute('data-price', OZON_BASE);
         if(!li.classList.contains('selected')){
           var priceEl = li.querySelector('.ai-p');
-          if(priceEl) priceEl.textContent = 'od '+OZON_BASE+' zł';
+          if(priceEl) priceEl.textContent = vcOdWord()+OZON_BASE+' zł';
         }
       }
     })
@@ -1155,7 +1161,7 @@ function ozonCalc(input) {
   var m2 = parseFloat(input.value)||0;
   var price = m2>0 ? ozonTierPrice(m2) : parseInt(li.getAttribute('data-price'));
   var priceEl = li.querySelector('.ai-p');
-  if(priceEl) priceEl.textContent = (m2>0?'':'od ')+price+' zł';
+  if(priceEl) priceEl.textContent = (m2>0?'':vcOdWord())+price+' zł';
   if(li.classList.contains('selected')) {
     var nameId = li.getAttribute('data-name-id');
     var nameSpan = li.querySelector('.ai-n');

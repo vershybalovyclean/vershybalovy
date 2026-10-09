@@ -41,6 +41,11 @@ var MC_TIERS = null;
 var MC_ZONES = null;
 var MC_RATES = null;
 var MC_ZONE_RATES = null;
+// Shared "od "/"from " price-prefix word, language-aware — used everywhere the
+// calculator writes a fresh "od 150 zł"-style price label via JS (async pricing
+// sync below, tier/addon selection, running total), since those are generated
+// after the fact and never go through applyTranslations()'s static-text pass.
+function vcOdWord(){ return {pl:'od ',uk:'від ',ru:'от ',en:'from '}[typeof lang!=='undefined'?lang:'pl'] || 'od '; }
 (function syncMieszkanPricing(){
   var SLUG_TO_TAB = {
     'sprzatanie-mieszkan-wspomagajace': 'wspomagajace',
@@ -72,7 +77,7 @@ var MC_ZONE_RATES = null;
         for(var i=0;i<6;i++){
           var startEl = document.querySelector('#acr-'+tab+'-'+i+' .ac-start');
           if(!startEl) continue;
-          startEl.textContent = (i===5) ? ('od '+tiers[i].price+' zł') : (tiers[i].price+' zł');
+          startEl.textContent = (i===5) ? (vcOdWord()+tiers[i].price+' zł') : (tiers[i].price+' zł');
         }
       });
       ['generalne','szczegolowe'].forEach(function(tab){
@@ -84,7 +89,7 @@ var MC_ZONE_RATES = null;
           MC_ZONES[tab][zoneKey] = row.base_price;
           if(typeof row.price_per_m2 === 'number') MC_ZONE_RATES[tab][zoneKey] = row.price_per_m2;
           var startEl = document.querySelector('#acr-'+tab+'-'+zoneKey+' .ac-start');
-          if(startEl) startEl.textContent = 'od '+row.base_price+' zł';
+          if(startEl) startEl.textContent = vcOdWord()+row.base_price+' zł';
         });
       });
     })
@@ -3356,7 +3361,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="order-panel-head">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
         <div class="order-panel-title" id="sidebar-title">📋 Twoje zamówienie</div>
-        <button type="button" class="order-reset-btn" id="order-reset-btn" onclick="if(confirm('Wyczyścić cały wybór?')) location.href = location.pathname;">🗑 Wyczyść</button>
+        <button type="button" class="order-reset-btn" id="order-reset-btn" onclick="if(confirm({pl:'Wyczyścić cały wybór?',uk:'Очистити весь вибір?',ru:'Очистить весь выбор?',en:'Clear your whole selection?'}[typeof lang!=='undefined'?lang:'pl'] || 'Wyczyścić cały wybór?')) location.href = location.pathname;">🗑 Wyczyść</button>
       </div>
       <div class="order-panel-sub" id="sidebar-sub">Wybierz usługi poniżej — cena aktualizuje się na bieżąco</div>
     </div>
@@ -3679,10 +3684,10 @@ function toggleAdd(li) {
       var ozonM2 = qtyInput ? (parseFloat(qtyInput.value)||0) : 0;
       if(ozonM2>0){ totalPrice = ozonTierPrice(ozonM2); displayName = name+' — '+ozonM2+' m²'; }
     }
-    selectedAddons.push({nameId: nameId, name: displayName, price: totalPrice, priceStr: 'od '+totalPrice+' zł', qty: qty, basePrice: basePrice, unit: unit});
+    selectedAddons.push({nameId: nameId, name: displayName, price: totalPrice, priceStr: vcOdWord()+totalPrice+' zł', qty: qty, basePrice: basePrice, unit: unit});
   } else {
     selectedAddons = selectedAddons.filter(function(a){ return a.nameId !== nameId; });
-    if(nameId === 'ozon1' && priceEl) priceEl.textContent = 'od '+basePrice+' zł';
+    if(nameId === 'ozon1' && priceEl) priceEl.textContent = vcOdWord()+basePrice+' zł';
   }
   updateAddonSummary();
   updateSidebar();
@@ -3706,7 +3711,7 @@ function qtyChange(e, btn, delta) {
     selectedAddons = selectedAddons.map(function(a){
       if(a.nameId === nameId){
         var displayName = newVal > 1 ? name+' x'+newVal+(unitStr?' '+unitStr:'') : name+(unitStr?' (1 '+unitStr+')':'');
-        return {nameId:nameId, name:displayName, price:basePrice*newVal, priceStr:'od '+(basePrice*newVal)+' zł', qty:newVal, basePrice:basePrice, unit:unitStr};
+        return {nameId:nameId, name:displayName, price:basePrice*newVal, priceStr:vcOdWord()+(basePrice*newVal)+' zł', qty:newVal, basePrice:basePrice, unit:unitStr};
       }
       return a;
     });
@@ -3736,7 +3741,7 @@ var OZON_BASE = 150;
         li.setAttribute('data-price', OZON_BASE);
         if(!li.classList.contains('selected')){
           var priceEl = li.querySelector('.ai-p');
-          if(priceEl) priceEl.textContent = 'od '+OZON_BASE+' zł';
+          if(priceEl) priceEl.textContent = vcOdWord()+OZON_BASE+' zł';
         }
       }
     })
@@ -3762,7 +3767,7 @@ function ozonCalc(input) {
   var m2 = parseFloat(input.value)||0;
   var price = m2>0 ? ozonTierPrice(m2) : parseInt(li.getAttribute('data-price'));
   var priceEl = li.querySelector('.ai-p');
-  if(priceEl) priceEl.textContent = (m2>0?'':'od ')+price+' zł';
+  if(priceEl) priceEl.textContent = (m2>0?'':vcOdWord())+price+' zł';
   if(li.classList.contains('selected')) {
     var nameId = li.getAttribute('data-name-id');
     var nameSpan = li.querySelector('.ai-n');
@@ -3851,7 +3856,7 @@ function qtyInputChange(input) {
     selectedAddons = selectedAddons.map(function(a){
       if(a.nameId === nameId){
         var displayName = name+' — '+qty+' '+unitStr;
-        return {nameId:nameId, name:displayName, price:Math.round(basePrice*qty), priceStr:'od '+Math.round(basePrice*qty)+' zł', qty:qty, basePrice:basePrice, unit:unitStr};
+        return {nameId:nameId, name:displayName, price:Math.round(basePrice*qty), priceStr:vcOdWord()+Math.round(basePrice*qty)+' zł', qty:qty, basePrice:basePrice, unit:unitStr};
       }
       return a;
     });
@@ -3871,10 +3876,10 @@ function winAddonSync(li, nameId, basePrice, m2) {
     var displayName = name+' — '+m2+' m²';
     var found = false;
     selectedAddons = selectedAddons.map(function(a){
-      if (a.nameId === nameId) { found = true; return {nameId:nameId, name:displayName, price:price, priceStr:'od '+price+' zł', qty:m2, basePrice:basePrice, unit:'m²'}; }
+      if (a.nameId === nameId) { found = true; return {nameId:nameId, name:displayName, price:price, priceStr:vcOdWord()+price+' zł', qty:m2, basePrice:basePrice, unit:'m²'}; }
       return a;
     });
-    if (!found) selectedAddons.push({nameId:nameId, name:displayName, price:price, priceStr:'od '+price+' zł', qty:m2, basePrice:basePrice, unit:'m²'});
+    if (!found) selectedAddons.push({nameId:nameId, name:displayName, price:price, priceStr:vcOdWord()+price+' zł', qty:m2, basePrice:basePrice, unit:'m²'});
   }
   updateAddonSummary();
   updateSidebar();
@@ -3918,7 +3923,7 @@ function updateAddonSummary() {
     return '<li><span>' + a.name + '</span><span style="color:var(--blue2);font-weight:700">' + a.priceStr + '</span></li>';
   }).join('');
 
-  total.textContent = 'od ' + totalPrice + ' zł';
+  total.textContent = vcOdWord() + totalPrice + ' zł';
 }
 
 function clearAddons() {
@@ -4123,7 +4128,7 @@ function submitOrder() {
   var totalAmt = afterDisc + addonsTotal;
 
   if(serviceLines.length === 0 && totalAmt <= 0) {
-    alert('Wybierz usługę i wpisz metraż.');
+    alert({pl:'Wybierz usługę i wpisz metraż.',uk:'Оберіть послугу та вкажіть метраж.',ru:'Выберите услугу и укажите метраж.',en:'Choose a service and enter the area.'}[typeof lang!=='undefined'?lang:'pl'] || 'Wybierz usługę i wpisz metraż.');
     return;
   }
 
