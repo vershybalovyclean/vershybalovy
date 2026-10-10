@@ -470,7 +470,7 @@ function submitSignup(e){
   document.getElementById('signup-form').style.display = 'none';
   document.getElementById('signup-thanks').classList.add('show');
   if(typeof gtag !== 'undefined'){
-    gtag('event', 'generate_lead', {
+    gtag('event', 'partner_signup_click', {
       'event_category': 'partner_signup',
       'event_label': type || 'program_partnerski',
       'value': 1

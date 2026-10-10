@@ -18,6 +18,23 @@
     ad_personalization: 'denied'
   });
 
+  // A previously accepted choice is restored synchronously, right after the defaults
+  // and BEFORE loadGoogleTags(), so the first page_view / call-conversion request of a
+  // returning visitor already carries the granted state instead of "denied". New and
+  // rejecting visitors keep the defaults above. Meta Pixel is deliberately NOT started
+  // here: window.VC_HAS_PIXEL is set by a later inline script, so the pixel is still
+  // loaded from the DOMContentLoaded handler below.
+  try {
+    if(localStorage.getItem(KEY) === 'accepted'){
+      gtag('consent', 'update', {
+        ad_storage: 'granted',
+        analytics_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted'
+      });
+    }
+  } catch(e) { /* localStorage unavailable — stay on the denied defaults */ }
+
   // Phase 3 (24.09): first-touch ad/UTM attribution — approved technical model, not a
   // legal/consent-mode determination. Captured as early as possible (before the banner
   // even renders) so a click-through from an ad survives normal on-site navigation up
@@ -147,9 +164,10 @@
   document.addEventListener('DOMContentLoaded', function(){
     var saved = localStorage.getItem(KEY);
     if(saved === 'accepted'){
-      grantConsent();
+      // Consent signals were already restored before the tags loaded (see top of file).
+      loadMetaPixel();
     } else if(saved === 'rejected'){
-      denyConsent();
+      // Defaults are already "denied" — nothing to update.
     } else {
       showBanner();
     }
