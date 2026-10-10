@@ -1400,7 +1400,7 @@ function applyTranslations(l) {
 
   // Topbar
   set('topbar-txt', t.topbar);
-  set('topbar-phone', '<a href="tel:+48514363538" style="color:#86efac;font-weight:700">📞 +48 514 363 538</a>');
+  set('topbar-phone', '<a data-vc-call href="tel:+48514363538" style="color:#86efac;font-weight:700">📞 +48 514 363 538</a>');
 
   // Nav links
   set('nav-home', t.nav_home);
@@ -2069,7 +2069,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-pencil"></use></svg></span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
       <a href="/program-partnerski"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
-    <a href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
+    <a data-vc-call href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
     <a href="/sprzatanie-mieszkan-i-domow-krakow" class="active" id="nav-mieszkan">Sprzątanie mieszkań i domów</a>
     <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">Po remoncie</a>
     <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">Po wyprowadzce</a>
@@ -3585,7 +3585,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <h4 id="ftFirmaH">Firma</h4>
       <a href="/poznaj-nas" id="ftLinkPoznaj">Poznaj nas</a>
       <a href="/program-partnerski" id="ftLinkPartner">Zostań partnerem</a>
-      <a href="tel:+48514363538">📞 +48 514 363 538</a>
+      <a data-vc-call href="tel:+48514363538">📞 +48 514 363 538</a>
       <a href="mailto:vershybalovy@gmail.com">📧 vershybalovy@gmail.com</a>
       <span style="display:block;font-size:13.5px;margin-bottom:10px" id="ftLocation">📍 Kraków i Małopolska</span>
     </div>
@@ -4260,7 +4260,7 @@ function addonsToForm() {
 </div>
 
 <script src="assets/js/nav.js?v=20261001a"></script>
-<script src="assets/js/site-texts-sync.js?v=1" defer></script>
+<script src="assets/js/site-texts-sync.js?v=20261011b" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
 <script src="assets/js/client-session.js?v=1"></script>
 <script src="assets/js/site-auth-ui.js?v=1"></script>
@@ -4270,7 +4270,7 @@ function addonsToForm() {
 <script src="assets/js/window-picker.js?v=2"></script>
 
 <!-- FLOATING CTA -->
-<a id="float-cta" href="tel:+48514363538">
+<a id="float-cta" data-vc-call href="tel:+48514363538">
   <span class="cta-icon">📞</span>
   <span id="cta-txt">Zadzwoń</span>
 </a>

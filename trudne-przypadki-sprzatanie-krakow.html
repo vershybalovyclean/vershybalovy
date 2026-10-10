@@ -146,7 +146,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-pencil"></use></svg></span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
       <a href="/program-partnerski"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
-    <a href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
+    <a data-vc-call href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
     <a href="/sprzatanie-mieszkan-i-domow-krakow" id="nav-mieszkan">Sprzątanie mieszkań i domów</a>
     <a href="/sprzatanie-po-remoncie-krakow" id="nav-remont">Po remoncie</a>
     <a href="/sprzatanie-po-wyprowadzce-krakow" id="nav-wyjazd">Po wyjeździe</a>
@@ -328,7 +328,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <div class="zb-summary-line" id="sum-line-degree">Stopień: —</div>
         <div class="zb-summary-line" id="sum-line-partner" style="display:none">Kod partnera: —</div>
         <a href="#" target="_blank" class="zb-summary-cta" id="zb-cta-btn" onclick="if(typeof gtag!=='undefined'){gtag('event','whatsapp_click',{'event_category':'whatsapp_zbierackosc','event_label':zbState.type||'zbierackosc','value':1});}">📞 Umów bezpłatny kontakt</a>
-        <div class="zb-summary-alt" id="sum-alt">lub zadzwoń: <a href="tel:+48514363538" style="color:var(--blue2);font-weight:700">+48 514 363 538</a></div>
+        <div class="zb-summary-alt" id="sum-alt">lub zadzwoń: <a data-vc-call href="tel:+48514363538" style="color:var(--blue2);font-weight:700">+48 514 363 538</a></div>
       </div>
     </div>
 
@@ -659,7 +659,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <p id="final-p">Umów bezpłatny kontakt — opowiemy jak wygląda proces i odpowiemy na pytania. Zakres prac i cenę ustalamy zawsze indywidualnie, po ocenie sytuacji.</p>
     <div class="zb-final-cta-btns">
       <a href="#wybor-przypadku" class="btn-prim" id="final-btn0">Opisz swoją sytuację →</a>
-      <a href="tel:+48514363538" class="btn-out" id="final-btn1" style="background:#fff">📞 +48 514 363 538</a>
+      <a data-vc-call href="tel:+48514363538" class="btn-out" id="final-btn1" style="background:#fff">📞 +48 514 363 538</a>
       <a href="https://wa.me/48514363538" target="_blank" class="btn-wa" id="final-btn2">💬 Napisz na WhatsApp</a>
     </div>
   </div>
@@ -696,7 +696,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <h4 id="ftFirmaH">Firma</h4>
       <a href="/poznaj-nas" id="ftLinkPoznaj">Poznaj nas</a>
       <a href="/program-partnerski" id="ftLinkPartner">Zostań partnerem</a>
-      <a href="tel:+48514363538">📞 +48 514 363 538</a>
+      <a data-vc-call href="tel:+48514363538">📞 +48 514 363 538</a>
       <a href="mailto:vershybalovy@gmail.com">📧 vershybalovy@gmail.com</a>
       <span style="display:block;font-size:13.5px;margin-bottom:10px" id="ftLocation">📍 Kraków i Małopolska</span>
     </div>
@@ -724,7 +724,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <script src="assets/js/client-session.js?v=1"></script>
 <script src="assets/js/site-auth-ui.js?v=1"></script>
 <script src="assets/js/nav.js?v=20261001a"></script>
-<script src="assets/js/site-texts-sync.js?v=1" defer></script>
+<script src="assets/js/site-texts-sync.js?v=20261011b" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
 <script>
 function toggleFaq(el){el.parentNode.classList.toggle('open');}
@@ -1604,7 +1604,7 @@ document.addEventListener('DOMContentLoaded', function(){ applyTranslations(loca
 </script>
 
 <!-- FLOATING CTA -->
-<a id="float-cta" href="tel:+48514363538">
+<a id="float-cta" data-vc-call href="tel:+48514363538">
   <span class="cta-icon">📞</span>
   <span id="cta-txt">Zadzwoń</span>
 </a>
@@ -1612,7 +1612,7 @@ document.addEventListener('DOMContentLoaded', function(){ applyTranslations(loca
 <!-- MOBILE TAB BAR -->
 <nav class="mobile-tabbar" aria-label="Nawigacja mobilna">
   <a href="/" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-home"></use></svg></span><span class="mtb-label" id="mtb-lbl-home">Strona główna</span></a>
-  <a href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-call">Zadzwoń</span></a>
+  <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-call">Zadzwoń</span></a>
   <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label" id="mtb-lbl-more">Więcej</span></button>
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
   <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-user"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
