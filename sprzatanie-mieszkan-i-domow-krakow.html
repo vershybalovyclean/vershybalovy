@@ -685,13 +685,18 @@ function updateSidebar() {
   // of the calendar date — that eligibility check happens later, once a date
   // is actually picked, same as the booking-step recap this mirrors.
   if(window.HW_GIFT_ENABLED !== false){
+    // Date condition shown next to each GRATIS line (text from booking.js,
+    // same dates as the eligibility rule); the gift itself is still added to
+    // the order only for an eligible cleaning date — unchanged.
+    var hwDates = ' <small class="hw-dates-note" style="display:block;font-size:11px;font-weight:600;color:#9a3412">(' +
+      (typeof window.bk_hwDatesNote === 'function' ? window.bk_hwDatesNote(true) : 'dla terminów 26.10–07.11') + ')</small>';
     if(hwGenActive() && hwGenGift){
-      items.push({label: '🎃 ' + hwAddonName(HW_GEN_MAP[hwGenGift]), val: 'GRATIS', cls:'discount'});
+      items.push({label: '🎃 ' + hwAddonName(HW_GEN_MAP[hwGenGift]) + hwDates, val: 'GRATIS', cls:'discount'});
     }
     if(hwSzcActive()){
       var szcGiftParts = [hwAddonName('kl8'), hwAddonName('kl11')];
       if(hwSzcGift) szcGiftParts.push(hwAddonName(HW_SZC_CHOICE_MAP[hwSzcGift]));
-      items.push({label: '🎃 Kitchen Pack: ' + szcGiftParts.join(' + '), val: 'GRATIS', cls:'discount'});
+      items.push({label: '🎃 Kitchen Pack: ' + szcGiftParts.join(' + ') + hwDates, val: 'GRATIS', cls:'discount'});
     }
   }
 
@@ -1976,7 +1981,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 }
 </script>
   <link rel="stylesheet" href="assets/css/base.css?v=20261008a">
-  <link rel="stylesheet" href="assets/css/booking.css?v=20261010a">
+  <link rel="stylesheet" href="assets/css/booking.css?v=20261011a">
   <link rel="stylesheet" href="assets/css/mieszkan.css?v=12">
   <link rel="stylesheet" href="assets/css/window-picker.css?v=1">
   <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261008a">
@@ -2254,6 +2259,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <div style="max-width:580px;margin:0 auto">
         <div class="hw-gift-box" id="hw-gift-gen" style="display:none">
           <p class="hw-gift-title" id="hw-gift-gen-title">🎃 Halloween: wybierz 1 usługę GRATIS</p>
+          <p class="hw-gift-incl bk-hw-dates">📅 Promocja dotyczy terminów sprzątania 26.10–07.11</p>
           <div class="hw-gift-opts" id="hw-gift-gen-opts">
             <label class="hw-gift-opt"><input type="radio" name="hw-gift-gen" value="kettle" onchange="hwSetGenGift('kettle')"><span id="hw-gift-gen-kettle">Czajnik</span></label>
             <label class="hw-gift-opt"><input type="radio" name="hw-gift-gen" value="microwave" onchange="hwSetGenGift('microwave')"><span id="hw-gift-gen-microwave">Kuchenka mikrofalowa</span></label>
@@ -2390,6 +2396,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <div style="max-width:580px;margin:0 auto">
         <div class="hw-gift-box" id="hw-gift-szc" style="display:none">
           <p class="hw-gift-title" id="hw-gift-szc-title">🎃 Halloween Kitchen Pack GRATIS</p>
+          <p class="hw-gift-incl bk-hw-dates">📅 Promocja dotyczy terminów sprzątania 26.10–07.11</p>
           <p class="hw-gift-incl" id="hw-gift-szc-incl">W pakiecie zawsze: okap (czyszczenie wewnątrz) + 1 szafka kuchenna (czyszczenie wewnątrz).</p>
           <p class="hw-gift-choose" id="hw-gift-szc-choose">Wybierz jeszcze jedno urządzenie GRATIS:</p>
           <div class="hw-gift-opts" id="hw-gift-szc-opts">
@@ -4257,7 +4264,7 @@ function addonsToForm() {
 <script src="assets/js/analytics.js?v=1"></script>
 <script src="assets/js/client-session.js?v=1"></script>
 <script src="assets/js/site-auth-ui.js?v=1"></script>
-<script src="assets/js/booking.js?v=20261010a"></script>
+<script src="assets/js/booking.js?v=20261011a"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>

@@ -94,6 +94,8 @@
       promoMin:'❌ Kod wymaga zamówienia od {min} zł',promoApplied:'✅ Kod zastosowany: ',
       promoError:'❌ Błąd sprawdzania kodu, spróbuj ponownie',
       partnerValid:'✅ Kod partnera prawidłowy',partnerInvalid:'❌ Taki kod nie istnieje',
+      ordBase:'🧾 Cena usług',ordPromo:'🏷️ Kod promocyjny',
+      hwDatesLong:'📅 Promocja dotyczy terminów sprzątania {dates}',hwDatesShort:'dla terminów {dates}',
       MONTHS:['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'],
       WDAYS:['Pn','Wt','Śr','Cz','Pt','So','Nd'],
       LOCALE:'pl-PL'
@@ -133,6 +135,8 @@
       promoEmpty:'⚠️ Введіть промокод',promoInvalid:'❌ Недійсний або прострочений код',
       promoMin:'❌ Код діє для замовлення від {min} zł',promoApplied:'✅ Код застосовано: ',
       promoError:'❌ Помилка перевірки коду, спробуйте ще раз',
+      ordBase:'🧾 Вартість послуг',ordPromo:'🏷️ Промокод',
+      hwDatesLong:'📅 Акція діє для дат прибирання {dates}',hwDatesShort:'для дат {dates}',
       partnerValid:'✅ Код партнера дійсний',partnerInvalid:'❌ Такого коду не існує',
       MONTHS:['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'],
       WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],
@@ -173,6 +177,8 @@
       promoEmpty:'⚠️ Введите промокод',promoInvalid:'❌ Недействительный или просроченный код',
       promoMin:'❌ Код действует для заказа от {min} zł',promoApplied:'✅ Код применён: ',
       promoError:'❌ Ошибка проверки кода, попробуйте ещё раз',
+      ordBase:'🧾 Стоимость услуг',ordPromo:'🏷️ Промокод',
+      hwDatesLong:'📅 Акция действует для дат уборки {dates}',hwDatesShort:'для дат {dates}',
       partnerValid:'✅ Код партнёра действителен',partnerInvalid:'❌ Такого кода не существует',
       MONTHS:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
       WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
@@ -214,6 +220,8 @@
       promoMin:'❌ This code requires an order of at least {min} zł',promoApplied:'✅ Code applied: ',
       promoError:'❌ Could not check the code, please try again',
       partnerValid:'✅ Partner code is valid',partnerInvalid:'❌ This code does not exist',
+      ordBase:'🧾 Services price',ordPromo:'🏷️ Promo code',
+      hwDatesLong:'📅 The offer applies to cleaning dates {dates}',hwDatesShort:'for dates {dates}',
       MONTHS:['January','February','March','April','May','June','July','August','September','October','November','December'],
       WDAYS:['Mo','Tu','We','Th','Fr','Sa','Su'],
       LOCALE:'en-GB'
@@ -347,6 +355,17 @@
     return !!isoDate && isoDate >= HW_GIFT_START && isoDate <= HW_GIFT_END;
   }
   window.bk_isHalloweenEligible = bk_isHalloweenEligible;
+
+  // Visitor-facing note on the gift date condition ("dla terminów 26.10–07.11"),
+  // built from the same HW_GIFT_START/END as the eligibility rule so the text can
+  // never drift from it. Display only — never affects what goes into the order.
+  function bk_hwDatesText(){
+    function dm(iso){ return iso.slice(8,10)+'.'+iso.slice(5,7); }
+    return dm(HW_GIFT_START)+'–'+dm(HW_GIFT_END);
+  }
+  window.bk_hwDatesNote = function(short){
+    return bk_t(short ? 'hwDatesShort' : 'hwDatesLong').replace('{dates}', bk_hwDatesText());
+  };
   window.bk_hwEligibleNow = function(){
     return bk_isHalloweenEligible(bk_selectedDate ? bk_isoDate(bk_selectedDate) : null);
   };
@@ -379,9 +398,29 @@
   }
 
   /* ─── RENDER ORDER SUMMARY ─────────────────────────── */
+  /* ─── ORDER SUMMARY BLOCK (before the submit button) ─────────────────
+     None of the 4 booking pages has the #bk-orderRows/#bk-orderTotal markup
+     bk_renderOrder() writes to, so the final amount (night +100%, promo) was
+     never shown before submitting. Created once, right above #bk-submitBtn.
+     Display only: the total is the same bk_finalPrice(d.price) sent as `price`. */
+  function bk_ensureSummary(){
+    if(document.getElementById('bk-orderTotal')) return;
+    var btn = document.getElementById('bk-submitBtn');
+    if(!btn || !btn.parentNode) return;
+    var box = document.createElement('div');
+    box.id = 'bk-summary';
+    box.className = 'bk-summary';
+    box.setAttribute('aria-live', 'polite');
+    box.innerHTML = '<div class="bk-summary-head" id="bk-order-head"></div>'
+      + '<ul id="bk-orderRows" class="bk-summary-rows"></ul>'
+      + '<div class="bk-summary-total"><span id="bk-total-lbl"></span><strong id="bk-orderTotal"></strong></div>';
+    btn.parentNode.insertBefore(box, btn);
+  }
+
   window.bk_renderOrder = function() {
     var d = window.bk_orderData;
     if(!d) return;
+    bk_ensureSummary();
     var rows = [];
     if(d.service) { d.service.split('|').forEach(function(l){ rows.push([bk_t('ordService'), l.trim()]); }); }
     if(d.extras) rows.push([bk_t('ordExtras'), d.extras]);
@@ -391,14 +430,20 @@
       if(hwLine) rows.push(['🎃 Halloween', hwLine]);
     }
     var nightOn = bk_isNightSlot();
+    var promoAmt = (d.price && bk_promoApplied) ? bk_promoDiscountAmount(d.price) : 0;
+    // Base price row only when something is added/subtracted from it, so the
+    // arithmetic (base + night − promo = total) is visible to the client.
+    if(d.price && (nightOn || promoAmt > 0)) rows.push([bk_t('ordBase'), d.price+' zł']);
     if(nightOn && d.price) rows.push([bk_t('ordNight'), '+'+d.price+' zł']);
+    if(promoAmt > 0) rows.push([bk_t('ordPromo')+' '+bk_promoApplied.code, '−'+promoAmt+' zł']);
     function _set(id, val, html) {
       var el = document.getElementById(id);
       if(!el) return;
       if(html) el.innerHTML = val; else el.textContent = val;
     }
     function _html(id, val) { var el=document.getElementById(id); if(el) el.innerHTML=val; }
-    _html('bk-orderRows', rows.map(function(r){ return '<li><span>'+r[0]+'</span><strong>'+r[1]+'</strong></li>'; }).join(''));
+    function _esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+    _html('bk-orderRows', rows.map(function(r){ return '<li><span>'+_esc(r[0])+'</span><strong>'+_esc(r[1])+'</strong></li>'; }).join(''));
     _set('bk-orderTotal', d.price ? bk_finalPrice(d.price)+' zł' : '— zł');
     _set('bk-order-head', bk_t('orderHead'));
     _set('bk-total-lbl', bk_t('ordTotal'));
@@ -488,11 +533,15 @@
       var active = bk_selectedSlot===s.id?' bk-slot-active':'';
       var night = s.night?' bk-slot-night':'';
       var off = !bk_slotAvailable(selIso, s);
-      var tagHtml = (tag&&!off)?'<span class="bk-slot-tag">'+tag+'</span>':'';
+      // Night slot: the +100% surcharge is shown as a readable second line inside
+      // the button (was an 8px corner badge); other slots keep their small tag.
+      var tagHtml = (tag&&!off&&!s.night)?'<span class="bk-slot-tag">'+tag+'</span>':'';
+      var surchargeHtml = (s.night&&tag)?'<span class="bk-slot-surcharge">'+tag+'</span>':'';
       return '<button type="button" class="bk-slot'+active+night+(off?' bk-slot-off':'')+'"'+(off?' disabled aria-disabled="true"':'')+' onclick="bk_pickSlot(\''+s.id+'\')">'
         +tagHtml
         +'<span style="font-size:14px;line-height:1">'+s.icon+'</span>'
         +'<span style="font-weight:700;font-size:13px;color:#1e293b;letter-spacing:.3px">'+bk_slotDisplayLabel(s)+'</span>'
+        +surchargeHtml
         +'</button>';
     }).join('');
   }
@@ -994,6 +1043,8 @@
     if(savedLbl) savedLbl.textContent = bk_t('savedAddrLabel');
     var manualOpt = document.getElementById('bk-saved-addr-manual');
     if(manualOpt) manualOpt.textContent = bk_t('manualAddrOpt');
+    // Halloween gift boxes on the pages carry a .bk-hw-dates line (date condition).
+    document.querySelectorAll('.bk-hw-dates').forEach(function(el){ el.textContent = window.bk_hwDatesNote(false); });
     var phIds = {
       'bk-name':'phName','bk-phone':'phPhone','bk-email':'phEmail',
       'bk-street':'phStreet','bk-apt':'phApt','bk-postal':'phPostal',
