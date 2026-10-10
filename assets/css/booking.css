@@ -68,6 +68,8 @@
 .bk-slot.bk-slot-night { border-color:#a5b4fc; background:#f5f3ff; }
 .bk-slot-tag { position:absolute;top:-7px;right:6px;background:#22c55e;color:#fff;font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;white-space:nowrap; }
 .bk-slot-night .bk-slot-tag { background:#6366f1; }
+/* Slot closed: starts in less than 120 min (Europe/Warsaw) — see booking.js */
+.bk-slot.bk-slot-off, .bk-slot.bk-slot-off:hover { opacity:.4; cursor:not-allowed; border-color:#e2e8f0; background:#f8fafc; box-shadow:none; }
 
 /* Input */
 .bk-input {
@@ -194,4 +196,16 @@
 @media(max-width:520px) {
   .bk-form-grid { grid-template-columns:1fr !important; }
   #bk-slotsContainer { flex-wrap:wrap !important; }
+  /* Mobile width fix: the calendar was a fixed 7×44px grid (332px) inside
+     20px card + 24px section padding (inline styles on each page) — ≈423px
+     minimum, wider than a 375px phone, so the open booking section widened
+     the whole page and cut off the order button. Columns now shrink to the
+     available width; !important is needed to override the pages' inline
+     styles. Layout only — no calendar/slot logic depends on these sizes. */
+  #bk-inline-section { padding-left:12px !important; padding-right:12px !important; }
+  #bk-inline-section .bk-card { padding:16px 12px !important; }
+  #bk-inline-section .bk-grid-wrap > *,
+  #bk-inline-section .bk-cal-slots-row > * { min-width:0; }
+  #bk-weekRow, #bk-calDays { grid-template-columns:repeat(7,minmax(0,1fr)) !important; }
+  .bk-day { width:100%; min-width:0; height:40px; }
 }

@@ -1976,7 +1976,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 }
 </script>
   <link rel="stylesheet" href="assets/css/base.css?v=20261008a">
-  <link rel="stylesheet" href="assets/css/booking.css?v=1">
+  <link rel="stylesheet" href="assets/css/booking.css?v=20261010a">
   <link rel="stylesheet" href="assets/css/mieszkan.css?v=12">
   <link rel="stylesheet" href="assets/css/window-picker.css?v=1">
   <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261008a">
@@ -4090,14 +4090,48 @@ function submitOrder() {
   var freqLabel   = (typeof freqState !== 'undefined') ? freqState.label    : '';
   var selectedAll = (typeof getSelectedTabs === 'function') ? getSelectedTabs() : [];
 
+  // Area detail per tier: an exact area (90+ m² input), the chosen fixed-price
+  // bracket ("do 45 m²" — a bracket, never reported as the actual area) or the
+  // zone (bathroom/kitchen + its m²). Visitor-language text goes into the
+  // service line; PL text goes to the team as areaRange/area (booking.js).
+  var ZONE_NAMES = {
+    pl:{'zone-0':'Łazienka','zone-1':'Kuchnia','zone-2':'Łazienka + Kuchnia'},
+    uk:{'zone-0':'Ванна кімната','zone-1':'Кухня','zone-2':'Ванна + Кухня'},
+    ru:{'zone-0':'Ванная','zone-1':'Кухня','zone-2':'Ванная + Кухня'},
+    en:{'zone-0':'Bathroom','zone-1':'Kitchen','zone-2':'Bathroom + Kitchen'}
+  };
+  var curLang = (typeof lang !== 'undefined' && ZONE_NAMES[lang]) ? lang : 'pl';
+  var TIER_PL = {wspomagajace:'Wspomagające', generalne:'Generalne', szczegolowe:'Szczegółowe'};
+  var areaNotesPl = [];   // one entry per tier: {tier, text, isRange}, PL
+  var analyticsLines = [];
+  function isRowActive(id){ var r = document.getElementById(id); return !!(r && r.classList.contains('active')); }
+
   TAB_MAP.forEach(function(t) {
     var price = (typeof acPrice !== 'undefined') ? (acPrice[t.key] || 0) : 0;
     var m2    = (typeof acM2   !== 'undefined') ? (acM2[t.key]   || 0) : 0;
     if(price <= 0) return;
     var mult = (freqTimes > 1 && selectedAll.length === 1) ? freqTimes : 1;
-    var label = t.name + (m2 ? ' (' + m2 + ' m²)' : '') + (mult > 1 ? ' × ' + mult : '');
+    var detail = '', detailPl = '', isRange = false;
+    var fixedIdx = (typeof acActive !== 'undefined') ? acActive[t.key] : undefined;
+    var zk = (typeof acZoneActive !== 'undefined') ? acZoneActive[t.key] : null;
+    if(m2 > 0) {
+      detail = detailPl = m2 + ' m²';
+    } else if(typeof fixedIdx === 'number' && fixedIdx >= 0 && fixedIdx < M2_BRACKETS.length && isRowActive('acr-' + t.key + '-' + fixedIdx)) {
+      detail = bk_rangeLabel(M2_BRACKETS[fixedIdx]);
+      detailPl = bk_rangeLabel(M2_BRACKETS[fixedIdx], 'pl');
+      isRange = true;
+    } else if(zk && isRowActive('acr-' + t.key + '-' + zk)) {
+      var zInp = document.getElementById('ac-inp-' + t.key + '-' + zk);
+      var zM2 = zInp ? parseFloat(zInp.value) : 0;
+      detail = ZONE_NAMES[curLang][zk] + (zM2 > 0 ? ', ' + zM2 + ' m²' : '');
+      detailPl = ZONE_NAMES.pl[zk] + (zM2 > 0 ? ', ' + zM2 + ' m²' : '');
+    }
+    var label = t.name + (detail ? ' (' + detail + ')' : '') + (mult > 1 ? ' × ' + mult : '');
     serviceLines.push(label);
+    // Pre-change label format, used only as the GA4 event_label (unchanged).
+    analyticsLines.push(t.name + (m2 ? ' (' + m2 + ' m²)' : '') + (mult > 1 ? ' × ' + mult : ''));
     orderedTabKeys.push(t.key);
+    if(detailPl) areaNotesPl.push({ tier: TIER_PL[t.key], text: detailPl, isRange: isRange });
     serviceTotal += price * mult;
   });
 
@@ -4157,14 +4191,28 @@ function submitOrder() {
   var structuredAddons = addons.filter(function(a){ return a.price > 0; }).map(function(a){
     return { key: 'ms:' + a.nameId, qty: a.qty, price: a.price };
   });
+  // PL area text for the team: a single tier → its bracket or area; several
+  // tiers → "Wspomagające: do 45 m²; Generalne: 100 m²". Any bracket involved
+  // → areaRange ("Zakres metrażu"), otherwise area ("Powierzchnia").
+  var areaRangeTxt = '', areaTxt = '';
+  if(areaNotesPl.length) {
+    var anyRange = areaNotesPl.some(function(n){ return n.isRange; });
+    var areaJoined = (areaNotesPl.length === 1) ? areaNotesPl[0].text
+      : areaNotesPl.map(function(n){ return n.tier + ': ' + n.text; }).join('; ');
+    if(anyRange) areaRangeTxt = areaJoined; else areaTxt = areaJoined;
+  }
   bk_orderData = {
     service: serviceLines.join('|') || 'Sprzątanie mieszkania',
+    analyticsLabel: analyticsLines.join('|') || 'Sprzątanie mieszkania',
     serviceSlug: orderServiceSlug,
     freq: (freqLabel && freqLabel !== 'Jednorazowo') ? freqLabel : '',
     freqTimes: (orderedTabKeys.length === 1) ? freqTimes : 1,
     extras: extrasLabels.join(', '),
     addons: structuredAddons,
-    areaM2: (orderedTabKeys.length === 1) ? (acM2[orderedTabKeys[0]] || 0) : null,
+    // Exact area only (90+ m² input); a fixed bracket is NOT an area → null.
+    areaM2: (orderedTabKeys.length === 1) ? (acM2[orderedTabKeys[0]] || null) : null,
+    areaRange: areaRangeTxt,
+    area: areaTxt,
     serviceLines: structuredServiceLines,
     price: totalAmt
   };
@@ -4209,7 +4257,7 @@ function addonsToForm() {
 <script src="assets/js/analytics.js?v=1"></script>
 <script src="assets/js/client-session.js?v=1"></script>
 <script src="assets/js/site-auth-ui.js?v=1"></script>
-<script src="assets/js/booking.js?v=2"></script>
+<script src="assets/js/booking.js?v=20261010a"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>

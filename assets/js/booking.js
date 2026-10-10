@@ -87,6 +87,13 @@
       recapDate:'📅 Termin',recapTime:'⏰ Godzina',recapPhone:'📞 Telefon',waBtn:'💬 Otwórz WhatsApp',
       myOrdersBtn:'📋 Zobacz moje zamówienia',
       bonusNote:'✓ Bonus już wliczony — bez dopłat',
+      slotNight:'po 21:00',
+      slotExpired:'Wybrana godzina jest już niedostępna (rezerwacja min. 2 godziny wcześniej). Wybierz inny termin.',
+      savedAddrLabel:'Adres',manualAddrOpt:'✏️ Inny adres (wpisz ręcznie)',
+      promoEmpty:'⚠️ Wpisz kod promocyjny',promoInvalid:'❌ Nieprawidłowy lub wygasły kod',
+      promoMin:'❌ Kod wymaga zamówienia od {min} zł',promoApplied:'✅ Kod zastosowany: ',
+      promoError:'❌ Błąd sprawdzania kodu, spróbuj ponownie',
+      partnerValid:'✅ Kod partnera prawidłowy',partnerInvalid:'❌ Taki kod nie istnieje',
       MONTHS:['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'],
       WDAYS:['Pn','Wt','Śr','Cz','Pt','So','Nd'],
       LOCALE:'pl-PL'
@@ -120,6 +127,13 @@
       recapDate:'📅 Дата',recapTime:'⏰ Час',recapPhone:'📞 Телефон',waBtn:'💬 Відкрити WhatsApp',
       myOrdersBtn:'📋 Переглянути мої замовлення',
       bonusNote:'✓ Бонус вже включено — без доплат',
+      slotNight:'після 21:00',
+      slotExpired:'Обраний час уже недоступний (бронювання мін. за 2 години). Оберіть інший час.',
+      savedAddrLabel:'Адреса',manualAddrOpt:'✏️ Інша адреса (ввести вручну)',
+      promoEmpty:'⚠️ Введіть промокод',promoInvalid:'❌ Недійсний або прострочений код',
+      promoMin:'❌ Код діє для замовлення від {min} zł',promoApplied:'✅ Код застосовано: ',
+      promoError:'❌ Помилка перевірки коду, спробуйте ще раз',
+      partnerValid:'✅ Код партнера дійсний',partnerInvalid:'❌ Такого коду не існує',
       MONTHS:['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'],
       WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],
       LOCALE:'uk-UA'
@@ -153,6 +167,13 @@
       recapDate:'📅 Дата',recapTime:'⏰ Время',recapPhone:'📞 Телефон',waBtn:'💬 Открыть WhatsApp',
       myOrdersBtn:'📋 Смотреть мои заказы',
       bonusNote:'✓ Бонус уже включён — без доплат',
+      slotNight:'после 21:00',
+      slotExpired:'Выбранное время уже недоступно (бронирование мин. за 2 часа). Выберите другое время.',
+      savedAddrLabel:'Адрес',manualAddrOpt:'✏️ Другой адрес (ввести вручную)',
+      promoEmpty:'⚠️ Введите промокод',promoInvalid:'❌ Недействительный или просроченный код',
+      promoMin:'❌ Код действует для заказа от {min} zł',promoApplied:'✅ Код применён: ',
+      promoError:'❌ Ошибка проверки кода, попробуйте ещё раз',
+      partnerValid:'✅ Код партнёра действителен',partnerInvalid:'❌ Такого кода не существует',
       MONTHS:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
       WDAYS:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
       LOCALE:'ru-RU'
@@ -186,6 +207,13 @@
       recapDate:'📅 Date',recapTime:'⏰ Time',recapPhone:'📞 Phone',waBtn:'💬 Open WhatsApp',
       myOrdersBtn:'📋 View my orders',
       bonusNote:'✓ Bonus already included — no extra charge',
+      slotNight:'after 21:00',
+      slotExpired:'The selected time is no longer available (bookings at least 2 hours ahead). Please choose another time.',
+      savedAddrLabel:'Address',manualAddrOpt:'✏️ Another address (enter manually)',
+      promoEmpty:'⚠️ Enter a promo code',promoInvalid:'❌ Invalid or expired code',
+      promoMin:'❌ This code requires an order of at least {min} zł',promoApplied:'✅ Code applied: ',
+      promoError:'❌ Could not check the code, please try again',
+      partnerValid:'✅ Partner code is valid',partnerInvalid:'❌ This code does not exist',
       MONTHS:['January','February','March','April','May','June','July','August','September','October','November','December'],
       WDAYS:['Mo','Tu','We','Th','Fr','Sa','Su'],
       LOCALE:'en-GB'
@@ -193,6 +221,14 @@
   };
 
   function bk_t(k){ var l=typeof lang!=='undefined'?lang:'pl'; return (BK_TX[l]&&BK_TX[l][k]!==undefined)?BK_TX[l][k]:BK_TX.pl[k]; }
+
+  // Fixed-price area bracket label, e.g. bk_rangeLabel(45) → "do 45 m²" (PL),
+  // "до 45 m²" (UK/RU), "up to 45 m²" (EN). Pass 'pl' for the team-facing text.
+  window.bk_rangeLabel = function(maxM2, forceLang){
+    var l = forceLang || (typeof lang!=='undefined'?lang:'pl');
+    var word = {pl:'do ',uk:'до ',ru:'до ',en:'up to '}[l] || 'do ';
+    return word + maxM2 + ' m²';
+  };
 
   /* ─── BONUS DATES ──────────────────────────────────── */
   var BK_BONUSES = {
@@ -248,11 +284,52 @@
     {id:'s4',icon:'🌇',label:'15:00–17:00',start:'15:00',tag:{pl:'',uk:'',ru:'',en:''}},
     {id:'s5',icon:'🌆',label:'17:00–19:00',start:'17:00',tag:{pl:'',uk:'',ru:'',en:''}},
     {id:'s6',icon:'🌃',label:'19:00–21:00',start:'19:00',tag:{pl:'',uk:'',ru:'',en:''}},
-    {id:'s7',icon:'🌙',label:'po 21:00',start:'21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',ru:'+100% — ночной выезд',en:'+100% — night visit'},night:true}
+    {id:'s7',icon:'🌙',label:'po 21:00',labelKey:'slotNight',start:'21:00',tag:{pl:'+100% — wyjazd nocny',uk:'+100% — нічний виїзд',ru:'+100% — ночной выезд',en:'+100% — night visit'},night:true}
   ];
+
+  // Visitor-facing slot label (translated where the label is a phrase, e.g.
+  // "po 21:00"); the order text sent to the team always uses s.label (PL).
+  function bk_slotDisplayLabel(s){
+    return s.labelKey ? bk_t(s.labelKey) : s.label;
+  }
 
   function bk_isoDate(d){
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+
+  /* ─── SLOT AVAILABILITY (Europe/Warsaw, min. 120 min lead time) ─────────
+     Calendar cells are plain dates in the business's own timezone, so "today"
+     and "now" are taken in Europe/Warsaw, never from the visitor's device
+     timezone. A slot is bookable only if it starts at least BK_MIN_LEAD_MIN
+     minutes from now. Re-checked at submit time (bk_validateAndHighlight). */
+  var BK_TZ = 'Europe/Warsaw';
+  var BK_MIN_LEAD_MIN = 120;
+  function bk_warsawNow(){
+    try {
+      var p = {};
+      new Intl.DateTimeFormat('en-CA', {timeZone:BK_TZ, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hourCycle:'h23'})
+        .formatToParts(new Date()).forEach(function(x){ p[x.type] = x.value; });
+      return { iso: p.year+'-'+p.month+'-'+p.day, minutes: (parseInt(p.hour,10)%24)*60 + parseInt(p.minute,10) };
+    } catch(e) {
+      var n = new Date();
+      return { iso: bk_isoDate(n), minutes: n.getHours()*60 + n.getMinutes() };
+    }
+  }
+  function bk_slotAvailable(isoDate, slot){
+    if(!isoDate || !slot) return true;
+    var now = bk_warsawNow();
+    if(isoDate < now.iso) return false;
+    if(isoDate > now.iso) return true;
+    var startMin = parseInt(slot.start.slice(0,2),10)*60 + parseInt(slot.start.slice(3,5),10);
+    return startMin - now.minutes >= BK_MIN_LEAD_MIN;
+  }
+  function bk_anySlotAvailable(isoDate){
+    return BK_SLOTS.some(function(s){ return bk_slotAvailable(isoDate, s); });
+  }
+  function bk_selectedSlotStillValid(){
+    if(!bk_selectedDate || !bk_selectedSlot) return true;
+    var s = BK_SLOTS.find(function(x){ return x.id === bk_selectedSlot; });
+    return bk_slotAvailable(bk_isoDate(bk_selectedDate), s);
   }
 
   /* ─── HALLOWEEN GIFT ELIGIBILITY (26.10–07.11.2026 inclusive) ──────────
@@ -342,16 +419,19 @@
     var first = new Date(bk_viewYear, bk_viewMonth, 1);
     var startWD = (first.getDay()+6)%7;
     var daysInMonth = new Date(bk_viewYear, bk_viewMonth+1, 0).getDate();
-    var today = new Date(); today.setHours(0,0,0,0);
+    var todayIso = bk_warsawNow().iso;
 
     var html = '';
     for(var i=0;i<startWD;i++) html+='<button class="bk-day bk-empty" disabled></button>';
     for(var d=1;d<=daysInMonth;d++){
       var date = new Date(bk_viewYear, bk_viewMonth, d);
+      var dIso = bk_isoDate(date);
       var dow = date.getDay();
       var cls = 'bk-day';
       var disabled = '';
-      if(date<today||dow===0||bk_blockedDates[bk_isoDate(date)]){ cls+=' bk-none'; disabled='disabled'; }
+      // Past days (Warsaw date) and today once no slot is ≥120 min ahead.
+      var pastOrFull = dIso < todayIso || (dIso === todayIso && !bk_anySlotAvailable(dIso));
+      if(pastOrFull||dow===0||bk_blockedDates[dIso]){ cls+=' bk-none'; disabled='disabled'; }
       var bonus = (!disabled&&bk_getBonus(date));
       if(bonus) cls+=' bk-bonus';
       if(bk_selectedDate&&date.toDateString()===bk_selectedDate.toDateString()) cls+=' bk-selected';
@@ -402,20 +482,24 @@
       : bk_t('slotsDefault');
     document.getElementById('bk-slots-title').textContent = title;
 
+    var selIso = bk_selectedDate ? bk_isoDate(bk_selectedDate) : null;
     document.getElementById('bk-slotsContainer').innerHTML = BK_SLOTS.map(function(s){
       var tag = s.tag[l]||'';
       var active = bk_selectedSlot===s.id?' bk-slot-active':'';
       var night = s.night?' bk-slot-night':'';
-      var tagHtml = tag?'<span class="bk-slot-tag">'+tag+'</span>':'';
-      return '<button class="bk-slot'+active+night+'" onclick="bk_pickSlot(\''+s.id+'\')">'
+      var off = !bk_slotAvailable(selIso, s);
+      var tagHtml = (tag&&!off)?'<span class="bk-slot-tag">'+tag+'</span>':'';
+      return '<button type="button" class="bk-slot'+active+night+(off?' bk-slot-off':'')+'"'+(off?' disabled aria-disabled="true"':'')+' onclick="bk_pickSlot(\''+s.id+'\')">'
         +tagHtml
         +'<span style="font-size:14px;line-height:1">'+s.icon+'</span>'
-        +'<span style="font-weight:700;font-size:13px;color:#1e293b;letter-spacing:.3px">'+s.label+'</span>'
+        +'<span style="font-weight:700;font-size:13px;color:#1e293b;letter-spacing:.3px">'+bk_slotDisplayLabel(s)+'</span>'
         +'</button>';
     }).join('');
   }
 
   window.bk_pickSlot = function(id){
+    var s = BK_SLOTS.find(function(x){ return x.id === id; });
+    if(bk_selectedDate && !bk_slotAvailable(bk_isoDate(bk_selectedDate), s)) return;
     bk_selectedSlot = id;
     bk_renderSlots();
     bk_checkForm();
@@ -472,6 +556,17 @@
       if(!firstInvalid) firstInvalid = el;
     }
     var ok = true;
+    // Submit-time re-check: the page may have been open long enough for the
+    // chosen slot to fall inside the 120-min lead time (or the day to pass).
+    var slotExpired = false;
+    if(bk_selectedSlot && !bk_selectedSlotStillValid()){
+      slotExpired = true;
+      bk_selectedSlot = null;
+      if(bk_selectedDate && !bk_anySlotAvailable(bk_isoDate(bk_selectedDate))) bk_selectedDate = null;
+      bk_renderCal();
+      bk_renderSlots();
+      if(typeof window.bk_renderOrder === 'function') window.bk_renderOrder();
+    }
     if(!bk_selectedDate){ markInvalid(document.getElementById('bk-calDays')); ok = false; }
     if(!bk_selectedSlot){ markInvalid(document.getElementById('bk-slotsContainer')); ok = false; }
     if(!bk_selectedPayment){ markInvalid(bk_payGroupEl()); ok = false; }
@@ -486,6 +581,10 @@
     }
     var consentEl = document.getElementById('bk-consent');
     if(consentEl && !consentEl.checked){ markInvalid(document.getElementById('bk-consent-wrap')); ok = false; }
+    if(slotExpired){
+      var errEl = document.getElementById('bk-formError');
+      if(errEl){ errEl.textContent = bk_t('slotExpired'); errEl.style.display = 'block'; }
+    }
     if(!ok && firstInvalid){
       firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
     }
@@ -576,8 +675,8 @@
       if(!input || input.value.trim().toUpperCase() !== code) return;
       bk_partnerCodeValid = !!id;
       if(res){
-        if(id){ res.textContent = '✅ Kod partnera prawidłowy'; res.style.color = '#16a34a'; }
-        else { res.textContent = '❌ Taki kod nie istnieje'; res.style.color = '#dc2626'; }
+        if(id){ res.textContent = bk_t('partnerValid'); res.style.color = '#16a34a'; }
+        else { res.textContent = bk_t('partnerInvalid'); res.style.color = '#dc2626'; }
       }
     }).catch(function(){
       bk_partnerCodeValid = null;
@@ -652,7 +751,7 @@
       var code = input ? input.value.trim().toUpperCase() : '';
       bk_promoApplied = null;
       if(!code){
-        if(res){ res.textContent = '⚠️ Wpisz kod promocyjny'; res.style.color = '#dc2626'; }
+        if(res){ res.textContent = bk_t('promoEmpty'); res.style.color = '#dc2626'; }
         bk_renderOrder();
         return;
       }
@@ -667,17 +766,17 @@
         var row = rows && rows[0];
         var d = window.bk_orderData || {};
         if(!row){
-          if(res){ res.textContent = '❌ Nieprawidłowy lub wygasły kod'; res.style.color = '#dc2626'; }
+          if(res){ res.textContent = bk_t('promoInvalid'); res.style.color = '#dc2626'; }
         } else if(row.min_order_amount && d.price && d.price < row.min_order_amount){
-          if(res){ res.textContent = '❌ Kod wymaga zamówienia od '+row.min_order_amount+' zł'; res.style.color = '#dc2626'; }
+          if(res){ res.textContent = bk_t('promoMin').replace('{min}', row.min_order_amount); res.style.color = '#dc2626'; }
         } else {
           bk_promoApplied = { discount_type: row.discount_type, discount_value: row.discount_value, min_order_amount: row.min_order_amount, code: code };
           var label = row.discount_type === 'percent' ? ('-'+row.discount_value+'%') : ('-'+row.discount_value+' zł');
-          if(res){ res.textContent = '✅ Kod zastosowany: '+label; res.style.color = '#16a34a'; }
+          if(res){ res.textContent = bk_t('promoApplied')+label; res.style.color = '#16a34a'; }
         }
         bk_renderOrder();
       }).catch(function(){
-        if(res){ res.textContent = '❌ Błąd sprawdzania kodu, spróbuj ponownie'; res.style.color = '#dc2626'; }
+        if(res){ res.textContent = bk_t('promoError'); res.style.color = '#dc2626'; }
       }).finally(function(){
         bk_promoCheckBtn.disabled = false;
         bk_promoCheckBtn.textContent = prevTxt;
@@ -712,7 +811,8 @@
     var l = typeof lang!=='undefined'?lang:'pl';
     var locale = bk_t('LOCALE');
     var slotObj = BK_SLOTS.find(function(s){return s.id===bk_selectedSlot;});
-    var slotLabel = slotObj?slotObj.label:'';
+    var slotLabel = slotObj?slotObj.label:'';               // PL — order text for the team
+    var slotDisplay = slotObj?bk_slotDisplayLabel(slotObj):''; // visitor's language — recap
     var dateLabel = bk_selectedDate.toLocaleDateString(locale,{weekday:'long',day:'numeric',month:'long'});
     var d = window.bk_orderData||{};
     var hwEligible = bk_isHalloweenEligible(bk_isoDate(bk_selectedDate));
@@ -740,7 +840,12 @@
     // jako osobne, górne pola tej samej wiadomości (patrz submit.js), więc
     // powtarzanie ich tu tylko dublowałoby tekst.
     var comment = 'REZERWACJA TERMINU (' + (document.title.split('|')[0] || '').trim() + ')\n';
-    if(d.m2) comment+='Powierzchnia: '+d.m2+' m²\n';
+    // Area: pages send either an exact area (area / areaM2) or, for fixed-price
+    // tiers, only the chosen bracket (areaRange, PL, e.g. "do 45 m²") — a bracket
+    // is never reported as an actual measured area.
+    if(d.areaRange) comment+='Zakres metrażu: '+d.areaRange+'\n';
+    else if(d.area) comment+='Powierzchnia: '+d.area+'\n';
+    else if(typeof d.areaM2 === 'number' && d.areaM2 > 0) comment+='Powierzchnia: '+d.areaM2+' m²\n';
     if(d.extras) comment+='Dodatki: '+d.extras+'\n';
     if(d.freq) comment+='Częstotliwość: '+d.freq+'\n';
     var nightOn = bk_isNightSlot();
@@ -791,7 +896,11 @@
         // so the admin side can store them in the same model a manual request uses,
         // without parsing the display strings above.
         addons: Array.isArray(d.addons) ? d.addons : [],
-        areaM2: (typeof d.areaM2 === 'number') ? d.areaM2 : null,
+        areaM2: (typeof d.areaM2 === 'number' && d.areaM2 > 0) ? d.areaM2 : null,
+        // Chosen fixed-price bracket (PL, e.g. "do 45 m²"), separate from areaM2.
+        // Not stored by api/submit yet — it already reaches the team via the
+        // service label and the "Zakres metrażu" line of the order text.
+        areaRange: d.areaRange || null,
         freqTimes: (typeof d.freqTimes === 'number' && d.freqTimes > 0) ? d.freqTimes : 1,
         serviceLines: Array.isArray(d.serviceLines) ? d.serviceLines : null,
         paymentMethod: bk_selectedPayment || null,
@@ -803,11 +912,13 @@
     .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })
     .then(function(res){
       if(!res || res.success !== true) throw new Error('submit failed');
-      trackFormConversion(d.service || '');
+      // analyticsLabel keeps the GA4 event_label exactly as before the area/range
+      // detail was added to `service` (analytics unchanged in this batch).
+      trackFormConversion(d.analyticsLabel || d.service || '');
       document.getElementById('bk-successName').textContent = bk_t('successThanks')+', '+(name.split(' ')[0]||'')+'!';
       document.getElementById('bk-success-p').innerHTML = bk_t('successP');
       document.getElementById('bk-recapDate').textContent = dateLabel;
-      document.getElementById('bk-recapTime').textContent = slotLabel;
+      document.getElementById('bk-recapTime').textContent = slotDisplay;
       document.getElementById('bk-recapPhone').textContent = phone;
       var partnerRow = document.getElementById('bk-recap-partner-row');
       if(partnerRow){
@@ -879,6 +990,10 @@
       if(el){ if(richIds[id]) el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
     });
     bk_applyWaBtnState();
+    var savedLbl = document.getElementById('bk-saved-addr-label');
+    if(savedLbl) savedLbl.textContent = bk_t('savedAddrLabel');
+    var manualOpt = document.getElementById('bk-saved-addr-manual');
+    if(manualOpt) manualOpt.textContent = bk_t('manualAddrOpt');
     var phIds = {
       'bk-name':'phName','bk-phone':'phPhone','bk-email':'phEmail',
       'bk-street':'phStreet','bk-apt':'phApt','bk-postal':'phPostal',
@@ -931,8 +1046,10 @@
     wrap.id = 'bk-saved-addr-wrap';
     wrap.style.cssText = 'grid-column:1/-1;display:flex;flex-direction:column;gap:6px';
     var label = document.createElement('label');
+    label.id = 'bk-saved-addr-label';
+    label.htmlFor = 'bk-saved-addr-select';
     label.style.cssText = 'font-size:13px;font-weight:600;color:#334155';
-    label.textContent = 'Adres';
+    label.textContent = bk_t('savedAddrLabel');
     var select = document.createElement('select');
     select.id = 'bk-saved-addr-select';
     select.className = 'bk-input';
@@ -944,20 +1061,51 @@
     });
     var manualOpt = document.createElement('option');
     manualOpt.value = 'manual';
-    manualOpt.textContent = '✏️ Inny adres (wpisz ręcznie)';
+    manualOpt.id = 'bk-saved-addr-manual';
+    manualOpt.textContent = bk_t('manualAddrOpt');
     select.appendChild(manualOpt);
     wrap.appendChild(label);
     wrap.appendChild(select);
     streetWrap.parentNode.insertBefore(wrap, streetWrap);
+
+    // While a saved address is picked, the hidden manual inputs hold placeholder
+    // values (see below). `injected` remembers exactly what was written there and
+    // `manualStash` whatever the client had typed before, so switching to
+    // "Inny adres" removes only our placeholders and restores the client's own
+    // input — it never wipes text the client entered.
+    var ADDR_IDS = ['bk-street','bk-apt','bk-postal','bk-city'];
+    var injected = null;
+    var manualStash = null;
+    function readAddr(){
+      var v = {};
+      ADDR_IDS.forEach(function(id){ var el = document.getElementById(id); v[id] = el ? el.value : ''; });
+      return v;
+    }
+    function writeAddr(v){
+      ADDR_IDS.forEach(function(id){ var el = document.getElementById(id); if(el) el.value = v[id] || ''; });
+    }
 
     function applySelection(){
       if(select.value === 'manual'){
         bk_usingSavedAddress = false;
         bk_savedAddressText = '';
         bk_savedPropertyId = null;
+        if(injected){
+          var cur = readAddr();
+          var restored = {};
+          ADDR_IDS.forEach(function(id){
+            // Field still holds our placeholder → put back the client's own value
+            // (or empty); a field the client already edited stays as it is.
+            restored[id] = (cur[id] === injected[id]) ? ((manualStash && manualStash[id]) || '') : cur[id];
+          });
+          writeAddr(restored);
+          injected = null;
+          manualStash = null;
+        }
         manualWraps.forEach(function(el){ el.style.display = ''; });
       } else {
         var prop = properties.find(function(p){ return p.id === select.value; });
+        if(!injected) manualStash = readAddr(); // first switch into saved mode
         bk_usingSavedAddress = true;
         bk_savedAddressText = prop ? prop.address : '';
         bk_savedPropertyId = prop ? prop.id : null;
@@ -965,10 +1113,8 @@
         // bk_checkForm()/bk_validateAndHighlight() still read these hidden inputs'
         // .value — keep them non-empty so a saved address doesn't block the "ready"
         // state. bk_submit() ignores this placeholder and sends bk_savedAddressText.
-        document.getElementById('bk-street').value = bk_savedAddressText;
-        document.getElementById('bk-postal').value = '00-000';
-        document.getElementById('bk-city').value = '—';
-        document.getElementById('bk-apt').value = '';
+        injected = {'bk-street': bk_savedAddressText, 'bk-apt': '', 'bk-postal': '00-000', 'bk-city': '—'};
+        writeAddr(injected);
       }
       bk_checkForm();
     }

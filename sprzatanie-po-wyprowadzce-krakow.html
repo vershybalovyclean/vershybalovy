@@ -58,7 +58,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 }
 </script>
   <link rel="stylesheet" href="assets/css/base.css?v=20261008a">
-  <link rel="stylesheet" href="assets/css/booking.css?v=1">
+  <link rel="stylesheet" href="assets/css/booking.css?v=20261010a">
   <link rel="stylesheet" href="assets/css/wyprowadzce.css?v=8">
   <link rel="stylesheet" href="assets/css/window-picker.css?v=1">
   <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261008a">
@@ -1432,6 +1432,9 @@ function submitOrder(){
     service: SEL ? SEL.service : 'Sprzątanie po wyprowadzce',
     serviceSlug: (SEL && SEL.cat === 'bezmeb') ? 'wyprowadzka-bez-mebli' : 'sprzatanie-po-wyprowadzce',
     area: (SEL && SEL.m2) ? SEL.m2 + ' m²' : '',
+    // Fixed-price bracket rows 0–4 (do 35/45/60/75/90 m²) carry no measured
+    // area — pass the bracket itself, separately from areaM2.
+    areaRange: (SEL && !SEL.m2 && SEL.idx >= 0 && SEL.idx < 5) ? bk_rangeLabel([35,45,60,75,90][SEL.idx], 'pl') : '',
     extras: extrasArr.join(', '),
     // Structured snapshot alongside the display strings above (see booking.js) —
     // selectedAddons already holds the raw {id, qty, price} per item. serviceLines
@@ -1714,7 +1717,7 @@ window.addEventListener('load', function(){
 <script src="assets/js/analytics.js?v=1"></script>
 <script src="assets/js/client-session.js?v=1"></script>
 <script src="assets/js/site-auth-ui.js?v=1"></script>
-<script src="assets/js/booking.js?v=2"></script>
+<script src="assets/js/booking.js?v=20261010a"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>
