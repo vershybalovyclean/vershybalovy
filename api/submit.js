@@ -553,7 +553,11 @@ export default async function handler(req, res) {
 
   const [emailResult, sheetResult] = await Promise.allSettled([
     sendEmail(text, name),
-    logToSheet({ date: new Date().toISOString(), name: name, phone: phone, service: service || "", partnerCode: partnerCode || "", comment: (hasClientNote ? clientNote : comment) || "" })
+    // Sheets appendRow parses values like user input: "+48 514 363 538" became a
+    // formula (#ERROR!), "+48514363538" a number without "+". A leading apostrophe
+    // stores the phone as plain text exactly as typed (the apostrophe is not shown).
+    // Sheets only — every other channel still gets `phone` unchanged.
+    logToSheet({ date: new Date().toISOString(), name: name, phone: phone ? "'" + phone : "", service: service || "", partnerCode: partnerCode || "", comment: (hasClientNote ? clientNote : comment) || "" })
   ]);
 
   // Telegram is handled sequentially, not in the allSettled batch above: for a real
