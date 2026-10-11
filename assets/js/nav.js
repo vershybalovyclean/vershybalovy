@@ -31,15 +31,24 @@ var SEASONAL_CAMPAIGN = { halloweenLogo: true };
   // Единственное другое публичное место со стандартным compact-V — кнопка
   // "Więcej"/More в нижнем таббаре; footer (100px) и JSON-LD schema.image
   // это не тот же кейс и не переключаются.
-  document.querySelectorAll('.mtb-cta-icon img').forEach(function(img){
-    if (SEASONAL_CAMPAIGN.halloweenLogo) {
-      img.src = 'assets/img/logo-halloween-v.webp';
-      img.classList.add('halloween-v-icon');
-    } else {
-      img.src = 'assets/img/logo.png';
-      img.classList.remove('halloween-v-icon');
-    }
-  });
+  // На большинстве страниц таббар стоит в разметке ПОСЛЕ этого скрипта,
+  // поэтому при выполнении кнопки ещё нет — ждём DOMContentLoaded.
+  function applyTabbarIcon(){
+    document.querySelectorAll('.mtb-cta-icon img').forEach(function(img){
+      if (SEASONAL_CAMPAIGN.halloweenLogo) {
+        img.src = 'assets/img/logo-halloween-v.webp';
+        img.classList.add('halloween-v-icon');
+      } else {
+        img.src = 'assets/img/logo.png';
+        img.classList.remove('halloween-v-icon');
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyTabbarIcon);
+  } else {
+    applyTabbarIcon();
+  }
 })();
 
 // VershClean — mobile nav toggle + auto-close on scroll
