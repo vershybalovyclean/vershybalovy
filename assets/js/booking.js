@@ -32,8 +32,11 @@
   // ever creates a real requests row (see scheduledDate below), so it's the only place
   // this needs forwarding to /api/submit. Returns {} if nothing was ever captured
   // (organic/direct visit, or localStorage unavailable) — never blocks the booking.
+  // cookie-consent.js only stores it with ad_storage consent; vcGetFirstTouch() also
+  // returns the current page's not-yet-stored value.
   function bk_getFirstTouch(){
     try {
+      if(typeof window.vcGetFirstTouch === 'function') return window.vcGetFirstTouch() || {};
       var raw = localStorage.getItem('vc_first_touch');
       return raw ? JSON.parse(raw) : {};
     } catch(e) { return {}; }
