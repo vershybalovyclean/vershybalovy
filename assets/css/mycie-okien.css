@@ -154,16 +154,6 @@
 
 .bk-wday{text-align:center;font-size:10px;font-weight:700;color:#94a3b8;padding:3px 0}
 
-.combo-banner{background:linear-gradient(135deg,#16a34a,#22c55e);
-  border-radius:var(--r);padding:20px 28px;text-align:center;margin-top:24px;
-  box-shadow:0 4px 20px rgba(34,197,94,.3)}
-
-.combo-banner-note{display:block;color:rgba(255,255,255,.72);font-size:11px;margin-top:8px}
-
-.combo-banner-sub{color:rgba(255,255,255,.92);font-size:14px;line-height:1.5;max-width:520px;margin:0 auto}
-
-.combo-banner-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;color:#fff;margin-bottom:6px}
-
 .compare-no{color:var(--gray2)}
 
 .compare-table{width:100%;border-collapse:collapse;margin-top:32px}

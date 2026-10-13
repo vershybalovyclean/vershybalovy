@@ -700,25 +700,10 @@ function updateSidebar() {
     }
   }
 
-  // Window item — shown separately. Discount (below) applies ONLY for one-time orders (freqTimes === 1).
-  var windowDiscountApplied = false;
-  var winDiscLbl = {pl:'Rabat na zamówienie z myciem okien', uk:'Знижка на замовлення з миттям вікон', ru:'Скидка на заказ с мытьём окон', en:'Discount for order with window cleaning'}[lang] || 'Rabat na zamówienie z myciem okien';
-  var winDiscPct = 10;
-
+  // Window item — shown separately, at its regular per-m² price (no combo discount).
   if(windowItem && windowItem.price > 0) {
-    // Window price added normally — no discount here for cyclic orders (any freqTimes > 1)
     items.push({label: windowItem.name, val: windowItem.price + ' zł'});
     total += windowItem.price;
-  }
-
-  // ── Window discount on ENTIRE order (only for one-time orders, combined with a main service) ─────────────
-  // Rule: discount only applies when NOT cycling (freqTimes === 1) AND a main cleaning service is selected.
-  // Any cyclicity selected (freqTimes > 1) — no window discount at all.
-  if(windowItem && windowItem.price > 0 && freqTimes === 1 && serviceTotal > 0) {
-    var winDiscAmtFull = Math.round(total * winDiscPct / 100);
-    items.push({label: '🪟 ' + winDiscLbl + ' (−' + winDiscPct + '%)', val: '−' + winDiscAmtFull + ' zł', cls:'discount'});
-    total = Math.max(0, total - winDiscAmtFull);
-    windowDiscountApplied = true;
   }
 
   // ── Render ────────────────────────────────────────────────────────────────

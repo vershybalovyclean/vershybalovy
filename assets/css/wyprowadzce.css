@@ -14,20 +14,12 @@
 
 .ac-cancel{display:none;background:none;border:none;color:var(--gray);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:underline;padding:4px 0;margin-top:6px}
 
-.ac-combo-note{font-size:11px;color:var(--gray);margin-top:6px;display:block}
-
 /* Disable the decorative bottom fade-overlay here — it used to extend 40px below this
    section and, once the gap above the combo banner was tightened, painted over its title */
 #extras-section::after{content:none}
 /* Same issue on the other side: this section's top fade-overlay extended 40px upward
    and painted over the bottom of the combo banner above it */
 #scope-section::before{content:none}
-
-.ac-combo-standalone{padding:14px 18px;background:var(--green-pale);border:1px solid var(--green-light);border-radius:12px;text-align:center}
-
-.ac-combo-text{font-size:13px;color:var(--text2);line-height:1.5}
-
-.ac-combo-title{font-size:14px;font-weight:800;color:var(--green);margin-bottom:4px}
 
 .ac-hint{font-size:11px;color:var(--gray);margin-top:5px}
 

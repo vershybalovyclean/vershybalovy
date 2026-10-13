@@ -26,7 +26,13 @@
 
 Вместе с блоками удалены их JS-подписи (мультиязычные тексты banner'ов) и правила порядка `#win-upsell-section` / `#combo-section` в `mieszkan-mobile.css`, `remont.css`, `wyprowadzce.css`.
 
-Не тронуты: мойка окон как доп. услуга (пункты `toggleAddWindow`, расчёт по м², `window-picker.js`), быстрые карточки «Mycie okien — Dodaj» на мобильных, цены, логика скидки −10% при сочетании окон с уборкой (`win_combo_discount` в калькуляторе `wyprowadzce`), отдельная страница `mycie-okien.html`. Картинка `hero-service.jpg` осталась: её используют другие страницы. Из скриптов синхронизации и общих шаблонов банеры не восстанавливаются: таких упоминаний нет.
+Не тронуты: мойка окон как платная доп. услуга (пункты `toggleAddWindow`, расчёт по м², `window-picker.js`, тарифы), быстрые карточки «Mycie okien — Dodaj» на мобильных, отдельная страница `mycie-okien.html`. Картинка `hero-service.jpg` осталась: её используют другие страницы. Из скриптов синхронизации и общих шаблонов баннеры не восстанавливаются: таких упоминаний нет.
+
+## Отменена скидка −10% за сочетание мойки окон с уборкой (окончательное решение)
+
+Удалено: автоматический расчёт скидки в калькуляторах `sprzatanie-po-wyprowadzce-krakow`, `sprzatanie-po-remoncie-krakow` и `sprzatanie-mieszkan-i-domow-krakow` (строка скидки в боковой панели и ограничение «−5% при партнёрском коде»); логика «okna −10%» (срок до 30.09.2026) в устаревших блоках `index.html` и `poznaj-nas.html` (форма, `updatePriceSummary`, `calcUpdatePrice`, плашка «dzień roboczy + okna»); плашка «Łącz usługi i oszczędzaj» на `mycie-okien.html`; фраза «rabat 10%» в описании услуги на главной и `poznaj-nas`; все тексты PL/UK/RU/EN (`combo_*`, `win_combo_discount_lbl`, `discount_lbl`, `calcWinDiscLabel`, `upsell_*`); мёртвые CSS-правила `.combo-banner*`, `.ac-combo-*`. Сервер (`api/submit.js`) цену не считает, а принимает от страницы; сумма заказа на страницах и раньше формировалась без этой скидки, теперь интерфейс с ней совпадает.
+
+Не затронуты: скидка за регулярность (2×/3×/4×), «dzień roboczy», промокоды, акция Halloween.
 
 ## Партнёрская форма (`/program-partnerski#dolacz`)
 
