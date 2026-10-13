@@ -50,7 +50,18 @@ function extractAttribution(body) {
   };
 }
 
-async function sendEmail(text, name) {
+const EMAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;
+
+// Returns the address if it is a single, plausible e-mail (used as Reply-To only —
+// never as From), otherwise null.
+function cleanReplyTo(v) {
+  const s = cleanAttrString(v, 254);
+  return s && EMAIL_RE.test(s) ? s : null;
+}
+
+// From defaults to Resend's sandbox sender exactly as before; set the optional
+// `resend_from` env var (an address on a Resend-verified domain) to change it.
+async function sendEmail(text, name, replyTo) {
   const RESEND_API_KEY = process.env.Resend_api_key;
   const TO_EMAIL = process.env.to_email;
   if (!RESEND_API_KEY || !TO_EMAIL) return false;
@@ -62,16 +73,119 @@ async function sendEmail(text, name) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: "onboarding@resend.dev",
+        from: process.env.resend_from || "onboarding@resend.dev",
         to: [TO_EMAIL],
         subject: "Nowe zgłoszenie od " + name,
-        text: text
+        text: text,
+        ...(cleanReplyTo(replyTo) ? { reply_to: cleanReplyTo(replyTo) } : {})
       })
     });
     return r.ok;
   } catch (error) {
     return false;
   }
+}
+
+// ── Partner-program sign-up (program-partnerski.html#dolacz) ─────────────────────
+// A lead for the company to call back — no account, contract, code or commission is
+// created here. Delivered to the partner inbox (alias of the main Workspace mailbox)
+// and to the owner's Telegram "attention" topic; deliberately NOT written to the
+// bookings Google Sheet (different columns/purpose) or to Supabase.
+const PARTNER_TYPES = ["Agencja nieruchomości", "Firma remontowo-budowlana", "Firma przeprowadzkowa", "Klient indywidualny", "Inne"];
+const PARTNER_SUBJECT = "Nowe zgłoszenie partnerskie — Vershy Property Care";
+
+// Single-line, control-character-free, length-capped text (names/phones/urls end up in
+// an e-mail body and a Telegram message — no line breaks or header-like injection).
+function cleanLine(v, maxLen) {
+  if (typeof v !== "string") return null;
+  const s = v.replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!s) return null;
+  return s.length > maxLen ? s.slice(0, maxLen) : s;
+}
+
+async function sendPartnerEmail(text, replyTo) {
+  const RESEND_API_KEY = process.env.Resend_api_key;
+  if (!RESEND_API_KEY) return false;
+  try {
+    const r = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + RESEND_API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        // Defaults to the sender domain already verified in Resend for Supabase Auth mail
+        // (README: mail.vershclean.pl). Override with `partner_from_email` if needed.
+        from: process.env.partner_from_email || "Vershy Property Care <noreply@mail.vershclean.pl>",
+        to: [process.env.partner_to_email || "partnerzy@vershclean.pl"],
+        subject: PARTNER_SUBJECT,
+        text: text,
+        ...(replyTo ? { reply_to: replyTo } : {})
+      })
+    });
+    // Log the status only — never the payload or response (personal data).
+    if (!r.ok) console.error("partner e-mail rejected by Resend, status", r.status);
+    return r.ok;
+  } catch (error) {
+    console.error("partner e-mail request failed");
+    return false;
+  }
+}
+
+async function handlePartnerSignup(req, res, body) {
+  // Honeypot: a real visitor never sees/fills this field. Pretend success so bots get no signal.
+  if (cleanLine(body.website, 200)) return res.status(200).json({ success: true });
+
+  const name = cleanLine(body.name, 120);
+  const phone = cleanLine(body.phone, 30);
+  const emailRaw = cleanLine(body.email, 254);
+  const email = emailRaw && EMAIL_RE.test(emailRaw) ? emailRaw : null;
+  const partnerType = cleanLine(body.partnerType, 80);
+
+  const phoneDigits = phone ? phone.replace(/\D/g, "") : "";
+  if (!name || name.length < 2) return res.status(400).json({ error: "Imię i nazwisko są wymagane" });
+  if (!phone || !/^[+\d\s()\-.]+$/.test(phone) || phoneDigits.length < 7 || phoneDigits.length > 15) {
+    return res.status(400).json({ error: "Podaj poprawny numer telefonu" });
+  }
+  if (emailRaw && !email) return res.status(400).json({ error: "Podaj poprawny adres e-mail" });
+  if (!partnerType || PARTNER_TYPES.indexOf(partnerType) === -1) {
+    return res.status(400).json({ error: "Wybierz rodzaj współpracy" });
+  }
+
+  const pageUrl = cleanLine(body.pageUrl, 300) || cleanLine(req.headers && (req.headers.referer || req.headers.referrer), 300);
+  const when = new Date();
+  const whenPl = when.toLocaleString("pl-PL", { timeZone: "Europe/Warsaw" });
+
+  const text = "Nowe zgłoszenie z formularza partnerskiego\n\n" +
+    "Imię i nazwisko: " + name + "\n" +
+    "Telefon: " + phone + "\n" +
+    "Email: " + (email || "nie podano") + "\n" +
+    "Rodzaj współpracy: " + partnerType + "\n" +
+    "Data zgłoszenia: " + whenPl + " (czas polski), " + when.toISOString() + "\n" +
+    "Źródło: Program partnerski\n" +
+    "Strona: " + (pageUrl || "brak danych") + "\n\n" +
+    "Zgłoszenie nie tworzy konta, umowy ani zobowiązań — skontaktuj się z osobą, aby omówić warunki współpracy.";
+
+  const [emailResult, telegramResult] = await Promise.allSettled([
+    sendPartnerEmail(text, email),
+    notifySiteEvent({
+      event: "site_contact",
+      name, phone,
+      service: "Program partnerski — " + partnerType,
+      comment: "Zgłoszenie partnerskie" + (email ? " · " + email : ""),
+      source: pageUrl || null
+    })
+  ]);
+  const emailOk = emailResult.status === "fulfilled" && emailResult.value === true;
+  const telegramOk = telegramResult.status === "fulfilled" && telegramResult.value === true;
+
+  // Success only if a human was actually notified through at least one channel.
+  if (!emailOk && !telegramOk) {
+    console.error("Partner sign-up: all notification channels failed");
+    return res.status(500).json({ error: "Błąd wysyłania" });
+  }
+  if (!emailOk) console.error("Partner sign-up: e-mail channel failed, delivered via Telegram only");
+  return res.status(200).json({ success: true });
 }
 
 // Legacy Telegram migration (26.09): quick-contact/estimate submissions (no
@@ -523,6 +637,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  if (req.body && req.body.formType === "partner") {
+    return handlePartnerSignup(req, res, req.body);
+  }
+
   const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at } = req.body;
 
   if (!name || !phone) {
@@ -552,7 +670,7 @@ export default async function handler(req, res) {
   const requestId = hasBooking ? randomUUID() : null;
 
   const [emailResult, sheetResult] = await Promise.allSettled([
-    sendEmail(text, name),
+    sendEmail(text, name, email),
     // Sheets appendRow parses values like user input: "+48 514 363 538" became a
     // formula (#ERROR!), "+48514363538" a number without "+". A leading apostrophe
     // stores the phone as plain text exactly as typed (the apostrophe is not shown).

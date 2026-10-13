@@ -39,7 +39,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 }
   </script>
   <link rel="stylesheet" href="assets/css/base.css?v=20261013a">
-  <link rel="stylesheet" href="assets/css/partnerski.css?v=1">
+  <link rel="stylesheet" href="assets/css/partnerski.css?v=2">
   <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261008a">
 </head>
 <body class="has-mobile-tabbar">
@@ -289,22 +289,22 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   <div class="wrap" style="text-align:center;max-width:760px">
     <div class="sec-lbl" id="sg-lbl">Dołącz do nas</div>
     <h2 class="sec-title" id="sg-h2">Zostań <em>partnerem</em></h2>
-    <p class="sec-sub" id="sg-sub" style="margin:0 auto 32px">Wypełnij formularz — skontaktujemy się w ciągu 24h i przekażemy Twój unikalny kod partnera.</p>
+    <p class="sec-sub" id="sg-sub" style="margin:0 auto 32px">Wypełnij formularz — skontaktujemy się z Tobą w ciągu 1 dnia roboczego i omówimy warunki współpracy.</p>
 
     <div class="pp-form-card">
       <form id="signup-form" onsubmit="return submitSignup(event)">
         <div class="pp-field">
           <label class="pp-field-lbl" id="sg-name-lbl">Imię i nazwisko *</label>
-          <input type="text" class="pp-input" id="sg-name" required>
+          <input type="text" class="pp-input" id="sg-name" required maxlength="120" autocomplete="name">
         </div>
         <div class="pp-row2">
           <div class="pp-field">
             <label class="pp-field-lbl" id="sg-phone-lbl">Telefon *</label>
-            <input type="tel" class="pp-input" id="sg-phone" required>
+            <input type="tel" class="pp-input" id="sg-phone" required maxlength="30" autocomplete="tel">
           </div>
           <div class="pp-field">
             <label class="pp-field-lbl" id="sg-email-lbl">Email</label>
-            <input type="email" class="pp-input" id="sg-email">
+            <input type="email" class="pp-input" id="sg-email" maxlength="254" autocomplete="email">
           </div>
         </div>
         <div class="pp-field">
@@ -317,16 +317,20 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
             <option value="Inne" id="sg-opt5">Inne</option>
           </select>
         </div>
+        <!-- Honeypot: invisible to people, bots tend to fill it; the server drops such submissions. -->
+        <div class="pp-hp" aria-hidden="true"><label>Website <input type="text" id="sg-website" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <p class="pp-form-error" id="sg-error" role="alert" hidden></p>
         <button type="submit" class="pp-submit-btn" id="sg-submit">🤝 Wyślij zgłoszenie</button>
-        <p class="pp-form-note" id="sg-note">Udział w programie jest bezpłatny. Odpowiemy w ciągu 24h.</p>
+        <p class="pp-form-note" id="sg-note">Udział w programie jest bezpłatny. Skontaktujemy się w ciągu 1 dnia roboczego.</p>
+        <p class="pp-form-note" id="sg-privacy">Wysyłając formularz, przekazujesz dane w celu kontaktu w sprawie współpracy. Szczegóły: <a href="/polityka-prywatnosci">Polityka prywatności</a>.</p>
         <p class="pp-form-note"><a href="mailto:partnerzy@vershclean.pl" data-vc-fixed-mail id="sg-mail-link">✉️ partnerzy@vershclean.pl</a></p>
       </form>
 
       <div class="pp-thanks" id="signup-thanks">
         <div class="pp-thanks-icon">🎉</div>
-        <div class="pp-thanks-title" id="sg-thanks-title">Dziękujemy za zgłoszenie!</div>
-        <p class="pp-thanks-text" id="sg-thanks-t1">Skontaktujemy się z Tobą w ciągu 24 godzin i przekażemy Twój unikalny kod partnera.</p>
-        <p class="pp-thanks-text" id="sg-thanks-t2">Możesz też napisać do nas od razu, aby przyspieszyć proces:</p>
+        <div class="pp-thanks-title" id="sg-thanks-title">Dziękujemy!</div>
+        <p class="pp-thanks-text" id="sg-thanks-t1">Twoje zgłoszenie zostało wysłane. Skontaktujemy się z Tobą w ciągu 1 dnia roboczego.</p>
+        <p class="pp-thanks-text" id="sg-thanks-t2">Masz pytania? Możesz też napisać do nas bezpośrednio:</p>
         <a href="#" target="_blank" class="btn-wa" id="signup-wa-btn" style="margin-top:10px;display:inline-block">💬 Napisz na WhatsApp</a>
         <a href="mailto:partnerzy@vershclean.pl" data-vc-fixed-mail class="btn-wa" id="signup-mail-btn" style="margin-top:10px;display:inline-block;background:var(--blue2)">✉️ partnerzy@vershclean.pl</a>
       </div>
@@ -444,32 +448,69 @@ window.addEventListener('scroll', function(){
 });
 
 // ===== SIGNUP FORM =====
+var signupBusy = false;
 function submitSignup(e){
   e.preventDefault();
+  if(signupBusy) return false; // double click / double tap
   var name = document.getElementById('sg-name').value;
   var phone = document.getElementById('sg-phone').value;
   var email = document.getElementById('sg-email').value;
   var type = document.getElementById('sg-type').value;
-
+  var btn = document.getElementById('sg-submit');
+  var errEl = document.getElementById('sg-error');
+  var idleLabel = btn.textContent;
   var t = TX[lang] || TX.pl;
-  var msg = t.sg_msg_title + '\n\n'
-    + t.sg_msg_name + name + '\n'
-    + t.sg_msg_phone + phone + '\n'
-    + (email ? t.sg_msg_email + email + '\n' : '')
-    + t.sg_msg_type + type;
 
-  document.getElementById('signup-wa-btn').href = 'https://wa.me/48514363538?text=' + encodeURIComponent(msg);
-  document.getElementById('signup-mail-btn').href = 'mailto:partnerzy@vershclean.pl?subject='
-    + encodeURIComponent(t.sg_msg_title) + '&body=' + encodeURIComponent(msg);
-  document.getElementById('signup-form').style.display = 'none';
-  document.getElementById('signup-thanks').classList.add('show');
-  if(typeof gtag !== 'undefined'){
-    gtag('event', 'partner_signup_click', {
-      'event_category': 'partner_signup',
-      'event_label': type || 'program_partnerski',
-      'value': 1
+  signupBusy = true;
+  btn.disabled = true;
+  btn.textContent = t.sg_sending;
+  errEl.hidden = true;
+
+  // The lead is delivered by /api/submit (formType "partner" -> partnerzy@ mailbox +
+  // Telegram). The thank-you panel appears only after the server confirms success.
+  fetch('/api/submit', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      formType: 'partner',
+      name: name, phone: phone, email: email, partnerType: type,
+      website: document.getElementById('sg-website').value, // honeypot
+      pageUrl: location.origin + location.pathname,
+      lang: lang
+    })
+  })
+  .then(function(r){
+    return r.json().catch(function(){ return null; }).then(function(j){
+      if(!r.ok || !j || j.success !== true) throw new Error('submit failed');
     });
-  }
+  })
+  .then(function(){
+    // Optional alternative contact buttons, prefilled with the same details.
+    var msg = t.sg_msg_title + '\n\n'
+      + t.sg_msg_name + name + '\n'
+      + t.sg_msg_phone + phone + '\n'
+      + (email ? t.sg_msg_email + email + '\n' : '')
+      + t.sg_msg_type + type;
+    document.getElementById('signup-wa-btn').href = 'https://wa.me/48514363538?text=' + encodeURIComponent(msg);
+    document.getElementById('signup-mail-btn').href = 'mailto:partnerzy@vershclean.pl?subject='
+      + encodeURIComponent(t.sg_msg_title) + '&body=' + encodeURIComponent(msg);
+    document.getElementById('signup-form').style.display = 'none';
+    document.getElementById('signup-thanks').classList.add('show');
+    if(typeof gtag !== 'undefined'){
+      gtag('event', 'partner_signup_click', {
+        'event_category': 'partner_signup',
+        'event_label': type || 'program_partnerski',
+        'value': 1
+      });
+    }
+  })
+  .catch(function(){
+    btn.disabled = false;
+    btn.textContent = idleLabel;
+    signupBusy = false;
+    errEl.innerHTML = (TX[lang] || TX.pl).sg_err;
+    errEl.hidden = false;
+  });
   return false;
 }
 
@@ -512,17 +553,19 @@ pl: {
   per3_t:'Firmy przeprowadzkowe', per3_d:'Polecaj sprzątanie mieszkania przed lub po przeprowadzce swoim klientom.',
   per4_t:'Zadowoleni klienci', per4_d:'Korzystałeś z naszych usług? Poleć nas znajomym i zarabiaj na każdym poleceniu.',
   sg_lbl:'Dołącz do nas', sg_h2:'Zostań <em>partnerem</em>',
-  sg_sub:'Wypełnij formularz — skontaktujemy się w ciągu 24h i przekażemy Twój unikalny kod partnera.',
+  sg_sub:'Wypełnij formularz — skontaktujemy się z Tobą w ciągu 1 dnia roboczego i omówimy warunki współpracy.',
   sg_name_lbl:'Imię i nazwisko *', sg_phone_lbl:'Telefon *', sg_email_lbl:'Email',
   sg_type_lbl:'Jak planujesz polecać klientów?',
   sg_opt1:'Agencja nieruchomości', sg_opt2:'Firma remontowo-budowlana', sg_opt3:'Firma przeprowadzkowa',
   sg_opt4:'Klient indywidualny', sg_opt5:'Inne',
-  sg_submit:'🤝 Wyślij zgłoszenie', sg_note:'Udział w programie jest bezpłatny. Odpowiemy w ciągu 24h.',
+  sg_submit:'🤝 Wyślij zgłoszenie', sg_note:'Udział w programie jest bezpłatny. Skontaktujemy się w ciągu 1 dnia roboczego.',
   sg_msg_title:'🤝 Zgłoszenie do programu partnerskiego', sg_msg_name:'Imię i nazwisko: ', sg_msg_phone:'Telefon: ', sg_msg_email:'Email: ', sg_msg_type:'Rodzaj współpracy: ',
-  sg_thanks_title:'Dziękujemy za zgłoszenie!',
-  sg_thanks_t1:'Skontaktujemy się z Tobą w ciągu 24 godzin i przekażemy Twój unikalny kod partnera.',
-  sg_thanks_t2:'Możesz też napisać do nas od razu, aby przyspieszyć proces:',
+  sg_thanks_title:'Dziękujemy!',
+  sg_thanks_t1:'Twoje zgłoszenie zostało wysłane. Skontaktujemy się z Tobą w ciągu 1 dnia roboczego.',
+  sg_thanks_t2:'Masz pytania? Możesz też napisać do nas bezpośrednio:',
   wa_btn:'💬 Napisz na WhatsApp',
+  sg_err:'Nie udało się wysłać zgłoszenia. Spróbuj ponownie lub napisz do nas: <a href="mailto:partnerzy@vershclean.pl" data-vc-fixed-mail>partnerzy@vershclean.pl</a>.', sg_sending:'⏳ Wysyłanie…',
+  sg_privacy:'Wysyłając formularz, przekazujesz dane w celu kontaktu w sprawie współpracy. Szczegóły: <a href="/polityka-prywatnosci">Polityka prywatności</a>.',
   faq_lbl:'FAQ', faq_h2:'Najczęstsze <em>pytania</em>',
   faq_q0:'Jak wypłacana jest prowizja?', faq_a0:'Prowizję w wysokości 10–15% wartości netto zlecenia wypłacamy zgodnie z Twoim wyborem: po każdym zrealizowanym zleceniu albo raz w miesiącu, zbiorczo za dany okres.',
   faq_q1:'Kiedy otrzymam swój kod partnera?', faq_a1:'W ciągu 24 godzin od zgłoszenia, drogą mailową lub telefoniczną. Kod ma format VC- i 4 cyfry, np. VC-4821.',
@@ -580,17 +623,19 @@ uk: {
   per3_t:'Компанії з переїзду', per3_d:'Рекомендуй прибирання квартири до або після переїзду своїм клієнтам.',
   per4_t:'Задоволені клієнти', per4_d:'Користувався нашими послугами? Порекомендуй нас знайомим і заробляй на кожній рекомендації.',
   sg_lbl:'Приєднуйся до нас', sg_h2:'Стань <em>партнером</em>',
-  sg_sub:"Заповни форму — ми зв'яжемося протягом 24 годин і надамо твій унікальний код партнера.",
+  sg_sub:'Заповни форму — ми зв\'яжемося з тобою протягом 1 робочого дня та обговоримо умови співпраці.',
   sg_name_lbl:"Ім'я та прізвище *", sg_phone_lbl:'Телефон *', sg_email_lbl:'Email',
   sg_type_lbl:'Як плануєш рекомендувати клієнтів?',
   sg_opt1:'Агенція нерухомості', sg_opt2:'Будівельно-ремонтна компанія', sg_opt3:'Компанія з переїзду',
   sg_opt4:'Індивідуальний клієнт', sg_opt5:'Інше',
-  sg_submit:'🤝 Надіслати заявку', sg_note:"Участь у програмі безкоштовна. Відповімо протягом 24 годин.",
+  sg_submit:'🤝 Надіслати заявку', sg_note:'Участь у програмі безкоштовна. Зв\'яжемося протягом 1 робочого дня.',
   sg_msg_title:'🤝 Заявка на участь у партнерській програмі', sg_msg_name:"Ім'я та прізвище: ", sg_msg_phone:'Телефон: ', sg_msg_email:'Email: ', sg_msg_type:'Вид співпраці: ',
-  sg_thanks_title:'Дякуємо за заявку!',
-  sg_thanks_t1:"Ми зв'яжемося з тобою протягом 24 годин і надамо твій унікальний код партнера.",
-  sg_thanks_t2:"Можеш також написати нам одразу, щоб прискорити процес:",
+  sg_thanks_title:'Дякуємо!',
+  sg_thanks_t1:'Твою заявку надіслано. Ми зв\'яжемося з тобою протягом 1 робочого дня.',
+  sg_thanks_t2:'Маєш питання? Можеш також написати нам напряму:',
   wa_btn:'💬 Написати у WhatsApp',
+  sg_err:'Не вдалося надіслати заявку. Спробуй ще раз або напиши нам: <a href="mailto:partnerzy@vershclean.pl" data-vc-fixed-mail>partnerzy@vershclean.pl</a>.', sg_sending:'⏳ Надсилаємо…',
+  sg_privacy:'Надсилаючи форму, ти передаєш дані для зв\'язку щодо співпраці. Докладніше: <a href="/polityka-prywatnosci">Політика конфіденційності</a>.',
   faq_lbl:'FAQ', faq_h2:'Часті <em>запитання</em>',
   faq_q0:'Як виплачується комісія?', faq_a0:'Комісію у розмірі 10–15% чистої вартості замовлення ми виплачуємо на твій вибір: після кожного виконаного замовлення або раз на місяць, сукупно за період.',
   faq_q1:'Коли я отримаю свій код партнера?', faq_a1:'Протягом 24 годин після заявки, електронною поштою або телефоном. Код має формат VC- і 4 цифри, напр. VC-4821.',
@@ -648,17 +693,19 @@ ru: {
   per3_t:'Компании по переезду', per3_d:'Рекомендуй уборку квартиры до или после переезда своим клиентам.',
   per4_t:'Довольные клиенты', per4_d:'Пользовался нашими услугами? Порекомендуй нас знакомым и зарабатывай на каждой рекомендации.',
   sg_lbl:'Присоединяйся к нам', sg_h2:'Стань <em>партнёром</em>',
-  sg_sub:'Заполни форму — мы свяжемся в течение 24 часов и передадим твой уникальный код партнёра.',
+  sg_sub:'Заполни форму — мы свяжемся с тобой в течение 1 рабочего дня и обсудим условия сотрудничества.',
   sg_name_lbl:'Имя и фамилия *', sg_phone_lbl:'Телефон *', sg_email_lbl:'Email',
   sg_type_lbl:'Как планируешь рекомендовать клиентов?',
   sg_opt1:'Агентство недвижимости', sg_opt2:'Строительно-ремонтная компания', sg_opt3:'Компания по переезду',
   sg_opt4:'Частный клиент', sg_opt5:'Другое',
-  sg_submit:'🤝 Отправить заявку', sg_note:'Участие в программе бесплатно. Ответим в течение 24 часов.',
+  sg_submit:'🤝 Отправить заявку', sg_note:'Участие в программе бесплатно. Свяжемся в течение 1 рабочего дня.',
   sg_msg_title:'🤝 Заявка на участие в партнёрской программе', sg_msg_name:'Имя и фамилия: ', sg_msg_phone:'Телефон: ', sg_msg_email:'Email: ', sg_msg_type:'Вид сотрудничества: ',
-  sg_thanks_title:'Спасибо за заявку!',
-  sg_thanks_t1:'Мы свяжемся с тобой в течение 24 часов и передадим твой уникальный код партнёра.',
-  sg_thanks_t2:'Можешь также написать нам сразу, чтобы ускорить процесс:',
+  sg_thanks_title:'Спасибо!',
+  sg_thanks_t1:'Твоя заявка отправлена. Мы свяжемся с тобой в течение 1 рабочего дня.',
+  sg_thanks_t2:'Есть вопросы? Можешь также написать нам напрямую:',
   wa_btn:'💬 Написать в WhatsApp',
+  sg_err:'Не удалось отправить заявку. Попробуй ещё раз или напиши нам: <a href="mailto:partnerzy@vershclean.pl" data-vc-fixed-mail>partnerzy@vershclean.pl</a>.', sg_sending:'⏳ Отправляем…',
+  sg_privacy:'Отправляя форму, ты передаёшь данные для связи по вопросам сотрудничества. Подробнее: <a href="/polityka-prywatnosci">Политика конфиденциальности</a>.',
   faq_lbl:'Частые вопросы', faq_h2:'Часто задаваемые <em>вопросы</em>',
   faq_q0:'Как выплачивается комиссия?', faq_a0:'Комиссию в размере 10–15% от чистой стоимости заказа мы выплачиваем по твоему выбору: после каждого выполненного заказа или раз в месяц одной суммой за период.',
   faq_q1:'Когда я получу свой код партнёра?', faq_a1:'В течение 24 часов после заявки, по email или телефону. Код имеет формат VC- и 4 цифры, напр. VC-4821.',
@@ -716,17 +763,19 @@ en: {
   per3_t:'Moving companies', per3_d:'Recommend apartment cleaning before or after a move to your clients.',
   per4_t:'Happy clients', per4_d:'Used our services? Recommend us to friends and earn on every referral.',
   sg_lbl:'Join us', sg_h2:'Become a <em>partner</em>',
-  sg_sub:"Fill in the form — we'll contact you within 24h and give you your unique partner code.",
+  sg_sub:'Fill in the form — we\'ll contact you within 1 business day to discuss the terms of cooperation.',
   sg_name_lbl:'Full name *', sg_phone_lbl:'Phone *', sg_email_lbl:'Email',
   sg_type_lbl:'How do you plan to refer clients?',
   sg_opt1:'Real estate agency', sg_opt2:'Construction & renovation company', sg_opt3:'Moving company',
   sg_opt4:'Individual client', sg_opt5:'Other',
-  sg_submit:'🤝 Send application', sg_note:"Participation in the program is free. We'll respond within 24h.",
+  sg_submit:'🤝 Send application', sg_note:'Participation in the program is free. We\'ll contact you within 1 business day.',
   sg_msg_title:'🤝 Partner program application', sg_msg_name:'Full name: ', sg_msg_phone:'Phone: ', sg_msg_email:'Email: ', sg_msg_type:'Type of cooperation: ',
-  sg_thanks_title:'Thanks for your application!',
-  sg_thanks_t1:"We'll contact you within 24 hours and give you your unique partner code.",
-  sg_thanks_t2:'You can also message us right away to speed things up:',
+  sg_thanks_title:'Thank you!',
+  sg_thanks_t1:'Your application has been sent. We will contact you within 1 business day.',
+  sg_thanks_t2:'Have questions? You can also write to us directly:',
   wa_btn:'💬 Message on WhatsApp',
+  sg_err:'We could not send your application. Please try again or write to us: <a href="mailto:partnerzy@vershclean.pl" data-vc-fixed-mail>partnerzy@vershclean.pl</a>.', sg_sending:'⏳ Sending…',
+  sg_privacy:'By submitting the form you share your details so we can contact you about cooperation. More: <a href="/polityka-prywatnosci">Privacy policy</a>.',
   faq_lbl:'FAQ', faq_h2:'Frequently <em>asked questions</em>',
   faq_q0:'How is commission paid out?', faq_a0:'We pay 10–15% commission of the net order value however you prefer: after each completed order, or once a month as a single batch payment.',
   faq_q1:'When will I get my partner code?', faq_a1:'Within 24 hours of signing up, by email or phone. The code follows the format VC- plus 4 digits, e.g. VC-4821.',
@@ -786,7 +835,8 @@ function applyTranslations(l){
   set('sg-name-lbl', t.sg_name_lbl); set('sg-phone-lbl', t.sg_phone_lbl); set('sg-email-lbl', t.sg_email_lbl);
   set('sg-type-lbl', t.sg_type_lbl);
   set('sg-opt1', t.sg_opt1); set('sg-opt2', t.sg_opt2); set('sg-opt3', t.sg_opt3); set('sg-opt4', t.sg_opt4); set('sg-opt5', t.sg_opt5);
-  set('sg-submit', t.sg_submit); set('sg-note', t.sg_note);
+  set('sg-submit', t.sg_submit); set('sg-note', t.sg_note); setHtml('sg-privacy', t.sg_privacy);
+  var sgErr = document.getElementById('sg-error'); if (sgErr && !sgErr.hidden) sgErr.innerHTML = t.sg_err;
   set('sg-thanks-title', t.sg_thanks_title); set('sg-thanks-t1', t.sg_thanks_t1); set('sg-thanks-t2', t.sg_thanks_t2);
   set('signup-wa-btn', t.wa_btn);
   set('faq-lbl', t.faq_lbl); setHtml('faq-h2', t.faq_h2);

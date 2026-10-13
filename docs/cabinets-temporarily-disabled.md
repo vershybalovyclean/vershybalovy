@@ -28,6 +28,18 @@
 
 Не тронуты: мойка окон как доп. услуга (пункты `toggleAddWindow`, расчёт по м², `window-picker.js`), быстрые карточки «Mycie okien — Dodaj» на мобильных, цены, логика скидки −10% при сочетании окон с уборкой (`win_combo_discount` в калькуляторе `wyprowadzce`), отдельная страница `mycie-okien.html`. Картинка `hero-service.jpg` осталась: её используют другие страницы. Из скриптов синхронизации и общих шаблонов банеры не восстанавливаются: таких упоминаний нет.
 
+## Партнёрская форма (`/program-partnerski#dolacz`)
+
+Форма теперь реально отправляет заявку: `POST /api/submit` с `formType: "partner"` (ветка `handlePartnerSignup` в `api/submit.js`).
+- Письмо на `partnerzy@vershclean.pl` (переопределяется env `partner_to_email`), тема «Nowe zgłoszenie partnerskie — Vershy Property Care», `Reply-To` = e-mail заявителя (если указан и корректен). Отправитель по умолчанию `Vershy Property Care <noreply@mail.vershclean.pl>` (env `partner_from_email`): домен `mail.vershclean.pl` подтверждён в Resend по README `vershy-admin`, но проверьте, что ключ `Resend_api_key` относится к тому же аккаунту.
+- Уведомление в Telegram (тема «Требует внимания») через существующий `notify-owner-event` (`site_contact`).
+- В Google Sheets и Supabase заявка не пишется.
+- Успех показывается только после ответа сервера `success: true`; повторная отправка блокируется; при ошибке показывается сообщение с адресом `partnerzy@`.
+- Защита: honeypot (`website`), серверная валидация и ограничение длины, очистка управляющих символов. Лимита частоты запросов нет.
+- Заявка не создаёт аккаунт, договор, код или комиссию.
+
+Для обычных заявок `api/submit.js` добавлено только необязательное: `Reply-To` (если клиент указал корректный e-mail) и env `resend_from` для отправителя (по умолчанию как раньше, `onboarding@resend.dev`).
+
 ## Что изменено в `vershy-admin` (отдельный репозиторий)
 
 Файл `vercel.json` (ветка `disable-client-partner-cabinets`, коммит `0751c3c`, пока не запушен):
