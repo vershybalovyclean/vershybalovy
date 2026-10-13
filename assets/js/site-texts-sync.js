@@ -164,7 +164,9 @@
     }
 
     if (email) {
-      document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
+      // [data-vc-fixed-mail] opts a link out (e.g. the partner-program inbox must not be
+      // overwritten with the general company address).
+      document.querySelectorAll('a[href^="mailto:"]:not([data-vc-fixed-mail])').forEach(function (a) {
         a.setAttribute("href", "mailto:" + email);
         if (emailPattern.test(a.textContent)) {
           a.textContent = a.textContent.replace(emailPattern, email);

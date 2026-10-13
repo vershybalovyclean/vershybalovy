@@ -61,7 +61,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   ]
 }
 </script>
-  <link rel="stylesheet" href="assets/css/base.css?v=20261011d">
+  <link rel="stylesheet" href="assets/css/base.css?v=20261013a">
   <link rel="stylesheet" href="assets/css/zbierackosc.css?v=3">
   <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261008a">
 </head>
@@ -118,15 +118,6 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <img src="assets/img/logo.png" alt="Vershy Property Care">
     <div class="hdr-brand">Vershy Property Care<small>Premium Cleaning &amp; Property Services</small></div>
   </a>
-  <div class="hdr-login">
-    <button type="button" class="login-trigger" onclick="toggleLoginMenu()">👤</button>
-    <div class="login-dropdown" id="login-dropdown">
-      <a href="https://kabinet.vershclean.pl/client/login.html" id="loginClient">👤 Kabinet klienta</a>
-      <a href="https://kabinet.vershclean.pl/partner/login.html" id="loginPartner">🤝 Kabinet partnera</a>
-      <a href="https://kabinet.vershclean.pl/client/login.html#register" id="loginRegister">📝 Zarejestruj się</a>
-      <a href="/program-partnerski" id="hdr-cta">🤝 Zostań partnerem</a>
-    </div>
-  </div>
   <button class="burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
   <div class="hdr-nav-backdrop" onclick="toggleNav()"></div>
   <nav class="hdr-nav" id="hn">
@@ -143,7 +134,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-case"></use></svg></span><span class="hng-label" id="hng8">Trudne przypadki</span></a>
       <a href="/#przed-po"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-camera"></use></svg></span><span class="hng-label" id="hng9">Realizacje</span></a>
       <a href="#faq-lbl"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-question"></use></svg></span><span class="hng-label" id="hng10">FAQ</span></a>
-      <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-pencil"></use></svg></span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
+      <a href="https://wa.me/48514363538" target="_blank" rel="noopener"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="hng-label" id="hng11">WhatsApp</span></a>
       <a href="/program-partnerski"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
     <a data-vc-call href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
@@ -722,10 +713,8 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<script src="assets/js/client-session.js?v=1"></script>
-<script src="assets/js/site-auth-ui.js?v=1"></script>
 <script src="assets/js/nav.js?v=20261012a"></script>
-<script src="assets/js/site-texts-sync.js?v=20261011b" defer></script>
+<script src="assets/js/site-texts-sync.js?v=20261013a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
 <script>
 function toggleFaq(el){el.parentNode.classList.toggle('open');}
@@ -872,7 +861,7 @@ pl: {
   hero_sub:'Zbieractwo, długotrwałe zaniedbanie, zadymienie i sadza po dymie — każdy przypadek oceniamy indywidualnie i przygotowujemy wycenę dopasowaną do rzeczywistej sytuacji.',
   hero_btn1:'Opisz swoją sytuację →', hero_btn2:'💬 Skontaktuj się z menedżerem',
   hero_audit_hint:'Cenę ustalamy zawsze indywidualnie — po kontakcie i ocenie sytuacji.',
-  cta_call:'Zadzwoń', mtb_home:'Strona główna', mtb_call:'Zadzwoń', mtb_more:'Więcej', mtb_chat:'Czat', mtb_account:'Konto',
+  cta_call:'Zadzwoń', mtb_home:'Strona główna', mtb_call:'Zadzwoń', mtb_more:'Więcej', mtb_chat:'Czat', mtb_account:'Partner',
   tr1:'🔬 Technologia ozonowania', tr2:'🧪 Certyfikowana chemia profesjonalna', tr3:'🛡️ Neutralizacja uporczywych zapachów',
   tr4:'🔒 Pełna dyskrecja', tr5:'📸 Dokumentacja fotograficzna',
   scn_lbl:'Trudne przypadki', scn_h2:'W czym możemy <em>pomóc?</em>', scn_sub:'Wybierz sytuację, która najlepiej opisuje Twój przypadek.',
@@ -1000,7 +989,7 @@ pl: {
   final_btn1:'📞 +48 514 363 538', final_btn2:'💬 Napisz na WhatsApp',
   hngMenuTitle:'Menu', hng1:'O nas', hng2:'Opinie', hng3:'Kontakt', hng4:'Mycie okien', hng5:'Sprzątanie mieszkań i domów',
   hng6:'Po remoncie', hng7:'Po wyprowadzce', hng8:'Trudne przypadki', hng9:'Realizacje', hng10:'FAQ',
-  hng11:'Zarejestruj się', hng12:'Zostań partnerem', hngCallBtn:'📞 ZADZWOŃ DO NAS', hngClose:'Zamknij',
+  hng11:'WhatsApp', hng12:'Zostań partnerem', hngCallBtn:'📞 ZADZWOŃ DO NAS', hngClose:'Zamknij',
   fslogan:'Premium Cleaning & Property Services', ftnote:'Ceny końcowe · Wycena indywidualna po audycie',
   ftUslugiH:'Usługi', ftLinkMieszkania:'Sprzątanie mieszkań i domów', ftLinkRemont:'Po remoncie', ftLinkWyprowadzka:'Po wyjeździe',
   ftLinkZbieractwo:'Trudne przypadki', ftLinkOkna:'Mycie okien', ftFirmaH:'Firma', ftLinkPoznaj:'Poznaj nas',
@@ -1018,7 +1007,7 @@ uk: {
   hero_sub:'Захаращення, багаторічна занедбаність, задимлення та кіптява після диму — кожен випадок оцінюємо індивідуально та готуємо вартість, що відповідає реальній ситуації.',
   hero_btn1:'Опишіть свою ситуацію →', hero_btn2:'💬 Зв\'язатися з менеджером',
   hero_audit_hint:'Ціну завжди визначаємо індивідуально — після контакту та оцінки ситуації.',
-  cta_call:'Подзвонити', mtb_home:'Головна', mtb_call:'Подзвонити', mtb_more:'Ще', mtb_chat:'Чат', mtb_account:'Кабінет',
+  cta_call:'Подзвонити', mtb_home:'Головна', mtb_call:'Подзвонити', mtb_more:'Ще', mtb_chat:'Чат', mtb_account:'Партнер',
   tr1:'🔬 Технологія озонування', tr2:'🧪 Сертифікована професійна хімія', tr3:'🛡️ Нейтралізація стійких запахів',
   tr4:'🔒 Повна конфіденційність', tr5:'📸 Фотодокументація',
   scn_lbl:'Складні випадки', scn_h2:'Чим ми можемо <em>допомогти?</em>', scn_sub:'Оберіть ситуацію, яка найкраще описує ваш випадок.',
@@ -1146,7 +1135,7 @@ uk: {
   final_btn1:'📞 +48 514 363 538', final_btn2:'💬 Написати у WhatsApp',
   hngMenuTitle:'Меню', hng1:'Про нас', hng2:'Відгуки', hng3:'Контакти', hng4:'Миття вікон', hng5:'Прибирання квартир і будинків',
   hng6:'Після ремонту', hng7:'Після виїзду', hng8:'Складні випадки', hng9:'Наші роботи', hng10:'Часті питання',
-  hng11:'Зареєструватися', hng12:'Стати партнером', hngCallBtn:'📞 ЗАТЕЛЕФОНУЙТЕ НАМ', hngClose:'Закрити',
+  hng11:'WhatsApp', hng12:'Стати партнером', hngCallBtn:'📞 ЗАТЕЛЕФОНУЙТЕ НАМ', hngClose:'Закрити',
   fslogan:'Premium Cleaning & Property Services', ftnote:'Кінцеві ціни · Індивідуальна оцінка після аудиту',
   ftUslugiH:'Послуги', ftLinkMieszkania:'Прибирання квартир і будинків', ftLinkRemont:'Після ремонту', ftLinkWyprowadzka:'Після виїзду',
   ftLinkZbieractwo:'Складні випадки', ftLinkOkna:'Миття вікон', ftFirmaH:'Компанія', ftLinkPoznaj:'Про нас',
@@ -1164,7 +1153,7 @@ ru: {
   hero_sub:'Захламление, многолетняя запущенность, задымление и копоть после дыма — каждый случай оцениваем индивидуально и готовим стоимость, соответствующую реальной ситуации.',
   hero_btn1:'Опишите свою ситуацию →', hero_btn2:'💬 Связаться с менеджером',
   hero_audit_hint:'Цену всегда определяем индивидуально — после контакта и оценки ситуации.',
-  cta_call:'Позвонить', mtb_home:'Главная', mtb_call:'Позвонить', mtb_more:'Ещё', mtb_chat:'Чат', mtb_account:'Кабинет',
+  cta_call:'Позвонить', mtb_home:'Главная', mtb_call:'Позвонить', mtb_more:'Ещё', mtb_chat:'Чат', mtb_account:'Партнёр',
   tr1:'🔬 Технология озонирования', tr2:'🧪 Сертифицированная профессиональная химия', tr3:'🛡️ Нейтрализация стойких запахов',
   tr4:'🔒 Полная конфиденциальность', tr5:'📸 Фотодокументация',
   scn_lbl:'Сложные случаи', scn_h2:'Чем мы можем <em>помочь?</em>', scn_sub:'Выберите ситуацию, которая лучше всего описывает ваш случай.',
@@ -1292,7 +1281,7 @@ ru: {
   final_btn1:'📞 +48 514 363 538', final_btn2:'💬 Написать в WhatsApp',
   hngMenuTitle:'Меню', hng1:'О нас', hng2:'Отзывы', hng3:'Контакты', hng4:'Мытьё окон', hng5:'Уборка квартир и домов',
   hng6:'После ремонта', hng7:'После выезда', hng8:'Сложные случаи', hng9:'Наши работы', hng10:'Частые вопросы',
-  hng11:'Зарегистрироваться', hng12:'Стать партнёром', hngCallBtn:'📞 ПОЗВОНИТЕ НАМ', hngClose:'Закрыть',
+  hng11:'WhatsApp', hng12:'Стать партнёром', hngCallBtn:'📞 ПОЗВОНИТЕ НАМ', hngClose:'Закрыть',
   fslogan:'Premium Cleaning & Property Services', ftnote:'Итоговые цены · Индивидуальная оценка после аудита',
   ftUslugiH:'Услуги', ftLinkMieszkania:'Уборка квартир и домов', ftLinkRemont:'После ремонта', ftLinkWyprowadzka:'После выезда',
   ftLinkZbieractwo:'Сложные случаи', ftLinkOkna:'Мытьё окон', ftFirmaH:'Компания', ftLinkPoznaj:'О нас',
@@ -1310,7 +1299,7 @@ en: {
   hero_sub:'Hoarding, long-term neglect, smoke damage and soot residue — we assess every case individually and prepare a quote matched to the real situation.',
   hero_btn1:'Describe your situation →', hero_btn2:'💬 Contact the manager',
   hero_audit_hint:'We always set the price individually — after contact and an assessment of the situation.',
-  cta_call:'Call', mtb_home:'Home', mtb_call:'Call', mtb_more:'More', mtb_chat:'Chat', mtb_account:'Account',
+  cta_call:'Call', mtb_home:'Home', mtb_call:'Call', mtb_more:'More', mtb_chat:'Chat', mtb_account:'Partner',
   tr1:'🔬 Ozone treatment technology', tr2:'🧪 Certified professional chemistry', tr3:'🛡️ Neutralization of persistent odors',
   tr4:'🔒 Full discretion', tr5:'📸 Photo documentation',
   scn_lbl:'Difficult cases', scn_h2:'How can we <em>help?</em>', scn_sub:'Choose the situation that best describes your case.',
@@ -1438,7 +1427,7 @@ en: {
   final_btn1:'📞 +48 514 363 538', final_btn2:'💬 Message on WhatsApp',
   hngMenuTitle:'Menu', hng1:'About us', hng2:'Reviews', hng3:'Contact', hng4:'Window cleaning', hng5:'Apartment & house cleaning',
   hng6:'Post-renovation', hng7:'Post-move-out', hng8:'Difficult cases', hng9:'Our work', hng10:'FAQ',
-  hng11:'Sign up', hng12:'Become a partner', hngCallBtn:'📞 CALL US', hngClose:'Close',
+  hng11:'WhatsApp', hng12:'Become a partner', hngCallBtn:'📞 CALL US', hngClose:'Close',
   fslogan:'Premium Cleaning & Property Services', ftnote:'Final prices · Individual quote after audit',
   ftUslugiH:'Services', ftLinkMieszkania:'Apartment & house cleaning', ftLinkRemont:'Post-renovation', ftLinkWyprowadzka:'Move-out cleaning',
   ftLinkZbieractwo:'Difficult cases', ftLinkOkna:'Window cleaning', ftFirmaH:'Company', ftLinkPoznaj:'About us',
@@ -1616,11 +1605,7 @@ document.addEventListener('DOMContentLoaded', function(){ applyTranslations(loca
   <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-call">Zadzwoń</span></a>
   <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label" id="mtb-lbl-more">Więcej</span></button>
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
-  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-user"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
+  <a href="/program-partnerski" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Partner</span></a>
 </nav>
-<div class="mtb-account-menu" id="mtb-account-menu">
-  <a href="https://kabinet.vershclean.pl/client/login.html" id="mtbLoginClient">👤 Kabinet klienta</a>
-  <a href="https://kabinet.vershclean.pl/partner/login.html" id="mtbLoginPartner">🤝 Kabinet partnera</a>
-</div>
 </body>
 </html>

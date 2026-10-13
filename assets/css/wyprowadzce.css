@@ -433,10 +433,8 @@ body.has-order{padding-bottom:76px}
   #chem-section{order:3}
   .photo-cta-wrap{order:4;margin-top:4px}
   #dla-kogo-section{order:5}
-  #combo-section{order:6}
   #scope-section{order:7}
   #faq-section{order:8}
-  #win-upsell-section{order:9}
 
   /* This line points at the desktop right-hand sidebar, which doesn't
      exist in the mobile flow — the price now renders directly below the

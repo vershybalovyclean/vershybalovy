@@ -142,7 +142,7 @@ header{
   color:var(--blue);line-height:1.2;white-space:nowrap}
 .hdr-brand small{display:block;font-size:10px;font-weight:500;color:var(--gray);
   letter-spacing:.8px;font-family:'Inter',sans-serif;text-transform:uppercase}
-.hdr-nav{display:flex;align-items:center;gap:3px}
+.hdr-nav{display:flex;align-items:center;gap:3px;margin-left:auto}
 .hdr-nav a{font-size:12px;color:var(--text3);padding:6px 8px;border-radius:8px;
   font-weight:600;transition:.2s;white-space:nowrap;
   background:var(--off);border:1px solid var(--brd)}
@@ -156,7 +156,10 @@ header{
   header{gap:12px}
   .hdr-brand small{display:none}
 }
-.burger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
+/* Cabinets are temporarily off the public site (no .hdr-login in the header), so the
+   burger now takes over the auto margin that used to push the right-hand cluster away
+   from the logo. If .hdr-login is restored, delete the margin-left line below. */
+.burger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px;margin-left:auto}
 .burger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px}
 @media(max-width:1279px){
   /* Collapsing the full inline nav into the burger menu at the same

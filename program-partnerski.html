@@ -38,7 +38,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   ]
 }
   </script>
-  <link rel="stylesheet" href="assets/css/base.css?v=20261011d">
+  <link rel="stylesheet" href="assets/css/base.css?v=20261013a">
   <link rel="stylesheet" href="assets/css/partnerski.css?v=1">
   <link rel="stylesheet" href="assets/css/mobile-tabbar.css?v=20261008a">
 </head>
@@ -88,15 +88,6 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
     <img src="assets/img/logo.png" alt="Vershy Property Care">
     <div class="hdr-brand">Vershy Property Care<small>Premium Cleaning &amp; Property Services</small></div>
   </a>
-  <div class="hdr-login">
-    <button type="button" class="login-trigger" onclick="toggleLoginMenu()">👤</button>
-    <div class="login-dropdown" id="login-dropdown">
-      <a href="https://kabinet.vershclean.pl/client/login.html" id="loginClient">👤 Kabinet klienta</a>
-      <a href="https://kabinet.vershclean.pl/partner/login.html" id="loginPartner">🤝 Kabinet partnera</a>
-      <a href="https://kabinet.vershclean.pl/client/login.html#register" id="loginRegister">📝 Zarejestruj się</a>
-      <a href="#dolacz" id="hdr-cta">🤝 Zostań partnerem</a>
-    </div>
-  </div>
   <button class="burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
   <div class="hdr-nav-backdrop" onclick="toggleNav()"></div>
   <nav class="hdr-nav" id="hn">
@@ -113,7 +104,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
       <a href="/trudne-przypadki-sprzatanie-krakow"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-case"></use></svg></span><span class="hng-label" id="hng8">Trudne przypadki</span></a>
       <a href="/#przed-po"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-camera"></use></svg></span><span class="hng-label" id="hng9">Realizacje</span></a>
       <a href="#faq-lbl"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-question"></use></svg></span><span class="hng-label" id="hng10">FAQ</span></a>
-      <a href="https://kabinet.vershclean.pl/client/login.html#register"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-pencil"></use></svg></span><span class="hng-label" id="hng11">Zarejestruj się</span></a>
+      <a href="https://wa.me/48514363538" target="_blank" rel="noopener"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="hng-label" id="hng11">WhatsApp</span></a>
       <a href="/program-partnerski"><span class="hng-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="hng-label" id="hng12">Zostań partnerem</span></a>
     </div>
     <a data-vc-call href="tel:+48514363538" class="hdr-nav-call" id="hngCallBtn">📞 ZADZWOŃ DO NAS</a>
@@ -328,6 +319,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         </div>
         <button type="submit" class="pp-submit-btn" id="sg-submit">🤝 Wyślij zgłoszenie</button>
         <p class="pp-form-note" id="sg-note">Udział w programie jest bezpłatny. Odpowiemy w ciągu 24h.</p>
+        <p class="pp-form-note"><a href="mailto:partnerzy@vershclean.pl" data-vc-fixed-mail id="sg-mail-link">✉️ partnerzy@vershclean.pl</a></p>
       </form>
 
       <div class="pp-thanks" id="signup-thanks">
@@ -336,6 +328,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <p class="pp-thanks-text" id="sg-thanks-t1">Skontaktujemy się z Tobą w ciągu 24 godzin i przekażemy Twój unikalny kod partnera.</p>
         <p class="pp-thanks-text" id="sg-thanks-t2">Możesz też napisać do nas od razu, aby przyspieszyć proces:</p>
         <a href="#" target="_blank" class="btn-wa" id="signup-wa-btn" style="margin-top:10px;display:inline-block">💬 Napisz na WhatsApp</a>
+        <a href="mailto:partnerzy@vershclean.pl" data-vc-fixed-mail class="btn-wa" id="signup-mail-btn" style="margin-top:10px;display:inline-block;background:var(--blue2)">✉️ partnerzy@vershclean.pl</a>
       </div>
     </div>
   </div>
@@ -440,10 +433,8 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<script src="assets/js/client-session.js?v=1"></script>
-<script src="assets/js/site-auth-ui.js?v=1"></script>
 <script src="assets/js/nav.js?v=20261012a"></script>
-<script src="assets/js/site-texts-sync.js?v=20261011b" defer></script>
+<script src="assets/js/site-texts-sync.js?v=20261013a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
 <script>
 function toggleFaq(el){el.parentNode.classList.toggle('open');}
@@ -468,6 +459,8 @@ function submitSignup(e){
     + t.sg_msg_type + type;
 
   document.getElementById('signup-wa-btn').href = 'https://wa.me/48514363538?text=' + encodeURIComponent(msg);
+  document.getElementById('signup-mail-btn').href = 'mailto:partnerzy@vershclean.pl?subject='
+    + encodeURIComponent(t.sg_msg_title) + '&body=' + encodeURIComponent(msg);
   document.getElementById('signup-form').style.display = 'none';
   document.getElementById('signup-thanks').classList.add('show');
   if(typeof gtag !== 'undefined'){
@@ -539,10 +532,10 @@ pl: {
   final_h2:'Gotowy, aby <em style="color:#fbbf24;font-style:normal">zacząć zarabiać?</em>',
   final_p:'Dołączenie do programu partnerskiego zajmuje kilka minut i jest całkowicie bezpłatne. Otrzymaj swój kod jeszcze dziś.',
   final_btn:'🤝 Zostań partnerem →',
-  mtb_home:'Strona główna', mtb_join:'Dołącz', mtb_more:'Więcej', mtb_chat:'Czat', mtb_account:'Konto',
+  mtb_home:'Strona główna', mtb_join:'Dołącz', mtb_more:'Więcej', mtb_chat:'Czat', mtb_account:'Zadzwoń',
   hngMenuTitle:'Menu', hng1:'O nas', hng2:'Opinie', hng3:'Kontakt', hng4:'Mycie okien', hng5:'Sprzątanie mieszkań',
   hng6:'Po remoncie', hng7:'Po wyprowadzce', hng8:'Trudne przypadki', hng9:'Realizacje', hng10:'FAQ',
-  hng11:'Zarejestruj się', hng12:'Zostań partnerem', hngCallBtn:'📞 ZADZWOŃ DO NAS', hngClose:'Zamknij',
+  hng11:'WhatsApp', hng12:'Zostań partnerem', hngCallBtn:'📞 ZADZWOŃ DO NAS', hngClose:'Zamknij',
   fslogan:'Premium Cleaning & Property Services', ftnote:'Ceny końcowe · Program partnerski — warunki mogą ulec zmianie',
   ftUslugiH:'Usługi', ftLinkMieszkania:'Sprzątanie mieszkań', ftLinkRemont:'Po remoncie', ftLinkWyprowadzka:'Po wyprowadzce',
   ftLinkZbieractwo:'Trudne przypadki', ftLinkOkna:'Mycie okien', ftFirmaH:'Firma', ftLinkPoznaj:'Poznaj nas',
@@ -607,10 +600,10 @@ uk: {
   final_h2:'Готовий <em style="color:#fbbf24;font-style:normal">почати заробляти?</em>',
   final_p:'Приєднання до партнерської програми займає кілька хвилин і повністю безкоштовне. Отримай свій код вже сьогодні.',
   final_btn:'🤝 Стати партнером →',
-  mtb_home:'Головна', mtb_join:'Приєднатися', mtb_more:'Ще', mtb_chat:'Чат', mtb_account:'Кабінет',
+  mtb_home:'Головна', mtb_join:'Приєднатися', mtb_more:'Ще', mtb_chat:'Чат', mtb_account:'Подзвонити',
   hngMenuTitle:'Меню', hng1:'Про нас', hng2:'Відгуки', hng3:'Контакти', hng4:'Миття вікон', hng5:'Прибирання квартир',
   hng6:'Після ремонту', hng7:'Після виїзду', hng8:'Складні випадки', hng9:'Наші роботи', hng10:'Часті питання',
-  hng11:'Зареєструватися', hng12:'Стати партнером', hngCallBtn:'📞 ЗАТЕЛЕФОНУЙТЕ НАМ', hngClose:'Закрити',
+  hng11:'WhatsApp', hng12:'Стати партнером', hngCallBtn:'📞 ЗАТЕЛЕФОНУЙТЕ НАМ', hngClose:'Закрити',
   fslogan:'Premium Cleaning & Property Services', ftnote:'Кінцеві ціни · Партнерська програма — умови можуть змінюватись',
   ftUslugiH:'Послуги', ftLinkMieszkania:'Прибирання квартир', ftLinkRemont:'Після ремонту', ftLinkWyprowadzka:'Після виїзду',
   ftLinkZbieractwo:'Складні випадки', ftLinkOkna:'Миття вікон', ftFirmaH:'Компанія', ftLinkPoznaj:'Про нас',
@@ -675,10 +668,10 @@ ru: {
   final_h2:'Готов <em style="color:#fbbf24;font-style:normal">начать зарабатывать?</em>',
   final_p:'Присоединение к партнёрской программе занимает несколько минут и полностью бесплатно. Получи свой код уже сегодня.',
   final_btn:'🤝 Стать партнёром →',
-  mtb_home:'Главная', mtb_join:'Присоединиться', mtb_more:'Ещё', mtb_chat:'Чат', mtb_account:'Кабинет',
+  mtb_home:'Главная', mtb_join:'Присоединиться', mtb_more:'Ещё', mtb_chat:'Чат', mtb_account:'Позвонить',
   hngMenuTitle:'Меню', hng1:'О нас', hng2:'Отзывы', hng3:'Контакты', hng4:'Мытьё окон', hng5:'Уборка квартир',
   hng6:'После ремонта', hng7:'После выезда', hng8:'Сложные случаи', hng9:'Наши работы', hng10:'Частые вопросы',
-  hng11:'Зарегистрироваться', hng12:'Стать партнёром', hngCallBtn:'📞 ПОЗВОНИТЕ НАМ', hngClose:'Закрыть',
+  hng11:'WhatsApp', hng12:'Стать партнёром', hngCallBtn:'📞 ПОЗВОНИТЕ НАМ', hngClose:'Закрыть',
   fslogan:'Premium Cleaning & Property Services', ftnote:'Итоговые цены · Партнёрская программа — условия могут измениться',
   ftUslugiH:'Услуги', ftLinkMieszkania:'Уборка квартир', ftLinkRemont:'После ремонта', ftLinkWyprowadzka:'После выезда',
   ftLinkZbieractwo:'Сложные случаи', ftLinkOkna:'Мытьё окон', ftFirmaH:'Компания', ftLinkPoznaj:'О нас',
@@ -743,10 +736,10 @@ en: {
   final_h2:'Ready to <em style="color:#fbbf24;font-style:normal">start earning?</em>',
   final_p:'Joining the partner program takes a few minutes and is completely free. Get your code today.',
   final_btn:'🤝 Become a partner →',
-  mtb_home:'Home', mtb_join:'Join', mtb_more:'More', mtb_chat:'Chat', mtb_account:'Account',
+  mtb_home:'Home', mtb_join:'Join', mtb_more:'More', mtb_chat:'Chat', mtb_account:'Call',
   hngMenuTitle:'Menu', hng1:'About us', hng2:'Reviews', hng3:'Contact', hng4:'Window cleaning', hng5:'Apartment cleaning',
   hng6:'Post-renovation', hng7:'Post-move-out', hng8:'Difficult cases', hng9:'Our work', hng10:'FAQ',
-  hng11:'Sign up', hng12:'Become a partner', hngCallBtn:'📞 CALL US', hngClose:'Close',
+  hng11:'WhatsApp', hng12:'Become a partner', hngCallBtn:'📞 CALL US', hngClose:'Close',
   fslogan:'Premium Cleaning & Property Services', ftnote:'Final prices · Partner program — terms may change',
   ftUslugiH:'Services', ftLinkMieszkania:'Apartment cleaning', ftLinkRemont:'Post-renovation', ftLinkWyprowadzka:'Post-move-out',
   ftLinkZbieractwo:'Difficult cases', ftLinkOkna:'Window cleaning', ftFirmaH:'Company', ftLinkPoznaj:'About us',
@@ -849,11 +842,7 @@ document.addEventListener('DOMContentLoaded', function(){ SL(localStorage.getIte
   <a href="#dolacz" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="mtb-label" id="mtb-lbl-join">Dołącz</span></a>
   <button type="button" class="mtb-item mtb-cta" onclick="toggleNav()"><span class="mtb-cta-icon"><img src="assets/img/logo.png" alt=""></span><span class="mtb-label" id="mtb-lbl-more">Więcej</span></button>
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
-  <button type="button" class="mtb-item" onclick="toggleMtbAccount()"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-user"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Konto</span></button>
+  <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Zadzwoń</span></a>
 </nav>
-<div class="mtb-account-menu" id="mtb-account-menu">
-  <a href="https://kabinet.vershclean.pl/client/login.html" id="mtbLoginClient">👤 Kabinet klienta</a>
-  <a href="https://kabinet.vershclean.pl/partner/login.html" id="mtbLoginPartner">🤝 Kabinet partnera</a>
-</div>
 </body>
 </html>
