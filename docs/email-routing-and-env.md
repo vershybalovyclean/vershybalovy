@@ -60,4 +60,5 @@ Google Workspace: один ящик `kontakt@vershclean.pl` и алиасы `par
 ## Замечания
 
 - `info@vershclean.pl` используется как контакт VAPID для push (`supabase/functions/send-push`, переменная `VAPID_SUBJECT` в Supabase). В схему адресов он не входит, меняется отдельно.
-- Юридические тексты (`regulamin.html`, `polityka-prywatnosci.html`) не менялись: личный адрес в них остаётся, пока не согласованы изменения по разделам. Ссылки в тексте политики приватности помечены `data-vc-fixed-mail`, чтобы их не подменяла синхронизация.
+- Юридические тексты (согласовано 13.10.2026): в `regulamin.html` адреса в разделах II (контакт), V (odstąpienie), VI (reklamacje) заменены на `kontakt@vershclean.pl`, в разделе XI (program partnerski) на `partnerzy@vershclean.pl`; в `polityka-prywatnosci.html` (разделы 1 и 6) на `kontakt@vershclean.pl`. Реквизиты Usługodawcy (раздел I, e-mail по данным CEIDG) не менялись.
+- **Рекламации временно на `kontakt@`.** Существование и приём почты на `reklamacje@vershclean.pl` проверить с этой машины не удалось (исходящий порт 25 закрыт, DNS-проверка алиаса невозможна). Пока ящик не подтверждён, в разделе VI указан `kontakt@`. После проверки (письмо с внешнего адреса на `reklamacje@`, ярлык «Рекламации») замените адрес в `regulamin.html` раздел VI одной строкой. То же стоит проверить для `partnerzy@`.
