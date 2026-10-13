@@ -654,7 +654,7 @@ export default async function handler(req, res) {
   // whole summary. Simpler contact forms never send clientNote — for them
   // `comment` IS the client's message, exactly as before.
   const hasClientNote = clientNote !== undefined;
-  const text = "Nowe zgłoszenie ze strony Verschybalovy!\n\n" +
+  const text = "Nowe zgłoszenie ze strony Vershy Property Care!\n\n" +
     "Imię: " + name + "\n" +
     "Telefon: " + phone + "\n" +
     "Usługa: " + (service || "nie wybrano") + "\n" +
