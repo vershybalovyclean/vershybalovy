@@ -92,6 +92,13 @@
       bonusNote:'✓ Bonus już wliczony — bez dopłat',
       slotNight:'po 21:00',
       slotExpired:'Wybrana godzina jest już niedostępna (rezerwacja min. 2 godziny wcześniej). Wybierz inny termin.',
+      errName:'Podaj imię i nazwisko (min. 2 znaki).',
+      errPhone:'Podaj poprawny numer telefonu, np. +48 600 123 456 lub 600 123 456.',
+      errEmail:'Podaj poprawny adres e-mail (np. anna@example.com) lub zostaw pole puste.',
+      errPostal:'Podaj kod pocztowy w formacie 00-000.',
+      errTooLong:'Jedno z pól jest za długie. Skróć tekst i spróbuj ponownie.',
+      errNotAccepted:'Zamówienie NIE zostało przyjęte.',
+      errWa:'Wyślij zamówienie samodzielnie przez WhatsApp',
       savedAddrLabel:'Adres',manualAddrOpt:'✏️ Inny adres (wpisz ręcznie)',
       promoEmpty:'⚠️ Wpisz kod promocyjny',promoInvalid:'❌ Nieprawidłowy lub wygasły kod',
       promoMin:'❌ Kod wymaga zamówienia od {min} zł',promoApplied:'✅ Kod zastosowany: ',
@@ -134,6 +141,13 @@
       bonusNote:'✓ Бонус вже включено — без доплат',
       slotNight:'після 21:00',
       slotExpired:'Обраний час уже недоступний (бронювання мін. за 2 години). Оберіть інший час.',
+      errName:'Вкажіть ім\'я та прізвище (мін. 2 символи).',
+      errPhone:'Вкажіть коректний номер телефону, напр. +48 600 123 456 або 600 123 456.',
+      errEmail:'Вкажіть коректну адресу e-mail (напр. anna@example.com) або залиште поле порожнім.',
+      errPostal:'Вкажіть поштовий індекс у форматі 00-000.',
+      errTooLong:'Одне з полів задовге. Скоротіть текст і спробуйте ще раз.',
+      errNotAccepted:'Замовлення НЕ прийнято.',
+      errWa:'Надішліть замовлення самостійно у WhatsApp',
       savedAddrLabel:'Адреса',manualAddrOpt:'✏️ Інша адреса (ввести вручну)',
       promoEmpty:'⚠️ Введіть промокод',promoInvalid:'❌ Недійсний або прострочений код',
       promoMin:'❌ Код діє для замовлення від {min} zł',promoApplied:'✅ Код застосовано: ',
@@ -176,6 +190,13 @@
       bonusNote:'✓ Бонус уже включён — без доплат',
       slotNight:'после 21:00',
       slotExpired:'Выбранное время уже недоступно (бронирование мин. за 2 часа). Выберите другое время.',
+      errName:'Укажите имя и фамилию (мин. 2 символа).',
+      errPhone:'Укажите корректный номер телефона, напр. +48 600 123 456 или 600 123 456.',
+      errEmail:'Укажите корректный адрес e-mail (напр. anna@example.com) или оставьте поле пустым.',
+      errPostal:'Укажите почтовый индекс в формате 00-000.',
+      errTooLong:'Одно из полей слишком длинное. Сократите текст и попробуйте снова.',
+      errNotAccepted:'Заказ НЕ принят.',
+      errWa:'Отправьте заказ самостоятельно в WhatsApp',
       savedAddrLabel:'Адрес',manualAddrOpt:'✏️ Другой адрес (ввести вручную)',
       promoEmpty:'⚠️ Введите промокод',promoInvalid:'❌ Недействительный или просроченный код',
       promoMin:'❌ Код действует для заказа от {min} zł',promoApplied:'✅ Код применён: ',
@@ -218,6 +239,13 @@
       bonusNote:'✓ Bonus already included — no extra charge',
       slotNight:'after 21:00',
       slotExpired:'The selected time is no longer available (bookings at least 2 hours ahead). Please choose another time.',
+      errName:'Enter your full name (at least 2 characters).',
+      errPhone:'Enter a valid phone number, e.g. +48 600 123 456 or 600 123 456.',
+      errEmail:'Enter a valid e-mail address (e.g. anna@example.com) or leave it empty.',
+      errPostal:'Enter the postal code in the format 00-000.',
+      errTooLong:'One of the fields is too long. Shorten the text and try again.',
+      errNotAccepted:'Your order has NOT been accepted.',
+      errWa:'Send the order yourself via WhatsApp',
       savedAddrLabel:'Address',manualAddrOpt:'✏️ Another address (enter manually)',
       promoEmpty:'⚠️ Enter a promo code',promoInvalid:'❌ Invalid or expired code',
       promoMin:'❌ This code requires an order of at least {min} zł',promoApplied:'✅ Code applied: ',
@@ -581,6 +609,37 @@
     document.getElementById('bk-submitBtn').classList.toggle('bk-notready', !ok);
   }
 
+  /* ─── FIELD FORMAT RULES ───────────────────────────── */
+  // Same rules are enforced again server-side in api/submit.js (this client check is
+  // only for fast feedback — it can always be bypassed).
+  // Phone: Polish numbers (9 digits, optionally +48 / 0048 / 48 prefix) or any other
+  // international number in E.164 shape (+ and 8–15 digits). Spaces, dashes, dots and
+  // parentheses are allowed as separators.
+  function bk_phoneValid(raw){
+    var s = String(raw || '').trim();
+    if(!s || s.length > 30 || !/^[+\d\s().\-]+$/.test(s)) return false;
+    if(s.indexOf('+') > 0 || s.lastIndexOf('+') > 0) return false; // "+" only as the first character
+    var d = s.replace(/\D/g, '');
+    var plus = s.charAt(0) === '+';
+    if(plus || d.indexOf('00') === 0){
+      if(!plus) d = d.slice(2);                                  // 0048… / 00380… → drop the 00 prefix
+      if(d.indexOf('48') === 0) return /^48[1-9]\d{8}$/.test(d); // Poland: 9-digit national number
+      return /^[1-9]\d{7,14}$/.test(d);                          // other countries (E.164)
+    }
+    if(d.length === 11 && d.indexOf('48') === 0) return /^48[1-9]\d{8}$/.test(d);
+    return /^[1-9]\d{8}$/.test(d);                               // Polish national number
+  }
+  function bk_emailValid(v){
+    v = String(v || '').trim();
+    return v.length <= 254 && /^[^\s@,;<>()[\]\\"]+@[^\s@,;<>()[\]\\"]+\.[^\s@,;<>()[\]\\".]{2,}$/.test(v);
+  }
+  // Polish postal code XX-XXX; five digits typed without the dash are accepted and fixed.
+  function bk_postalNormalize(v){
+    v = String(v || '').trim();
+    return /^\d{5}$/.test(v) ? v.slice(0, 2) + '-' + v.slice(2) : v;
+  }
+  function bk_postalValid(v){ return /^\d{2}-\d{3}$/.test(v); }
+
   /* ─── VALIDATION HIGHLIGHT ──────────────────────────── */
   // The payment buttons' wrapper isn't consistently id'd across pages (only
   // mieszkan.html has id="bk-payGroup") — find it by relation to a known button instead.
@@ -594,7 +653,7 @@
       var el = document.getElementById(id); if(el) el.classList.remove('bk-invalid');
     });
     var payGroup = bk_payGroupEl(); if(payGroup) payGroup.classList.remove('bk-invalid');
-    ['bk-name','bk-phone','bk-street','bk-postal','bk-city','bk-partner-code'].forEach(function(id){
+    ['bk-name','bk-phone','bk-email','bk-street','bk-postal','bk-city','bk-partner-code'].forEach(function(id){
       var el = document.getElementById(id); if(el) el.classList.remove('bk-field-invalid');
     });
   }
@@ -627,15 +686,32 @@
       var el = document.getElementById(id);
       if(el && !el.value.trim()){ markInvalid(el, true); ok = false; }
     });
+    // Format checks (only for fields that are filled in — empty required fields are
+    // already highlighted above, empty optional ones stay optional).
+    var fmtMsgs = [];
+    var nameEl = document.getElementById('bk-name');
+    if(nameEl && nameEl.value.trim() && nameEl.value.trim().length < 2){ markInvalid(nameEl, true); ok = false; fmtMsgs.push(bk_t('errName')); }
+    var phoneEl = document.getElementById('bk-phone');
+    if(phoneEl && phoneEl.value.trim() && !bk_phoneValid(phoneEl.value)){ markInvalid(phoneEl, true); ok = false; fmtMsgs.push(bk_t('errPhone')); }
+    var emailEl = document.getElementById('bk-email');
+    if(emailEl && emailEl.value.trim() && !bk_emailValid(emailEl.value)){ markInvalid(emailEl, true); ok = false; fmtMsgs.push(bk_t('errEmail')); }
+    var postalEl = document.getElementById('bk-postal');
+    if(postalEl && !bk_usingSavedAddress && postalEl.value.trim()){
+      var postalFixed = bk_postalNormalize(postalEl.value);
+      if(bk_postalValid(postalFixed)) postalEl.value = postalFixed;
+      else { markInvalid(postalEl, true); ok = false; fmtMsgs.push(bk_t('errPostal')); }
+    }
     if(bk_partnerOn){
       var codeEl = document.getElementById('bk-partner-code');
       if(codeEl && !/^VC-\d{4}$/.test(codeEl.value)){ markInvalid(codeEl, true); ok = false; }
     }
     var consentEl = document.getElementById('bk-consent');
     if(consentEl && !consentEl.checked){ markInvalid(document.getElementById('bk-consent-wrap')); ok = false; }
-    if(slotExpired){
-      var errEl = document.getElementById('bk-formError');
-      if(errEl){ errEl.textContent = bk_t('slotExpired'); errEl.style.display = 'block'; }
+    var errEl = document.getElementById('bk-formError');
+    if(slotExpired) fmtMsgs.unshift(bk_t('slotExpired'));
+    if(errEl){
+      if(fmtMsgs.length){ errEl.style.whiteSpace = 'pre-line'; errEl.textContent = fmtMsgs.join('\n'); errEl.style.display = 'block'; }
+      else errEl.style.display = 'none';
     }
     if(!ok && firstInvalid){
       firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
@@ -858,7 +934,19 @@
   });
 
   /* ─── SUBMIT ───────────────────────────────────────── */
+  var bk_submitting = false;
+  var bk_lastFingerprint = '';
+  var bk_requestId = '';
+  function bk_newRequestId(){
+    try { if(window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID(); } catch(e) {}
+    var b = new Uint8Array(16);
+    try { window.crypto.getRandomValues(b); } catch(e) { for(var i = 0; i < 16; i++) b[i] = Math.floor(Math.random() * 256); }
+    b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80; // RFC 4122 v4
+    var h = Array.prototype.map.call(b, function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
+    return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+  }
   window.bk_submit = function(){
+    if(bk_submitting) return;
     if(!bk_validateAndHighlight()) return;
     var l = typeof lang!=='undefined'?lang:'pl';
     var locale = bk_t('LOCALE');
@@ -927,6 +1015,16 @@
     // clientNote, żeby "Komentarz:" w Telegramie pokazywał wyłącznie to,
     // co klient faktycznie napisał, a nie całe to podsumowanie zamówienia.
 
+    // Duplicate-submit protection: the lock above (bk_submitting) stops double clicks and
+    // Enter-key repeats while a request is in flight; requestId makes a retry of the SAME
+    // order idempotent on the server (it is used as requests.id, a repeat of an already
+    // saved order is answered with success without creating a second row or notifying
+    // anyone again). Any change to the order content produces a new id.
+    var fingerprint = [name, phone, email, fullAddress, bk_isoDate(bk_selectedDate), bk_selectedSlot, bk_selectedPayment,
+      d.serviceSlug || '', d.price || 0, notes, JSON.stringify(d.addons || []), promoCode, partnerCode].join('\u0001');
+    if(fingerprint !== bk_lastFingerprint){ bk_lastFingerprint = fingerprint; bk_requestId = bk_newRequestId(); }
+
+    bk_submitting = true;
     var btn = document.getElementById('bk-submitBtn');
     btn.disabled = true;
     document.getElementById('bk-submit-txt').textContent = bk_t('submitSending');
@@ -938,6 +1036,7 @@
       body:JSON.stringify(Object.assign({
         name:name, phone:phone, service:d.service||'Rezerwacja terminu', comment:comment, clientNote:notes, partnerCode:partnerCode,
         promoCode:promoCode, serviceSlug:d.serviceSlug||'',
+        requestId:bk_requestId, postalCode:(bk_usingSavedAddress ? '' : postal),
         email:email||'', address:fullAddress,
         scheduledDate:bk_isoDate(bk_selectedDate), scheduledTime:(slotObj?slotObj.start:''),
         price:d.price?bk_finalPrice(d.price):null,
@@ -961,7 +1060,14 @@
         promoDiscountAmount: d.price ? bk_promoDiscountAmount(d.price) : 0
       }, bk_getFirstTouch()))
     })
-    .then(function(r){ if(!r.ok) throw new Error('submit failed'); return r.json(); })
+    .then(function(r){
+      if(!r.ok){
+        return r.json().catch(function(){ return null; }).then(function(j){
+          var e = new Error('submit failed'); e.status = r.status; e.code = j && j.code; throw e;
+        });
+      }
+      return r.json();
+    })
     .then(function(res){
       if(!res || res.success !== true) throw new Error('submit failed');
       // analyticsLabel keeps the GA4 event_label exactly as before the area/range
@@ -1001,10 +1107,38 @@
       document.getElementById('bk-successView').classList.remove('bk-hidden');
       document.getElementById('bk-successView').scrollIntoView({behavior:'smooth',block:'start'});
     })
-    .catch(function(){
+    .catch(function(err){
       var errEl = document.getElementById('bk-formError');
-      errEl.textContent = bk_t('errMsg');
+      // The server re-validates every field (api/submit.js) and answers 400 with a
+      // machine-readable `code`; show the matching message in the visitor's language
+      // and mark the field. Anything else (network, 5xx) keeps the generic message.
+      var code = err && err.code;
+      var fieldByCode = {invalid_name:'bk-name', invalid_phone:'bk-phone', invalid_email:'bk-email', invalid_postal:'bk-postal'};
+      var keyByCode = {invalid_name:'errName', invalid_phone:'errPhone', invalid_email:'errEmail', invalid_postal:'errPostal', too_long:'errTooLong'};
+      errEl.style.whiteSpace = 'pre-line';
+      // Validation problem -> its own message. Anything else (network, database down):
+      // say plainly that the order was NOT accepted, then the generic "try again / call".
+      errEl.textContent = keyByCode[code] ? bk_t(keyByCode[code]) : bk_t('errNotAccepted') + '\n' + bk_t('errMsg');
       errEl.style.display='block';
+      // Not a validation problem (network down, server/database unavailable): the order was
+      // NOT confirmed. Besides "try again / call", offer a second reliable channel — the
+      // same order as a prefilled WhatsApp message — so the lead cannot be lost.
+      if(!keyByCode[code]){
+        try {
+          var waText = (comment + '\nImię: ' + name + '\nTelefon: ' + phone + (email ? '\nE-mail: ' + email : '')).slice(0, 1500);
+          var waLink = document.createElement('a');
+          waLink.id = 'bk-err-wa';
+          waLink.href = 'https://wa.me/48514363538?text=' + encodeURIComponent(waText);
+          waLink.target = '_blank';
+          waLink.rel = 'noopener';
+          waLink.textContent = '💬 ' + bk_t('errWa');
+          waLink.style.cssText = 'display:block;margin-top:8px;font-weight:700;text-decoration:underline;color:inherit';
+          errEl.appendChild(waLink);
+        } catch(e) { /* the plain error text above is enough */ }
+      }
+      var badField = fieldByCode[code] && document.getElementById(fieldByCode[code]);
+      if(badField){ badField.classList.add('bk-field-invalid'); badField.scrollIntoView({behavior:'smooth', block:'center'}); }
+      bk_submitting = false;
       btn.disabled=false;
       document.getElementById('bk-submit-txt').textContent=bk_t('submitTxt');
     });
@@ -1194,6 +1328,27 @@
   }
 
   /* ─── INIT ─────────────────────────────────────────── */
+  // Input hints and length limits are applied here (not in the page HTML) so every
+  // page that includes booking.js gets the same rules; the server enforces the same
+  // limits. Editing a field also clears its red "invalid" highlight.
+  (function bk_initFieldRules(){
+    var rules = {
+      'bk-name':   {maxlength:'120', autocomplete:'name'},
+      'bk-phone':  {maxlength:'30',  inputmode:'tel', autocomplete:'tel'},
+      'bk-email':  {maxlength:'254', inputmode:'email', autocomplete:'email'},
+      'bk-street': {maxlength:'150', autocomplete:'address-line1'},
+      'bk-apt':    {maxlength:'20'},
+      'bk-postal': {maxlength:'6',   autocomplete:'postal-code'},
+      'bk-city':   {maxlength:'80',  autocomplete:'address-level2'},
+      'bk-notes':  {maxlength:'2000'}
+    };
+    Object.keys(rules).forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      Object.keys(rules[id]).forEach(function(a){ el.setAttribute(a, rules[id][a]); });
+      el.addEventListener('input', function(){ el.classList.remove('bk-field-invalid'); });
+    });
+  })();
   bk_renderCal();
   bk_renderSlots();
   bk_applyTexts();

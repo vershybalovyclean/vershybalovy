@@ -60,6 +60,14 @@
   window.vcGetManagerSession = function(){
     if (cachedMgr) return cachedMgr;
     cachedMgr = (async function(){
+      // Owner/manager cabinet (admin app.js) no longer mirrors its access token to
+      // this public domain — it only sets the non-secret role flag vc_mgr_role.
+      // The only thing this site does with the result is pick the destination of
+      // the "Wróć do panelu" button (an admin login page that re-checks the real
+      // session itself), so no token and no Supabase call are needed for it.
+      var roleFlag = getCookie('vc_mgr_role');
+      if (roleFlag === 'owner' || roleFlag === 'manager') return { token: null, role: roleFlag };
+      // Legacy path for partner/cleaner cabinets, which still write vc_mgr_at.
       var token = getCookie('vc_mgr_at');
       if (!token) return null;
       try {

@@ -1,8 +1,11 @@
 /* ─── COOKIE CONSENT + GOOGLE CONSENT MODE V2 ──────────────────────────────
    Default consent signals are set to "denied" before any Google tag loads.
-   GTM is then loaded unconditionally — Consent Mode governs what tags send,
-   not whether they load. The visitor's choice is stored per category and
-   mapped to the four Consent Mode v2 signals:
+   STRICT MODE: GTM (Analytics, Ads conversion tracking, Ads call-tracking) is
+   loaded ONLY after the visitor grants at least one category; until then, and
+   after a refusal, nothing from Google is requested. Once it runs, Consent Mode
+   plus per-tag consent requirements inside the container decide what each tag
+   may do. The visitor's choice is stored per category and mapped to the four
+   Consent Mode v2 signals:
 
      Analityczne pliki cookie   → analytics_storage   (GA4 cookies _ga, _ga_*)
      Reklamowe pliki cookie     → ad_storage          (Google Ads cookies _gcl_*)
@@ -225,7 +228,29 @@
   // via a standalone gtag.js + gtag('config',...), and once more by GTM's own internal
   // GA4 Configuration tag. GTM is the single source of truth now; this function only
   // bootstraps GTM itself.
+  // STRICT MODE (MASTER QA, D-001/D-007/D-008): Google Tag Manager — and with it Google
+  // Analytics, Google Ads conversion tracking and Ads call-tracking — is loaded ONLY once
+  // the visitor has granted at least one consent category. Before that (first visit,
+  // "Tylko niezbędne", no decision) nothing from Google is requested at all: no gtm.js,
+  // no call-tracking script, no pings, no storage. Which tag may fire for which category
+  // is then enforced inside the container (consent requirements on each tag).
+  var tagsLoaded = false;
+  function googleTagsAllowed(c){
+    return !!(c && (c.analytics || c.ads || c.ad_measure || c.ad_personal));
+  }
   function loadGoogleTags(){
+    if(tagsLoaded) return;
+    tagsLoaded = true;
+    // Anything the page queued while there was no consent (e.g. a tap on the phone number
+    // before the choice) is thrown away: only the consent commands stay in the queue, so
+    // nothing is reported retroactively once the container starts.
+    var queued = [];
+    for(var i = 0; i < dataLayer.length; i++){
+      var e = dataLayer[i];
+      if(e && e[0] === 'consent') queued.push(e);
+    }
+    dataLayer.length = 0;
+    queued.forEach(function(e){ dataLayer.push(e); });
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PLMP4PG5');
   }
 
@@ -259,6 +284,19 @@
     });
   }
 
+  // Google Ads also keeps data in localStorage: the Ads linker (_gcl_*) and the
+  // call-tracking number cache (keys like "<conversion label>,<number>" plus
+  // "…_expiresAt"). Removed whenever advertising storage is not granted, including
+  // leftovers written by earlier visits (before strict mode existed).
+  function dropGoogleAdsStorage(){
+    try {
+      for(var i = localStorage.length - 1; i >= 0; i--){
+        var k = localStorage.key(i);
+        if(k && (/^_gcl_/.test(k) || /^[A-Za-z0-9_-]{10,},\d{8,}(_expiresAt)?$/.test(k))) localStorage.removeItem(k);
+      }
+    } catch(e) {}
+  }
+
   // Applies a new choice: stores it, updates Consent Mode, notifies GTM and starts or
   // stops what depends on it. Cookies of every denied category are removed (also ones
   // left over from an earlier choice or banner version). Revoking a category that was
@@ -268,11 +306,15 @@
     var before = current;
     current = saveChoice(c);
     gtag('consent', 'update', signals(current));
-    pushUpdate(current, source);
+    if(tagsLoaded || googleTagsAllowed(current)){
+      loadGoogleTags();
+      pushUpdate(current, source);
+    }
     if(!current.analytics) deleteCookies(function(n){ return /^_ga(_|$)/.test(n); });
     if(!current.ads){
       deleteCookies(function(n){ return /^_gcl_/.test(n); });
       dropStoredTouch();
+      dropGoogleAdsStorage();
     } else {
       storeTouchIfAllowed();
     }
@@ -403,8 +445,16 @@
     translateLinks();
   };
 
-  loadGoogleTags();
-  if(current) pushUpdate(current, 'restored');
+  // Returning visitor with a stored choice: the container starts (already carrying that
+  // state) only if at least one category was granted. First visits and refusals load
+  // nothing from Google.
+  if(googleTagsAllowed(current)){
+    loadGoogleTags();
+    pushUpdate(current, 'restored');
+  }
+  // Leftover Google Ads data from visits before strict mode (or after a withdrawal) is
+  // removed whenever advertising storage is not granted.
+  if(!current || !current.ads) dropGoogleAdsStorage();
 
   document.addEventListener('DOMContentLoaded', function(){
     translateLinks();

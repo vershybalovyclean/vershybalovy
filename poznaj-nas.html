@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<script src="assets/js/cookie-consent.js?v=20261011d"></script>
+<script src="assets/js/cookie-consent.js?v=20261017a"></script>
 <script>window.VC_HAS_PIXEL = true;</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -29,7 +29,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://www.vershclean.pl/assets/img/vershy-social-preview.jpg">
   <meta name="facebook-domain-verification" content="k9fr7sj0oxdc2vumyug8umrprdzlsm">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link href="assets/css/fonts.css?v=20261017a" rel="stylesheet">
 <script>
 if('scrollRestoration' in history){history.scrollRestoration='manual';}
 window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0,0); } });
@@ -93,7 +93,6 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <symbol id="nic-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l0.9-4.3L15.4 5.2l3.4 3.4L8.3 19.1 4 20z"/><line x1="13.6" y1="6.6" x2="17" y2="10"/></symbol>
 </defs>
 </svg>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLMP4PG5" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- TOPBAR sticky -->
 <div class="topbar">
@@ -1620,22 +1619,22 @@ function calcSubmit() {
 
 // ===== SHORT SERVICE CARDS =====
 var SRV_SHORT = [
-  {icon:'🪣',cc:'c1',img:'https://images.unsplash.com/photo-1649083048337-4aeb6dda80bb?w=500&q=80',pl:{name:'Sprzątanie wspomagające',desc:'Regularne utrzymanie porządku — odkurzanie, mycie podłóg, łazienka, kuchnia.',price:'od 199 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#wspomagajace'},
+  {icon:'🪣',cc:'c1',img:'assets/img/unsplash-1649083048337-4aeb6dda80bb-500.jpg',pl:{name:'Sprzątanie wspomagające',desc:'Regularne utrzymanie porządku — odkurzanie, mycie podłóg, łazienka, kuchnia.',price:'od 199 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#wspomagajace'},
    uk:{name:'Допоміжне прибирання',desc:'Регулярне підтримання порядку — пилосос, миття підлог, ванна, кухня.',price:'від 199 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#wspomagajace'},
    en:{name:'Maintenance cleaning',desc:'Regular upkeep — vacuuming, floor mopping, bathroom, kitchen.',price:'from 199 zł',link:'#kontakt'}},
-  {icon:'✨',cc:'c2',img:'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=500&q=80',pl:{name:'Sprzątanie generalne',desc:'Dokładne czyszczenie od A do Z — usuwamy pajęczyny, myjemy gniazdka, lampy, za meblami.',price:'od 349 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#generalne'},
+  {icon:'✨',cc:'c2',img:'assets/img/unsplash-1556912172-45b7abe8b7e1-500.jpg',pl:{name:'Sprzątanie generalne',desc:'Dokładne czyszczenie od A do Z — usuwamy pajęczyny, myjemy gniazdka, lampy, za meblami.',price:'od 349 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#generalne'},
    uk:{name:'Генеральне прибирання',desc:'Ретельне чищення від А до Я — видаляємо павутиння, миємо розетки, лампи, за меблями.',price:'від 349 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#generalne'},
    en:{name:'General cleaning',desc:'Thorough clean from A to Z — cobwebs, sockets, lamps, behind furniture.',price:'from 349 zł',link:'#kontakt'}},
-  {icon:'🔬',cc:'c3',img:'https://images.unsplash.com/photo-1721825170838-9747d16c4255?w=500&q=80',pl:{name:'Sprzątanie szczegółowe',desc:'Najgłębszy poziom czystości — wszystko z generalnego + parowanie grzejników, usuwanie kamienia.',price:'od 617 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#szczegolowe'},
+  {icon:'🔬',cc:'c3',img:'assets/img/unsplash-1721825170838-9747d16c4255-500.jpg',pl:{name:'Sprzątanie szczegółowe',desc:'Najgłębszy poziom czystości — wszystko z generalnego + parowanie grzejników, usuwanie kamienia.',price:'od 617 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#szczegolowe'},
    uk:{name:'Детальне прибирання',desc:'Найглибший рівень чистоти — все з генерального + парова обробка радіаторів, видалення накипу.',price:'від 617 zł',link:'/sprzatanie-mieszkan-i-domow-krakow#szczegolowe'},
    en:{name:'Deep cleaning',desc:'Deepest level of cleanliness — everything in general + steam radiators, limescale removal.',price:'from 617 zł',link:'#kontakt'}},
-  {icon:'🏗️',cc:'c4',img:'https://images.unsplash.com/photo-1721395290083-895bf53d6178?w=500&q=80',pl:{name:'Sprzątanie po remoncie',desc:'Specjalistyczne czyszczenie budowlane — kurz, fugi, farba, gruz. Dokumentacja fotograficzna.',price:'od 949 zł',link:'/sprzatanie-po-remoncie-krakow'},
+  {icon:'🏗️',cc:'c4',img:'assets/img/unsplash-1721395290083-895bf53d6178-500.jpg',pl:{name:'Sprzątanie po remoncie',desc:'Specjalistyczne czyszczenie budowlane — kurz, fugi, farba, gruz. Dokumentacja fotograficzna.',price:'od 949 zł',link:'/sprzatanie-po-remoncie-krakow'},
    uk:{name:'Прибирання після ремонту',desc:'Спеціалізоване будівельне чищення — пил, затирка, фарба, сміття. Фотодокументація.',price:'від 949 zł',link:'/sprzatanie-po-remoncie-krakow'},
    en:{name:'Post-renovation cleaning',desc:'Specialist construction clean — dust, grout, paint, debris. Photo documentation.',price:'from 949 zł',link:'/sprzatanie-po-remoncie-krakow'}},
-  {icon:'🏠',cc:'c5',img:'https://images.unsplash.com/photo-1780147343308-7ede77816ee6?w=500&q=80',pl:{name:'Sprzątanie po wyprowadzce',desc:'Przygotowanie pod nowy najem lub sprzedaż — zwrot kaucji, dokumentacja, realizacja 24h.',price:'od 787 zł',link:'/sprzatanie-po-wyprowadzce-krakow'},
+  {icon:'🏠',cc:'c5',img:'assets/img/unsplash-1780147343308-7ede77816ee6-500.jpg',pl:{name:'Sprzątanie po wyprowadzce',desc:'Przygotowanie pod nowy najem lub sprzedaż — zwrot kaucji, dokumentacja, realizacja 24h.',price:'od 787 zł',link:'/sprzatanie-po-wyprowadzce-krakow'},
    uk:{name:'Прибирання після виїзду',desc:'Підготовка під новий найм або продаж — повернення застави, документація, виконання за 24 год.',price:'від 787 zł',link:'/sprzatanie-po-wyprowadzce-krakow'},
    en:{name:'Post-move-out cleaning',desc:'Preparation for new rental or sale — deposit return, documentation, delivery within 24h.',price:'from 787 zł',link:'/sprzatanie-po-wyprowadzce-krakow'}},
-  {icon:'🪟',cc:'c6',img:'https://images.unsplash.com/photo-1536509814050-49f492a201b4?w=500&q=80',pl:{name:'Mycie okien',desc:'Sezonowe i zimowe mycie okien z obu stron — ramy, parapety, uszczelki.',price:'od 25 zł/m²',link:'/mycie-okien'},
+  {icon:'🪟',cc:'c6',img:'assets/img/unsplash-1536509814050-49f492a201b4-500.jpg',pl:{name:'Mycie okien',desc:'Sezonowe i zimowe mycie okien z obu stron — ramy, parapety, uszczelki.',price:'od 25 zł/m²',link:'/mycie-okien'},
    uk:{name:'Миття вікон',desc:'Сезонне та зимове миття вікон з обох сторін — рами, підвіконня, ущільнювачі.',price:'від 25 zł/m²',link:'/mycie-okien'},
    en:{name:'Window cleaning',desc:'Seasonal and winter window cleaning both sides — frames, sills, seals.',price:'from 25 zł/m²',link:'/mycie-okien'}}
 ];

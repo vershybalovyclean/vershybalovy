@@ -1,4 +1,22 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
+
+// ── Outbound calls with a hard timeout ───────────────────────────────────────────────
+// A hung downstream service (Supabase, Resend, the Sheets webhook, Telegram relay) must
+// not hold the function until the platform kills it — that is exactly how a booking can
+// end up saved but never announced, and the client gets a gateway timeout for it.
+// Every outbound request below goes through fetchT. Lookups that only enrich the row get
+// a short limit, the notification/insert calls a longer one; all four notification
+// channels run in parallel (see handler), so the whole function stays well under 10 s.
+const TIMEOUT_LOOKUP_MS = 2000;
+const TIMEOUT_DEFAULT_MS = 4000;
+function fetchT(url, opts, ms) {
+  const o = Object.assign({}, opts || {});
+  if (!o.signal && typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+    const isLookup = /\/rest\/v1\/(rpc\/resolve_|services\?|properties\?)|\/auth\/v1\/user/.test(String(url));
+    o.signal = AbortSignal.timeout(ms || (isLookup ? TIMEOUT_LOOKUP_MS : TIMEOUT_DEFAULT_MS));
+  }
+  return globalThis.fetch(url, o);
+}
 
 // Phase 3 (24.09) attribution enrichment — minimal normalization, no validation
 // framework. Every helper below fails to null rather than throwing: a malformed or
@@ -59,14 +77,90 @@ function cleanReplyTo(v) {
   return s && EMAIL_RE.test(s) ? s : null;
 }
 
+// ── Booking-form validation (MASTER QA, D-009) ──────────────────────────────────────
+// Mirrors assets/js/booking.js (bk_phoneValid / bk_emailValid / postal): the client
+// check is only for fast feedback, this is the one that counts. A failed check answers
+// 400 {error, code, field}; the browser maps `code` to a message in the visitor's
+// language. Nothing here touches pricing or the order content.
+const BOOKING_EMAIL_RE = /^[^\s@,;<>()[\]\\"]+@[^\s@,;<>()[\]\\"]+\.[^\s@,;<>()[\]\\".]{2,}$/;
+const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const PAYMENT_METHODS = ["transfer", "blik", "cash"];
+const BOOKING_LIMITS = { name: 120, phone: 30, email: 254, address: 300, postal: 6, clientNote: 2000, comment: 6000, service: 300 };
+
+// Polish numbers: 9 digits (optionally +48 / 0048 / 48 prefix); other countries: E.164
+// shape (+ and 8-15 digits). Spaces, dashes, dots and parentheses are allowed separators.
+function isValidPhone(raw) {
+  if (typeof raw !== "string") return false;
+  const s = raw.trim();
+  if (!s || s.length > BOOKING_LIMITS.phone || !/^[+\d\s().\-]+$/.test(s)) return false;
+  if (s.indexOf("+") > 0 || s.lastIndexOf("+") > 0) return false;
+  let d = s.replace(/\D/g, "");
+  const plus = s.charAt(0) === "+";
+  if (plus || d.indexOf("00") === 0) {
+    if (!plus) d = d.slice(2);
+    if (d.indexOf("48") === 0) return /^48[1-9]\d{8}$/.test(d);
+    return /^[1-9]\d{7,14}$/.test(d);
+  }
+  if (d.length === 11 && d.indexOf("48") === 0) return /^48[1-9]\d{8}$/.test(d);
+  return /^[1-9]\d{8}$/.test(d);
+}
+
+function isRealIsoDate(s) {
+  if (typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const d = new Date(s + "T00:00:00Z");
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
+}
+
+// Returns null when the booking/contact body is acceptable, otherwise {code, error}.
+function validateSubmission(body) {
+  const L = BOOKING_LIMITS;
+  const bad = (code, error) => ({ code, error });
+  const str = (v) => (typeof v === "string" ? v : "");
+
+  const name = cleanLine(body.name, L.name + 1);
+  if (!name || name.length < 2 || name.length > L.name || str(body.name).length > 4 * L.name) {
+    return bad("invalid_name", "Podaj imię i nazwisko");
+  }
+  if (!isValidPhone(body.phone)) return bad("invalid_phone", "Podaj poprawny numer telefonu");
+
+  const email = str(body.email).trim();
+  if (email && (email.length > L.email || !BOOKING_EMAIL_RE.test(email))) {
+    return bad("invalid_email", "Podaj poprawny adres e-mail");
+  }
+  const postal = str(body.postalCode).trim();
+  if (postal && !/^\d{2}-\d{3}$/.test(postal)) return bad("invalid_postal", "Podaj kod pocztowy w formacie 00-000");
+
+  if (str(body.address).length > L.address || str(body.clientNote).length > L.clientNote ||
+      str(body.comment).length > L.comment || str(body.service).length > L.service) {
+    return bad("too_long", "Jedno z pól jest za długie");
+  }
+
+  // A real calendar booking additionally needs a valid date/time, an address and (if sent)
+  // a known payment method.
+  if (body.scheduledDate) {
+    if (!isRealIsoDate(body.scheduledDate)) return bad("invalid_date", "Nieprawidłowa data");
+    const warsawToday = new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Warsaw" });
+    const earliest = new Date(Date.parse(warsawToday + "T00:00:00Z") - 86400000).toISOString().slice(0, 10);
+    if (body.scheduledDate < earliest) return bad("invalid_date", "Termin jest w przeszłości");
+    if (body.scheduledTime && !/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/.test(String(body.scheduledTime))) {
+      return bad("invalid_time", "Nieprawidłowa godzina");
+    }
+    if (!str(body.address).trim()) return bad("invalid_address", "Podaj adres");
+    if (body.paymentMethod && PAYMENT_METHODS.indexOf(body.paymentMethod) === -1) {
+      return bad("invalid_payment", "Nieprawidłowy sposób płatności");
+    }
+  }
+  return null;
+}
+
 // From defaults to Resend's sandbox sender exactly as before; set the optional
 // `resend_from` env var (an address on a Resend-verified domain) to change it.
-async function sendEmail(text, name, replyTo) {
+async function sendEmail(text, name, replyTo, subjectPrefix) {
   const RESEND_API_KEY = process.env.Resend_api_key;
   const TO_EMAIL = process.env.to_email;
   if (!RESEND_API_KEY || !TO_EMAIL) return false;
   try {
-    const r = await fetch("https://api.resend.com/emails", {
+    const r = await fetchT("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Authorization": "Bearer " + RESEND_API_KEY,
@@ -75,7 +169,7 @@ async function sendEmail(text, name, replyTo) {
       body: JSON.stringify({
         from: process.env.resend_from || "onboarding@resend.dev",
         to: [TO_EMAIL],
-        subject: "Nowe zgłoszenie od " + name,
+        subject: (subjectPrefix || "") + "Nowe zgłoszenie od " + name,
         text: text,
         ...(cleanReplyTo(replyTo) ? { reply_to: cleanReplyTo(replyTo) } : {})
       })
@@ -107,7 +201,7 @@ async function sendPartnerEmail(text, replyTo) {
   const RESEND_API_KEY = process.env.Resend_api_key;
   if (!RESEND_API_KEY) return false;
   try {
-    const r = await fetch("https://api.resend.com/emails", {
+    const r = await fetchT("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Authorization": "Bearer " + RESEND_API_KEY,
@@ -201,7 +295,7 @@ async function notifySiteEvent(eventBody) {
   const SUPABASE_URL = process.env.supabase_url;
   if (!SUPABASE_URL) return false;
   try {
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/notify-owner-event", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/notify-owner-event", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(eventBody)
@@ -223,7 +317,7 @@ async function notifyOwnerEvent(requestId) {
   const SUPABASE_URL = process.env.supabase_url;
   if (!SUPABASE_URL || !requestId) return false;
   try {
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/notify-owner-event", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/notify-owner-event", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ event: "request", id: requestId })
@@ -261,7 +355,7 @@ async function notifyPushOwner(requestId) {
   const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !requestId) return false;
   try {
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/send-push", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/send-push", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -280,7 +374,7 @@ async function logToSheet(data) {
   const URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
   if (!URL) return false;
   try {
-    const r = await fetch(URL, {
+    const r = await fetchT(URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -302,7 +396,7 @@ async function resolvePartnerId(partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY) {
     // RLS blocks anon reads of profiles entirely, so this goes through a narrow
     // SECURITY DEFINER RPC (public.resolve_partner_id) that returns only the id —
     // never a direct table query, which would leak partner email/phone/commission.
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_partner_id", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_partner_id", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -326,7 +420,7 @@ async function resolvePartnerId(partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY) {
 async function incrementPromoUsage(promoCode, SUPABASE_URL, SUPABASE_ANON_KEY) {
   if (!promoCode || !SUPABASE_URL || !SUPABASE_ANON_KEY) return;
   try {
-    await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/increment_promo_usage", {
+    await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/increment_promo_usage", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -349,7 +443,7 @@ async function incrementPromoUsage(promoCode, SUPABASE_URL, SUPABASE_ANON_KEY) {
 async function resolveServiceId(serviceSlug, SUPABASE_URL, SUPABASE_ANON_KEY) {
   if (!serviceSlug || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
   try {
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/services?slug=eq." + encodeURIComponent(serviceSlug) + "&select=id", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/services?slug=eq." + encodeURIComponent(serviceSlug) + "&select=id", {
       headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY }
     });
     if (!r.ok) return null;
@@ -371,7 +465,7 @@ async function resolveServiceId(serviceSlug, SUPABASE_URL, SUPABASE_ANON_KEY) {
 async function resolveClientId(clientToken, SUPABASE_URL, SUPABASE_ANON_KEY) {
   if (!clientToken || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
   try {
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/auth/v1/user", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/auth/v1/user", {
       headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + clientToken }
     });
     if (!r.ok) return null;
@@ -393,7 +487,7 @@ async function resolvePropertyId(propertyId, clientId, clientToken, SUPABASE_URL
     // client_id = auth.uid() — that identity comes from the JWT in Authorization,
     // so this must run as the client's own verified token, not the anon key
     // (which has no auth.uid() and would just get an empty result either way).
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/properties?id=eq." + encodeURIComponent(propertyId) + "&client_id=eq." + encodeURIComponent(clientId) + "&select=id", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/properties?id=eq." + encodeURIComponent(propertyId) + "&client_id=eq." + encodeURIComponent(clientId) + "&select=id", {
       headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + clientToken }
     });
     if (!r.ok) return null;
@@ -416,7 +510,7 @@ async function resolvePropertyId(propertyId, clientId, clientToken, SUPABASE_URL
 async function resolveOrCreatePropertyId(address, clientId, name, phone, SUPABASE_URL, SUPABASE_ANON_KEY) {
   if (!address || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
   try {
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_or_create_property", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_or_create_property", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -443,7 +537,7 @@ async function resolveOrCreatePropertyId(address, clientId, name, phone, SUPABAS
 async function resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY) {
   if (!Array.isArray(keys) || !keys.length || !SUPABASE_URL || !SUPABASE_ANON_KEY) return {};
   try {
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_addon_service_ids", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_addon_service_ids", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -496,12 +590,18 @@ async function insertSupabaseRequest(data) {
     return false;
   }
   if (!data.scheduledDate) return false;
+  const startedAt = Date.now();
+  let rowInserted = false; // true as soon as the requests row itself is confirmed saved
+  let partial = false;     // row saved, but its service lines / add-ons were not
   try {
     const partnerId = await resolvePartnerId(data.partnerCode, SUPABASE_URL, SUPABASE_ANON_KEY);
     const serviceId = await resolveServiceId(data.serviceSlug, SUPABASE_URL, SUPABASE_ANON_KEY);
     const clientId = await resolveClientId(data.clientToken, SUPABASE_URL, SUPABASE_ANON_KEY);
     let propertyId = clientId ? await resolvePropertyId(data.propertyId, clientId, data.clientToken, SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-    if (!propertyId && data.address) {
+    // Enrichment lookups fail to null; if the database is struggling (the lookups above
+    // used up their time limits) skip the optional property find-or-create and go straight
+    // to the insert, so an outage is reported to the client within a few seconds.
+    if (!propertyId && data.address && (Date.now() - startedAt) < 3000) {
       propertyId = await resolveOrCreatePropertyId(data.address, clientId, data.name, data.phone, SUPABASE_URL, SUPABASE_ANON_KEY);
     }
     // client_comment = only the client's own words, matching how manual/
@@ -527,7 +627,7 @@ async function insertSupabaseRequest(data) {
     // oversized; a missing or invalid attribution value never blocks the booking itself.
     const attribution = extractAttribution(data);
 
-    const r = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -564,9 +664,17 @@ async function insertSupabaseRequest(data) {
       })
     });
     if (!r.ok) {
-      console.error("insertSupabaseRequest failed", r.status, await r.text().catch(() => ""));
+      const errText = await r.text().catch(() => "");
+      // A confirmed duplicate is ONLY: HTTP 409 + unique violation of the primary key
+      // (requests_pkey) + (when the error names the key) our own id. Any other 409/4xx/5xx
+      // is a real failure and is reported as such — it must never turn into a success.
+      if (r.status === 409 && /requests_pkey/.test(errText) && (!/Key \(id\)/.test(errText) || errText.indexOf(String(data.id)) !== -1)) {
+        return "duplicate";
+      }
+      console.error("insertSupabaseRequest failed", r.status, errText);
       return false;
     }
+    rowInserted = true;
     if (data.promoCode) {
       await incrementPromoUsage(data.promoCode, SUPABASE_URL, SUPABASE_ANON_KEY);
     }
@@ -589,7 +697,7 @@ async function insertSupabaseRequest(data) {
         });
       }
       if (lineRows.length) {
-        const rsRes = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/request_services", {
+        const rsRes = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/request_services", {
           method: "POST",
           headers: {
             "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY,
@@ -597,7 +705,7 @@ async function insertSupabaseRequest(data) {
           },
           body: JSON.stringify(lineRows)
         });
-        if (!rsRes.ok) console.error("request_services insert failed", rsRes.status, await rsRes.text().catch(() => ""));
+        if (!rsRes.ok) { partial = true; console.error("request_services insert failed", rsRes.status, await rsRes.text().catch(() => "")); }
       }
     }
 
@@ -613,7 +721,7 @@ async function insertSupabaseRequest(data) {
         .filter(a => a.key && idMap[a.key] && (a.price > 0 || (a.isGift && giftsAllowed)))
         .map(a => ({ request_id: data.id, addon_service_id: idMap[a.key], price: a.price || 0, qty: a.qty || 1, is_gift: !!(a.isGift && giftsAllowed) }));
       if (addonRows.length) {
-        const raRes = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/request_addons", {
+        const raRes = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/request_addons", {
           method: "POST",
           headers: {
             "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY,
@@ -621,15 +729,53 @@ async function insertSupabaseRequest(data) {
           },
           body: JSON.stringify(addonRows)
         });
-        if (!raRes.ok) console.error("request_addons insert failed", raRes.status, await raRes.text().catch(() => ""));
+        if (!raRes.ok) { partial = true; console.error("request_addons insert failed", raRes.status, await raRes.text().catch(() => "")); }
       }
     }
 
-    return true;
+    // true = fully saved; "partial" = the request row exists but its service lines / add-ons
+    // did not all get saved (the e-mail/Telegram text still carries the full order).
+    return partial ? "partial" : true;
   } catch (error) {
     console.error("insertSupabaseRequest threw", error);
-    return false;
+    // The row itself may already be saved (an error/timeout in a later step must not turn a
+    // saved booking into a "not saved" answer — a retry would only hit the duplicate path).
+    return rowInserted ? "partial" : false;
   }
+}
+
+// Limits for the "[POWTÓRKA]" retry notice. Kept in memory of the running function
+// instance (no extra storage needed): best-effort across cold starts, but it bounds any
+// burst that reaches a warm instance — which is exactly what a replay loop does.
+const RETRY_NOTICES_PER_ORDER = 2;       // per order id, per hour
+const RETRY_NOTICES_GLOBAL = 10;         // per instance, per 10 minutes
+const retryNoticeLog = new Map();        // orderId -> [timestamps]
+let retryNoticeGlobal = [];              // timestamps
+function allowRetryNotice(orderId) {
+  const now = Date.now();
+  retryNoticeGlobal = retryNoticeGlobal.filter((t) => now - t < 600000);
+  if (retryNoticeGlobal.length >= RETRY_NOTICES_GLOBAL) return false;
+  if (retryNoticeLog.size > 500) {
+    for (const [k, v] of retryNoticeLog) { if (!v.some((t) => now - t < 3600000)) retryNoticeLog.delete(k); }
+  }
+  const times = (retryNoticeLog.get(orderId) || []).filter((t) => now - t < 3600000);
+  if (times.length >= RETRY_NOTICES_PER_ORDER) { retryNoticeLog.set(orderId, times); return false; }
+  times.push(now);
+  retryNoticeLog.set(orderId, times);
+  retryNoticeGlobal.push(now);
+  return true;
+}
+
+// Same order = same id: the browser's requestId is combined with the order content, so a
+// retry of an identical order maps to the same requests.id (duplicate-safe), while any
+// other order — even one that wrongly reuses a requestId — gets its own row.
+function deriveRequestId(clientRequestId, content) {
+  const h = createHash("sha256").update(clientRequestId + "\u0001" + JSON.stringify(content)).digest();
+  const b = Buffer.from(h.subarray(0, 16));
+  b[6] = (b[6] & 0x0f) | 0x40; // version 4 layout
+  b[8] = (b[8] & 0x3f) | 0x80; // RFC 4122 variant
+  const x = b.toString("hex");
+  return x.slice(0, 8) + "-" + x.slice(8, 12) + "-" + x.slice(12, 16) + "-" + x.slice(16, 20) + "-" + x.slice(20);
 }
 
 export default async function handler(req, res) {
@@ -641,11 +787,23 @@ export default async function handler(req, res) {
     return handlePartnerSignup(req, res, req.body);
   }
 
-  const { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at } = req.body;
-
-  if (!name || !phone) {
-    return res.status(400).json({ error: "Imię i telefon są wymagane" });
+  if (!req.body || typeof req.body !== "object") {
+    return res.status(400).json({ error: "Nieprawidłowe żądanie", code: "invalid_request" });
   }
+
+  let { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at } = req.body;
+
+  // Format/length validation of the contact fields (name, phone, e-mail, postal code,
+  // and for calendar bookings date/time/address/payment). Same rules as the browser.
+  const invalid = validateSubmission(req.body);
+  if (invalid) {
+    return res.status(400).json({ error: invalid.error, code: invalid.code });
+  }
+  // From here on name/phone/e-mail are single-line, control-character-free strings
+  // (they end up in an e-mail subject/body, a Telegram message and a Google Sheet).
+  name = cleanLine(name, BOOKING_LIMITS.name);
+  phone = cleanLine(phone, BOOKING_LIMITS.phone);
+  email = cleanLine(email, BOOKING_LIMITS.email) || "";
 
   // The full calendar-booking widget (booking.js) sends `comment` as an
   // auto-generated order summary (service/addons/price/date/address/...)
@@ -667,57 +825,110 @@ export default async function handler(req, res) {
   // to call notifyOwnerEvent() afterwards without a RETURNING round-trip, which anon
   // inserts can't safely do (see the RLS SELECT-gap note in insertSupabaseRequest).
   const hasBooking = !!scheduledDate;
-  const requestId = hasBooking ? randomUUID() : null;
+  // Duplicate-submit protection: the browser sends a per-order `requestId` (UUID v4) that
+  // is reused for retries of the SAME order. The row id is derived from that requestId AND
+  // the order content, so (a) a retry of an identical order hits the primary key and is
+  // recognised as a duplicate, while (b) a different order can never be swallowed as a
+  // "duplicate" — even if a client wrongly reuses a requestId it gets its own row. A
+  // missing or malformed requestId falls back to a server-generated id (old cached pages
+  // keep working exactly as before, just without retry protection).
+  const clientRequestId = typeof req.body.requestId === "string" && UUID_V4_RE.test(req.body.requestId) ? req.body.requestId.toLowerCase() : null;
+  const requestId = !hasBooking ? null
+    : clientRequestId
+      ? deriveRequestId(clientRequestId, [name, phone, scheduledDate, scheduledTime || "", address || "", price == null ? null : price, service || "", comment || "", clientNote || "", JSON.stringify(addons || [])])
+      : randomUUID();
 
-  const [emailResult, sheetResult] = await Promise.allSettled([
-    sendEmail(text, name, email),
+  // The database row is written first so the outcome is known before anything is sent.
+  // If the insert fails, e-mail / Google Sheets / Telegram below still carry the full order
+  // (clearly marked as NOT saved), so a Supabase outage never makes a lead disappear.
+  let inserted = null; // true | "partial" | "duplicate" | false (hasBooking only)
+  if (hasBooking) {
+    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
+  }
+
+  // Confirmed duplicate = this exact order is already saved. The client gets success and
+  // no second row exists. The first attempt may have died after the insert but before the
+  // owner was notified (function timeout, dropped connection) and that cannot be told
+  // from here, so one clearly marked "retry" notice goes out (e-mail + Telegram attention
+  // topic). It is not a new request and is never written to Google Sheets (no duplicate row).
+  if (inserted === "duplicate") {
+    // Bounded: at most RETRY_NOTICES_PER_ORDER notices per order id per hour and
+    // RETRY_NOTICES_GLOBAL per 10 minutes, so replaying the same order over and over can
+    // never turn into an endless stream of notifications. Beyond the limit the client
+    // still gets success (the order is saved) but nothing more is sent.
+    if (!allowRetryNotice(requestId)) return res.status(200).json({ success: true });
+    await Promise.allSettled([
+      sendEmail("POWTÓRZONE WYSŁANIE tej samej rezerwacji (id " + requestId + ").\nRezerwacja jest już zapisana w systemie (panel → Заявки) — to powiadomienie wysłano na wypadek, gdyby pierwsze nie dotarło.\n\n" + text, name, email, "[POWTÓRKA] "),
+      notifySiteEvent({
+        event: "site_contact",
+        name, phone, service: (service || "") + " · POWTÓRZONA rezerwacja",
+        comment: "Ta sama rezerwacja wysłana ponownie — jest już zapisana w systemie (id " + requestId + ").",
+        source: null
+      })
+    ]);
+    return res.status(200).json({ success: true });
+  }
+
+  const saved = hasBooking && !!inserted; // true or "partial"
+  let mailText = text;
+  let mailPrefix = "";
+  if (hasBooking && !saved) {
+    mailPrefix = "[NIE ZAPISANO W SYSTEMIE] ";
+    mailText = "UWAGA: ta rezerwacja NIE została zapisana w systemie (awaria bazy danych). Klient dostał komunikat o błędzie i może ponowić zgłoszenie. Oddzwoń lub dopisz zlecenie ręcznie.\n\n" + text;
+  } else if (inserted === "partial") {
+    mailText = "UWAGA: rezerwacja zapisana, ale jej pozycje (usługi/dodatki) nie zostały w pełni zapisane w systemie — uzupełnij ręcznie wg treści poniżej.\n\n" + text;
+  }
+
+  // All channels run in parallel and each has its own time limit (fetchT), so one slow or
+  // dead service can neither delay the others nor push the function past the platform
+  // limit. Telegram for a saved booking goes through notifyOwnerEvent (the row exists by
+  // now); for an unsaved one through site_booking_failed (v2 ATTENTION topic) as an extra
+  // channel. None of this is ever allowed to substitute for the insert in the answer to
+  // the client below — a notification reaching the owner is not proof the request is saved.
+  const tasks = [
+    sendEmail(mailText, name, email, mailPrefix),
     // Sheets appendRow parses values like user input: "+48 514 363 538" became a
     // formula (#ERROR!), "+48514363538" a number without "+". A leading apostrophe
     // stores the phone as plain text exactly as typed (the apostrophe is not shown).
     // Sheets only — every other channel still gets `phone` unchanged.
-    logToSheet({ date: new Date().toISOString(), name: name, phone: phone ? "'" + phone : "", service: service || "", partnerCode: partnerCode || "", comment: (hasClientNote ? clientNote : comment) || "" })
-  ]);
-
-  // Telegram is handled sequentially, not in the allSettled batch above: for a real
-  // booking it must fan out via notifyOwnerEvent (which needs the DB row to already
-  // exist), falling back to notifySiteEvent's site_booking_failed (v2 ATTENTION topic)
-  // only as a best-effort extra channel if that insert itself failed — so a Supabase
-  // outage still reaches someone instead of going silent. It is never allowed to substitute for the insert
-  // in the client-facing success check below: a notification reaching the owner is not
-  // the same as the booking actually being saved, and conflating the two previously let
-  // a client see "Dziękujemy" for a request that was never written to the database.
-  // Awaited so both finish before the function returns (Vercel doesn't guarantee
-  // background execution after the response is sent).
-  let telegramOk;
-  let inserted = null;
+    logToSheet({ date: new Date().toISOString(), name: name, phone: phone ? "'" + phone : "", service: service || "", partnerCode: partnerCode || "", comment: (hasBooking && !saved ? mailPrefix : "") + ((hasClientNote ? clientNote : comment) || "") })
+  ];
   if (hasBooking) {
-    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
-    telegramOk = inserted ? await notifyOwnerEvent(requestId) : await notifySiteEvent({
+    tasks.push(saved ? notifyOwnerEvent(requestId) : notifySiteEvent({
       event: "site_booking_failed",
       name, phone, service: service || null,
       date: scheduledDate || null, address: address || null,
       comment: (hasClientNote ? clientNote : comment) || null
-    });
-    if (inserted) await notifyPushOwner(requestId);
+    }));
+    if (saved) tasks.push(notifyPushOwner(requestId));
   } else {
     // Quick contact/estimate forms never become a requests row — routed to the
     // v2 admin group's ATTENTION topic instead of the old single personal chat.
-    telegramOk = await notifySiteEvent({
+    tasks.push(notifySiteEvent({
       event: "site_contact",
       name, phone, service: service || null,
       comment: (hasClientNote ? clientNote : comment) || null,
       source: (req.headers && (req.headers.referer || req.headers.referrer)) || null
-    });
+    }));
   }
+  // Awaited so everything finishes before the function returns (Vercel doesn't
+  // guarantee background execution after the response is sent).
+  const settled = await Promise.allSettled(tasks);
+  const emailResult = settled[0];
+  const sheetResult = settled[1];
+  const telegramOk = settled[2].status === "fulfilled" && settled[2].value === true;
 
   if (hasBooking) {
-    // A real calendar booking is only a success if it was actually saved — the
-    // notification channels above are a best-effort side conversation with the owner,
-    // not proof the client's request exists anywhere.
-    if (!inserted) {
+    // A real calendar booking is only a success if it was actually saved.
+    if (!saved) {
       console.error("Booking not saved to Supabase", { emailResult, sheetResult, telegramOk });
-      return res.status(500).json({ error: "Nie udało się zapisać rezerwacji. Spróbuj ponownie lub skontaktuj się z nami telefonicznie." });
+      return res.status(500).json({ error: "Nie udało się zapisać rezerwacji. Spróbuj ponownie lub skontaktuj się z nami telefonicznie.", code: "not_saved" });
     }
+    // Saved, but no channel confirmed the owner notification: the request still sits in the
+    // admin's incoming queue — leave a loud trace in the function log.
+    const pushOk = settled[3] && settled[3].status === "fulfilled" && settled[3].value === true;
+    const mailOk = emailResult.status === "fulfilled" && emailResult.value === true;
+    if (!telegramOk && !pushOk && !mailOk) console.error("NOTIFICATION_FAILED: booking saved but no channel confirmed", { requestId });
     return res.status(200).json({ success: true });
   }
 
