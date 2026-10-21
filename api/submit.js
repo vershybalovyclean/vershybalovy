@@ -181,10 +181,12 @@ async function sendEmail(text, name, replyTo, subjectPrefix) {
 }
 
 // ── Partner-program sign-up (program-partnerski.html#dolacz) ─────────────────────
-// A lead for the company to call back — no account, contract, code or commission is
-// created here. Delivered to the partner inbox (alias of the main Workspace mailbox)
-// and to the owner's Telegram "attention" topic; deliberately NOT written to the
-// bookings Google Sheet (different columns/purpose) or to Supabase.
+// A lead for the company to call back — no account, login, invitation, partner code or commission
+// is created here. The application is saved to Supabase (public.partner_applications, via the
+// anon-callable RPC submit_partner_application) so the Owner can review it in the admin panel
+// (Partners → Website applications) and only then create the partner; it is ALSO delivered to the
+// partner inbox (alias of the main Workspace mailbox) and to the owner's Telegram "attention" topic.
+// Deliberately NOT written to the bookings Google Sheet (different columns/purpose).
 const PARTNER_TYPES = ["Agencja nieruchomości", "Firma remontowo-budowlana", "Firma przeprowadzkowa", "Klient indywidualny", "Inne"];
 const PARTNER_SUBJECT = "Nowe zgłoszenie partnerskie — Vershy Property Care";
 
@@ -226,6 +228,27 @@ async function sendPartnerEmail(text, replyTo) {
   }
 }
 
+// Saves the application for Owner review. Never creates auth.users / profile / partner / code / invitation.
+// Returns { ok, replayed } — replayed=true when the same phone already has an unreviewed application.
+async function savePartnerApplication(app) {
+  const SUPABASE_URL = process.env.supabase_url;
+  const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return { ok: false, replayed: false };
+  try {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/submit_partner_application", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+      body: JSON.stringify({ p: app })
+    });
+    if (!r.ok) { console.error("partner application not saved, status", r.status); return { ok: false, replayed: false }; }
+    const j = await r.json();
+    return { ok: !!(j && j.ok), replayed: !!(j && j.replayed) };
+  } catch (error) {
+    console.error("partner application request failed");
+    return { ok: false, replayed: false };
+  }
+}
+
 async function handlePartnerSignup(req, res, body) {
   // Honeypot: a real visitor never sees/fills this field. Pretend success so bots get no signal.
   if (cleanLine(body.website, 200)) return res.status(200).json({ success: true });
@@ -258,7 +281,12 @@ async function handlePartnerSignup(req, res, body) {
     "Data zgłoszenia: " + whenPl + " (czas polski), " + when.toISOString() + "\n" +
     "Źródło: Program partnerski\n" +
     "Strona: " + (pageUrl || "brak danych") + "\n\n" +
-    "Zgłoszenie nie tworzy konta, umowy ani zobowiązań — skontaktuj się z osobą, aby omówić warunki współpracy.";
+    "Zgłoszenie nie tworzy konta, umowy ani zobowiązań — skontaktuj się z osobą, aby omówić warunki współpracy.\n" +
+    "Zgłoszenie jest zapisane w panelu Owner: Partnerzy → Zgłoszenia ze strony (partner i kod powstają dopiero po zatwierdzeniu).";
+
+  // Save for Owner review first: a repeat of the same unreviewed phone is not re-notified (no duplicate e-mail/Telegram).
+  const saved = await savePartnerApplication({ name, phone, email, partnerType, pageUrl, lang: cleanLine(body.lang, 8) });
+  if (saved.ok && saved.replayed) return res.status(200).json({ success: true });
 
   const [emailResult, telegramResult] = await Promise.allSettled([
     sendPartnerEmail(text, email),
@@ -273,8 +301,9 @@ async function handlePartnerSignup(req, res, body) {
   const emailOk = emailResult.status === "fulfilled" && emailResult.value === true;
   const telegramOk = telegramResult.status === "fulfilled" && telegramResult.value === true;
 
-  // Success only if a human was actually notified through at least one channel.
-  if (!emailOk && !telegramOk) {
+  // Success if the application was saved for the Owner or a human was notified through at least one channel.
+  if (!saved.ok) console.error("Partner sign-up: application was not saved to the admin database");
+  if (!saved.ok && !emailOk && !telegramOk) {
     console.error("Partner sign-up: all notification channels failed");
     return res.status(500).json({ error: "Błąd wysyłania" });
   }
