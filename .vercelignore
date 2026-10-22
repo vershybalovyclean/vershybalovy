@@ -1,0 +1,4 @@
+# Files that stay in the repository for internal use but must NOT be part of the public
+# deployment (www.vershclean.pl serves the repo root as static files).
+# vercel.json additionally redirects /docs/* as a second layer.
+/docs/

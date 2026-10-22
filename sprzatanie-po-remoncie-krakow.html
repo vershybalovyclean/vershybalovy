@@ -921,7 +921,9 @@ function calcZone(i){
   var prevMax = i>0 ? zones[i-1].max : 0;
   var val = parseFloat(inp.value);
   if(!val || val <= 0){
-    res.className='calc-result'; res.textContent='';
+    // K-1: 0 / liczba ujemna → komunikat o błędnym metrażu (puste pole — bez komunikatu); cena zawsze zerowana
+    if(window.vcAreaInputFilled && vcAreaInputFilled(inp)){ res.className='calc-result err show'; res.textContent=vcAreaZeroMsg(); }
+    else { res.className='calc-result'; res.textContent=''; }
     order.m2=0; order.price=0; updateOrder(); return;
   }
   if(val <= prevMax){
@@ -1535,7 +1537,7 @@ window.addEventListener('load', function(){
 <script src="assets/js/nav.js?v=20261012a"></script>
 <script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
-<script src="assets/js/booking.js?v=20261029a"></script>
+<script src="assets/js/booking.js?v=20261030a"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>
@@ -1554,6 +1556,6 @@ window.addEventListener('load', function(){
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
   <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Zadzwoń</span></a>
 </nav>
-<script src="assets/js/locale-fixes.js?v=20261029a"></script>
+<script src="assets/js/locale-fixes.js?v=20261030a"></script>
 </body>
 </html>

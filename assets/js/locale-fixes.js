@@ -120,4 +120,14 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   window.vcLocaleFix = run;
+
+  // K-1: komunikat dla metrażu wpisanego jako 0 / liczba ujemna (puste pole nie jest błędem). Wspólny dla kalkulatorów na stronach.
+  var AREA_ZERO_MSG = {
+    pl: '❌ Podaj metraż większy niż 0 m²',
+    uk: '❌ Вкажіть площу, більшу за 0 м²',
+    ru: '❌ Укажите площадь больше 0 м²',
+    en: '❌ Enter an area greater than 0 m²'
+  };
+  window.vcAreaZeroMsg = function () { return AREA_ZERO_MSG[curLang()] || AREA_ZERO_MSG.pl; };
+  window.vcAreaInputFilled = function (el) { return !!el && String(el.value).trim() !== ''; };
 })();

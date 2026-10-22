@@ -124,7 +124,19 @@ function m2QuickApply(val){
   var activeTabContent = document.querySelector('.tab-content.active');
   if(!activeTabContent) return;
   var tabId = activeTabContent.id.replace('tc-', '');
-  if(!m2 || m2 <= 0){ if(resEl) resEl.textContent = ''; return; }
+  if(!m2 || m2 <= 0){
+    // K-1: nie zostawiaj starej ceny po wpisaniu 0 / pustego pola — zeruj wynik wybranego zakresu i pokaż komunikat dla 0
+    var act = acActive[tabId];
+    if(act !== undefined){
+      var ar = document.getElementById('ac-res-' + tabId + '-' + act), ai = document.getElementById('ac-inp-' + tabId + '-' + act);
+      if(ar){ ar.className = 'ac-result'; ar.textContent = ''; }
+      if(ai) ai.value = '';
+    }
+    acM2[tabId] = 0; acPrice[tabId] = 0;
+    if(resEl) resEl.textContent = (String(val == null ? '' : val).trim() !== '' && window.vcAreaZeroMsg) ? vcAreaZeroMsg() : '';
+    if(typeof updateSidebar === 'function') updateSidebar();
+    return;
+  }
   var idx = M2_BRACKETS.findIndex(function(max){ return m2 <= max; });
   if(idx === -1) idx = 5;
   var row = document.getElementById('acr-' + tabId + '-' + idx);
@@ -173,8 +185,9 @@ function acCalc(tabId, idx, maxM2, rate, minPrice, minM2, prevMax) {
   var val = parseFloat(inp.value);
 
   if(!val || val <= 0) {
-    res.className = 'ac-result';
-    res.textContent = '';
+    // K-1: 0 / liczba ujemna to błąd metrażu (komunikat), puste pole — brak wyniku; w obu przypadkach cena z poprzedniej wartości jest zerowana
+    if(window.vcAreaInputFilled && vcAreaInputFilled(inp)){ res.className = 'ac-result err'; res.textContent = vcAreaZeroMsg(); }
+    else { res.className = 'ac-result'; res.textContent = ''; }
     acM2[tabId] = 0; acPrice[tabId] = 0;
     updateSidebar(); return;
   }
@@ -4215,7 +4228,7 @@ function addonsToForm() {
 <script src="assets/js/nav.js?v=20261012a"></script>
 <script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
-<script src="assets/js/booking.js?v=20261029a"></script>
+<script src="assets/js/booking.js?v=20261030a"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>
@@ -4234,6 +4247,6 @@ function addonsToForm() {
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
   <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Zadzwoń</span></a>
 </nav>
-<script src="assets/js/locale-fixes.js?v=20261029a"></script>
+<script src="assets/js/locale-fixes.js?v=20261030a"></script>
 </body>
 </html>

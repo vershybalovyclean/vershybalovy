@@ -1519,14 +1519,16 @@ function calcArea(idx, maxSqm, rate, minPrice) {
   var val = parseFloat(inp.value);
   
   if(!val || val <= 0) {
-    result.style.display='none';
+    // K-1: 0 / liczba ujemna → komunikat o błędnym metrażu (puste pole — bez komunikatu); cena zawsze zerowana
+    if(window.vcAreaInputFilled && vcAreaInputFilled(inp)){ result.style.display='block'; result.className='area-calc-result err'; result.textContent=vcAreaZeroMsg(); }
+    else { result.style.display='none'; }
     exactArea = 0;
     calculatedPrice = 0;
     selectedArea = '';
     updatePriceSummary();
     return;
   }
-  
+
   // Get previous range max to check lower bound
   var key = getPriceKey(selectedSvc);
   var ranges = key && PRICE_RATES[key] ? PRICE_RATES[key].ranges : [];
@@ -1704,7 +1706,8 @@ function calcCardPrice(svcIdx) {
   
   var val = parseFloat(inp.value);
   if(!val || val <= 0) {
-    res.textContent=''; res.className='card-calc-result';
+    if(window.vcAreaInputFilled && vcAreaInputFilled(inp)){ res.textContent=vcAreaZeroMsg(); res.className='card-calc-result err'; }
+    else { res.textContent=''; res.className='card-calc-result'; }
     currentCardPrice=0; return;
   }
   
@@ -2299,6 +2302,6 @@ observeFI();
 <script src="assets/js/nav.js?v=20261012a"></script>
 <script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
-<script src="assets/js/locale-fixes.js?v=20261029a"></script>
+<script src="assets/js/locale-fixes.js?v=20261030a"></script>
 </body>
 </html>

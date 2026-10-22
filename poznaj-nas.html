@@ -1179,7 +1179,8 @@ function calcArea(idx, maxSqm, rate, minPrice) {
   var val = parseFloat(inp.value);
   
   if(!val || val <= 0) {
-    result.style.display='none';
+    if(window.vcAreaInputFilled && vcAreaInputFilled(inp)){ result.style.display='block'; result.className='area-calc-result err'; result.textContent=vcAreaZeroMsg(); }
+    else { result.style.display='none'; }
     exactArea = 0;
     calculatedPrice = 0;
     selectedArea = '';
@@ -1364,7 +1365,8 @@ function calcCardPrice(svcIdx) {
   
   var val = parseFloat(inp.value);
   if(!val || val <= 0) {
-    res.textContent=''; res.className='card-calc-result';
+    if(window.vcAreaInputFilled && vcAreaInputFilled(inp)){ res.textContent=vcAreaZeroMsg(); res.className='card-calc-result err'; }
+    else { res.textContent=''; res.className='card-calc-result'; }
     currentCardPrice=0; return;
   }
   
@@ -2119,6 +2121,6 @@ window.addEventListener('DOMContentLoaded',function(){
 <script src="assets/js/nav.js?v=20261012a"></script>
 <script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
-<script src="assets/js/locale-fixes.js?v=20261029a"></script>
+<script src="assets/js/locale-fixes.js?v=20261030a"></script>
 </body>
 </html>

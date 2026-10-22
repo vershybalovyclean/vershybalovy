@@ -1082,7 +1082,12 @@ function acCalc(cat, idx, rate, min, maxM2, prevMax){
   var inp = document.getElementById('ac-inp-'+cat+'-'+idx);
   var res = document.getElementById('ac-res-'+cat+'-'+idx);
   var val = parseFloat(inp.value);
-  if(!val || val<=0){ res.className='ac-result';res.textContent=''; SEL.m2=0;SEL.price=0;updateSidebar();return; }
+  if(!val || val<=0){
+    // K-1: 0 / liczba ujemna → komunikat o błędnym metrażu (puste pole — bez komunikatu); cena zawsze zerowana
+    if(window.vcAreaInputFilled && vcAreaInputFilled(inp)){ res.className='ac-result err'; res.textContent=vcAreaZeroMsg(); }
+    else { res.className='ac-result'; res.textContent=''; }
+    SEL.m2=0;SEL.price=0;updateSidebar();return;
+  }
   if(prevMax>0 && val<=prevMax){
     res.className='ac-result err';
     res.textContent='❌ '+val+' m² '+_t('calc_err_below',{max:prevMax});
@@ -1652,7 +1657,7 @@ window.addEventListener('load', function(){
 <script src="assets/js/nav.js?v=20261012a"></script>
 <script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
-<script src="assets/js/booking.js?v=20261029a"></script>
+<script src="assets/js/booking.js?v=20261030a"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>
@@ -1671,6 +1676,6 @@ window.addEventListener('load', function(){
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
   <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Zadzwoń</span></a>
 </nav>
-<script src="assets/js/locale-fixes.js?v=20261029a"></script>
+<script src="assets/js/locale-fixes.js?v=20261030a"></script>
 </body>
 </html>

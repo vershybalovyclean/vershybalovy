@@ -670,6 +670,9 @@
     if(bk_partnerOn){
       var codeEl = document.getElementById('bk-partner-code');
       if(codeEl && !/^VC-\d{4}$/.test(codeEl.value)){ markInvalid(codeEl, true); ok = false; }
+      // Kod, który serwer już sprawdził i nie rozpoznał (bk_checkPartnerCode), nie przechodzi dalej — zamiast po cichu zapisać zamówienie
+      // bez partnera. Brak wyniku sprawdzenia (sieć / jeszcze trwa) nie blokuje zamówienia.
+      else if(codeEl && bk_partnerCodeValid === false){ markInvalid(codeEl, true); ok = false; fmtMsgs.push(bk_t('partnerInvalid')); }
     }
     var consentEl = document.getElementById('bk-consent');
     if(consentEl && !consentEl.checked){ markInvalid(document.getElementById('bk-consent-wrap')); ok = false; }

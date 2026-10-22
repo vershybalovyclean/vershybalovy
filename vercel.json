@@ -1,12 +1,23 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/poznaj-nas", "destination": "/poznaj-nas.html" }
   ],
   "redirects": [
     { "source": "/sprzatanie-po-zbierackosci-krakow", "destination": "/trudne-przypadki-sprzatanie-krakow", "permanent": true },
     { "source": "/sprzatanie-po-zbieractwie-krakow", "destination": "/trudne-przypadki-sprzatanie-krakow", "permanent": true },
-    { "source": "/sprzatanie-mieszkan-krakow", "destination": "/sprzatanie-mieszkan-i-domow-krakow", "permanent": true }
+    { "source": "/sprzatanie-mieszkan-krakow", "destination": "/sprzatanie-mieszkan-i-domow-krakow", "permanent": true },
+    { "source": "/docs/:path*", "destination": "/", "permanent": false }
   ]
 }
