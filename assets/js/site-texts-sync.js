@@ -46,12 +46,28 @@
     return m ? m[0].replace(/^\++/, "+") : null;
   }
 
+  // Display text built from the tel: number itself (+48 numbers), so it does not
+  // depend on how Google formats its replacement: Google only replaces the part of
+  // the page text that matches the number in the GTM tag, which can leave
+  // "+48 +48 …", "++48 …" or "+22 …" behind depending on the formats involved.
+  // Mobile prefixes are grouped 3-3-3, geographic numbers 2-3-2-2.
+  function plDisplay(digits) {
+    if (digits.length !== 11 || digits.indexOf("48") !== 0) return null;
+    var n = digits.slice(2);
+    return /^(45|5[0137]|6[069]|7[2389]|88)/.test(n)
+      ? "+48 " + n.slice(0, 3) + " " + n.slice(3, 6) + " " + n.slice(6)
+      : "+48 " + n.slice(0, 2) + " " + n.slice(2, 5) + " " + n.slice(5, 7) + " " + n.slice(7);
+  }
+  function nationalPart(digits) {
+    return digits.length === 11 && digits.indexOf("48") === 0 ? digits.slice(2) : digits;
+  }
+
   function setForwarding(link) {
     var d = hrefDigits(link.getAttribute("href"));
     if (!d || isOwnNumber(d) || (forwarding && forwarding.digits === d)) return;
     if (forwarding) previousForwarding[forwarding.digits] = true;
     delete previousForwarding[d];
-    forwarding = { digits: d, tel: link.getAttribute("href"), display: null };
+    forwarding = { digits: d, tel: link.getAttribute("href"), display: plDisplay(d) };
   }
 
   // Display text for the current forwarding number, from a marked link that
@@ -102,7 +118,15 @@
       forEachTextNode(a, function (node) {
         var t = node.nodeValue;
         var nt = t;
-        if (forwarding && /\+\s*\+/.test(t) && digitsOf(t).indexOf(forwarding.digits) !== -1) {
+        if (forwarding && forwarding.display) {
+          // Whole phone-like run ending in the forwarding number ("+48 +48 22 …",
+          // "++48 22 …", "+22 …") → one clean display of that number.
+          var tail = nationalPart(forwarding.digits);
+          nt = nt.replace(/\+*[\d(][\d\s+()\-]{5,}\d/g, function (run) {
+            var rd = digitsOf(run);
+            return rd.length >= tail.length && rd.slice(-tail.length) === tail ? forwarding.display : run;
+          });
+        } else if (forwarding && /\+\s*\+/.test(t) && digitsOf(t).indexOf(forwarding.digits) !== -1) {
           nt = nt.replace(/\+\s*\+/, "+");
         }
         var m = nt.match(PHONE_RE);

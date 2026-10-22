@@ -713,7 +713,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script src="assets/js/nav.js?v=20261012a"></script>
-<script src="assets/js/site-texts-sync.js?v=20261013a" defer></script>
+<script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
 <script>
 function toggleFaq(el){el.parentNode.classList.toggle('open');}
@@ -810,6 +810,9 @@ function zbSelectDegree(el) {
   zbUpdateSummary();
 }
 function zbUpdateSummary() {
+  // "or call:" prefix before the phone link is static Polish markup; the dictionaries already hold sum_alt for every language.
+  var altEl = document.getElementById('sum-alt');
+  if (altEl && altEl.firstChild && altEl.firstChild.nodeType === 3) altEl.firstChild.nodeValue = (TX[lang] || TX.pl).sum_alt || 'lub zadzwoń: ';
   var area = document.getElementById('zb-area').value;
   zbState.area = area ? parseFloat(area) : null;
   var summary = document.getElementById('zb-summary');
@@ -854,7 +857,7 @@ var TX = {
 pl: {
   topbar: 'Premium Cleaning &amp; Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em>',
   nav_mieszkan:'Sprzątanie mieszkań i domów', nav_remont:'Po remoncie', nav_wyjazd:'Po wyjeździe',
-  nav_zb:'Trudne przypadki', nav_okna:'Mycie okien', nav_about:'Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Kabinet klienta', login_partner:'🤝 Kabinet partnera', login_register:'📝 Zarejestruj się',
+  nav_zb:'Trudne przypadki', nav_okna:'Mycie okien', nav_about:'Poznaj nas', hdr_cta:'🤝 Zostań partnerem', login_btn:'Zaloguj się', login_client:'👤 Panel klienta', login_partner:'🤝 Panel partnera', login_register:'📝 Zarejestruj się',
   hero_badge:'Trudne przypadki',
   hero_h1:'Trudne przypadki sprzątania w <em>Krakowie</em>',
   hero_sub:'Zbieractwo, długotrwałe zaniedbanie, zadymienie i sadza po dymie — każdy przypadek oceniamy indywidualnie i przygotowujemy wycenę dopasowaną do rzeczywistej sytuacji.',
@@ -1337,7 +1340,7 @@ en: {
   sum_title:'📋 Your request', sum_type:'Type: ', sum_area:'Area: ', sum_degree:'Degree: ', sum_partner:'Partner code: ', sum_smoke_source:'Source of smoke: ',
   zb_partner_label:'Order under the partner program', zb_partner_code_hint:'Format: VC- plus 4 digits, e.g. VC-4821.',
   sum_cta:'📞 Request a free contact', sum_alt:'or call: ',
-  wa_message:'Hello, I am interested in hoarding cleanup services.\\nProperty type: {type}\\nArea: {area}\\nDegree of neglect: {degree}',
+  wa_message:'Hello, I am interested in hoarding cleanup services.\nProperty type: {type}\nArea: {area}\nDegree of neglect: {degree}',
   wa_message_zd:'Hello, I am interested in smoke/soot cleanup.\nProperty type: {type}\nArea: {area}\nDegree of smoke damage: {degree}',
   audit_note:'💡 <strong>Why is the first step a paid audit (300 zł)?</strong> The audit fee is fully deducted from the final price if you decide to sign a contract with us. Every such case is different — during the site visit our technician assesses the real scope of work, takes photo documentation and prepares an exact quote.',
   audit_note_zd:'💡 <strong>How is the price determined?</strong> We assess every smoke-damage case individually based on your inquiry and, if needed, an on-site visit — with no price set in advance. Contact us to discuss the details and get a quote matched to your situation.',
@@ -1606,5 +1609,6 @@ document.addEventListener('DOMContentLoaded', function(){ applyTranslations(loca
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
   <a href="/program-partnerski" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-partner"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Partner</span></a>
 </nav>
+<script src="assets/js/locale-fixes.js?v=20261029a"></script>
 </body>
 </html>

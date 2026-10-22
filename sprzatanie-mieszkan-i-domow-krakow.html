@@ -550,7 +550,8 @@ function updateMixedStatus() {
     st.className = 'mixed-status ok';
     var _pt2 = (window._planTx && window._planTx.plan) ? (window._planTx.plan[lang]||'Plan miesięczny') : 'Plan miesięczny';
     var _tt2 = _t('cleanings');
-    st.innerHTML = '\u2705 ' + _pt2 + ' gotowy: ' + total + '/' + target + ' ' + _tt2;
+    var _ready = {pl: 'gotowy', uk: '\u0433\u043e\u0442\u043e\u0432\u0438\u0439', ru: '\u0433\u043e\u0442\u043e\u0432', en: 'ready'}[lang] || 'gotowy';
+    st.innerHTML = '\u2705 ' + _pt2 + ' ' + _ready + ': ' + total + '/' + target + ' ' + _tt2;
   } else {
     st.className = 'mixed-status warn';
     var _st2 = _t('mixed_warn');
@@ -862,10 +863,10 @@ var FAQ_TX = {
 
 
 var ADDONS_TX = {
-  pl: {"al1": "Czyszczenie lamp", "al2": "Czyszczenie grzejników", "al3": "Wnętrza szaf", "al4": "Wymiana pościeli", "al5": "Składanie rzeczy", "al6": "Prasowanie", "al7": "Zdejmowanie zasłon", "al8": "Czyszczenie klimatyzacji", "al9": "Kuweta dla zwierzęcia", "al10": "Mycie wysokich powierzchni", "al11": "Sprzątanie balkonu", "al12": "Przesuwanie mebli", "bl1": "Czyszczenie fug", "bl2": "Czyszczenie podłogi", "bl3": "Pralka", "bl4": "Kratka wentylacyjna", "bl5": "Mycie ścian (cała wys.)", "bl6": "Udrażnianie odpływu", "bl7": "Czyszczenie dna toalety", "bl8": "Usuwanie pleśni", "bl9": "Usuwanie kamienia / rdzy", "bl10": "Kratka prysznica", "bl11": "Kamień z szyb prysznicowych", "bl12": "Kabina prysznicowa (całkowicie)", "kl1": "Czajnik", "kl2": "Kuchenka mikrofalowa", "kl3": "Multicooker", "kl4": "Grill", "kl5": "Lodówka", "kl6": "Zamrażarka", "kl7": "Piekarnik", "kl8": "Okap", "kl9": "Zmywarka", "kl10": "Odtłuszczanie frontów", "kl11": "Czyszczenie szafek", "kl12": "Kosz na śmieci", "kl13": "Ekspres do kawy", "wl1": "Mycie okien", "ozon1": "Ozonowanie", "cc1": "Dywan / wykładzina dywanowa", "cc2": "Dywan z długim włosiem (shaggy)", "cc3": "Fotel", "cc4": "Krzesło", "cc5": "Puf", "cc6": "Sofa 2-osobowa", "cc7": "Sofa 3-osobowa", "cc8": "Wersalka / sofa rozkładana", "cc9": "Narożnik (mały, do 200 cm)", "cc10": "Narożnik (średni, 200–250 cm)", "cc11": "Narożnik (duży, 250+ cm)", "cc12": "Poduszka dekoracyjna", "cc13": "Zagłówek + rama łóżka", "cc14": "Materac 1-osobowy (1 strona)", "cc15": "Materac 1-osobowy (2 strony)", "cc16": "Materac 2-osobowy (1 strona)", "cc17": "Materac 2-osobowy (2 strony)", "cc18": "Materac dziecięcy", "ol1": "Usługa dodatkowa (nietypowa prośba)"},
-  uk: {"al1": "Чищення ламп", "al2": "Чищення радіаторів", "al3": "Всередині шаф", "al4": "Зміна постільної білизни", "al5": "Складання речей", "al6": "Прасування", "al7": "Зняття штор", "al8": "Чищення кондиціонера", "al9": "Лоток для тварини", "al10": "Миття високих поверхонь", "al11": "Прибирання балкону", "al12": "Пересування меблів", "bl1": "Чищення швів", "bl2": "Чищення підлоги", "bl3": "Пральна машина", "bl4": "Вентиляційна решітка", "bl5": "Миття стін (повна висота)", "bl6": "Прочищення зливу", "bl7": "Чищення дна унітазу", "bl8": "Видалення плісняви", "bl9": "Видалення каменю / іржі", "bl10": "Решітка душу", "bl11": "Накип зі скла душової", "bl12": "Душова кабіна (повністю)", "kl1": "Чайник", "kl2": "Мікрохвильова піч", "kl3": "Мультиварка", "kl4": "Гриль", "kl5": "Холодильник", "kl6": "Морозилка", "kl7": "Духовка", "kl8": "Витяжка", "kl9": "Посудомийна машина", "kl10": "Знежирення фасадів", "kl11": "Чищення шаф", "kl12": "Відро для сміття", "kl13": "Кавоварка", "wl1": "Миття вікон", "ozon1": "Озонування", "cc1": "Килим / килимове покриття", "cc2": "Килим з довгим ворсом (shaggy)", "cc3": "Крісло", "cc4": "Стілець", "cc5": "Пуф", "cc6": "Диван 2-місний", "cc7": "Диван 3-місний", "cc8": "Розкладний диван", "cc9": "Кутовий диван (малий, до 200 см)", "cc10": "Кутовий диван (середній, 200–250 см)", "cc11": "Кутовий диван (великий, 250+ см)", "cc12": "Декоративна подушка", "cc13": "Узголів'я + каркас ліжка", "cc14": "Матрац 1-спальний (1 сторона)", "cc15": "Матрац 1-спальний (2 сторони)", "cc16": "Матрац 2-спальний (1 сторона)", "cc17": "Матрац 2-спальний (2 сторони)", "cc18": "Дитячий матрац", "ol1": "Додаткова послуга (нетипове прохання)"},
-  en: {"al1": "Lamp cleaning", "al2": "Radiator cleaning", "al3": "Wardrobe interiors", "al4": "Bedding change", "al5": "Folding items", "al6": "Ironing", "al7": "Curtain removal", "al8": "AC cleaning", "al9": "Pet litter box", "al10": "High surface washing", "al11": "Balcony cleaning", "al12": "Furniture moving", "bl1": "Grout cleaning", "bl2": "Floor cleaning", "bl3": "Washing machine", "bl4": "Ventilation grille", "bl5": "Wall washing (full height)", "bl6": "Drain unblocking", "bl7": "Toilet base cleaning", "bl8": "Mould removal", "bl9": "Limescale / rust removal", "bl10": "Shower drain", "bl11": "Shower glass descaling", "bl12": "Shower cubicle (complete)", "kl1": "Kettle", "kl2": "Microwave", "kl3": "Multicooker", "kl4": "Grill", "kl5": "Fridge", "kl6": "Freezer", "kl7": "Oven", "kl8": "Hood", "kl9": "Dishwasher", "kl10": "Cabinet front degreasing", "kl11": "Cabinet cleaning", "kl12": "Bin", "kl13": "Coffee machine", "wl1": "Window cleaning", "ozon1": "Ozone treatment", "cc1": "Carpet / rug", "cc2": "Long-pile carpet (shaggy)", "cc3": "Armchair", "cc4": "Chair", "cc5": "Pouf", "cc6": "2-seat sofa", "cc7": "3-seat sofa", "cc8": "Sofa bed", "cc9": "Corner sofa (small, up to 200 cm)", "cc10": "Corner sofa (medium, 200–250 cm)", "cc11": "Corner sofa (large, 250+ cm)", "cc12": "Decorative pillow", "cc13": "Headboard + bed frame", "cc14": "Single mattress (1 side)", "cc15": "Single mattress (2 sides)", "cc16": "Double mattress (1 side)", "cc17": "Double mattress (2 sides)", "cc18": "Children's mattress", "ol1": "Additional service (custom request)"},
-  ru: {"al1": "Чистка светильников", "al2": "Чистка радиаторов", "al3": "Внутри шкафов", "al4": "Смена постельного белья", "al5": "Складывание вещей", "al6": "Глажка", "al7": "Снятие штор", "al8": "Чистка кондиционера", "al9": "Лоток для питомца", "al10": "Мытьё высоких поверхностей", "al11": "Уборка балкона", "al12": "Перестановка мебели", "bl1": "Чистка швов", "bl2": "Чистка пола", "bl3": "Стиральная машина", "bl4": "Вентиляционная решётка", "bl5": "Мытьё стен (по всей высоте)", "bl6": "Прочистка слива", "bl7": "Чистка дна унитаза", "bl8": "Удаление плесени", "bl9": "Удаление накипи / ржавчины", "bl10": "Решётка душа", "bl11": "Известковый налёт со стёкол душа", "bl12": "Душевая кабина (полностью)", "kl1": "Чайник", "kl2": "Микроволновая печь", "kl3": "Мультиварка", "kl4": "Гриль", "kl5": "Холодильник", "kl6": "Морозильная камера", "kl7": "Духовка", "kl8": "Вытяжка", "kl9": "Посудомоечная машина", "kl10": "Обезжиривание фасадов", "kl11": "Чистка шкафчиков", "kl12": "Мусорное ведро", "kl13": "Кофемашина", "wl1": "Мытьё окон", "ozon1": "Озонирование", "cc1": "Ковёр / ковровое покрытие", "cc2": "Ковёр с длинным ворсом (шегги)", "cc3": "Кресло", "cc4": "Стул", "cc5": "Пуф", "cc6": "Диван 2-местный", "cc7": "Диван 3-местный", "cc8": "Раскладной диван", "cc9": "Угловой диван (маленький, до 200 см)", "cc10": "Угловой диван (средний, 200–250 см)", "cc11": "Угловой диван (большой, 250+ см)", "cc12": "Декоративная подушка", "cc13": "Изголовье + каркас кровати", "cc14": "Матрас 1-спальный (1 сторона)", "cc15": "Матрас 1-спальный (2 стороны)", "cc16": "Матрас 2-спальный (1 сторона)", "cc17": "Матрас 2-спальный (2 стороны)", "cc18": "Детский матрас", "ol1": "Дополнительная услуга (нетипичная просьба)"}
+  pl: {"wl2": "Balustrady", "al1": "Czyszczenie lamp", "al2": "Czyszczenie grzejników", "al3": "Wnętrza szaf", "al4": "Wymiana pościeli", "al5": "Składanie rzeczy", "al6": "Prasowanie", "al7": "Zdejmowanie zasłon", "al8": "Czyszczenie klimatyzacji", "al9": "Kuweta dla zwierzęcia", "al10": "Mycie wysokich powierzchni", "al11": "Sprzątanie balkonu", "al12": "Przesuwanie mebli", "bl1": "Czyszczenie fug", "bl2": "Czyszczenie podłogi", "bl3": "Pralka", "bl4": "Kratka wentylacyjna", "bl5": "Mycie ścian (cała wys.)", "bl6": "Udrażnianie odpływu", "bl7": "Czyszczenie dna toalety", "bl8": "Usuwanie pleśni", "bl9": "Usuwanie kamienia / rdzy", "bl10": "Kratka prysznica", "bl11": "Kamień z szyb prysznicowych", "bl12": "Kabina prysznicowa (całkowicie)", "kl1": "Czajnik", "kl2": "Kuchenka mikrofalowa", "kl3": "Multicooker", "kl4": "Grill", "kl5": "Lodówka", "kl6": "Zamrażarka", "kl7": "Piekarnik", "kl8": "Okap", "kl9": "Zmywarka", "kl10": "Odtłuszczanie frontów", "kl11": "Czyszczenie szafek", "kl12": "Kosz na śmieci", "kl13": "Ekspres do kawy", "wl1": "Mycie okien", "ozon1": "Ozonowanie", "cc1": "Dywan / wykładzina dywanowa", "cc2": "Dywan z długim włosiem (shaggy)", "cc3": "Fotel", "cc4": "Krzesło", "cc5": "Puf", "cc6": "Sofa 2-osobowa", "cc7": "Sofa 3-osobowa", "cc8": "Wersalka / sofa rozkładana", "cc9": "Narożnik (mały, do 200 cm)", "cc10": "Narożnik (średni, 200–250 cm)", "cc11": "Narożnik (duży, 250+ cm)", "cc12": "Poduszka dekoracyjna", "cc13": "Zagłówek + rama łóżka", "cc14": "Materac 1-osobowy (1 strona)", "cc15": "Materac 1-osobowy (2 strony)", "cc16": "Materac 2-osobowy (1 strona)", "cc17": "Materac 2-osobowy (2 strony)", "cc18": "Materac dziecięcy", "ol1": "Usługa dodatkowa (nietypowa prośba)"},
+  uk: {"wl2": "Балюстради", "al1": "Чищення ламп", "al2": "Чищення радіаторів", "al3": "Всередині шаф", "al4": "Зміна постільної білизни", "al5": "Складання речей", "al6": "Прасування", "al7": "Зняття штор", "al8": "Чищення кондиціонера", "al9": "Лоток для тварини", "al10": "Миття високих поверхонь", "al11": "Прибирання балкону", "al12": "Пересування меблів", "bl1": "Чищення швів", "bl2": "Чищення підлоги", "bl3": "Пральна машина", "bl4": "Вентиляційна решітка", "bl5": "Миття стін (повна висота)", "bl6": "Прочищення зливу", "bl7": "Чищення дна унітазу", "bl8": "Видалення плісняви", "bl9": "Видалення каменю / іржі", "bl10": "Решітка душу", "bl11": "Накип зі скла душової", "bl12": "Душова кабіна (повністю)", "kl1": "Чайник", "kl2": "Мікрохвильова піч", "kl3": "Мультиварка", "kl4": "Гриль", "kl5": "Холодильник", "kl6": "Морозилка", "kl7": "Духовка", "kl8": "Витяжка", "kl9": "Посудомийна машина", "kl10": "Знежирення фасадів", "kl11": "Чищення шаф", "kl12": "Відро для сміття", "kl13": "Кавоварка", "wl1": "Миття вікон", "ozon1": "Озонування", "cc1": "Килим / килимове покриття", "cc2": "Килим з довгим ворсом (shaggy)", "cc3": "Крісло", "cc4": "Стілець", "cc5": "Пуф", "cc6": "Диван 2-місний", "cc7": "Диван 3-місний", "cc8": "Розкладний диван", "cc9": "Кутовий диван (малий, до 200 см)", "cc10": "Кутовий диван (середній, 200–250 см)", "cc11": "Кутовий диван (великий, 250+ см)", "cc12": "Декоративна подушка", "cc13": "Узголів'я + каркас ліжка", "cc14": "Матрац 1-спальний (1 сторона)", "cc15": "Матрац 1-спальний (2 сторони)", "cc16": "Матрац 2-спальний (1 сторона)", "cc17": "Матрац 2-спальний (2 сторони)", "cc18": "Дитячий матрац", "ol1": "Додаткова послуга (нетипове прохання)"},
+  en: {"wl2": "Balustrades", "al1": "Lamp cleaning", "al2": "Radiator cleaning", "al3": "Wardrobe interiors", "al4": "Bedding change", "al5": "Folding items", "al6": "Ironing", "al7": "Curtain removal", "al8": "AC cleaning", "al9": "Pet litter box", "al10": "High surface washing", "al11": "Balcony cleaning", "al12": "Furniture moving", "bl1": "Grout cleaning", "bl2": "Floor cleaning", "bl3": "Washing machine", "bl4": "Ventilation grille", "bl5": "Wall washing (full height)", "bl6": "Drain unblocking", "bl7": "Toilet base cleaning", "bl8": "Mould removal", "bl9": "Limescale / rust removal", "bl10": "Shower drain", "bl11": "Shower glass descaling", "bl12": "Shower cubicle (complete)", "kl1": "Kettle", "kl2": "Microwave", "kl3": "Multicooker", "kl4": "Grill", "kl5": "Fridge", "kl6": "Freezer", "kl7": "Oven", "kl8": "Hood", "kl9": "Dishwasher", "kl10": "Cabinet front degreasing", "kl11": "Cabinet cleaning", "kl12": "Bin", "kl13": "Coffee machine", "wl1": "Window cleaning", "ozon1": "Ozone treatment", "cc1": "Carpet / rug", "cc2": "Long-pile carpet (shaggy)", "cc3": "Armchair", "cc4": "Chair", "cc5": "Pouf", "cc6": "2-seat sofa", "cc7": "3-seat sofa", "cc8": "Sofa bed", "cc9": "Corner sofa (small, up to 200 cm)", "cc10": "Corner sofa (medium, 200–250 cm)", "cc11": "Corner sofa (large, 250+ cm)", "cc12": "Decorative pillow", "cc13": "Headboard + bed frame", "cc14": "Single mattress (1 side)", "cc15": "Single mattress (2 sides)", "cc16": "Double mattress (1 side)", "cc17": "Double mattress (2 sides)", "cc18": "Children's mattress", "ol1": "Additional service (custom request)"},
+  ru: {"wl2": "Балюстрады", "al1": "Чистка светильников", "al2": "Чистка радиаторов", "al3": "Внутри шкафов", "al4": "Смена постельного белья", "al5": "Складывание вещей", "al6": "Глажка", "al7": "Снятие штор", "al8": "Чистка кондиционера", "al9": "Лоток для питомца", "al10": "Мытьё высоких поверхностей", "al11": "Уборка балкона", "al12": "Перестановка мебели", "bl1": "Чистка швов", "bl2": "Чистка пола", "bl3": "Стиральная машина", "bl4": "Вентиляционная решётка", "bl5": "Мытьё стен (по всей высоте)", "bl6": "Прочистка слива", "bl7": "Чистка дна унитаза", "bl8": "Удаление плесени", "bl9": "Удаление накипи / ржавчины", "bl10": "Решётка душа", "bl11": "Известковый налёт со стёкол душа", "bl12": "Душевая кабина (полностью)", "kl1": "Чайник", "kl2": "Микроволновая печь", "kl3": "Мультиварка", "kl4": "Гриль", "kl5": "Холодильник", "kl6": "Морозильная камера", "kl7": "Духовка", "kl8": "Вытяжка", "kl9": "Посудомоечная машина", "kl10": "Обезжиривание фасадов", "kl11": "Чистка шкафчиков", "kl12": "Мусорное ведро", "kl13": "Кофемашина", "wl1": "Мытьё окон", "ozon1": "Озонирование", "cc1": "Ковёр / ковровое покрытие", "cc2": "Ковёр с длинным ворсом (шегги)", "cc3": "Кресло", "cc4": "Стул", "cc5": "Пуф", "cc6": "Диван 2-местный", "cc7": "Диван 3-местный", "cc8": "Раскладной диван", "cc9": "Угловой диван (маленький, до 200 см)", "cc10": "Угловой диван (средний, 200–250 см)", "cc11": "Угловой диван (большой, 250+ см)", "cc12": "Декоративная подушка", "cc13": "Изголовье + каркас кровати", "cc14": "Матрас 1-спальный (1 сторона)", "cc15": "Матрас 1-спальный (2 стороны)", "cc16": "Матрас 2-спальный (1 сторона)", "cc17": "Матрас 2-спальный (2 стороны)", "cc18": "Детский матрас", "ol1": "Дополнительная услуга (нетипичная просьба)"}
 };
 
 
@@ -1009,7 +1010,7 @@ pl:{
   topbar:"Premium Cleaning & Property Services &nbsp;&middot;&nbsp; <em>Jedna jakość. Jeden standard.</em>",
   /* NAV */
   nav_home:"🏠 Strona główna", nav_mieszkan:"Sprzątanie mieszkań i domów",
-  nav_remont:"Po remoncie", nav_wyjazd:"Po wyprowadzce", nav_zb:"Trudne przypadki", nav_okna:"Mycie okien", nav_about:"Poznaj nas", nav_cta:"🤝 Zostań partnerem", login_btn:"Zaloguj się", login_client:"👤 Kabinet klienta", login_partner:"🤝 Kabinet partnera", login_register:"📝 Zarejestruj się",
+  nav_remont:"Po remoncie", nav_wyjazd:"Po wyprowadzce", nav_zb:"Trudne przypadki", nav_okna:"Mycie okien", nav_about:"Poznaj nas", nav_cta:"🤝 Zostań partnerem", login_btn:"Zaloguj się", login_client:"👤 Panel klienta", login_partner:"🤝 Panel partnera", login_register:"📝 Zarejestruj się",
   /* HERO */
   hero_badge:"🏠 Kraków i Małopolska",
   hero_h1:"Profesjonalne sprzątanie mieszkań i domów<br><em>— trzy poziomy czystości</em>",
@@ -1099,7 +1100,7 @@ photo_cta_title:"Nie wiesz, którą usługę wybrać?",
   hng6:"Po remoncie", hng7:"Po wyprowadzce", hng8:"Trudne przypadki", hng9:"Realizacje", hng10:"FAQ",
   hng11:"WhatsApp", hng12:"Zostań partnerem", hngCallBtn:"📞 ZADZWOŃ DO NAS", hngClose:"Zamknij",
   mtbHome:"Strona główna", mtbOrder:"Zamów", mtbMore:"Więcej", mtbChat:"Czat", mtbAccount:"Zadzwoń",
-  loginClient:"👤 Kabinet klienta", loginPartner:"🤝 Kabinet partnera",
+  loginClient:"👤 Panel klienta", loginPartner:"🤝 Panel partnera",
   fslogan:"Premium Cleaning & Property Services", ftnote:"Ceny końcowe · Cena zależy od stopnia zabrudzenia",
   ftUslugiH:"Usługi", ftLinkMieszkania:"Sprzątanie mieszkań i domów", ftLinkRemont:"Po remoncie", ftLinkWyprowadzka:"Po wyprowadzce",
   ftLinkZbieractwo:"Trudne przypadki", ftLinkOkna:"Mycie okien", ftFirmaH:"Firma", ftLinkPoznaj:"Poznaj nas",
@@ -1576,6 +1577,7 @@ function applyTranslations(l) {
   var sectionMap = {
     pl:{pred:'Przedpokój',kuch:'Kuchnia',laz:'Łazienka',pok:'Pokoje'},
     uk:{pred:'Передпокій',kuch:'Кухня',laz:'Ванна кімната',pok:'Кімнати'},
+    ru:{pred:'Прихожая',kuch:'Кухня',laz:'Ванная',pok:'Комнаты'},
     en:{pred:'Hallway',kuch:'Kitchen',laz:'Bathroom',pok:'Rooms'}
   };
   var sm = sectionMap[l] || sectionMap.pl;
@@ -1594,6 +1596,7 @@ function applyTranslations(l) {
     var discTxt = {
       pl:'🎉 Rabat <strong>−'+freqState.discount+'%</strong> za regularne sprzątanie '+freqState.times+'× w miesiącu — został uwzględniony w wycenie po prawej.<br><small>⚠️ Nie łączy się z innymi rabatami promocyjnymi.</small>',
       uk:'🎉 Знижка <strong>−'+freqState.discount+'%</strong> за регулярне прибирання '+freqState.times+'× на місяць — врахована у вартості.<br><small>⚠️ Не поєднується з іншими знижками.</small>',
+      ru:'🎉 Скидка <strong>−'+freqState.discount+'%</strong> за регулярную уборку '+freqState.times+'× в месяц — учтена в стоимости.<br><small>⚠️ Не сочетается с другими скидками.</small>',
       en:'🎉 Discount <strong>−'+freqState.discount+'%</strong> for regular cleaning '+freqState.times+'× per month — applied to the price.<br><small>⚠️ Cannot be combined with other discounts.</small>'
     };
     if(fn) { fn.className='freq-discount-notice green show'; fn.innerHTML=discTxt[l]||discTxt.pl; }
@@ -1616,6 +1619,7 @@ function applyTranslations(l) {
   var conflictTxt = {
     pl:'⚠️ Wybrano kilka typów sprzątania',
     uk:'⚠️ Обрано кілька типів прибирання',
+    ru:'⚠️ Выбрано несколько типов уборки',
     en:'⚠️ Multiple cleaning types selected'
   };
   var ctEl = document.querySelector('.conflict-warn-title');
@@ -1700,7 +1704,10 @@ function applyTranslations(l) {
     uk:['Оберіть вище вкладку <strong>\u201eПідтримуюче\u201d</strong> і вкажіть площу.',
         'Оберіть вище вкладку <strong>\u201eГенеральне\u201d</strong> і вкажіть площу.',
         'Оберіть вище вкладку <strong>\u201eДетальне\u201d</strong> і вкажіть площу.'],
-    en:['Select <strong>\u201eMaintenance\u201d</strong> tab above and enter the area.',
+    ru:['Выберите выше вкладку <strong>„Поддерживающая”</strong> и укажите площадь.',
+        'Выберите выше вкладку <strong>„Генеральная”</strong> и укажите площадь.',
+        'Выберите выше вкладку <strong>„Детальная”</strong> и укажите площадь.'],
+    en:['Select<strong>\u201eMaintenance\u201d</strong> tab above and enter the area.',
         'Select <strong>\u201eGeneral\u201d</strong> tab above and enter the area.',
         'Select <strong>\u201eDetailed\u201d</strong> tab above and enter the area.']
   };
@@ -1709,6 +1716,8 @@ function applyTranslations(l) {
     var el = document.getElementById('mwarn-'+k);
     if(el) el.innerHTML = '\u26a0\ufe0f ' + wm[i];
   });
+  // The "Suma: 0 / N" status line is static Polish until the first quantity change \u2014 re-render it for the current language.
+  try { if(typeof updateMixedStatus === 'function') updateMixedStatus(); } catch(e) {}
 
   // Update _planTx for sidebar dynamic use
   window._planTx = {
@@ -1737,6 +1746,7 @@ function applyTranslations(l) {
   set('conflict-desc', {
     pl:'Tryb „Takie same" powtarza <strong>jeden typ</strong> uborki w każdym cyklu.',
     uk:'Режим „Однакові" повторює <strong>один тип</strong> прибирання в кожному циклі.',
+    ru:'Режим „Одинаковые" повторяет <strong>один тип</strong> уборки в каждом цикле.',
     en:'Mode „Same type" repeats <strong>one type</strong> of cleaning each cycle.'
   }[l]);
   setTxt('masz-wybrane', {pl:'Masz wybrane:',uk:'Обрано:',ru:'Выбрано:',en:'Selected:'}[l]||'Masz wybrane:');
@@ -1744,6 +1754,7 @@ function applyTranslations(l) {
   set('conflict-switch-btn', {
     pl:'🔀 Przełącz na „Łączone" — ustaw ile razy każdy typ',
     uk:'🔀 Перейти на „Комбіновані" — вказати кількість кожного типу',
+    ru:'🔀 Перейти на „Комбинированные" — указать количество каждого типа',
     en:'🔀 Switch to „Combined" — set count for each type'
   }[l]);
 
@@ -1754,11 +1765,13 @@ function applyTranslations(l) {
   set('gen-zone-banner', {
     pl:'Łazienka od 150 zł &nbsp;·&nbsp; Kuchnia od 180 zł &nbsp;·&nbsp; Łazienka + Kuchnia od 300 zł',
     uk:'Ванна від 150 zł &nbsp;·&nbsp; Кухня від 180 zł &nbsp;·&nbsp; Ванна + Кухня від 300 zł',
+    ru:'Ванная от 150 zł &nbsp;·&nbsp; Кухня от 180 zł &nbsp;·&nbsp; Ванная + Кухня от 300 zł',
     en:'Bathroom from 150 zł &nbsp;·&nbsp; Kitchen from 180 zł &nbsp;·&nbsp; Bathroom + Kitchen from 300 zł'
   }[l]);
   set('szc-zone-banner', {
     pl:'Łazienka od 250 zł &nbsp;·&nbsp; Kuchnia od 300 zł &nbsp;·&nbsp; Łazienka + Kuchnia od 500 zł',
     uk:'Ванна від 250 zł &nbsp;·&nbsp; Кухня від 300 zł &nbsp;·&nbsp; Ванна + Кухня від 500 zł',
+    ru:'Ванная от 250 zł &nbsp;·&nbsp; Кухня от 300 zł &nbsp;·&nbsp; Ванная + Кухня от 500 zł',
     en:'Bathroom from 250 zł &nbsp;·&nbsp; Kitchen from 300 zł &nbsp;·&nbsp; Bathroom + Kitchen from 500 zł'
   }[l]);
 
@@ -1766,6 +1779,7 @@ function applyTranslations(l) {
   set('win-addon-hint', {
     pl:'👆 Kliknij aby dodać mycie okien — cena z ramami i parapetem',
     uk:'👆 Натисніть, щоб додати миття вікон — ціна з рамами і підвіконням',
+    ru:'👆 Нажмите, чтобы добавить мытьё окон — цена с рамами и подоконником',
     en:'👆 Click to add window cleaning — price includes frames and sills'
   }[l]);
 
@@ -1786,8 +1800,8 @@ function applyTranslations(l) {
     } else if(txt.includes('Łazienka') && txt.includes('+')) {
       el.textContent = zl.lazkuch;
     } else {
-      var doM = txt.match(/^(?:do|до|up to)\s*(\d+)\s*m²$/i);
-      if(doM) el.textContent = ((l==='uk'||l==='ru') ? 'до '+doM[1]+' m²' : l==='en' ? 'up to '+doM[1]+' m²' : 'do '+doM[1]+' m²');
+      var doM = txt.match(/^(?:do|до|up to)\s*(\d+)\s*[mм]²$/i);
+      if(doM) el.textContent = ((l==='uk'||l==='ru') ? 'до '+doM[1]+' м²' : l==='en' ? 'up to '+doM[1]+' m²' : 'do '+doM[1]+' m²');
     }
   });
 
@@ -1886,6 +1900,11 @@ function SL(l) {
     b.classList.toggle('on', ['pl','uk','ru','en'][i] === l);
   });
   applyTranslations(l);
+  // Mobile step 2 ("m² quick input") is static Polish markup outside the page dictionaries.
+  var m2Lbl = document.querySelector('label[for="m2-quick-input"]');
+  if (m2Lbl) m2Lbl.textContent = {pl: '2. Podaj metraż', uk: '2. Вкажіть площу', ru: '2. Укажите площадь', en: '2. Enter the area'}[l] || '2. Podaj metraż';
+  var m2In = document.getElementById('m2-quick-input');
+  if (m2In) m2In.placeholder = {pl: 'np. 55 m²', uk: 'напр. 55 м²', ru: 'напр. 55 м²', en: 'e.g. 55 m²'}[l] || 'np. 55 m²';
 }
 window.addEventListener('load', function(){
   initWindowPicker();
@@ -3887,6 +3906,7 @@ function setFreq(btn, times, discount) {
     var discountTexts = {
       pl: '🎉 Rabat ' + discount + '% za regularne sprzątanie ' + times + '× w miesiącu — zostanie uwzględniony w wycenie. ⚠️ Nie łączy się z innymi rabatami.',
       uk: '🎉 Знижка ' + discount + '% за регулярне прибирання ' + times + '× на місяць. ⚠️ Не поєднується з іншими знижками.',
+      ru: '🎉 Скидка ' + discount + '% за регулярную уборку ' + times + '× в месяц. ⚠️ Не сочетается с другими скидками.',
       en: '🎉 ' + discount + '% discount for regular cleaning ' + times + '× per month. ⚠️ Cannot be combined with other discounts.'
     };
     note.textContent = discountTexts[lang] || discountTexts.pl;
@@ -4193,9 +4213,9 @@ function addonsToForm() {
 </div>
 
 <script src="assets/js/nav.js?v=20261012a"></script>
-<script src="assets/js/site-texts-sync.js?v=20261013a" defer></script>
+<script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
-<script src="assets/js/booking.js?v=20261017a"></script>
+<script src="assets/js/booking.js?v=20261029a"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>
@@ -4214,5 +4234,6 @@ function addonsToForm() {
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
   <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Zadzwoń</span></a>
 </nav>
+<script src="assets/js/locale-fixes.js?v=20261029a"></script>
 </body>
 </html>
