@@ -1129,6 +1129,7 @@ function updateSidebar(){
     totalEl.textContent='— zł'; if(mobTotal) mobTotal.textContent='— zł';
     cta.disabled=true; document.body.classList.remove('has-order'); if(mobBar) mobBar.classList.remove('show');
     var sbf=document.getElementById('sb-form'); if(sbf) sbf.classList.remove('show');
+    if(window.VCInfoCard) VCInfoCard.hide('wyprowadzka');
     return;
   }
 
@@ -1136,6 +1137,9 @@ function updateSidebar(){
   totalEl.textContent = (total>0?total+' zł':'— zł'); if(mobTotal) mobTotal.textContent = (total>0?total+' zł':'— zł');
   cta.disabled = !(total>0);
   document.body.classList.add('has-order'); if(mobBar) mobBar.classList.add('show');
+  if(window.VCInfoCard){
+    if(SEL && SEL.price>0) VCInfoCard.update('wyprowadzka', {band: 0, total: total}); else VCInfoCard.hide('wyprowadzka');
+  }
 }
 function toggleChemSection(){
   var body = document.getElementById('chem-body');
@@ -1676,6 +1680,7 @@ window.addEventListener('load', function(){
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
   <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Zadzwoń</span></a>
 </nav>
+<script src="assets/js/service-info-card.js?v=20261031a"></script>
 <script src="assets/js/locale-fixes.js?v=20261030a"></script>
 </body>
 </html>

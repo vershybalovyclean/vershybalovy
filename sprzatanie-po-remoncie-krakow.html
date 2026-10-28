@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <div class="div"></div>
 
 <!-- SCOPE -->
-<section class="sec-alt">
+<section class="sec-alt" id="scope-section">
   <div class="wrap">
     <div class="sec-lbl" id="scope-lbl">Zakres prac</div>
     <h2 class="sec-title" id="scope-h2">Co dokładnie <em>robimy?</em></h2>
@@ -981,6 +981,12 @@ function updateOrder(){
     if(total > 0) { mobBar.classList.add('show'); document.body.classList.add('has-order'); }
     else { mobBar.classList.remove('show'); document.body.classList.remove('has-order'); }
   }
+
+  // Karta informacyjna usługi (czas, liczba specjalistów, cena z tego kalkulatora — bez własnej logiki cen)
+  if(window.VCInfoCard){
+    if(order.price > 0 && typeof order.zoneIdx === 'number') VCInfoCard.update('remont', {band: order.zoneIdx, total: total});
+    else VCInfoCard.hide('remont');
+  }
 }
 
 function showToast(msg, ok){
@@ -1556,6 +1562,7 @@ window.addEventListener('load', function(){
   <a href="https://wa.me/48514363538" target="_blank" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-chat"></use></svg></span><span class="mtb-label" id="mtb-lbl-chat">Czat</span></a>
   <a data-vc-call href="tel:+48514363538" class="mtb-item"><span class="mtb-icon"><svg aria-hidden="true"><use href="#nic-phone"></use></svg></span><span class="mtb-label" id="mtb-lbl-account">Zadzwoń</span></a>
 </nav>
+<script src="assets/js/service-info-card.js?v=20261031a"></script>
 <script src="assets/js/locale-fixes.js?v=20261030a"></script>
 </body>
 </html>
