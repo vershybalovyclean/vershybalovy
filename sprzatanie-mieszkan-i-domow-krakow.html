@@ -4070,6 +4070,8 @@ function submitOrder() {
   var freqTimes   = (typeof freqState !== 'undefined') ? freqState.times    : 1;
   var freqDisc    = (typeof freqState !== 'undefined') ? freqState.discount : 0;
   var freqLabel   = (typeof freqState !== 'undefined') ? freqState.label    : '';
+  var freqFmt     = (typeof freqState !== 'undefined') ? freqState.format   : 'same';
+  var tabMult = {};   // tab key -> number of cleanings of that type in this order
   var selectedAll = (typeof getSelectedTabs === 'function') ? getSelectedTabs() : [];
 
   // Area detail per tier: an exact area (90+ m² input), the chosen fixed-price
@@ -4093,6 +4095,13 @@ function submitOrder() {
     var m2    = (typeof acM2   !== 'undefined') ? (acM2[t.key]   || 0) : 0;
     if(price <= 0) return;
     var mult = (freqTimes > 1 && selectedAll.length === 1) ? freqTimes : 1;
+    // Смешанный формат регулярности: количество уборок каждого типа — как в боковой панели (updateSidebar), чтобы заказ уходил с той же
+    // суммой, которую видит клиент (раньше счётчики mqState здесь не читались: показано 906 zł, отправлялось 655 zł).
+    if(freqTimes > 1 && freqFmt === 'mixed') {
+      mult = mqState[TAB_TO_KEY[t.key]] || 0;
+      if(mult === 0) return;
+    }
+    tabMult[t.key] = mult;
     var detail = '', detailPl = '', isRange = false;
     var fixedIdx = (typeof acActive !== 'undefined') ? acActive[t.key] : undefined;
     var zk = (typeof acZoneActive !== 'undefined') ? acZoneActive[t.key] : null;
@@ -4167,9 +4176,24 @@ function submitOrder() {
       slug: TAB_TO_SLUG[key] || null,
       m2: acM2[key] || 0,
       price: acPrice[key] || 0,
-      qty: (orderedTabKeys.length === 1 && freqTimes > 1) ? freqTimes : 1
+      qty: tabMult[key] || 1
     };
   });
+  // Regular series (2/3/4 visits per month): the monthly amounts the calculator already computed above (no new price formula) — the server
+  // only DISTRIBUTES this total across the visits. Not sent for one-time orders.
+  var visitsTotal = orderedTabKeys.reduce(function(s, k){ return s + (tabMult[k] || 1); }, 0);
+  var isRegular = freqTimes > 1 && (orderedTabKeys.length === 1 || freqFmt === 'mixed');
+  var regularPlan = isRegular ? {
+    times: (freqFmt === 'mixed') ? visitsTotal : freqTimes,
+    plannedTimes: freqTimes,
+    discountPercent: freqDisc,
+    serviceBase: serviceTotal,
+    discountAmount: discAmt,
+    afterDiscount: afterDisc,
+    addonsTotal: addonsTotal,
+    baseTotal: totalAmt,
+    lines: orderedTabKeys.map(function(key){ return { slug: TAB_TO_SLUG[key] || null, unit: acPrice[key] || 0, qty: tabMult[key] || 1, m2: acM2[key] || 0 }; })
+  } : null;
   var structuredAddons = addons.filter(function(a){ return a.price > 0; }).map(function(a){
     return { key: 'ms:' + a.nameId, qty: a.qty, price: a.price };
   });
@@ -4188,7 +4212,8 @@ function submitOrder() {
     analyticsLabel: analyticsLines.join('|') || 'Sprzątanie mieszkania',
     serviceSlug: orderServiceSlug,
     freq: (freqLabel && freqLabel !== 'Jednorazowo') ? freqLabel : '',
-    freqTimes: (orderedTabKeys.length === 1) ? freqTimes : 1,
+    freqTimes: (freqFmt === 'mixed' && freqTimes > 1) ? visitsTotal : ((orderedTabKeys.length === 1) ? freqTimes : 1),
+    regularPlan: regularPlan,
     extras: extrasLabels.join(', '),
     addons: structuredAddons,
     // Exact area only (90+ m² input); a fixed bracket is NOT an area → null.

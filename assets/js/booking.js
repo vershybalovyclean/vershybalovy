@@ -1024,6 +1024,8 @@
         // service label and the "Zakres metrażu" line of the order text.
         areaRange: d.areaRange || null,
         freqTimes: (typeof d.freqTimes === 'number' && d.freqTimes > 0) ? d.freqTimes : 1,
+        // Monthly plan of a regular order (amounts already computed by the calculator); the server only splits the monthly total across visits.
+        regularPlan: d.regularPlan || null,
         serviceLines: Array.isArray(d.serviceLines) ? d.serviceLines : null,
         paymentMethod: bk_selectedPayment || null,
         invoiceRequested: !!bk_invoiceOn,

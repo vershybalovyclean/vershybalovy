@@ -608,6 +608,69 @@ function isNightTime(scheduledTime) {
   return hour >= 21 || hour < 7;
 }
 
+// ── Regular monthly series (2/3/4 visits) ─────────────────────────────────────────────────────────────────────
+// Approved combinations only: (a) the same maintenance cleaning every visit, (b) ONE general cleaning first and maintenance cleanings after it.
+// Anything else (detailed cleaning, several general cleanings, other services) is NOT turned into a series automatically — the order is saved
+// as one request for manual scheduling. The amounts come from the calculator (regularPlan); nothing is recalculated here — the database only
+// distributes the monthly total across the visits (series_allocate).
+const SERIES_WSP = "sprzatanie-mieszkan-wspomagajace";
+const SERIES_GEN = "sprzatanie-mieszkan-generalne";
+const SERIES_DISCOUNT = { 2: 5, 3: 10, 4: 15 };
+async function buildSeriesPayload(data, rowBody, SUPABASE_URL, SUPABASE_ANON_KEY) {
+  try {
+    const plan = data.regularPlan;
+    if (!plan || !Array.isArray(plan.lines) || !plan.lines.length) return null;
+    const times = Number(plan.times), planned = Number(plan.plannedTimes || plan.times);
+    if (!(times >= 2 && times <= 4) || times !== planned) return null;
+    if (Number(plan.discountPercent) !== SERIES_DISCOUNT[times]) return null;
+    const n = (v) => Number(v);
+    const total = n(rowBody.price);
+    if (![plan.serviceBase, plan.discountAmount, plan.afterDiscount, plan.addonsTotal, plan.baseTotal, total].every((v) => Number.isFinite(n(v)))) return null;
+    if (!(total > 0) || !(n(plan.baseTotal) > 0)) return null;
+    const lines = plan.lines.map((l) => ({ slug: l && l.slug, unit: n(l && l.unit), qty: Math.floor(n(l && l.qty)), m2: n(l && l.m2) || null }));
+    if (lines.some((l) => (l.slug !== SERIES_WSP && l.slug !== SERIES_GEN) || !(l.unit > 0) || !(l.qty >= 1))) return null;
+    const gen = lines.find((l) => l.slug === SERIES_GEN), wsp = lines.find((l) => l.slug === SERIES_WSP);
+    let visits;
+    if (!gen && wsp && lines.length === 1 && wsp.qty === times) visits = Array(times).fill(wsp);
+    else if (gen && wsp && lines.length === 2 && gen.qty === 1 && wsp.qty === times - 1) visits = [gen].concat(Array(times - 1).fill(wsp));
+    else return null;
+    const serviceBase = visits.reduce((s, v) => s + v.unit, 0);
+    if (Math.abs(serviceBase - n(plan.serviceBase)) > 0.005) return null;
+    if (Math.abs(n(plan.serviceBase) - n(plan.discountAmount) - n(plan.afterDiscount)) > 0.005) return null;
+    if (Math.abs(n(plan.afterDiscount) + n(plan.addonsTotal) - n(plan.baseTotal)) > 0.005) return null;
+    const ids = {};
+    for (const slug of [SERIES_WSP, SERIES_GEN]) {
+      if (lines.some((l) => l.slug === slug)) { ids[slug] = await resolveServiceId(slug, SUPABASE_URL, SUPABASE_ANON_KEY); if (!ids[slug]) return null; }
+    }
+    let addonRows = [];
+    if (Array.isArray(data.addons) && data.addons.length) {
+      const giftsAllowed = isHalloweenGiftEligible(data.scheduledDate);
+      const keys = data.addons.map((a) => a.key).filter(Boolean);
+      const idMap = await resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY);
+      addonRows = data.addons
+        .filter((a) => a.key && idMap[a.key] && (a.price > 0 || (a.isGift && giftsAllowed)))
+        .map((a) => ({ addon_service_id: idMap[a.key], price: a.price || 0, qty: a.qty || 1, is_gift: !!(a.isGift && giftsAllowed) }));
+    }
+    return {
+      request: rowBody,
+      plan: { total, base: n(plan.baseTotal), service_base: n(plan.serviceBase), after_disc: n(plan.afterDiscount), discount_percent: n(plan.discountPercent), discount_amount: n(plan.discountAmount), addons_total: n(plan.addonsTotal) },
+      visits: visits.map((v) => ({ service_id: ids[v.slug], unit_price: v.unit, area_m2: v.m2 })),
+      addons: addonRows
+    };
+  } catch (e) {
+    console.error("buildSeriesPayload failed — saving as one manual request", e);
+    return null;
+  }
+}
+
+// One summary for the team (e-mail): visits, dates, kinds, the monthly total, conflicts needing agreement.
+function seriesSummaryText(result, plan) {
+  if (!result || !Array.isArray(result.visits)) return "";
+  const lines = result.visits.map((v) => (v.visit_no + ". " + v.date + " — " + (v.service || "") + " — " + Number(v.price).toFixed(2) + " zł" + (v.conflict ? "  ⚠ Wymaga uzgodnienia daty (" + (v.conflict === "blocked_date" ? "data zablokowana" : "termin zajęty") + ")" : "")));
+  return "\n\nREGULARNA SERIA — " + result.visits.length + " wizyty w ciągu 30 dni, razem " + Number(result.total).toFixed(2) + " zł (jedna płatność za cały miesiąc)\n" + lines.join("\n") +
+    "\nWszystkie wizyty są już w panelu jako osobne zlecenia (status: nowe). Dodatki dotyczą tylko pierwszej wizyty.";
+}
+
 async function insertSupabaseRequest(data) {
   const SUPABASE_URL = process.env.supabase_url;
   const SUPABASE_ANON_KEY = process.env.Supabase_anon_key;
@@ -656,15 +719,7 @@ async function insertSupabaseRequest(data) {
     // oversized; a missing or invalid attribution value never blocks the booking itself.
     const attribution = extractAttribution(data);
 
-    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify({
+    const rowBody = {
         ...(data.id ? { id: data.id } : {}),
         client_id: clientId,
         property_id: propertyId,
@@ -690,8 +745,58 @@ async function insertSupabaseRequest(data) {
         promo_code: data.promoCode || null,
         promo_discount_amount: (typeof data.promoDiscountAmount === "number") ? data.promoDiscountAmount : 0,
         ...attribution
-      })
-    });
+    };
+
+    // Regular order (2/3/4 visits per month): approved combinations become ONE atomic monthly series (all visit requests + the single
+    // monthly total, via the create_regular_series RPC); any other regular combination is saved as ONE request for manual scheduling
+    // (regular_manual — the old per-completion trigger skips it). The calendar's monthly total is never recalculated here.
+    let seriesBody = null;
+    if (data.regularPlan && Number(data.regularPlan.plannedTimes || data.regularPlan.times) > 1) {
+      seriesBody = await buildSeriesPayload(data, rowBody, SUPABASE_URL, SUPABASE_ANON_KEY);
+      if (!seriesBody) rowBody.regular_manual = true;
+    }
+    let r = seriesBody
+      ? await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/create_regular_series", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+          body: JSON.stringify({ p: seriesBody })
+        })
+      : await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(rowBody)
+        });
+    if (seriesBody && r.ok) {
+      // The RPC saved the whole series (requests, service lines, add-ons of the first visit) in one transaction.
+      const seriesResult = await r.json().catch(() => null);
+      rowInserted = true;
+      if (data.seriesOut) data.seriesOut.result = seriesResult;
+      if (seriesResult && seriesResult.replayed) return "duplicate";
+      if (data.promoCode) await incrementPromoUsage(data.promoCode, SUPABASE_URL, SUPABASE_ANON_KEY);
+      return true;
+    }
+    if (seriesBody && !r.ok) {
+      const seriesErr = await r.text().catch(() => "");
+      if (/series_combination_not_supported|series_plan_invalid/.test(seriesErr)) {
+        // The RPC refused the combination/plan (nothing was saved): fall back to ONE request for manual scheduling.
+        console.error("create_regular_series refused, saving as one manual request", seriesErr.slice(0, 200));
+        rowBody.regular_manual = true;
+        seriesBody = null;
+        r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Prefer": "return=minimal" },
+          body: JSON.stringify(rowBody)
+        });
+      } else {
+        console.error("create_regular_series failed", r.status, seriesErr.slice(0, 300));
+        return false;
+      }
+    }
     if (!r.ok) {
       const errText = await r.text().catch(() => "");
       // A confirmed duplicate is ONLY: HTTP 409 + unique violation of the primary key
@@ -820,7 +925,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Nieprawidłowe żądanie", code: "invalid_request" });
   }
 
-  let { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at } = req.body;
+  let { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, regularPlan } = req.body;
 
   // Format/length validation of the contact fields (name, phone, e-mail, postal code,
   // and for calendar bookings date/time/address/payment). Same rules as the browser.
@@ -871,8 +976,9 @@ export default async function handler(req, res) {
   // If the insert fails, e-mail / Google Sheets / Telegram below still carry the full order
   // (clearly marked as NOT saved), so a Supabase outage never makes a lead disappear.
   let inserted = null; // true | "partial" | "duplicate" | false (hasBooking only)
+  const seriesOut = {}; // filled by insertSupabaseRequest when a monthly series was created
   if (hasBooking) {
-    inserted = await insertSupabaseRequest({ name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
+    inserted = await insertSupabaseRequest({ regularPlan, seriesOut, name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
   }
 
   // Confirmed duplicate = this exact order is already saved. The client gets success and
@@ -906,6 +1012,13 @@ export default async function handler(req, res) {
     mailText = "UWAGA: ta rezerwacja NIE została zapisana w systemie (awaria bazy danych). Klient dostał komunikat o błędzie i może ponowić zgłoszenie. Oddzwoń lub dopisz zlecenie ręcznie.\n\n" + text;
   } else if (inserted === "partial") {
     mailText = "UWAGA: rezerwacja zapisana, ale jej pozycje (usługi/dodatki) nie zostały w pełni zapisane w systemie — uzupełnij ręcznie wg treści poniżej.\n\n" + text;
+  }
+
+  // Regular orders: ONE message for the team with all visits (series) or a manual-scheduling note (other combinations).
+  if (saved && seriesOut.result && Array.isArray(seriesOut.result.visits)) {
+    mailText += seriesSummaryText(seriesOut.result, regularPlan);
+  } else if (saved && regularPlan && Number(regularPlan.plannedTimes || regularPlan.times) > 1) {
+    mailText += "\n\nZAMÓWIENIE REGULARNE (" + (regularPlan.plannedTimes || regularPlan.times) + " wizyty w miesiącu) — kombinacja bez automatycznego harmonogramu: zapisano jedno zlecenie, harmonogram wizyt do uzgodnienia ręcznie. Cena miesiąca wg kalkulatora: " + Number(price).toFixed(2) + " zł.";
   }
 
   // All channels run in parallel and each has its own time limit (fetchT), so one slow or
