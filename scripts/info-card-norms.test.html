@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><title>Info card norms</title>
+<style>body{font:14px system-ui;margin:24px}.PASS{color:#0a7d2c}.FAIL{color:#c00;font-weight:700}</style></head><body>
+<h2>Normy karty usługi — podpis zgodny z Owner (vershy-admin/assets/js/service-norms.js)</h2>
+<div id="r"></div>
+<script src="../assets/js/service-info-card.js"></script>
+<script>
+// Ta sama zatwierdzona podpisana tabela jest zapisana w teście Owner (scripts/tests/service-norms.test.html).
+// Zmiana norm tylko po jednej stronie psuje test tej strony — normy trzeba zmienić w obu repozytoriach.
+const V = window.VCInfoCard;
+const sig = (norms, team, moveOut) => Object.keys(norms).sort().map(k => k + ':' + norms[k].map(r => r.join('-')).join('/')).join(';') + ';team=' + team + ';moveout=' + moveOut;
+const EXPECTED_SIG = 'generalne:3-3/3.5-3.5/6-6/7-7;remont:6-8/8-10/10-12/12-14;szczegolowe:7-7/7.5-7.5/7-10.5/12-12;wspomagajace:2-2.5/2.5-3/3-4/4-5;team=2;moveout=6';
+const got = sig(V.NORMS, V.TEAM, V.MOVEOUT_MIN_HOURS);
+const bounds = JSON.stringify([45, 46, 60, 61, 75, 76, 90, 91].map(V.bandForArea)) === JSON.stringify([0, 1, 1, 2, 2, 3, 3, 4]);
+const ok = got === EXPECTED_SIG && bounds;
+document.getElementById('r').innerHTML = `<b class="${ok ? 'PASS' : 'FAIL'}">${ok ? 'PASS' : 'FAIL'}</b> ${ok ? '' : got}`;
+window.__ok = ok;
+</script></body></html>

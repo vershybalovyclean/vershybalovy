@@ -18,6 +18,7 @@
     { "source": "/sprzatanie-po-zbierackosci-krakow", "destination": "/trudne-przypadki-sprzatanie-krakow", "permanent": true },
     { "source": "/sprzatanie-po-zbieractwie-krakow", "destination": "/trudne-przypadki-sprzatanie-krakow", "permanent": true },
     { "source": "/sprzatanie-mieszkan-krakow", "destination": "/sprzatanie-mieszkan-i-domow-krakow", "permanent": true },
-    { "source": "/docs/:path*", "destination": "/", "permanent": false }
+    { "source": "/docs/:path*", "destination": "/", "permanent": false },
+    { "source": "/scripts/:path*", "destination": "/", "permanent": false }
   ]
 }

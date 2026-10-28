@@ -2,3 +2,4 @@
 # deployment (www.vershclean.pl serves the repo root as static files).
 # vercel.json additionally redirects /docs/* as a second layer.
 /docs/
+/scripts/

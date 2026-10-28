@@ -171,5 +171,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wrapSL); else wrapSL();
   window.addEventListener('load', wrapSL);
 
-  window.VCInfoCard = { update: update, hide: hide, describe: describe, bandForArea: bandForArea, normIndex: normIndex, NORMS: NORMS, TX: TX, CHECKLIST: CHECKLIST, MOVEOUT_MIN_HOURS: MOVEOUT_MIN_HOURS };
+  window.VCInfoCard = { update: update, hide: hide, describe: describe, bandForArea: bandForArea, normIndex: normIndex, NORMS: NORMS, TX: TX, CHECKLIST: CHECKLIST, MOVEOUT_MIN_HOURS: MOVEOUT_MIN_HOURS, TEAM: TEAM };
 })();
