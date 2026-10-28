@@ -665,10 +665,10 @@ async function buildSeriesPayload(data, rowBody, SUPABASE_URL, SUPABASE_ANON_KEY
 
 // One summary for the team (e-mail): visits, dates, kinds, the monthly total, conflicts needing agreement.
 function seriesSummaryText(result, plan) {
-  if (!result || !Array.isArray(result.visits)) return "";
-  const lines = result.visits.map((v) => (v.visit_no + ". " + v.date + " — " + (v.service || "") + " — " + Number(v.price).toFixed(2) + " zł" + (v.conflict ? "  ⚠ Wymaga uzgodnienia daty (" + (v.conflict === "blocked_date" ? "data zablokowana" : "termin zajęty") + ")" : "")));
-  return "\n\nREGULARNA SERIA — " + result.visits.length + " wizyty w ciągu 30 dni, razem " + Number(result.total).toFixed(2) + " zł (jedna płatność za cały miesiąc)\n" + lines.join("\n") +
-    "\nWszystkie wizyty są już w panelu jako osobne zlecenia (status: nowe). Dodatki dotyczą tylko pierwszej wizyty.";
+  if (!result || !result.series_id) return "";
+  const times = Number((plan && (plan.plannedTimes || plan.times)) || 0);
+  return "\n\nZAMÓWIENIE REGULARNE — " + (times || "?") + " wizyty w miesiącu, razem " + Number(result.total != null ? result.total : (plan && plan.baseTotal)).toFixed(2) + " zł (jedna płatność za cały miesiąc)." +
+    "\nW panelu jest JEDNA zbiorcza zgłoszenie (usługi, liczba sprzątań, rabat, cena miesiąca z kalkulatora). Terminy i godziny wszystkich wizyt ustala menedżer przy potwierdzaniu zgłoszenia — dopiero wtedy powstają osobne zlecenia wizyt. Dodatki dotyczą tylko pierwszej wizyty.";
 }
 
 async function insertSupabaseRequest(data) {
@@ -756,7 +756,7 @@ async function insertSupabaseRequest(data) {
       if (!seriesBody) rowBody.regular_manual = true;
     }
     let r = seriesBody
-      ? await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/create_regular_series", {
+      ? await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/create_series_parent", {
           method: "POST",
           headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
           body: JSON.stringify({ p: seriesBody })
@@ -772,7 +772,8 @@ async function insertSupabaseRequest(data) {
           body: JSON.stringify(rowBody)
         });
     if (seriesBody && r.ok) {
-      // The RPC saved the whole series (requests, service lines, add-ons of the first visit) in one transaction.
+      // The RPC saved ONE parent request (service lines, add-ons, month total) in one transaction; visits are created later,
+      // when the manager confirms the series and sets the dates.
       const seriesResult = await r.json().catch(() => null);
       rowInserted = true;
       if (data.seriesOut) data.seriesOut.result = seriesResult;
@@ -784,7 +785,7 @@ async function insertSupabaseRequest(data) {
       const seriesErr = await r.text().catch(() => "");
       if (/series_combination_not_supported|series_plan_invalid/.test(seriesErr)) {
         // The RPC refused the combination/plan (nothing was saved): fall back to ONE request for manual scheduling.
-        console.error("create_regular_series refused, saving as one manual request", seriesErr.slice(0, 200));
+        console.error("create_series_parent refused, saving as one manual request", seriesErr.slice(0, 200));
         rowBody.regular_manual = true;
         seriesBody = null;
         r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
@@ -793,7 +794,7 @@ async function insertSupabaseRequest(data) {
           body: JSON.stringify(rowBody)
         });
       } else {
-        console.error("create_regular_series failed", r.status, seriesErr.slice(0, 300));
+        console.error("create_series_parent failed", r.status, seriesErr.slice(0, 300));
         return false;
       }
     }
@@ -1015,7 +1016,7 @@ export default async function handler(req, res) {
   }
 
   // Regular orders: ONE message for the team with all visits (series) or a manual-scheduling note (other combinations).
-  if (saved && seriesOut.result && Array.isArray(seriesOut.result.visits)) {
+  if (saved && seriesOut.result && seriesOut.result.series_id) {
     mailText += seriesSummaryText(seriesOut.result, regularPlan);
   } else if (saved && regularPlan && Number(regularPlan.plannedTimes || regularPlan.times) > 1) {
     mailText += "\n\nZAMÓWIENIE REGULARNE (" + (regularPlan.plannedTimes || regularPlan.times) + " wizyty w miesiącu) — kombinacja bez automatycznego harmonogramu: zapisano jedno zlecenie, harmonogram wizyt do uzgodnienia ręcznie. Cena miesiąca wg kalkulatora: " + Number(price).toFixed(2) + " zł.";
