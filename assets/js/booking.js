@@ -908,6 +908,7 @@
 
   /* ─── SUBMIT ───────────────────────────────────────── */
   var bk_submitting = false;
+  var bk_successRegular = false; // true after a successful regular (monthly series) order — see bk_applyTexts
   var bk_lastFingerprint = '';
   var bk_requestId = '';
   function bk_newRequestId(){
@@ -1053,6 +1054,7 @@
       document.getElementById('bk-successName').textContent = bk_t('successThanks')+', '+(name.split(' ')[0]||'')+'!';
       // Regular (monthly series) order: the visit dates are agreed by the manager afterwards — say so, and label the chosen date as a preference.
       var bkRegular = !!d.regularPlan;
+      bk_successRegular = bkRegular;
       document.getElementById('bk-success-p').innerHTML = bk_t(bkRegular ? 'successRegP' : 'successP');
       if(bkRegular){
         document.getElementById('bk-r-date').textContent = bk_t('recapDateReg');
@@ -1158,6 +1160,19 @@
       var el = document.getElementById(id);
       if(el){ if(richIds[id]) el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
     });
+    // After a successful REGULAR order the confirmation keeps its own wording (and the "preferred" date/time labels) when the language is switched.
+    if(bk_successRegular){
+      var rp = document.getElementById('bk-success-p'); if(rp) rp.innerHTML = bk_t('successRegP');
+      var rd = document.getElementById('bk-r-date'); if(rd) rd.textContent = bk_t('recapDateReg');
+      var rt = document.getElementById('bk-r-time'); if(rt) rt.textContent = bk_t('recapTimeReg');
+      // the chosen date/time values are re-formatted in the new language too (no mixed-language recap)
+      try {
+        var rdv = document.getElementById('bk-recapDate'), rtv = document.getElementById('bk-recapTime');
+        var so = BK_SLOTS.find(function(s){return s.id===bk_selectedSlot;});
+        if(rdv && bk_selectedDate) rdv.textContent = bk_selectedDate.toLocaleDateString(bk_t('LOCALE'),{weekday:'long',day:'numeric',month:'long'});
+        if(rtv && so) rtv.textContent = bk_slotDisplayLabel(so);
+      } catch(e) {}
+    }
     bk_applyWaBtnState();
     var savedLbl = document.getElementById('bk-saved-addr-label');
     if(savedLbl) savedLbl.textContent = bk_t('savedAddrLabel');
