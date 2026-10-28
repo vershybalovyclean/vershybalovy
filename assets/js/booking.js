@@ -88,6 +88,7 @@
       f1:'✔ bez ukrytych dopłat',f2:'✔ własne środki w cenie',f3:'✔ możliwość zmiany terminu',
       successThanks:'Dziękujemy',successP:'Twoja prośba o rezerwację została wysłana. Skontaktujemy się z Tobą w ciągu <strong>15 minut</strong> przez WhatsApp lub telefon.',
       recapDate:'📅 Termin',recapTime:'⏰ Godzina',recapPhone:'📞 Telefon',waBtn:'💬 Otwórz WhatsApp',
+      successRegP:'Twoje zgłoszenie na regularne sprzątanie zostało przyjęte. Menedżer skontaktuje się z Tobą w ciągu <strong>15 minut</strong> przez WhatsApp lub telefon i uzgodni terminy oraz godziny wszystkich wizyt. Dopiero potem potwierdzimy zamówienie.',recapDateReg:'📅 Preferowany termin 1. wizyty',recapTimeReg:'⏰ Preferowana godzina',
       myOrdersBtn:'📋 Zobacz moje zamówienia',
       bonusNote:'✓ Bonus już wliczony — bez dopłat',
       slotNight:'po 21:00',
@@ -137,6 +138,7 @@
       f1:'✔ без прихованих доплат',f2:'✔ власні засоби включені',f3:'✔ можливість зміни дати',
       successThanks:'Дякуємо',successP:"Твоя заявка надіслана. Зв'яжемося протягом <strong>15 хвилин</strong> через WhatsApp або телефон.",
       recapDate:'📅 Дата',recapTime:'⏰ Час',recapPhone:'📞 Телефон',waBtn:'💬 Відкрити WhatsApp',
+      successRegP:"Твою заявку на регулярне прибирання отримано. Керівниця зв'яжеться з тобою протягом <strong>15 хвилин</strong> через WhatsApp або телефон і погодить дати й час усіх візитів. Після цього ми підтвердимо замовлення.",recapDateReg:'📅 Бажана дата 1-го візиту',recapTimeReg:'⏰ Бажаний час',
       myOrdersBtn:'📋 Переглянути мої замовлення',
       bonusNote:'✓ Бонус вже включено — без доплат',
       slotNight:'після 21:00',
@@ -186,6 +188,7 @@
       f1:'✔ без скрытых доплат',f2:'✔ собственные средства в цене',f3:'✔ возможность изменить дату',
       successThanks:'Спасибо',successP:'Ваша заявка на бронирование отправлена. Свяжемся с вами в течение <strong>15 минут</strong> через WhatsApp или по телефону.',
       recapDate:'📅 Дата',recapTime:'⏰ Время',recapPhone:'📞 Телефон',waBtn:'💬 Открыть WhatsApp',
+      successRegP:'Ваша заявка на регулярную уборку получена. Управляющая свяжется с вами в течение <strong>15 минут</strong> через WhatsApp или телефон и согласует даты и время всех визитов. После этого мы подтвердим заказ.',recapDateReg:'📅 Желаемая дата 1-го визита',recapTimeReg:'⏰ Желаемое время',
       myOrdersBtn:'📋 Смотреть мои заказы',
       bonusNote:'✓ Бонус уже включён — без доплат',
       slotNight:'после 21:00',
@@ -235,6 +238,7 @@
       f1:'✔ no hidden fees',f2:'✔ our own supplies included',f3:'✔ date can be changed',
       successThanks:'Thank you',successP:"Your booking request has been sent. We'll contact you within <strong>15 minutes</strong> via WhatsApp or phone.",
       recapDate:'📅 Date',recapTime:'⏰ Time',recapPhone:'📞 Phone',waBtn:'💬 Open WhatsApp',
+      successRegP:"Your regular cleaning request has been received. Our manager will contact you within <strong>15 minutes</strong> via WhatsApp or phone to agree the dates and times of all visits. We will confirm the order after that.",recapDateReg:'📅 Preferred date of the 1st visit',recapTimeReg:'⏰ Preferred time',
       myOrdersBtn:'📋 View my orders',
       bonusNote:'✓ Bonus already included — no extra charge',
       slotNight:'after 21:00',
@@ -1047,7 +1051,13 @@
       // detail was added to `service` (analytics unchanged in this batch).
       trackFormConversion(d.analyticsLabel || d.service || '');
       document.getElementById('bk-successName').textContent = bk_t('successThanks')+', '+(name.split(' ')[0]||'')+'!';
-      document.getElementById('bk-success-p').innerHTML = bk_t('successP');
+      // Regular (monthly series) order: the visit dates are agreed by the manager afterwards — say so, and label the chosen date as a preference.
+      var bkRegular = !!d.regularPlan;
+      document.getElementById('bk-success-p').innerHTML = bk_t(bkRegular ? 'successRegP' : 'successP');
+      if(bkRegular){
+        document.getElementById('bk-r-date').textContent = bk_t('recapDateReg');
+        document.getElementById('bk-r-time').textContent = bk_t('recapTimeReg');
+      }
       document.getElementById('bk-recapDate').textContent = dateLabel;
       document.getElementById('bk-recapTime').textContent = slotDisplay;
       document.getElementById('bk-recapPhone').textContent = phone;
