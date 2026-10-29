@@ -14,7 +14,7 @@
     'Profesjonalne sprzątanie': { uk: 'Професійне прибирання', ru: 'Профессиональная уборка', en: 'Professional cleaning' },
     'Ozonowanie i dezynfekcja': { uk: 'Озонування та дезінфекція', ru: 'Озонирование и дезинфекция', en: 'Ozone treatment and disinfection' },
     'Pranie tapicerki i czyszczenie chemiczne': { uk: 'Прання меблів та хімчистка', ru: 'Стирка мебели и химчистка', en: 'Upholstery washing and dry cleaning' },
-    'Sprzątanie przyjazne zwierzętom': { uk: 'Прибирання, безпечне для тварин', ru: 'Уборка, безопасная для животных', en: 'Pet-friendly cleaning' },
+    'Sprzątanie przyjazne zwierzętom': { uk: 'Прибирання, дружнє до тварин', ru: 'Уборка, дружелюбная к животным', en: 'Pet-friendly cleaning' },
     'Przed': { uk: 'До', ru: 'До', en: 'Before' },
     'Zespół Vershy Property Care': { uk: 'Команда Vershy Property Care', ru: 'Команда Vershy Property Care', en: 'The Vershy Property Care team' },
     'Olena i Volodymyr — Vershy Property Care': { uk: 'Олена і Володимир — Vershy Property Care', ru: 'Олена и Володимир — Vershy Property Care', en: 'Olena and Volodymyr — Vershy Property Care' },
