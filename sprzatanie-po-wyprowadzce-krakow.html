@@ -501,8 +501,8 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
         <div id="chem-body" style="display:none;flex-basis:100%;width:100%;margin-top:10px" onclick="event.stopPropagation()">
     <p class="chem-hint" id="chem-hint">👆 Kliknij aby wybrać usługę</p>
     <ul class="add-list">
-      <li class="add-group-label-row" id="chem-g1">Dywany i wykładziny</li>
-      <li onclick="toggleAddon(this,'cc1',10,'m²',1)">
+      <li hidden style="display:none!important" class="add-group-label-row" id="chem-g1">Dywany i wykładziny</li>
+      <li hidden style="display:none!important" onclick="toggleAddon(this,'cc1',10,'m²',1)">
         <div class="add-check">✓</div>
         <svg class="ai-ico" aria-hidden="true"><use href="#ic-carpet"></use></svg><span class="ai-n" id="cc1-name">Dywan / wykładzina dywanowa</span>
         <span class="ai-p">od 10 zł</span>
@@ -511,7 +511,7 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
           <span class="qty-unit">m²</span>
         </div>
       </li>
-      <li onclick="toggleAddon(this,'cc2',12,'m²',1)">
+      <li hidden style="display:none!important" onclick="toggleAddon(this,'cc2',12,'m²',1)">
         <div class="add-check">✓</div>
         <svg class="ai-ico" aria-hidden="true"><use href="#ic-carpet"></use></svg><span class="ai-n" id="cc2-name">Dywan z długim włosiem (shaggy)</span>
         <span class="ai-p">od 12 zł</span>
