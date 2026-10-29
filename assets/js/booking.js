@@ -1159,6 +1159,10 @@
     Object.keys(ids).forEach(function(id){
       var el = document.getElementById(id);
       if(el){ if(richIds[id]) el.innerHTML=bk_t(ids[id]); else el.textContent=bk_t(ids[id]); }
+      // legal-document links point to the version in the page language (/uk/…, /ru/…, /en/…; Polish stays at the root)
+      if(el && richIds[id] && typeof lang!=='undefined' && lang!=='pl'){
+        Array.prototype.forEach.call(el.querySelectorAll('a[href^="/polityka"],a[href^="/regulamin"],a[href^="/zalacznik"]'), function(a){ a.setAttribute('href','/'+lang+a.getAttribute('href')); });
+      }
     });
     // After a successful REGULAR order the confirmation keeps its own wording (and the "preferred" date/time labels) when the language is switched.
     if(bk_successRegular){

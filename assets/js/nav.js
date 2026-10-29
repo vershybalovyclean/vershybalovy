@@ -15,11 +15,11 @@ var SEASONAL_CAMPAIGN = { halloweenLogo: true };
   document.querySelectorAll('.hdr-logo').forEach(function(a){
     var img = a.querySelector('img');
     if (SEASONAL_CAMPAIGN.halloweenLogo) {
-      if (img) img.src = 'assets/img/logo-halloween.webp';
+      if (img) img.src = '/assets/img/logo-halloween.webp';
       a.classList.add('halloween-campaign');
       a.classList.remove('classic-logo');
     } else {
-      if (img) img.src = 'assets/img/logo-classic-full.webp';
+      if (img) img.src = '/assets/img/logo-classic-full.webp';
       a.classList.add('classic-logo');
       a.classList.remove('halloween-campaign');
     }
@@ -36,10 +36,10 @@ var SEASONAL_CAMPAIGN = { halloweenLogo: true };
   function applyTabbarIcon(){
     document.querySelectorAll('.mtb-cta-icon img').forEach(function(img){
       if (SEASONAL_CAMPAIGN.halloweenLogo) {
-        img.src = 'assets/img/logo-halloween-v.webp';
+        img.src = '/assets/img/logo-halloween-v.webp';
         img.classList.add('halloween-v-icon');
       } else {
-        img.src = 'assets/img/logo.png';
+        img.src = '/assets/img/logo.png';
         img.classList.remove('halloween-v-icon');
       }
     });
@@ -115,6 +115,9 @@ document.addEventListener('click', function(e){
     var btn = e.target.closest('.lb');
     if(!btn) return;
     if(!box.classList.contains('expanded')){
+      // collapsed (narrow screens): the first tap only reveals the other languages — the link must not navigate yet
+      var collapsed = [].some.call(box.querySelectorAll('.lb'), function(x){ return x.offsetParent === null; });
+      if(collapsed && btn.tagName === 'A') e.preventDefault();
       box.classList.add('expanded');
       return;
     }
@@ -203,4 +206,9 @@ document.addEventListener('click', function(e){
   if(m && m.classList.contains('show') && !m.contains(e.target) && !(btn && btn.getAttribute('onclick')==='toggleMtbAccount()')){
     m.classList.remove('show');
   }
+});
+// Language switcher links (<a class="lb" hreflang>) point to the same page in another language; the current #anchor is carried over on click.
+document.addEventListener('click', function(e){
+  var a = e.target.closest && e.target.closest('a.lb[hreflang]');
+  if(a && window.location.hash && a.getAttribute('href').indexOf('#') < 0){ a.setAttribute('href', a.getAttribute('href') + window.location.hash); }
 });

@@ -14,16 +14,54 @@
   .links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
   a.btn{display:inline-block;padding:12px 20px;border-radius:10px;background:#0f172a;color:#fff;text-decoration:none;font-weight:700;font-size:15px}
   a.btn.alt{background:#fff;color:#0f172a;border:1.5px solid #cbd5e1}
+  .l{display:none}
+  .l.on{display:block}
 </style>
 </head>
 <body>
+<!-- Wszystkie cztery wersje językowe są w statycznym HTML (bez JS widać polską); skrypt na końcu tylko wybiera wersję według prefiksu adresu (/uk/, /ru/, /en/).
+     Serwer nadal zwraca prawdziwy status HTTP 404. -->
 <main class="box">
-  <h1>Nie znaleziono strony</h1>
-  <p>Ta strona nie istnieje lub została przeniesiona. Wróć na stronę główną albo zadzwoń — chętnie pomożemy.</p>
-  <div class="links">
-    <a class="btn" href="/">Strona główna</a>
-    <a class="btn alt" href="tel:+48514363538">Zadzwoń: +48 514 363 538</a>
-  </div>
+  <section class="l on" lang="pl" data-l="pl">
+    <h1>Nie znaleziono strony</h1>
+    <p>Ta strona nie istnieje lub została przeniesiona. Wróć na stronę główną albo zadzwoń — chętnie pomożemy.</p>
+    <div class="links">
+      <a class="btn" href="/">Strona główna</a>
+      <a class="btn alt" href="tel:+48514363538">Zadzwoń: +48 514 363 538</a>
+    </div>
+  </section>
+  <section class="l" lang="uk" data-l="uk">
+    <h1>Сторінку не знайдено</h1>
+    <p>Цієї сторінки не існує або її було переміщено. Поверніться на головну сторінку або зателефонуйте — із радістю допоможемо.</p>
+    <div class="links">
+      <a class="btn" href="/uk">Головна сторінка</a>
+      <a class="btn alt" href="tel:+48514363538">Зателефонувати: +48 514 363 538</a>
+    </div>
+  </section>
+  <section class="l" lang="ru" data-l="ru">
+    <h1>Страница не найдена</h1>
+    <p>Этой страницы не существует или она была перемещена. Вернитесь на главную страницу или позвоните — мы с радостью поможем.</p>
+    <div class="links">
+      <a class="btn" href="/ru">Главная страница</a>
+      <a class="btn alt" href="tel:+48514363538">Позвонить: +48 514 363 538</a>
+    </div>
+  </section>
+  <section class="l" lang="en" data-l="en">
+    <h1>Page not found</h1>
+    <p>This page does not exist or has been moved. Go back to the home page or give us a call — we will be happy to help.</p>
+    <div class="links">
+      <a class="btn" href="/en">Home page</a>
+      <a class="btn alt" href="tel:+48514363538">Call: +48 514 363 538</a>
+    </div>
+  </section>
 </main>
+<script>
+(function(){
+  var m = /^\/(uk|ru|en)(\/|$)/.exec(location.pathname), l = m ? m[1] : 'pl';
+  var T = { pl: 'Nie znaleziono strony — Vershy Property Care', uk: 'Сторінку не знайдено — Vershy Property Care', ru: 'Страница не найдена — Vershy Property Care', en: 'Page not found — Vershy Property Care' };
+  document.documentElement.lang = l; document.title = T[l];
+  var s = document.querySelectorAll('.l'); for (var i = 0; i < s.length; i++) s[i].className = 'l' + (s[i].getAttribute('data-l') === l ? ' on' : '');
+})();
+</script>
 </body>
 </html>

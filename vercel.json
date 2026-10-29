@@ -12,9 +12,13 @@
     }
   ],
   "rewrites": [
-    { "source": "/poznaj-nas", "destination": "/poznaj-nas.html" }
+    { "source": "/poznaj-nas", "destination": "/poznaj-nas.html" },
+    { "source": "/uk", "destination": "/uk/index.html" },
+    { "source": "/ru", "destination": "/ru/index.html" },
+    { "source": "/en", "destination": "/en/index.html" }
   ],
   "redirects": [
+    { "source": "/:lang(uk|ru|en)/index", "destination": "/:lang", "permanent": true },
     { "source": "/sprzatanie-po-zbierackosci-krakow", "destination": "/trudne-przypadki-sprzatanie-krakow", "permanent": true },
     { "source": "/sprzatanie-po-zbieractwie-krakow", "destination": "/trudne-przypadki-sprzatanie-krakow", "permanent": true },
     { "source": "/sprzatanie-mieszkan-krakow", "destination": "/sprzatanie-mieszkan-i-domow-krakow", "permanent": true },

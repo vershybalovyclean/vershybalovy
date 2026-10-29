@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>i18n checks (local, not deployed)</title></head><body>
+<p>Автоматические проверки языковых страниц. Запуск: <code>runChecks()</code>; результат в <code>window.__report</code>.</p><pre id="o"></pre>
+<script>
+const PAGES = ['index', 'sprzatanie-mieszkan-i-domow-krakow', 'sprzatanie-po-remoncie-krakow', 'sprzatanie-po-wyprowadzce-krakow', 'trudne-przypadki-sprzatanie-krakow', 'mycie-okien', 'poznaj-nas', 'program-partnerski'];
+const LANGS = ['uk', 'ru', 'en'];
+const ORIGIN = 'https://www.vershclean.pl';
+const selfUrl = (l, s) => s === 'index' ? ORIGIN + (l === 'pl' ? '/' : '/' + l) : ORIGIN + (l === 'pl' ? '' : '/' + l) + '/' + s;
+const getLive = async (s) => { try { localStorage.setItem('vc_lang', 'pl'); } catch (e) { } const fr = document.createElement('iframe'); fr.style.cssText = 'position:fixed;left:-9999px;width:1280px;height:900px'; fr.src = '/' + s + '.html?' + Date.now(); document.body.appendChild(fr); await new Promise(r => fr.onload = r); await new Promise(r => setTimeout(r, 3500)); const d = fr.contentDocument.implementation.createHTMLDocument(''); d.documentElement.innerHTML = fr.contentDocument.documentElement.innerHTML; fr.remove(); return d; };
+const get = async (p) => new DOMParser().parseFromString(await (await fetch(p + '?' + Date.now(), { cache: 'no-store' })).text(), 'text/html');
+const vis = (d) => { const c = d.body.cloneNode(true); c.querySelectorAll('script,style,svg,noscript,template').forEach(e => e.remove()); return c; };
+const prices = (t) => (t.match(/\d[\d\s.,]*\s?(zł|PLN)/gi) || []).map(x => x.replace(/\s/g, '').toLowerCase()).sort();
+const num = (t) => (t.match(/\d+/g) || []).sort().join(',');
+window.runChecks = async function () {
+  const rep = { fail: [], warn: [], pages: {} };
+  const F = (k, m) => rep.fail.push(k + ': ' + m), W = (k, m) => rep.warn.push(k + ': ' + m);
+  for (const s of PAGES) {
+    const pl = await getLive(s); const plTitle = pl.title, plDesc = pl.querySelector('meta[name=description]').content;
+    const plPrices = prices(vis(pl).textContent);
+    for (const l of LANGS) {
+      const k = l + '/' + s; const d = await get('/' + l + '/' + s + '.html'); const raw = d.documentElement.outerHTML; const info = {};
+      if (d.documentElement.lang !== l) F(k, 'html lang=' + d.documentElement.lang);
+      if (!d.title || d.title === plTitle) F(k, 'title пустой/польский');
+      const desc = d.querySelector('meta[name=description]'); if (!desc || !desc.content || desc.content === plDesc) F(k, 'description пустой/польский');
+      const can = d.querySelector('link[rel=canonical]'); if (!can || can.href !== selfUrl(l, s)) F(k, 'canonical ' + (can && can.href));
+      const og = (p) => (d.querySelector('meta[property="' + p + '"]') || {}).content;
+      if (og('og:url') !== selfUrl(l, s)) F(k, 'og:url ' + og('og:url'));
+      if (!/^https:\/\/www\.vershclean\.pl\//.test(og('og:image') || '')) F(k, 'og:image не абсолютный: ' + og('og:image'));
+      const tw = (d.querySelector('meta[name="twitter:image"]') || {}).content; if (tw && !/^https:/.test(tw)) F(k, 'twitter:image не абсолютный');
+      if (og('og:description') === (pl.querySelector('meta[property="og:description"]') || {}).content) F(k, 'og:description польский');
+      const hl = [...d.querySelectorAll('link[rel=alternate][hreflang]')].map(a => a.hreflang + '=' + a.href);
+      const need = ['pl=' + selfUrl('pl', s), l + '=' + selfUrl(l, s), 'x-default=' + selfUrl('pl', s)];
+      need.forEach(n => { if (!hl.includes(n)) F(k, 'нет hreflang ' + n); }); info.hreflang = hl.length; if (hl.length !== 5) F(k, 'hreflang-ссылок ' + hl.length + ' (нужно 5)');
+      d.querySelectorAll('script[type="application/ld+json"]').forEach((j, i) => { try { const o = JSON.parse(j.textContent); const t = o['@type']; if (t === 'Service' && o.inLanguage !== l) F(k, 'Service.inLanguage'); if (t === 'FAQPage' && /[ąćęłńśźż]{1}/i.test(JSON.stringify(o).replace(/Kraków|Małopolskie|Małopolsce|Małopolska|zł/g, '')) && l !== 'pl') W(k, 'FAQPage содержит польские символы'); if (t === 'LocalBusiness' || t === 'Service') { if (o.url !== selfUrl(l, s)) F(k, t + '.url ' + o.url); } } catch (e) { F(k, 'JSON-LD #' + i + ' не парсится'); } });
+      if (/data-vcn/.test(raw)) F(k, 'остался data-vcn');
+      if (d.querySelector('base')) F(k, 'есть <base>');
+      if (/generated|claude|anthropic/i.test([...d.querySelectorAll('meta[name=generator]')].map(m => m.content).join())) F(k, 'generator marker');
+      const ids = {}; d.querySelectorAll('[id]').forEach(e => ids[e.id] = (ids[e.id] || 0) + 1); const dup = Object.keys(ids).filter(i => ids[i] > 1); if (dup.length) F(k, 'дубли id: ' + dup.slice(0, 5)); const plIds = {}; pl.querySelectorAll('[id]').forEach(e => { if (!/^(cookie-banner|cb-|vc-info-card)/.test(e.id)) plIds[e.id] = (plIds[e.id] || 0) + 1; }); const idk = Object.keys(ids).filter(i => !/^(cookie-banner|cb-|vc-info-card)/.test(i)); const plSet = new Set(Object.keys(plIds)); if (idk.length !== plSet.size || idk.some(i => !plSet.has(i))) F(k, 'набор id ≠ PL (' + idk.length + ' vs ' + plSet.size + ')');
+      // относительные ресурсы
+      const rel = []; d.querySelectorAll('[src],link[href],a[href]').forEach(e => { const a = e.getAttribute('src') || e.getAttribute('href'); if (a && !/^(\/|https?:|#|mailto:|tel:|data:|javascript:|sms:|whatsapp:|viber:|tg:)/i.test(a)) rel.push(a); }); if (rel.length) F(k, 'относительные пути: ' + [...new Set(rel)].slice(0, 5));
+      // польский остаток в видимом тексте
+      const t = vis(d).textContent.replace(/\s+/g, ' '); const pols = t.match(/[^\s]*[ąćęłńśźż][^\s]*/gi) || []; const allowed = /^(Kraków|Krakow|Małopolsk|Vershy|Kraków,|zł)/i; const bad = [...new Set(pols.filter(w => !allowed.test(w)))]; info.polishWords = bad.length; if (bad.length) W(k, 'польские слова в тексте (' + bad.length + '): ' + bad.slice(0, 12).join(' | '));
+      // паритет цен
+      const lp = prices(vis(d).textContent); if (lp.join() !== plPrices.join()) F(k, 'цены ≠ польским: PL[' + plPrices.length + '] vs ' + l + '[' + lp.length + '] ' + plPrices.filter(x => !lp.includes(x)).slice(0, 8) + ' / ' + lp.filter(x => !plPrices.includes(x)).slice(0, 8));
+      // внутренние ссылки
+      const hrefs = [...new Set([...d.querySelectorAll('a[href^="/"]')].map(a => a.getAttribute('href').split('#')[0].split('?')[0]))]; const brokenL = [];
+      for (const h of hrefs) { if (h === '/' || h === '') continue; const cand = /\.\w+$/.test(h) ? [h] : [h + '.html', h]; let ok = false; for (const c of cand) { try { const r = await fetch(c + '?c', { method: 'HEAD', cache: 'no-store' }); if (r.ok && !(r.headers.get('content-type') || '').includes('x-unknown')) { ok = true; break; } } catch (e) { } } if (!ok) brokenL.push(h); }
+      const redirNow = { '/poznaj-nas': 1 }; const real = brokenL.filter(h => !redirNow[h] && !/^\/(uk|ru|en)$/.test(h)); if (real.length) F(k, 'битые ссылки: ' + real.slice(0, 8)); info.links = hrefs.length;
+      // ссылки на другой язык / польские внутренние страницы
+      const wrongLang = [...d.querySelectorAll('a[href^="/"]')].map(a => a.getAttribute('href')).filter(h => { const m = /^\/(uk|ru|en)(\/|$|#)/.exec(h); return m && m[1] !== l && !/lb/.test(''); }); const wl = [...d.querySelectorAll('a[href^="/"]:not(.lb)')].map(a => a.getAttribute('href')).filter(h => { const m = /^\/(uk|ru|en)(\/|$|#)/.exec(h); return m && m[1] !== l; }); if (wl.length) F(k, 'ссылки на чужой язык: ' + wl.slice(0, 5));
+      const plLinks = [...d.querySelectorAll('a[href^="/"]:not(.lb)')].map(a => a.getAttribute('href').split('#')[0]).filter(h => PAGES.includes(h.slice(1)) && h !== '/index'); if (plLinks.length) W(k, 'внутренние ссылки без языкового префикса: ' + [...new Set(plLinks)].slice(0, 5));
+      const sw = d.querySelectorAll('a.lb[hreflang]'); if (sw.length !== 4) F(k, 'переключатель: ' + sw.length + ' ссылок'); const on = d.querySelectorAll('a.lb.on'); if (on.length !== 1 || on[0].getAttribute('hreflang') !== l) F(k, 'активный язык переключателя');
+      rep.pages[k] = info;
+    }
+  }
+  window.__report = rep; document.getElementById('o').textContent = JSON.stringify({ fail: rep.fail.length, warn: rep.warn.length }, null, 1); return rep;
+};
+
+</script>
+<script src="check-legal.js"></script></body></html>

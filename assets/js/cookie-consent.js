@@ -337,14 +337,14 @@
     return '<div class="cb-box">' +
         '<div class="cb-body">' +
           '<p class="cb-title" id="cb-title">' + esc(t.title) + '</p>' +
-          '<p class="cb-text">' + esc(t.text) + ' <a href="/polityka-prywatnosci" class="cb-privacy">' + esc(t.privacy) + '</a></p>' +
+          '<p class="cb-text">' + esc(t.text) + ' <a href="' + (lang() === 'pl' ? '' : '/' + lang()) + '/polityka-prywatnosci" class="cb-privacy">' + esc(t.privacy) + '</a></p>' +
         '</div>' +
         '<div class="cb-actions">' +
           '<div class="cb-buttons">' +
             '<button type="button" id="cb-ok" class="cb-btn">' + esc(t.ok) + '</button>' +
             '<button type="button" id="cb-reject" class="cb-btn-secondary">' + esc(t.reject) + '</button>' +
           '</div>' +
-          '<a href="' + SETTINGS_URL + '" id="cb-settings" class="cb-link">' + esc(t.settings) + '</a>' +
+          '<a href="' + (lang() === 'pl' ? '' : '/' + lang()) + SETTINGS_URL + '" id="cb-settings" class="cb-link">' + esc(t.settings) + '</a>' +
         '</div>' +
       '</div>';
   }

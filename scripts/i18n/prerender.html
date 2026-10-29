@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>i18n prerender (local generator, not deployed)</title>
+<style>body{font:14px system-ui;margin:20px;max-width:900px}pre{background:#f4f4f4;padding:8px;overflow:auto;max-height:300px}button{padding:6px 12px;margin:4px 0}</style></head><body>
+<h3>Локальный генератор языковых страниц (Этап 0 — прототип)</h3>
+<p>Берёт польский исходник <code>/{slug}.html</code>, запускает его собственные переводы (<code>SL(lang)</code>) в изолированном iframe и собирает готовый HTML:
+структура и скрипты остаются исходными, меняются только переводимые тексты/атрибуты, затем подставляются <code>head</code>-метаданные, hreflang, JSON-LD, пути и языковые ссылки.
+Единственный источник переводов — словари внутри польских страниц.</p>
+<label>slug <input id="slug" value="sprzatanie-po-remoncie-krakow"></label> <label>lang <input id="lang" value="uk" size="3"></label>
+<button id="run">Сгенерировать</button> <button id="dl" disabled>Скачать HTML</button>
+<pre id="log"></pre>
+<script src="seo.js"></script>
+<script src="legal/regulamin.js"></script>
+<script src="legal/polityka-prywatnosci.js"></script>
+<script src="legal/polityka-cookies.js"></script>
+<script src="legal/zalacznik-nr-1-zakres-uslug.js"></script>
+<script>
+const PAGES = ['index', 'sprzatanie-mieszkan-i-domow-krakow', 'sprzatanie-po-remoncie-krakow', 'sprzatanie-po-wyprowadzce-krakow', 'trudne-przypadki-sprzatanie-krakow', 'mycie-okien', 'poznaj-nas', 'program-partnerski'];
+const LEGAL = ['regulamin', 'polityka-prywatnosci', 'polityka-cookies', 'zalacznik-nr-1-zakres-uslug'];
+const SLUGS = ['sprzatanie-mieszkan-i-domow-krakow','sprzatanie-po-remoncie-krakow','sprzatanie-po-wyprowadzce-krakow','trudne-przypadki-sprzatanie-krakow','mycie-okien','poznaj-nas','program-partnerski'];
+const ORIGIN = 'https://www.vershclean.pl';
+const HREFLANG = { pl: 'pl', uk: 'uk', ru: 'ru', en: 'en' };
+const log = (m) => { document.getElementById('log').textContent += m + '\n'; };
+let outHtml = '';
+const SKIP_COPY = new Set(['SCRIPT', 'STYLE', 'SVG', 'IFRAME', 'NOSCRIPT', 'TEMPLATE', 'HEAD', 'HTML', 'BODY']);
+const ATTRS = ['title', 'alt', 'aria-label', 'placeholder'];
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function generate(slug, lang) {
+  const seo = (SEO[slug] || {})[lang]; if (!seo) throw new Error('нет SEO-данных для ' + slug + '/' + lang);
+  const raw = await (await fetch('/' + slug + '.html?' + Date.now(), { cache: 'no-store' })).text();
+  const doc = new DOMParser().parseFromString(raw, 'text/html');
+  // метки data-vcn ТОЛЬКО на элементах body (кроме script/style): метки в head/на скриптах ломают инициализацию booking.js
+  const pidx = new Map(); let tn = 0; doc.body.querySelectorAll('*').forEach(e => { if (['SCRIPT', 'STYLE'].includes(e.tagName)) return; pidx.set(e, ++tn); e.setAttribute('data-vcn', tn); });
+  const tagged = '<!doctype html>' + doc.documentElement.outerHTML.replace('<head>', '<head><base href="/">');
+  doc.body.querySelectorAll('[data-vcn]').forEach(e => e.removeAttribute('data-vcn')); // исходный DOM остаётся чистым; номера хранятся в pidx
+  localStorage.setItem('vc_lang', lang);
+  const fr = document.createElement('iframe'); fr.style.cssText = 'position:fixed;left:-9999px;width:1280px;height:900px'; fr.srcdoc = tagged; document.body.appendChild(fr);
+  await new Promise(r => fr.onload = r); await sleep(3000);
+  fr.contentWindow.SL(lang); await sleep(2500);
+  const live = fr.contentDocument;
+  const liveMap = new Map(); live.querySelectorAll('[data-vcn]').forEach(e => liveMap.set(+e.getAttribute('data-vcn'), e));
+  if (liveMap.size < pidx.size * 0.9) throw new Error('метки потеряны: ' + liveMap.size + ' из ' + pidx.size);
+  // 1. переносим переводы: из живого DOM в исходный (нетронутый) DOM
+  let changedLeaf = 0, changedText = 0, changedAttr = 0, replaced = 0;
+  [...doc.body.querySelectorAll('*')].forEach(O => {
+    if (!doc.body.contains(O) || !pidx.has(O)) return;
+    const L = liveMap.get(pidx.get(O)); if (!L) return;
+    ATTRS.forEach(a => { if (L.hasAttribute(a) && L.getAttribute(a) !== O.getAttribute(a)) { O.setAttribute(a, L.getAttribute(a)); changedAttr++; } });
+    if (SKIP_COPY.has(O.tagName.toUpperCase())) return;
+    const oKids = [...O.children], lKids = [...L.children];
+    if (oKids.length === 0) { if (O.innerHTML !== L.innerHTML) { O.innerHTML = L.innerHTML; changedLeaf++; } return; }
+    const lSet = new Set(lKids.map(k => +k.getAttribute('data-vcn')));
+    if (oKids.some(k => !lSet.has(pidx.get(k)))) { O.innerHTML = L.innerHTML; replaced++; return; }
+    const oT = [...O.childNodes].filter(x => x.nodeType === 3), lT = [...L.childNodes].filter(x => x.nodeType === 3);
+    if (oT.length === lT.length) oT.forEach((t, i) => { if (t.nodeValue !== lT[i].nodeValue) { t.nodeValue = lT[i].nodeValue; changedText++; } });
+  });
+  const title = live.title;
+  // скрытые «динамические» тексты формы (бонус, сообщение об успехе) заполняет booking.js при показе; в статике оставляем их на языке страницы
+  // bk_t недоступна снаружи (замыкание booking.js): значения берём из словарей booking.js (порядок pl, uk, ru, en)
+  const bkSrc = await (await fetch('/assets/js/booking.js?' + Date.now(), { cache: 'no-store' })).text(), bkDyn = {}, li = ['pl', 'uk', 'ru', 'en'].indexOf(lang);
+  const bkGet = (key) => { const m = [...bkSrc.matchAll(new RegExp(key + ":(['\"])((?:\\\\.|(?!\\1)[^\\\\])*)\\1", 'g'))]; return m[li] ? m[li][2].replace(/\\(['"])/g, '$1') : null; };
+  if (bkGet('bonusNote')) { bkDyn['bk-bonusNote'] = bkGet('bonusNote'); bkDyn['bk-successName'] = bkGet('successThanks') + '!'; bkDyn['bk-success-p'] = bkGet('successP'); }
+  const LTX = fr.contentWindow.TX; // сводка заявки на «Трудных случаях»: подписи полей до выбора значений
+  if (slug === 'trudne-przypadki-sprzatanie-krakow' && LTX && LTX[lang]) { bkDyn['sum-line-area'] = LTX[lang].sum_area + '—'; bkDyn['sum-line-degree'] = LTX[lang].sum_degree + '—'; }
+  fr.remove();
+  Object.entries(bkDyn).forEach(([id, v]) => { const el = doc.getElementById(id); if (el && v) el.innerHTML = v; });
+  log(`перенос: leaf=${changedLeaf} replaced=${replaced} text=${changedText} attrs=${changedAttr}`);
+
+  // 2. head
+  const head = doc.head, url = (l) => slug === 'index' ? ORIGIN + (l === 'pl' ? '/' : '/' + l) : ORIGIN + (l === 'pl' ? '' : '/' + l) + '/' + slug, selfUrl = url(lang), plUrl = url('pl');
+  doc.documentElement.setAttribute('lang', lang);
+  const setMeta = (sel, attr, val) => { const m = head.querySelector(sel); if (m) m.setAttribute(attr, val); else log('нет ' + sel); };
+  doc.title = title;
+  setMeta('meta[name="description"]', 'content', seo.description);
+  setMeta('meta[property="og:title"]', 'content', title);
+  setMeta('meta[property="og:description"]', 'content', seo.ogDescription);
+  setMeta('meta[property="og:url"]', 'content', selfUrl);
+  setMeta('link[rel="canonical"]', 'href', selfUrl);
+  const ogLocale = { uk: 'uk_UA', ru: 'ru_RU', en: 'en_GB', pl: 'pl_PL' }[lang];
+  const mk = (tag, attrs) => { const e = doc.createElement(tag); Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); return e; };
+  const canon = head.querySelector('link[rel="canonical"]');
+  const anchor = canon.nextSibling;
+  // язык страницы приоритетнее localStorage: все существующие скрипты читают vc_lang
+  const langScript = doc.createElement('script'); langScript.textContent = "try{localStorage.setItem('vc_lang','" + lang + "')}catch(e){}";
+  head.insertBefore(langScript, head.querySelector('meta[charset]').nextSibling);
+  head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(e => e.remove()); // польский исходник уже содержит hreflang-набор — заменяем его набором, собранным для этой страницы
+  const alts = ['pl', 'uk', 'ru', 'en'].map(l => mk('link', { rel: 'alternate', hreflang: l, href: url(l) })).concat([mk('link', { rel: 'alternate', hreflang: 'x-default', href: plUrl })]);
+  alts.forEach(a => canon.parentNode.insertBefore(a, anchor));
+  canon.parentNode.insertBefore(mk('meta', { property: 'og:locale', content: ogLocale }), anchor);
+  // JSON-LD: Service локализован; FAQPage собирается из видимого FAQ этой же страницы (без расхождений с содержимым)
+  const ld = [...doc.querySelectorAll('script[type="application/ld+json"]')];
+  const svcEl = ld.find(s => /"Service"/.test(s.textContent)), faqEl = ld.find(s => /"FAQPage"/.test(s.textContent));
+  const lbEl = ld.find(s => /"LocalBusiness"/.test(s.textContent));
+  if (svcEl) {
+    const svc = JSON.parse(svcEl.textContent);
+    svc.serviceType = seo.serviceType; svc.name = seo.name; svc.description = seo.serviceDescription; svc.inLanguage = lang; svc.url = selfUrl;
+    if (svc.provider && svc.provider.areaServed) svc.provider.areaServed.name = seo.area;
+    svcEl.textContent = '\n' + JSON.stringify(svc, null, 2) + '\n';
+  }
+  if (lbEl) {
+    const lb = JSON.parse(lbEl.textContent); lb.url = selfUrl; if (lb.areaServed) lb.areaServed.name = seo.area;
+    lbEl.textContent = '\n' + JSON.stringify(lb, null, 2) + '\n';
+  }
+  if (faqEl) {
+    const faq = JSON.parse(faqEl.textContent); const items = [], was = faq.mainEntity.length;
+    doc.querySelectorAll('.faq-item, .pn-faq-item').forEach(it => { const q = it.querySelector('.faq-q, summary'), a = it.querySelector('.faq-a, p'); if (!q || !a) return; const qt = [...q.childNodes].filter(x => x.nodeType === 3).map(x => x.nodeValue).join('').trim(); items.push({ '@type': 'Question', name: qt, acceptedAnswer: { '@type': 'Answer', text: a.textContent.replace(/\s+/g, ' ').trim() } }); });
+    if (items.length === was) { faq.inLanguage = lang; faq.mainEntity = items; faqEl.textContent = '\n' + JSON.stringify(faq, null, 2) + '\n'; }
+    else log('ВНИМАНИЕ: FAQ в разметке ' + items.length + ' ≠ JSON-LD ' + was + ' — FAQPage оставлен без изменений');
+    log('FAQ в JSON-LD: ' + items.length + ' (было ' + was + ')');
+  }
+
+  // 3. языковые ссылки вместо клиентского переключения
+  // исходные польские страницы уже содержат <a class="lb" href hreflang>; здесь выставляем активный язык (SL(...) из live-DOM не копируется)
+  doc.querySelectorAll('a.lb[hreflang]').forEach(a => { const l = a.getAttribute('hreflang'); a.setAttribute('class', a.className.replace(/\bon\b/, '').trim() + (l === lang ? ' on' : '')); });
+  // 4. внутренние ссылки на соседние страницы того же языка (юридические — пока польские)
+  doc.querySelectorAll('a[href]:not(.lb)').forEach(a => { const h = a.getAttribute('href'); const m = /^\/([a-z0-9-]+)(#.*)?$/.exec(h); if (m && SLUGS.concat(LEGAL).includes(m[1])) a.setAttribute('href', '/' + lang + '/' + m[1] + (m[2] || '')); else if (h === '/' || /^\/#/.test(h)) a.setAttribute('href', '/' + lang + h.slice(1)); });
+  // 4b. штатный SL(lang) после load: booking.js на старте подписывает форму польским (var lang страницы ещё 'pl'); один вызов выравнивает все тексты
+  const sync = doc.createElement('script'); sync.textContent = "window.addEventListener('load',function(){setTimeout(function(){try{SL('" + lang + "')}catch(e){}},0)});"; doc.body.appendChild(sync);
+  // 5. относительные пути ресурсов -> корневые (страница теперь на /uk/...)
+  let html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+  // атрибуты src/href/poster с относительным путём (assets/…, manifest.json, видео «окна.mp4») -> корневые; строки 'assets/…' внутри встроенных скриптов (img:'assets/img/…') тоже
+  html = html.replace(/\b(src|href|poster)="(?!\/|https?:|#|mailto:|tel:|data:|javascript:|sms:|whatsapp:|viber:|tg:|blob:)([^"]+)"/gi, '$1="/$2"')
+    .replace(/(['"`])assets\//g, '$1/assets/').replace(/ data-vcn="\d+"/g, '');
+  return html;
+}
+// ───── юридические страницы: перевод по блокам (legal/*.js) + шапка/подвал из уже сгенерированных страниц ─────
+const INL = new Set(['STRONG', 'EM', 'A', 'BR', 'SPAN', 'B', 'I', 'U', 'CODE', 'SMALL', 'SUP', 'SUB', 'MARK']);
+const unitEls = (root, sel) => [...root.querySelectorAll(sel)].filter(e => !['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(e.tagName) && !INL.has(e.tagName) && ![...e.children].some(c => !INL.has(c.tagName)) && e.innerHTML.trim());
+const fnv = (s) => { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h.toString(16); };
+const digits = (s) => (s.replace(/<[^>]*>/g, '').match(/\d+/g) || []).sort().join(',');
+async function genLegal(doc, lang) {
+  const T = (window.LEGAL || {})[doc], M = (window.LEGAL_META[doc] || {})[lang]; if (!T || !T[lang] || !M) throw new Error('нет перевода ' + doc + '/' + lang);
+  const raw = await (await fetch('/' + doc + '.html?' + Date.now(), { cache: 'no-store' })).text();
+  const d = new DOMParser().parseFromString(raw, 'text/html');
+  const els = unitEls(d, '.legal-hero *, .legal-wrap *'); const nBase = els.length;
+  // дополнительные блоки в конце: ссылка «назад» и текстовые узлы элементов, у которых есть вложенные блоки (напр. <li>Текст<ul>…</ul></li>)
+  const ex = []; const walk = (e) => { if (['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(e.tagName)) return; if ([...e.children].some(c => !INL.has(c.tagName))) [...e.childNodes].forEach(n => { if (n.nodeType === 3 && n.nodeValue.trim()) ex.push({ node: n, text: n.nodeValue.replace(/s+/g, ' ').trim() }); }); [...e.children].forEach(c => { if (!INL.has(c.tagName)) walk(c); }); };
+  d.querySelectorAll('.legal-hero, .legal-wrap').forEach(walk); d.querySelectorAll('.legal-wrap > a.legal-back').forEach(a => ex.unshift({ node: a, text: a.innerHTML.trim(), isEl: true }));
+  const pl = els.map(e => e.innerHTML.trim()).concat(ex.map(x => x.text));
+  const hash = fnv(pl.join('\u0001'));
+  if (T.plHash === '__HASH__') log('HASH ' + doc + ' = ' + hash);
+  else if (T.plHash !== hash) throw new Error('ПЕРЕВОД УСТАРЕЛ: польский текст ' + doc + ' изменился (hash ' + hash + ' ≠ ' + T.plHash + ')');
+  if (T[lang].length !== pl.length) throw new Error(doc + '/' + lang + ': блоков перевода ' + T[lang].length + ' ≠ польских ' + pl.length);
+  pl.forEach((p, i) => { if (digits(p) !== digits(T[lang][i])) log('ЧИСЛА блок ' + i + ': PL[' + digits(p) + '] ≠ ' + lang + '[' + digits(T[lang][i]) + ']'); });
+  els.forEach((e, i) => { e.innerHTML = T[lang][i]; });
+  ex.forEach((x, j) => { const tr = T[lang][nBase + j]; if (x.isEl) x.node.innerHTML = tr; else { const v = x.node.nodeValue; x.node.nodeValue = (/^s/.test(v) ? ' ' : '') + tr + (/s$/.test(v) ? ' ' : ''); } });
+  // шапка/подвал: словарь PL→язык из пары «польская страница услуги ↔ её сгенерированная версия»
+  const EXTRA = { // строки шапки/подвала юридических страниц, которых нет на страницах услуг (перевод поддерживается здесь)
+    'Kraków i Małopolska': { uk: 'Краків і Малопольща', ru: 'Краков и Малопольша', en: 'Kraków and Lesser Poland' },
+    'Od jednego mieszkania po całe budynki.<br>Jedna jakość. Jeden standard.': { uk: 'Від однієї квартири до цілих будівель.<br>Одна якість. Один стандарт.', ru: 'От одной квартиры до целых зданий.<br>Одно качество. Один стандарт.', en: 'From a single apartment to entire buildings.<br>One quality. One standard.' }
+  };
+  const PRE = /^[\p{Extended_Pictographic}️‍\s]+|^(&nbsp;|\s)+/u, nk = (s) => s.replace(PRE, '').trim(), pre = (s) => (PRE.exec(s) || [''])[0];
+  const map = new Map(), amap = new Map(), nmap = new Map();
+  for (const ref of ['/sprzatanie-po-remoncie-krakow', '/index', '/poznaj-nas', '/program-partnerski', '/mycie-okien']) {
+    const dP = new DOMParser().parseFromString(await (await fetch(ref + '.html?' + Date.now(), { cache: 'no-store' })).text(), 'text/html');
+    const dG = new DOMParser().parseFromString(await (await fetch('/' + lang + ref + '.html?' + Date.now(), { cache: 'no-store' })).text(), 'text/html');
+    ['.topbar', 'header', 'footer'].forEach(sel => {
+      const a = dP.querySelector(sel), b = dG.querySelector(sel); if (!a || !b) return;
+      const ea = [...a.querySelectorAll('*')], eb = [...b.querySelectorAll('*')]; if (ea.length !== eb.length) { log('эталон ' + ref + ' ' + sel + ': ' + ea.length + ' ≠ ' + eb.length); return; }
+      ea.forEach((x, i) => { const y = eb[i]; if (x.tagName === 'SCRIPT') return;
+        if (![...x.children].some(c => !INL.has(c.tagName)) && x.innerHTML.trim() && x.innerHTML !== y.innerHTML) { const k = x.innerHTML.trim(); if (!map.has(k)) map.set(k, y.innerHTML.trim()); const nkk = nk(k); if (nkk && !nmap.has(nkk)) nmap.set(nkk, nk(y.innerHTML.trim())); }
+        ['alt', 'aria-label', 'title'].forEach(at => { if (x.hasAttribute(at) && y.hasAttribute(at) && x.getAttribute(at) !== y.getAttribute(at) && !amap.has(x.getAttribute(at))) amap.set(x.getAttribute(at), y.getAttribute(at)); }); });
+    });
+  }
+  Object.entries(EXTRA).forEach(([k, v]) => { map.set(k, v[lang]); nmap.set(nk(k), nk(v[lang])); });
+  const KEEP = /Vershy|Property|Care|Premium|Cleaning|Services|kontakt|vershclean|Facebook|Instagram|WhatsApp|Telegram|NIP|REGON|Wieliczka|Skawina|Niepołomice|Zabierzów|Zielonki|Krzeszowice|Michałowice|Świątniki|Mogilany|Myślenice|\d/gi;
+  let miss = [];
+  ['.topbar', 'header', 'footer'].forEach(sel => { const c = d.querySelector(sel); if (!c) return; c.querySelectorAll('*').forEach(x => { ['alt', 'aria-label', 'title'].forEach(at => { if (x.hasAttribute(at) && amap.has(x.getAttribute(at))) x.setAttribute(at, amap.get(x.getAttribute(at))); }); if ([...x.children].some(ch => !INL.has(ch.tagName)) || !x.innerHTML.trim() || x.tagName === 'SCRIPT' || x.closest('.topbar-langs') || ([...x.children].some(ch => ch.tagName === 'A') && ['NAV', 'DIV'].includes(x.tagName))) return; const k = x.innerHTML.trim(); if (map.has(k)) x.innerHTML = map.get(k); else if (nmap.has(nk(k)) && nk(k)) x.innerHTML = pre(k) + nmap.get(nk(k)); else { const plain = k.replace(/<[^>]*>/g, '').replace(KEEP, '').replace(/[^A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]/g, ''); if (plain.length > 2) miss.push(k.slice(0, 60)); } }); });
+  if (miss.length) log('шапка/подвал без перевода: ' + [...new Set(miss)].join(' | '));
+  // head
+  const url = (l) => ORIGIN + (l === 'pl' ? '' : '/' + l) + '/' + doc, selfUrl = url(lang);
+  d.documentElement.setAttribute('lang', lang); d.title = M.title; d.querySelector('meta[name="description"]').setAttribute('content', M.description); d.querySelector('link[rel="canonical"]').setAttribute('href', selfUrl);
+  const ls = d.createElement('script'); ls.textContent = "try{localStorage.setItem('vc_lang','" + lang + "')}catch(e){}"; const old = d.head.querySelector('script:not([src])'); if (old) old.textContent = ls.textContent; else d.head.insertBefore(ls, d.head.querySelector('meta[charset]').nextSibling);
+  d.querySelectorAll('a.lb[hreflang]').forEach(a => { const l = a.getAttribute('hreflang'); a.setAttribute('class', a.className.replace(/\bon\b/, '').trim() + (l === lang ? ' on' : '')); });
+  d.querySelectorAll('a[href]:not(.lb)').forEach(a => { const h = a.getAttribute('href'); const m = /^\/([a-z0-9-]+)(#.*)?$/.exec(h); if (m && SLUGS.concat(LEGAL).includes(m[1])) a.setAttribute('href', '/' + lang + '/' + m[1] + (m[2] || '')); else if (h === '/' || /^\/#/.test(h)) a.setAttribute('href', '/' + lang + h.slice(1)); });
+  let html = '<!DOCTYPE html>\n' + d.documentElement.outerHTML;
+  html = html.replace(/\b(src|href|poster)="(?!\/|https?:|#|mailto:|tel:|data:|javascript:|sms:|whatsapp:|viber:|tg:|blob:)([^"]+)"/gi, '$1="/$2"').replace(/(['"`])assets\//g, '$1/assets/');
+  return html;
+}
+window.runLegal = async (langs, docs) => {
+  const res = [];
+  for (const lang of langs) for (const doc of (docs || LEGAL)) {
+    document.getElementById('log').textContent = '';
+    try { const html = await genLegal(doc, lang); const r = await fetch('http://localhost:8090/?path=' + lang + '/' + doc + '.html', { method: 'POST', body: html }); res.push(lang + '/' + doc + ': ' + (await r.text()) + ' | ' + document.getElementById('log').textContent.replace(/\n/g, ' ; ')); }
+    catch (e) { res.push(lang + '/' + doc + ': FAIL ' + e.message); }
+    window.__res = res;
+  }
+  window.__done = true; return res;
+};
+// сводная страница для проверки юридических переводов: польский оригинал рядом с UK / RU / EN (самодостаточный HTML)
+window.buildLegalReview = async () => {
+  const titles = { 'regulamin': 'Regulamin świadczenia usług sprzątania', 'polityka-prywatnosci': 'Polityka prywatności', 'polityka-cookies': 'Polityka cookies', 'zalacznik-nr-1-zakres-uslug': 'Załącznik nr 1 – Zakres usług' };
+  let nav = '', body = '', stats = [];
+  for (const doc of LEGAL) {
+    const T = window.LEGAL[doc];
+    const d = new DOMParser().parseFromString(await (await fetch('/' + doc + '.html?' + Date.now(), { cache: 'no-store' })).text(), 'text/html');
+    const els = unitEls(d, '.legal-hero *, .legal-wrap *'); const ex = [];
+    const walk = (e) => { if (['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(e.tagName)) return; if ([...e.children].some(c => !INL.has(c.tagName))) [...e.childNodes].forEach(n => { if (n.nodeType === 3 && n.nodeValue.trim()) ex.push(n.nodeValue.replace(/\s+/g, ' ').trim()); }); [...e.children].forEach(c => { if (!INL.has(c.tagName)) walk(c); }); };
+    d.querySelectorAll('.legal-hero, .legal-wrap').forEach(walk); d.querySelectorAll('.legal-wrap > a.legal-back').forEach(a => ex.unshift(a.innerHTML.trim()));
+    const pl = els.map(e => e.innerHTML.trim()).concat(ex);
+    nav += '<a href="#' + doc + '">' + titles[doc] + '</a>';
+    let rows = '', okN = 0;
+    pl.forEach((p, i) => { const ok = ['uk', 'ru', 'en'].every(l => digits(p) === digits(T[l][i])); if (ok) okN++; rows += '<tr' + (ok ? '' : ' class="bad"') + '><td class="n">' + i + '</td><td>' + p + '</td><td>' + T.uk[i] + '</td><td>' + T.ru[i] + '</td><td>' + T.en[i] + '</td></tr>'; });
+    stats.push(doc + ': ' + pl.length + ' блоков, числа совпадают в ' + okN);
+    body += '<h2 id="' + doc + '">' + titles[doc] + ' <small>' + pl.length + ' блоков · версия польского текста ' + T.plHash + '</small></h2><table><thead><tr><th>#</th><th>🇵🇱 Оригинал (PL)</th><th>🇺🇦 UK</th><th>🇷🇺 RU</th><th>🇬🇧 EN</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+  return '<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Юридические переводы — сверка с польским оригиналом</title><style>body{font:14px/1.5 system-ui,Arial;margin:0;color:#0f172a}header{position:sticky;top:0;background:#0f172a;color:#fff;padding:10px 16px;z-index:5}header a{color:#93c5fd;margin-right:16px;text-decoration:none}h2{margin:28px 16px 8px}h2 small{font-weight:400;color:#64748b;font-size:12px}p.note{margin:12px 16px;color:#475569}table{border-collapse:collapse;width:calc(100% - 32px);margin:0 16px}th,td{border:1px solid #e2e8f0;padding:6px 8px;vertical-align:top;width:23%}th{background:#f1f5f9;position:sticky;top:42px;text-align:left}td.n,th:first-child{width:3%;color:#94a3b8}tr:nth-child(even) td{background:#fafcff}tr.bad td{background:#fee2e2}a{color:#1d4ed8}</style></head><body><header>' + nav + '</header><p class="note"><b>Перевод не заверенный, для проверки.</b> Структура, нумерация, суммы и сроки сохранены; новых положений нет. Красная строка = числа в переводе не совпали с оригиналом (таких: см. итог). Итог: ' + stats.join(' · ') + '. Правки вносятся в <code>scripts/i18n/legal/*.js</code>, затем генератор пересобирает страницы.</p>' + body + '</body></html>';
+};
+// пакетный запуск: все страницы × языки, запись через локальный приёмник (scripts/i18n/receiver.ps1, localhost:8090)
+window.runAll = async (langs, pages) => {
+  const res = [];
+  for (const lang of langs) for (const slug of (pages || PAGES)) {
+    document.getElementById('log').textContent = '';
+    try {
+      const html = await generate(slug, lang);
+      const r = await fetch('http://localhost:8090/?path=' + lang + '/' + slug + '.html', { method: 'POST', body: html });
+      res.push(lang + '/' + slug + ': ' + (await r.text()) + ' | ' + document.getElementById('log').textContent.replace(/\n/g, ' ; '));
+    } catch (e) { res.push(lang + '/' + slug + ': FAIL ' + e.message); }
+    window.__res = res;
+  }
+  window.__done = true; return res;
+};
+document.getElementById('run').onclick = async () => {
+  document.getElementById('log').textContent = '';
+  try { outHtml = await generate(document.getElementById('slug').value, document.getElementById('lang').value); log('готово: ' + outHtml.length + ' байт'); document.getElementById('dl').disabled = false; window.__out = outHtml; }
+  catch (e) { log('ОШИБКА ' + e.message); }
+};
+document.getElementById('dl').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([outHtml], { type: 'text/html' })); a.download = document.getElementById('lang').value + '__' + document.getElementById('slug').value + '.html'; document.body.appendChild(a); a.click(); a.remove(); };
+</script></body></html>

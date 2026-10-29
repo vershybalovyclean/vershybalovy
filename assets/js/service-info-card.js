@@ -148,7 +148,7 @@
     rows += d.timeIsSentence ? '<dt></dt><dd>' + esc(d.time) + '</dd>' : '<dt>' + t.time + '</dt><dd>' + esc(d.time) + '</dd>';
     rows += '<dt>' + t.price + '</dt><dd class="vc-ic-price">' + esc(st.total) + ' ' + t.currency + '</dd>';
     host.innerHTML = '<p class="vc-ic-title">' + t.title + '</p><dl class="vc-ic-rows">' + rows + '</dl>' +
-      '<a class="vc-ic-link" href="' + CHECKLIST[key] + '"' + (CHECKLIST[key].charAt(0) === '#' ? '' : ' target="_blank" rel="noopener"') + '>' + t.checklist + '</a>' +
+      '<a class="vc-ic-link" href="' + (CHECKLIST[key].charAt(0) === '/' && lang !== 'pl' ? '/' + lang : '') + CHECKLIST[key] + '"' + (CHECKLIST[key].charAt(0) === '#' ? '' : ' target="_blank" rel="noopener"') + '>' + t.checklist + '</a>' +
       '<p class="vc-ic-note">' + t.note + '</p>';
     host.hidden = false;
   }
