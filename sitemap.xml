@@ -1,49 +1,353 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.vershclean.pl/</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/uk</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/ru</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/en</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/"/>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/uk/sprzatanie-mieszkan-i-domow-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/ru/sprzatanie-mieszkan-i-domow-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/en/sprzatanie-mieszkan-i-domow-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-mieszkan-i-domow-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-mieszkan-i-domow-krakow"/>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.vershclean.pl/sprzatanie-po-remoncie-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-po-remoncie-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/uk/sprzatanie-po-remoncie-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-po-remoncie-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/ru/sprzatanie-po-remoncie-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-po-remoncie-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/en/sprzatanie-po-remoncie-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-po-remoncie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-po-remoncie-krakow"/>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/uk/sprzatanie-po-wyprowadzce-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/ru/sprzatanie-po-wyprowadzce-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/en/sprzatanie-po-wyprowadzce-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/sprzatanie-po-wyprowadzce-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/sprzatanie-po-wyprowadzce-krakow"/>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow"/>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/uk/trudne-przypadki-sprzatanie-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow"/>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/ru/trudne-przypadki-sprzatanie-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow"/>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/en/trudne-przypadki-sprzatanie-krakow</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/trudne-przypadki-sprzatanie-krakow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/trudne-przypadki-sprzatanie-krakow"/>
     <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.vershclean.pl/mycie-okien</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/mycie-okien"/>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/uk/mycie-okien</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/mycie-okien"/>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/ru/mycie-okien</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/mycie-okien"/>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/en/mycie-okien</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/mycie-okien"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/mycie-okien"/>
     <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.vershclean.pl/poznaj-nas</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/poznaj-nas"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/uk/poznaj-nas</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/poznaj-nas"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/ru/poznaj-nas</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/poznaj-nas"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/en/poznaj-nas</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/poznaj-nas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/poznaj-nas"/>
     <lastmod>2026-10-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.vershclean.pl/program-partnerski</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/program-partnerski"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/uk/program-partnerski</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/program-partnerski"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/ru/program-partnerski</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/program-partnerski"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.vershclean.pl/en/program-partnerski</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.vershclean.pl/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.vershclean.pl/uk/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.vershclean.pl/ru/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vershclean.pl/en/program-partnerski"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vershclean.pl/program-partnerski"/>
     <lastmod>2026-10-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
