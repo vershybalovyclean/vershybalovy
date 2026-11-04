@@ -1,5 +1,6 @@
 import { randomUUID, createHash } from "node:crypto";
 import { checkWindowPricing, catalogKey, isWindowAddonKey } from "./_window_tariffs.js";
+import { evaluateHalloweenGifts, isVerifiedHalloweenGift } from "./_halloween.js";
 
 // ── Outbound calls with a hard timeout ───────────────────────────────────────────────
 // A hung downstream service (Supabase, Resend, the Sheets webhook, Telegram relay) must
@@ -608,17 +609,11 @@ async function missingCatalogKeys(keys, SUPABASE_URL, SUPABASE_ANON_KEY) {
   }
 }
 
-// Halloween campaign (26.10–07.11.2026 inclusive) GRATIS add-ons: eligibility is
-// re-checked here against the booking's actual scheduled_date (never trusted from
-// the client alone) before any addon.isGift is allowed to reach request_addons at
-// price 0 — a request for a date outside the window has its gift flags stripped
-// (forced back to a real price-only addon, which the normal price>0 filter below
-// then drops like any other zero/invalid line).
-const HALLOWEEN_GIFT_START = "2026-10-26";
-const HALLOWEEN_GIFT_END = "2026-11-07";
-function isHalloweenGiftEligible(scheduledDate) {
-  return typeof scheduledDate === "string" && scheduledDate >= HALLOWEEN_GIFT_START && scheduledDate <= HALLOWEEN_GIFT_END;
-}
+// Halloween campaign GRATIS add-ons: the whole decision (server clock vs 08.11.2026 00:00 Europe/Warsaw,
+// cleaning date 26.10–07.11, gift key vs the kind of cleaning ordered) is made once per request in
+// api/_halloween.js (evaluateHalloweenGifts). Only add-ons it confirmed carry a server-side marker;
+// request_addons gets price 0 / is_gift only for those. Anything else with isGift/price 0 is dropped
+// by the normal price>0 filter below, like any other zero/invalid line.
 
 // Ночные заказы (21:00–7:00, по просьбе владелицы) автоматически помечаются
 // requests.is_urgent — то же поле, что уже используется для ручной пометки
@@ -667,12 +662,11 @@ async function buildSeriesPayload(data, rowBody, SUPABASE_URL, SUPABASE_ANON_KEY
     }
     let addonRows = [];
     if (Array.isArray(data.addons) && data.addons.length) {
-      const giftsAllowed = isHalloweenGiftEligible(data.scheduledDate);
       const keys = data.addons.map((a) => a.key).filter(Boolean);
       const idMap = await resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY);
       addonRows = data.addons
-        .filter((a) => a.key && idMap[a.key] && (a.price > 0 || (a.isGift && giftsAllowed)))
-        .map((a) => ({ addon_service_id: idMap[a.key], price: a.price || 0, qty: a.qty || 1, is_gift: !!(a.isGift && giftsAllowed) }));
+        .filter((a) => a.key && idMap[a.key] && (a.price > 0 || isVerifiedHalloweenGift(a)))
+        .map((a) => ({ addon_service_id: idMap[a.key], price: a.price || 0, qty: a.qty || 1, is_gift: isVerifiedHalloweenGift(a) }));
     }
     return {
       request: rowBody,
@@ -872,12 +866,11 @@ async function insertSupabaseRequest(data) {
     // never re-derived from the current addon_services.price — the catalog price
     // can move independently of what this specific client actually saw and paid.
     if (Array.isArray(data.addons) && data.addons.length) {
-      const giftsAllowed = isHalloweenGiftEligible(data.scheduledDate);
       const keys = data.addons.map(a => a.key).filter(Boolean);
       const idMap = await resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY);
       const addonRows = data.addons
-        .filter(a => a.key && idMap[a.key] && (a.price > 0 || (a.isGift && giftsAllowed)))
-        .map(a => ({ request_id: data.id, addon_service_id: idMap[a.key], price: a.price || 0, qty: a.qty || 1, is_gift: !!(a.isGift && giftsAllowed) }));
+        .filter(a => a.key && idMap[a.key] && (a.price > 0 || isVerifiedHalloweenGift(a)))
+        .map(a => ({ request_id: data.id, addon_service_id: idMap[a.key], price: a.price || 0, qty: a.qty || 1, is_gift: isVerifiedHalloweenGift(a) }));
       if (addonRows.length) {
         const raRes = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/request_addons", {
           method: "POST",
@@ -936,6 +929,12 @@ function deriveRequestId(clientRequestId, content) {
   return x.slice(0, 8) + "-" + x.slice(8, 12) + "-" + x.slice(12, 16) + "-" + x.slice(16, 20) + "-" + x.slice(20);
 }
 
+const HW_REASON_PL = {
+  expired: "akcja zakończyła się 08.11.2026 o 00:00 czasu warszawskiego",
+  date: "termin sprzątania poza okresem promocji 26.10–07.11",
+  invalid: "prezent nie pasuje do zamówionej usługi lub nie został potwierdzony"
+};
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -988,6 +987,16 @@ export default async function handler(req, res) {
   phone = cleanLine(phone, BOOKING_LIMITS.phone);
   email = cleanLine(email, BOOKING_LIMITS.email) || "";
 
+  // Halloween gifts are decided here, on the server, from the server clock — never from the browser's isGift /
+  // price / date / comment line (see api/_halloween.js). From this point `addons` holds only freshly built rows
+  // (confirmed gifts carry a server-side marker) and `comment` has the browser's Halloween line replaced by the
+  // server's own (or removed). The duplicate-protection id below is still derived from what the browser really
+  // sent, so a retry of the same order is recognised as the same order on either side of the cutoff.
+  const rawComment = comment, rawAddons = addons;
+  const hw = evaluateHalloweenGifts({ addons, comment, clientNote, scheduledDate, serviceLines, serviceSlug, nowMs: Date.now() });
+  addons = hw.addons;
+  comment = hw.comment;
+
   // The full calendar-booking widget (booking.js) sends `comment` as an
   // auto-generated order summary (service/addons/price/date/address/...)
   // and the client's own free-text note separately as `clientNote`, so
@@ -1001,7 +1010,10 @@ export default async function handler(req, res) {
     "Usługa: " + (service || "nie wybrano") + "\n" +
     (partnerCode ? "Kod partnera: " + partnerCode + "\n" : "") +
     (hasClientNote && comment ? "\n" + comment + "\n" : "") +
-    "Komentarz: " + ((hasClientNote ? clientNote : comment) || "brak");
+    "Komentarz: " + ((hasClientNote ? clientNote : comment) || "brak") +
+    (hw.claimed && !hw.granted
+      ? "\n\n⚠ Halloween: prezent NIE został przyznany (" + HW_REASON_PL[hw.reason || "invalid"] + "). Klient widział prezent w formularzu — uprzedź go, a cenę zamówienia zostaw bez zmian."
+      : "");
 
   // Real calendar bookings get their id generated here (instead of letting Postgres
   // default it) so it's already known before insertSupabaseRequest ever runs — needed
@@ -1018,7 +1030,7 @@ export default async function handler(req, res) {
   const clientRequestId = typeof req.body.requestId === "string" && UUID_V4_RE.test(req.body.requestId) ? req.body.requestId.toLowerCase() : null;
   const requestId = !hasBooking ? null
     : clientRequestId
-      ? deriveRequestId(clientRequestId, [name, phone, scheduledDate, scheduledTime || "", address || "", price == null ? null : price, service || "", comment || "", clientNote || "", JSON.stringify(addons || [])])
+      ? deriveRequestId(clientRequestId, [name, phone, scheduledDate, scheduledTime || "", address || "", price == null ? null : price, service || "", rawComment || "", clientNote || "", JSON.stringify(rawAddons || [])])
       : randomUUID();
 
   // The database row is written first so the outcome is known before anything is sent.
@@ -1120,6 +1132,8 @@ export default async function handler(req, res) {
     const pushOk = settled[3] && settled[3].status === "fulfilled" && settled[3].value === true;
     const mailOk = emailResult.status === "fulfilled" && emailResult.value === true;
     if (!telegramOk && !pushOk && !mailOk) console.error("NOTIFICATION_FAILED: booking saved but no channel confirmed", { requestId });
+    // The browser is told only when a gift it asked for was NOT granted, and why (the page shows a notice).
+    if (hw.claimed && !hw.granted) return res.status(200).json({ success: true, halloweenGift: { granted: false, reason: hw.reason || "invalid" } });
     return res.status(200).json({ success: true });
   }
 

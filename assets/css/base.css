@@ -1529,3 +1529,10 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
 .scope-ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
 .scope-li{padding-left:26px;position:relative;line-height:1.45;font-size:15px}
 .scope-li::before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-weight:800}
+
+/* Halloween campaign ended (nav.js sets html.hw-off from the server answer after 08.11.2026 00:00 Europe/Warsaw):
+   hide the seasonal banners, cards and gift pickers. The images stay in assets/img for the next campaign. */
+.hw-off .promo-banner.halloween-promo,
+.hw-off #mies-promo,
+.hw-off #wyp-promo,
+.hw-off .hw-gift-box{display:none!important}

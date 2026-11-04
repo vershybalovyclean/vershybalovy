@@ -1,41 +1,43 @@
-// Сезонная кампания шапки (01.10, финал): ЕДИНСТВЕННЫЙ переключатель для
-// ОБА состояния — не только "включить Halloween", но и "какой постоянный
-// branding показывать, когда Halloween выключен". С этого ТЗ старый
-// logo.png + отдельная надпись .hdr-brand (легаси-разметка в HTML) больше
-// НЕ является тем, что реально показывается ни в одном состоянии — это
-// просто noscript/до-JS fallback на случай, если этот файл не выполнился.
-// И Halloween, и новый classic full logo — цельные композиции (герб+
-// Vershy+PROPERTY CARE), поэтому в обоих случаях .hdr-brand скрывается и
-// src меняется, но КАЖДОЕ состояние получает СВОЙ класс (halloween-campaign
-// / classic-logo) со своей геометрией в base.css — Halloween-specific
-// offsets/overlap/margin-top никогда не применяются к classic logo и
-// наоборот (см. ТЗ п.3: "same CSS + different src" запрещён явно).
+// Halloween campaign ends 08.11.2026 00:00 Europe/Warsaw (CET, UTC+1 → 07.11.2026 23:00:00 UTC). The same instant is
+// the cutoff of api/submit.js (gifts) and api/campaign.js — the SERVER decides; the visitor's clock is only a hint:
+//  * a server answer "ended" is final (stored for the visitor: nothing is asked again),
+//  * a server answer "active" is remembered for 10 minutes of the session,
+//  * with no answer yet (first visit, offline, blocked storage) the local clock gives a provisional look and
+//    /api/campaign corrects it — in BOTH directions, so a clock that runs fast does not hide a live campaign and a
+//    clock that is behind does not keep an ended one. A clock more than 14 days past the cutoff is trusted as is.
+var HW_CUTOFF_MS = Date.UTC(2026, 10, 7, 23, 0, 0);
 var SEASONAL_CAMPAIGN = { halloweenLogo: true };
 (function(){
-  document.querySelectorAll('.hdr-logo').forEach(function(a){
-    var img = a.querySelector('img');
-    if (SEASONAL_CAMPAIGN.halloweenLogo) {
-      if (img) img.src = '/assets/img/logo-halloween.webp';
-      a.classList.add('halloween-campaign');
-      a.classList.remove('classic-logo');
-    } else {
-      if (img) img.src = '/assets/img/logo-classic-full.webp';
-      a.classList.add('classic-logo');
-      a.classList.remove('halloween-campaign');
-    }
-  });
-  // Компактный brand-V — тот же принцип: Halloween ON использует
-  // предоставленный Owner файл (своя геометрия, см. .halloween-v-icon в
-  // mobile-tabbar.css), Halloween OFF — исходный logo.png, уже стоящий в
-  // разметке по умолчанию, с исходным 66%-box (никакого класса не нужно).
-  // Единственное другое публичное место со стандартным compact-V — кнопка
-  // "Więcej"/More в нижнем таббаре; footer (100px) и JSON-LD schema.image
-  // это не тот же кейс и не переключаются.
-  // На большинстве страниц таббар стоит в разметке ПОСЛЕ этого скрипта,
-  // поэтому при выполнении кнопки ещё нет — ждём DOMContentLoaded.
-  function applyTabbarIcon(){
+  var KEY_OVER = 'vc_hw_over', KEY_ACTIVE = 'vc_hw_active', KEY_OFFSET = 'vc_hw_off', TTL = 10 * 60 * 1000;
+  function sget(store, k){ try { return window[store].getItem(k); } catch(e){ return null; } }
+  function sset(store, k, v){ try { window[store].setItem(k, v); } catch(e){} }
+
+  // Reconciles everything the campaign controls. Idempotent; safe to call before and after the page scripts ran.
+  function applyCampaign(active){
+    SEASONAL_CAMPAIGN.halloweenLogo = !!active;
+    document.documentElement.classList.toggle('hw-off', !active);
+    window.HW_GIFT_ENABLED = !!active;
+    // Page-level pieces whose inline display the page scripts set once (mieszkan / wyprowadzka pages).
+    ['mies-promo', 'wyp-promo'].forEach(function(id){ var el = document.getElementById(id); if (el) el.style.display = active ? '' : 'none'; });
+    ['hw-gift-gen', 'hw-gift-szc'].forEach(function(id){ var el = document.getElementById(id); if (el) el.style.display = active ? 'block' : 'none'; });
+    var wyp = document.getElementById('hw-gift-wyp'); if (wyp) wyp.style.display = active ? '' : 'none';
+    document.querySelectorAll('.hdr-logo').forEach(function(a){
+      var img = a.querySelector('img');
+      if (active) {
+        if (img) img.src = '/assets/img/logo-halloween.webp';
+        a.classList.add('halloween-campaign');
+        a.classList.remove('classic-logo');
+      } else {
+        if (img) img.src = '/assets/img/logo-classic-full.webp';
+        a.classList.add('classic-logo');
+        a.classList.remove('halloween-campaign');
+      }
+    });
+    // Компактный brand-V в нижнем таббаре: Halloween ON — файл от Owner (своя геометрия, .halloween-v-icon в
+    // mobile-tabbar.css), OFF — исходный logo.png с исходным 66%-box. Footer (100px) и JSON-LD schema.image
+    // это не тот же кейс и не переключаются.
     document.querySelectorAll('.mtb-cta-icon img').forEach(function(img){
-      if (SEASONAL_CAMPAIGN.halloweenLogo) {
+      if (active) {
         img.src = '/assets/img/logo-halloween-v.webp';
         img.classList.add('halloween-v-icon');
       } else {
@@ -44,11 +46,64 @@ var SEASONAL_CAMPAIGN = { halloweenLogo: true };
       }
     });
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyTabbarIcon);
+  window.vcApplyCampaign = applyCampaign;
+
+  var now = Date.now();
+  var state; // true = active, false = ended
+  var needAsk = false;
+  if (sget('localStorage', KEY_OVER) === '1' || sget('sessionStorage', KEY_OVER) === '1') {
+    state = false;
   } else {
-    applyTabbarIcon();
+    var cached = parseInt(sget('sessionStorage', KEY_ACTIVE) || '', 10);
+    if (cached && now - cached >= 0 && now - cached < TTL && now < HW_CUTOFF_MS + 14 * 86400000) {
+      state = true; // the server said "active" a moment ago
+    } else {
+      state = now < HW_CUTOFF_MS; // provisional, from the visitor's own clock
+      needAsk = now < HW_CUTOFF_MS + 14 * 86400000;
+    }
   }
+  applyCampaign(state);
+  // The page scripts (DOMContentLoaded handlers of the service pages) read the flag too; re-apply after them.
+  document.addEventListener('DOMContentLoaded', function(){ applyCampaign(SEASONAL_CAMPAIGN.halloweenLogo); });
+
+  function ask(){
+    if (!window.fetch) return;
+    var ctl = window.AbortController ? new AbortController() : null;
+    var timer = ctl ? setTimeout(function(){ ctl.abort(); }, 3000) : null;
+    fetch('/api/campaign', { cache: 'no-store', credentials: 'omit', signal: ctl ? ctl.signal : undefined })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){
+        if (timer) clearTimeout(timer);
+        if (!j || typeof j.active !== 'boolean') return; // unusable answer: keep the current look
+        if (typeof j.now === 'number') { srvOffset = j.now - Date.now(); sset('sessionStorage', KEY_OFFSET, String(srvOffset)); }
+        if (j.active) { sset('sessionStorage', KEY_ACTIVE, String(Date.now())); armCutoff(); }
+        else { sset('localStorage', KEY_OVER, '1'); sset('sessionStorage', KEY_OVER, '1'); }
+        applyCampaign(j.active);
+      })
+      .catch(function(){ if (timer) clearTimeout(timer); });
+  }
+  // A tab that stays open and visible across the cutoff: wake up at the cutoff on the SERVER's clock (offset learned
+  // from /api/campaign, so a wrong visitor clock does not matter) and ask again, ignoring the 10-minute cache.
+  var srvOffset = parseInt(sget('sessionStorage', KEY_OFFSET) || '', 10);
+  if (isNaN(srvOffset)) srvOffset = 0;
+  var cutTimer = null, cutTries = 0;
+  function armCutoff(){
+    if (cutTimer) clearTimeout(cutTimer);
+    var left = HW_CUTOFF_MS - (Date.now() + srvOffset);
+    if (left > 14 * 86400000) return;
+    cutTimer = setTimeout(function(){
+      if (!SEASONAL_CAMPAIGN.halloweenLogo) return;
+      if (HW_CUTOFF_MS - (Date.now() + srvOffset) > 0) return armCutoff(); // woke up early (timer cap / throttling)
+      if (cutTries++ < 5) { ask(); setTimeout(armCutoff, 1500 * cutTries); } // server clock may trail by a moment
+    }, Math.max(0, Math.min(left + 300, 2147000000)));
+  }
+  if (needAsk) ask(); else if (state) armCutoff();
+  // A tab left open across the cutoff: re-check when the visitor comes back to it.
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState !== 'visible' || !SEASONAL_CAMPAIGN.halloweenLogo) return;
+    var t = parseInt(sget('sessionStorage', KEY_ACTIVE) || '', 10);
+    if (!t || Date.now() - t >= TTL) ask();
+  });
 })();
 
 // VershClean — mobile nav toggle + auto-close on scroll

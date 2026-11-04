@@ -86,6 +86,9 @@
       orderHead:'Twoje zamówienie',ordService:'🏠 Usługa',ordArea:'📏 Powierzchnia',ordExtras:'💎 Dodatki',ordFreq:'🔄 Częstotliwość',ordTotal:'💰 Razem',
       ordNight:'🌙 Dopłata nocna (+100%)',nightComment:'Dopłata nocna (+100%): TAK',
       f1:'✔ bez ukrytych dopłat',f2:'✔ własne środki w cenie',f3:'✔ możliwość zmiany terminu',
+      hwNoExpired:'Promocja Halloween zakończyła się o północy 7 listopada (czas warszawski), dlatego prezent nie został przyznany. Zamówienie przyjęliśmy bez zmian.',
+      hwNoDate:'Prezent Halloween obowiązuje tylko dla terminów sprzątania 26.10–07.11, a wybrany termin jest poza tym okresem, więc prezent nie został przyznany. Zamówienie przyjęliśmy bez zmian.',
+      hwNoInvalid:'Nie mogliśmy potwierdzić prezentu Halloween dla tego zamówienia, więc nie został przyznany. Zamówienie przyjęliśmy bez zmian — skontaktujemy się z Tobą.',
       successThanks:'Dziękujemy',successP:'Twoja prośba o rezerwację została wysłana. Skontaktujemy się z Tobą w ciągu <strong>15 minut</strong> przez WhatsApp lub telefon.',
       recapDate:'📅 Termin',recapTime:'⏰ Godzina',recapPhone:'📞 Telefon',waBtn:'💬 Otwórz WhatsApp',
       successRegP:'Twoje zgłoszenie na regularne sprzątanie zostało przyjęte. Menedżer skontaktuje się z Tobą w ciągu <strong>15 minut</strong> przez WhatsApp lub telefon i uzgodni terminy oraz godziny wszystkich wizyt. Dopiero potem potwierdzimy zamówienie.',recapDateReg:'📅 Preferowany termin 1. wizyty',recapTimeReg:'⏰ Preferowana godzina',
@@ -140,6 +143,9 @@
       orderHead:'Твоє замовлення',ordService:'🏠 Послуга',ordArea:'📏 Площа',ordExtras:'💎 Додатково',ordFreq:'🔄 Частота',ordTotal:'💰 Разом',
       ordNight:'🌙 Нічна доплата (+100%)',nightComment:'Нічна доплата (+100%): ТАК',
       f1:'✔ без прихованих доплат',f2:'✔ власні засоби включені',f3:'✔ можливість зміни дати',
+      hwNoExpired:'Акція Halloween завершилася опівночі 7 листопада (за варшавським часом), тому подарунок не надано. Замовлення прийнято без змін.',
+      hwNoDate:'Подарунок Halloween діє лише для дат прибирання 26.10–07.11, а обрана дата поза цим періодом, тому подарунок не надано. Замовлення прийнято без змін.',
+      hwNoInvalid:'Ми не змогли підтвердити подарунок Halloween для цього замовлення, тому його не надано. Замовлення прийнято без змін — ми зв’яжемося з тобою.',
       successThanks:'Дякуємо',successP:"Твоя заявка надіслана. Зв'яжемося протягом <strong>15 хвилин</strong> через WhatsApp або телефон.",
       recapDate:'📅 Дата',recapTime:'⏰ Час',recapPhone:'📞 Телефон',waBtn:'💬 Відкрити WhatsApp',
       successRegP:"Твою заявку на регулярне прибирання отримано. Керівниця зв'яжеться з тобою протягом <strong>15 хвилин</strong> через WhatsApp або телефон і погодить дати й час усіх візитів. Після цього ми підтвердимо замовлення.",recapDateReg:'📅 Бажана дата 1-го візиту',recapTimeReg:'⏰ Бажаний час',
@@ -194,6 +200,9 @@
       orderHead:'Ваш заказ',ordService:'🏠 Услуга',ordArea:'📏 Площадь',ordExtras:'💎 Дополнительно',ordFreq:'🔄 Частота',ordTotal:'💰 Итого',
       ordNight:'🌙 Ночная доплата (+100%)',nightComment:'Ночная доплата (+100%): ДА',
       f1:'✔ без скрытых доплат',f2:'✔ собственные средства в цене',f3:'✔ возможность изменить дату',
+      hwNoExpired:'Акция Halloween закончилась в полночь 7 ноября (по варшавскому времени), поэтому подарок не предоставлен. Заказ принят без изменений.',
+      hwNoDate:'Подарок Halloween действует только для дат уборки 26.10–07.11, а выбранная дата вне этого периода, поэтому подарок не предоставлен. Заказ принят без изменений.',
+      hwNoInvalid:'Мы не смогли подтвердить подарок Halloween для этого заказа, поэтому он не предоставлен. Заказ принят без изменений — мы свяжемся с вами.',
       successThanks:'Спасибо',successP:'Ваша заявка на бронирование отправлена. Свяжемся с вами в течение <strong>15 минут</strong> через WhatsApp или по телефону.',
       recapDate:'📅 Дата',recapTime:'⏰ Время',recapPhone:'📞 Телефон',waBtn:'💬 Открыть WhatsApp',
       successRegP:'Ваша заявка на регулярную уборку получена. Управляющая свяжется с вами в течение <strong>15 минут</strong> через WhatsApp или телефон и согласует даты и время всех визитов. После этого мы подтвердим заказ.',recapDateReg:'📅 Желаемая дата 1-го визита',recapTimeReg:'⏰ Желаемое время',
@@ -248,6 +257,9 @@
       orderHead:'Your order',ordService:'🏠 Service',ordArea:'📏 Area',ordExtras:'💎 Extras',ordFreq:'🔄 Frequency',ordTotal:'💰 Total',
       ordNight:'🌙 Night surcharge (+100%)',nightComment:'Night surcharge (+100%): YES',
       f1:'✔ no hidden fees',f2:'✔ our own supplies included',f3:'✔ date can be changed',
+      hwNoExpired:'The Halloween promotion ended at midnight on 7 November (Warsaw time), so the gift was not granted. Your order was accepted unchanged.',
+      hwNoDate:'The Halloween gift applies only to cleaning dates 26.10–07.11, and the date you chose is outside that period, so the gift was not granted. Your order was accepted unchanged.',
+      hwNoInvalid:'We could not confirm the Halloween gift for this order, so it was not granted. Your order was accepted unchanged — we will contact you.',
       successThanks:'Thank you',successP:"Your booking request has been sent. We'll contact you within <strong>15 minutes</strong> via WhatsApp or phone.",
       recapDate:'📅 Date',recapTime:'⏰ Time',recapPhone:'📞 Phone',waBtn:'💬 Open WhatsApp',
       successRegP:"Your regular cleaning request has been received. Our manager will contact you within <strong>15 minutes</strong> via WhatsApp or phone to agree the dates and times of all visits. We will confirm the order after that.",recapDateReg:'📅 Preferred date of the 1st visit',recapTimeReg:'⏰ Preferred time',
@@ -934,6 +946,20 @@
   /* ─── SUBMIT ───────────────────────────────────────── */
   var bk_submitting = false;
   var bk_successRegular = false; // true after a successful regular (monthly series) order — see bk_applyTexts
+  // Halloween gift refused by the server: its reason ('expired' | 'date' | 'invalid'), shown under the thank-you text
+  // in the visitor's language (and re-rendered on a language switch). null = nothing to say.
+  var bk_hwNoteReason = null;
+  function bk_renderHwNote(){
+    var p = document.getElementById('bk-success-p'); if(!p || !p.parentNode) return;
+    var n = document.getElementById('bk-hw-note');
+    if(!bk_hwNoteReason){ if(n) n.parentNode.removeChild(n); return; }
+    if(!n){
+      n = document.createElement('p'); n.id = 'bk-hw-note'; n.setAttribute('role','status');
+      n.style.cssText = 'margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:13.5px;line-height:1.45';
+      p.parentNode.insertBefore(n, p.nextSibling);
+    }
+    n.textContent = bk_t(bk_hwNoteReason === 'expired' ? 'hwNoExpired' : bk_hwNoteReason === 'date' ? 'hwNoDate' : 'hwNoInvalid');
+  }
   var bk_lastFingerprint = '';
   var bk_requestId = '';
   function bk_newRequestId(){
@@ -1112,6 +1138,8 @@
       var bkRegular = !!d.regularPlan;
       bk_successRegular = bkRegular;
       document.getElementById('bk-success-p').innerHTML = bk_t(bkRegular ? 'successRegP' : 'successP');
+      bk_hwNoteReason = (res.halloweenGift && res.halloweenGift.granted === false) ? (res.halloweenGift.reason || 'invalid') : null;
+      bk_renderHwNote();
       if(bkRegular){
         document.getElementById('bk-r-date').textContent = bk_t('recapDateReg');
         document.getElementById('bk-r-time').textContent = bk_t('recapTimeReg');
@@ -1234,6 +1262,7 @@
       }
     });
     // After a successful REGULAR order the confirmation keeps its own wording (and the "preferred" date/time labels) when the language is switched.
+    bk_renderHwNote();
     if(bk_successRegular){
       var rp = document.getElementById('bk-success-p'); if(rp) rp.innerHTML = bk_t('successRegP');
       var rd = document.getElementById('bk-r-date'); if(rd) rd.textContent = bk_t('recapDateReg');
