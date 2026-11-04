@@ -1,5 +1,5 @@
 import { randomUUID, createHash } from "node:crypto";
-import { checkWindowPricing } from "./_window_tariffs.js";
+import { checkWindowPricing, catalogKey, isWindowAddonKey } from "./_window_tariffs.js";
 
 // ── Outbound calls with a hard timeout ───────────────────────────────────────────────
 // A hung downstream service (Supabase, Resend, the Sheets webhook, Telegram relay) must
@@ -586,6 +586,28 @@ async function resolveAddonServiceIds(keys, SUPABASE_URL, SUPABASE_ANON_KEY) {
   }
 }
 
+// Window-cleaning add-ons are priced per season, so each one must resolve to its own catalogue row (see catalogKey in
+// api/_window_tariffs.js). Returns the keys that are NOT in the catalogue (absent or inactive) — or null when the
+// catalogue cannot be read at all (not configured / network / RPC error): then the booking flow continues exactly as it
+// always did and nothing is judged here.
+async function missingCatalogKeys(keys, SUPABASE_URL, SUPABASE_ANON_KEY) {
+  if (!Array.isArray(keys) || !keys.length || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+  try {
+    const r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/resolve_addon_service_ids", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+      body: JSON.stringify({ p_keys: keys })
+    });
+    if (!r.ok) return null;
+    const rows = await r.json();
+    if (!Array.isArray(rows)) return null;
+    const have = new Set(rows.map((row) => row.site_key));
+    return keys.filter((k) => !have.has(k));
+  } catch (error) {
+    return null;
+  }
+}
+
 // Halloween campaign (26.10–07.11.2026 inclusive) GRATIS add-ons: eligibility is
 // re-checked here against the booking's actual scheduled_date (never trusted from
 // the client alone) before any addon.isGift is allowed to reach request_addons at
@@ -946,6 +968,18 @@ export default async function handler(req, res) {
         season: winCheck.season, baseDelta: winCheck.baseDelta,
         lines: winCheck.lines.map((l) => ({ kind: l.kind, key: l.key, oldKey: l.oldKey || null, standalone: !!l.standalone, qty: l.qty, price: l.price, claimed: l.claimed }))
       });
+    }
+    // Catalogue key by SERVICE date and kind of window cleaning, decided here (never from the browser). Public keys are
+    // unchanged (ms:wl1, wp:okna, pr:wl1); in winter they resolve to the "-winter" catalogue rows. If a row is missing
+    // the order is refused BEFORE anything is saved or sent — a window line must never land on a wrong catalogue service.
+    if (Array.isArray(addons) && addons.some((a) => a && typeof a.key === "string" && isWindowAddonKey(a.key))) {
+      const winKeys = addons.filter((a) => a && typeof a.key === "string" && isWindowAddonKey(a.key)).map((a) => catalogKey(a.key, scheduledDate));
+      const missing = await missingCatalogKeys(winKeys, process.env.supabase_url, process.env.Supabase_anon_key);
+      if (missing && missing.length) {
+        console.error("window catalogue row missing", missing, scheduledDate);
+        return res.status(503).json({ success: false, code: "catalog_unavailable", error: "Window cleaning catalogue row is not available for the chosen date" });
+      }
+      addons = addons.map((a) => (a && typeof a.key === "string" && isWindowAddonKey(a.key)) ? Object.assign({}, a, { key: catalogKey(a.key, scheduledDate) }) : a);
     }
   }
   // From here on name/phone/e-mail are single-line, control-character-free strings

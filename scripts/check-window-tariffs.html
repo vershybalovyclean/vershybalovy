@@ -14,7 +14,7 @@ const SUB = await import(URL.createObjectURL(new Blob([subSrc], {type:'text/java
 const handler = SUB.default;
 let calls = [];
 globalThis.process = { env: { supabase_url: 'https://sb.test', Supabase_anon_key: 'k', Resend_api_key: 'r', to_email: 'team@test.invalid' } };
-const IDS = { 'ms:wl1':'w1','wp:okna':'w2','pr:wl1':'w3','ms:kl3':'k3','ok:balustrady-winter':'b1','ok:balustrady-season':'b2' };
+const IDS = { 'ms:wl1':'w1','wp:okna':'w2','pr:wl1':'w3','ms:kl3':'k3','ms:wl1-winter':'w1w','wp:okna-winter':'w2w','pr:wl1-winter':'w3w','ok:balustrady-winter':'b1','ok:balustrady-season':'b2' };
 globalThis.fetch = async (url, o) => {
   o = o || {}; const body = o.body ? JSON.parse(o.body) : null; calls.push({ url: String(url), method: o.method || 'GET', body });
   const j = (v) => ({ ok: true, status: 200, json: async () => v, text: async () => JSON.stringify(v) });
@@ -93,6 +93,54 @@ p = await post(body({ service: 'Mycie okien — Zima', areaM2: 10, windows: { ki
 T('H8 stand-alone stale 250 in winter → 409 with 400', p.status === 409 && p.json.lines[0].price === 400 && p.json.lines[0].standalone === true, p.json);
 p = await post(body({ service: 'Mycie okien — Zima', areaM2: 10, windows: { kind: 'plain', m2: 10, standalone: true, total: 400 }, price: 400, serviceLines: undefined, addons: [] }));
 T('H9 stand-alone 400 accepted', p.status === 200 && p.json.success === true, p.json);
+// ---- catalogue key by service date (winter rows via "<key>-winter") ----
+const resolved = () => calls.filter(c => c.url.includes('resolve_addon_service_ids')).flatMap(c => c.body.p_keys);
+const addonRowsOf = (p) => p.calls.filter(c => c.url.endsWith('/rest/v1/request_addons')).flatMap(c => c.body);
+const saved = (p) => p.calls.some(c => c.url.includes('/rest/v1/requests'));
+const ALLIDS = { ...IDS, 'ms:wl1-winter':'w1w', 'wp:okna-winter':'w2w', 'pr:wl1-winter':'w3w' };
+Object.assign(IDS, ALLIDS);
+const cases = [
+  ['ms:wl1', 'w1', 'w1w', 25, 40], ['wp:okna', 'w2', 'w2w', 25, 40], ['pr:wl1', 'w3', 'w3w', 33, 50]
+];
+for (const [key, idSeason, idWinter, rs, rw] of cases) {
+  let p = await post(body({ scheduledDate: '2027-01-12', addons: [add(key, 10, rw * 10)], price: 500 + rw * 10 }));
+  T('K1 ' + key + ' winter date → winter catalogue row', p.status === 200 && addonRowsOf(p).some(r => r.addon_service_id === idWinter && r.price === rw * 10 && r.qty === 10) && resolved().includes(key + '-winter') && !resolved().includes(key), { s: p.status, rows: addonRowsOf(p), res: resolved() });
+  p = await post(body({ scheduledDate: '2027-07-07', addons: [add(key, 10, rs * 10)], price: 500 + rs * 10 }));
+  T('K2 ' + key + ' season date → season (public) row', p.status === 200 && addonRowsOf(p).some(r => r.addon_service_id === idSeason && r.price === rs * 10) && !resolved().some(k => k.endsWith('-winter')), { s: p.status, rows: addonRowsOf(p), res: resolved() });
+}
+for (const [d, expWinter] of [['2027-03-31', true], ['2027-04-01', false], ['2027-10-15', false], ['2027-10-16', true]]) {
+  const rate = expWinter ? 40 : 25;
+  const p = await post(body({ scheduledDate: d, addons: [add('ms:wl1', 10, rate * 10)], price: 500 + rate * 10 }));
+  T('K3 boundary ' + d + ' → ' + (expWinter ? 'winter' : 'season') + ' row', p.status === 200 && addonRowsOf(p).some(r => r.addon_service_id === (expWinter ? 'w1w' : 'w1')), { s: p.status, rows: addonRowsOf(p) });
+}
+p = await post(body({ scheduledDate: '2027-07-07', addons: [add('ms:wl1-winter', 10, 250)], price: 750 }));
+T('K4 forged "-winter" key on a season date → folded to the public/season row, price still checked', p.status === 200 && addonRowsOf(p).some(r => r.addon_service_id === 'w1') && !resolved().includes('ms:wl1-winter'), { s: p.status, rows: addonRowsOf(p), res: resolved() });
+p = await post(body({ scheduledDate: '2027-01-12', addons: [add('ms:wl1-winter', 10, 250)], price: 750 }));
+T('K5 forged "-winter" key with a stale (season) price on a winter date → 409, nothing saved', p.status === 409 && !saved(p), { s: p.status });
+p = await post(body({ scheduledDate: '2027-01-12', addons: [add('ms:wl1', 10, 400), add('ms:kl3', 1, 30)], price: 930 }));
+T('K6 non-window add-on keeps its own key; price and total untouched', p.status === 200 && addonRowsOf(p).some(r => r.addon_service_id === 'k3' && r.price === 30) && calls.find(c => c.url.endsWith('/rest/v1/requests')).body.price === 930, { rows: addonRowsOf(p) });
+p = await post(body({ scheduledDate: '2027-01-12', addons: [add('ms:kl3', 1, 30)], price: 530 }));
+T('K7 order without windows: no window catalogue lookups, saved normally', p.status === 200 && saved(p) && !resolved().some(k => /wl1|okna/.test(k)));
+// missing catalogue row → controlled error, no save, no mail
+delete IDS['ms:wl1-winter'];
+p = await post(body({ scheduledDate: '2027-01-12', addons: [add('ms:wl1', 10, 400)], price: 900 }));
+T('K8 winter row missing in the catalogue → 503 catalog_unavailable, nothing saved or sent', p.status === 503 && p.json.code === 'catalog_unavailable' && p.json.success === false && p.calls.every(c => !/rest\/v1\/request|resend|telegram/i.test(c.url)), { s: p.status, urls: p.calls.map(c => c.url) });
+p = await post(body({ scheduledDate: '2027-07-07', addons: [add('ms:wl1', 10, 250)], price: 750 }));
+T('K9 …while the season row still works (public key unchanged)', p.status === 200 && saved(p));
+p = await post(body({ scheduledDate: '2027-01-12', addons: [add('ms:kl3', 1, 30)], price: 530 }));
+T('K10 …and orders without windows are unaffected by the missing winter row', p.status === 200 && saved(p));
+Object.assign(IDS, { 'ms:wl1-winter': 'w1w' });
+delete IDS['ms:wl1'];
+p = await post(body({ scheduledDate: '2027-07-07', addons: [add('ms:wl1', 10, 250)], price: 750 }));
+T('K11 season row missing → 503 too (never a silent drop onto nothing)', p.status === 503 && !saved(p));
+Object.assign(IDS, { 'ms:wl1': 'w1' });
+// catalogue unreadable (RPC error) → behaves as before: not judged, order flow continues
+const keepFetch = globalThis.fetch;
+globalThis.fetch = async (url, o) => String(url).includes('resolve_addon_service_ids') ? { ok: false, status: 500, json: async () => ({}), text: async () => '' } : keepFetch(url, o);
+p = await post(body({ scheduledDate: '2027-01-12', addons: [add('ms:wl1', 10, 400)], price: 900 }));
+T('K12 catalogue RPC unavailable → not blocked (same as before this change), order saved', p.status === 200 && saved(p), { s: p.status });
+globalThis.fetch = keepFetch;
+// Halloween compatibility: a paid window add-on and the gift rows keep working side by side is covered by the combined run
 document.getElementById('out').textContent = (fails ? 'FAILS: ' + fails : 'ALL PASS') + '  (' + out.length + ' checks)\n' + out.join('\n');
 window.__fails = fails;
 </script>

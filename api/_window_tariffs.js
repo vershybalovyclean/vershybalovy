@@ -14,6 +14,19 @@ export const WINDOW_TARIFFS = VC_WIN;
 // Add-on keys of the booking snapshot → kind of window cleaning (site_addon_map: ms:wl1, wp:okna, pr:wl1).
 const ADDON_KIND = { "ms:wl1": "plain", "wp:okna": "plain", "pr:wl1": "renovation" };
 
+// Catalogue keys (site_addon_map.site_key → addon_services). The public keys above keep pointing at the season rows
+// (ms:wl1 / wp:okna → "Мойка окон (доп. услуга, сезон)", pr:wl1 → "…после ремонта"). The winter rows are reached through
+// "<key>-winter", the same naming as the existing ok:balustrady-winter. The SERVER picks the key from the service date; a
+// "-winter" key sent by a browser is folded back to its public key first, so the client never chooses the season.
+const WINTER_KEY = { "ms:wl1": "ms:wl1-winter", "wp:okna": "wp:okna-winter", "pr:wl1": "pr:wl1-winter" };
+const PUBLIC_KEY = Object.fromEntries(Object.entries(WINTER_KEY).map(([k, w]) => [w, k]));
+export function publicWindowKey(key) { return PUBLIC_KEY[key] || key; }
+export function isWindowAddonKey(key) { return Object.prototype.hasOwnProperty.call(ADDON_KIND, publicWindowKey(key)); }
+export function catalogKey(key, iso) {
+  const k = publicWindowKey(key);
+  return WINTER_KEY[k] && seasonFor(iso) === "winter" ? WINTER_KEY[k] : k;
+}
+
 export function seasonFor(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
   if (!m) return null;
@@ -42,10 +55,10 @@ export function checkWindowPricing(body) {
   const addons = Array.isArray(body.addons) ? body.addons : [];
   for (const a of addons) {
     if (!a || typeof a.key !== "string") continue;
-    if (ADDON_KIND[a.key]) {
+    if (ADDON_KIND[publicWindowKey(a.key)]) {
       const qty = num(a.qty), claimed = num(a.price);
       if (!(qty > 0) || !(claimed >= 0)) { lines.push({ kind: "window", key: a.key, qty: a.qty, claimed: a.price, price: NaN, bad: true }); continue; }
-      const price = Math.round(windowRate(ADDON_KIND[a.key], iso) * qty);
+      const price = Math.round(windowRate(ADDON_KIND[publicWindowKey(a.key)], iso) * qty);
       lines.push({ kind: "window", key: a.key, qty, price, claimed });
       baseDelta += price - claimed;
     } else if (/^ok:balustrady-(season|winter)$/.test(a.key)) {
