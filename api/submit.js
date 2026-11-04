@@ -1,4 +1,5 @@
 import { randomUUID, createHash } from "node:crypto";
+import { checkWindowPricing } from "./_window_tariffs.js";
 
 // ── Outbound calls with a hard timeout ───────────────────────────────────────────────
 // A hung downstream service (Supabase, Resend, the Sheets webhook, Telegram relay) must
@@ -933,6 +934,19 @@ export default async function handler(req, res) {
   const invalid = validateSubmission(req.body);
   if (invalid) {
     return res.status(400).json({ error: invalid.error, code: invalid.code });
+  }
+  // Window-cleaning price check (api/_window_tariffs.js): the season is the SERVICE date. A window line that does not match
+  // the tariff for that date is never saved silently and never replaced behind the client's back: nothing is created, the
+  // recalculated lines go back (409 price_changed) and the browser asks the client to confirm the new price, then resends.
+  if (scheduledDate) {
+    const winCheck = checkWindowPricing(req.body);
+    if (winCheck && !winCheck.ok) {
+      return res.status(409).json({
+        success: false, code: "price_changed", error: "Window cleaning price differs from the tariff for the chosen date",
+        season: winCheck.season, baseDelta: winCheck.baseDelta,
+        lines: winCheck.lines.map((l) => ({ kind: l.kind, key: l.key, oldKey: l.oldKey || null, standalone: !!l.standalone, qty: l.qty, price: l.price, claimed: l.claimed }))
+      });
+    }
   }
   // From here on name/phone/e-mail are single-line, control-character-free strings
   // (they end up in an e-mail subject/body, a Telegram message and a Google Sheet).

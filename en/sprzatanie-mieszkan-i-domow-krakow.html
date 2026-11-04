@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <script src="/assets/js/cookie-consent.js?v=20261029i"></script>
+<script src="/assets/js/window-tariffs.js?v=1"></script>
 <meta charset="UTF-8"><script>try{localStorage.setItem('vc_lang','en')}catch(e){}</script>
 <script>try{localStorage.setItem('vc_lang','pl')}catch(e){}</script>
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
@@ -1122,7 +1123,7 @@ photo_cta_title:"Nie wiesz, którą usługę wybrać?",
   mob_total:"Łącznie:", mob_cta:"Złóż zamówienie →",
   /* WINDOWS */
   win_season:"sezonowe", win_winter:"zimowe",
-  win_info:"☀️ Sezon (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Zima (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Min: <strong>199 zł</strong> &nbsp;|&nbsp; Cena za m² okna z ramą",
+  win_info:"☀️ Sezon (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Zima (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Cena za m² okna z ramą",
   /* FOOTER */
   ft_copy:"© 2026 Vershy Property Care · Kraków i Małopolska · Ceny końcowe",
   hngMenuTitle:"Menu", hng1:"O nas", hng2:"Opinie", hng3:"Kontakt", hng4:"Mycie okien", hng5:"Sprzątanie mieszkań i domów",
@@ -1210,7 +1211,7 @@ photo_cta_title:"Не знаєте, яку послугу обрати?",
   sb_wa:"💬 Написати у WhatsApp",
   mob_total:"Разом від:", mob_cta:"Оформити замовлення →",
   win_season:"сезонне", win_winter:"зимове",
-  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Мін: <strong>199 zł</strong> &nbsp;|&nbsp; Ціна за м² вікна з рамою",
+  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Ціна за м² вікна з рамою",
   ft_copy:"© 2026 Vershy Property Care · Краків і Малопольща · Кінцеві ціни",
   hngMenuTitle:"Меню", hng1:"Про нас", hng2:"Відгуки", hng3:"Контакти", hng4:"Миття вікон", hng5:"Прибирання квартир і будинків",
   hng6:"Після ремонту", hng7:"Після виїзду", hng8:"Складні випадки", hng9:"Наші роботи", hng10:"Часті питання",
@@ -1297,7 +1298,7 @@ photo_cta_title:"Не знаете, какую услугу выбрать?",
   sb_wa:"💬 Написать в WhatsApp",
   mob_total:"Итого от:", mob_cta:"Оформить заказ →",
   win_season:"сезонное", win_winter:"зимнее",
-  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Мин: <strong>199 zł</strong> &nbsp;|&nbsp; Цена за м² окна с рамой",
+  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Цена за м² окна с рамой",
   ft_copy:"© 2026 Vershy Property Care · Краков и Малопольша · Итоговые цены",
   hngMenuTitle:"Меню", hng1:"О нас", hng2:"Отзывы", hng3:"Контакты", hng4:"Мытьё окон", hng5:"Уборка квартир и домов",
   hng6:"После ремонта", hng7:"После выезда", hng8:"Сложные случаи", hng9:"Наши работы", hng10:"Частые вопросы",
@@ -1384,7 +1385,7 @@ photo_cta_title:"Not sure which service to pick?",
   sb_wa:"💬 Write on WhatsApp",
   mob_total:"Total from:", mob_cta:"Place order →",
   win_season:"seasonal", win_winter:"winter",
-  win_info:"☀️ Season (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Winter (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Min: <strong>199 zł</strong> &nbsp;|&nbsp; Price per m² incl. frame",
+  win_info:"☀️ Season (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Winter (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Price per m² incl. frame",
   ft_copy:"© 2026 Vershy Property Care · Kraków & Małopolska · Final prices",
   hngMenuTitle:"Menu", hng1:"About us", hng2:"Reviews", hng3:"Contact", hng4:"Window cleaning", hng5:"Apartment & house cleaning",
   hng6:"Post-renovation", hng7:"Move-out", hng8:"Difficult cases", hng9:"Our work", hng10:"FAQ",
@@ -3103,7 +3104,7 @@ document.addEventListener('DOMContentLoaded', function(){
           <li onclick="toggleAddWindow(this,'wl1-mieszkan')" data-name-id="wl1" data-price="25"><div class="add-check">✓</div><span class="ai-n">Window cleaning</span><span class="ai-p" data-pl="25 zł/m²">25 zł/m²</span><div class="win-picker-wrap" id="wp-wl1-mieszkan" onclick="event.stopPropagation()"><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="9" y="9" width="14" height="14" rx="1.5" fill="#eff6ff" stroke="#2563eb" stroke-width="2"></rect><rect x="20.5" y="14" width="1.6" height="6" rx="0.8" fill="#64748b"></rect></svg></span><span class="win-text"><span class="win-name" data-wt="0">Small window (1 sash)</span><small class="win-size">0,5 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','small',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-small">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','small',1)">+</button></div></div><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="9" y="4" width="13" height="24" rx="1.5" fill="#eff6ff" stroke="#2563eb" stroke-width="2"></rect><rect x="19.5" y="13" width="1.6" height="6" rx="0.8" fill="#64748b"></rect></svg></span><span class="win-text"><span class="win-name" data-wt="1">Standard window</span><small class="win-size">1,0 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','std',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-std">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','std',1)">+</button></div></div><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="3" y="8" width="26" height="16" rx="1.5" fill="#eff6ff" stroke="#2563eb" stroke-width="2"></rect><line x1="16" y1="8" x2="16" y2="24" stroke="#2563eb" stroke-width="1.4"></line></svg></span><span class="win-text"><span class="win-name" data-wt="2">Double window (2 sash)</span><small class="win-size">1,8 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','double',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-double">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','double',1)">+</button></div></div><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="2" y="9" width="28" height="14" rx="1.5" fill="#eff6ff" stroke="#2563eb" stroke-width="2"></rect><line x1="11.3" y1="9" x2="11.3" y2="23" stroke="#2563eb" stroke-width="1.4"></line><line x1="20.7" y1="9" x2="20.7" y2="23" stroke="#2563eb" stroke-width="1.4"></line></svg></span><span class="win-text"><span class="win-name" data-wt="3">Large window (3 sash)</span><small class="win-size">2,7 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','triple',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-triple">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','triple',1)">+</button></div></div><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="9" y="2" width="13" height="27" rx="1.5" fill="#eff6ff" stroke="#2563eb" stroke-width="2"></rect><line x1="9" y1="29.5" x2="22" y2="29.5" stroke="#94a3b8" stroke-width="1.6"></line><rect x="10.3" y="14" width="1.6" height="6" rx="0.8" fill="#64748b"></rect></svg></span><span class="win-text"><span class="win-name" data-wt="4">Balcony door</span><small class="win-size">1,9 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','balcony',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-balcony">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','balcony',1)">+</button></div></div><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="6" y="1" width="16" height="28" rx="1.5" fill="#eff6ff" stroke="#2563eb" stroke-width="2"></rect><line x1="14" y1="1" x2="14" y2="29" stroke="#2563eb" stroke-width="1.2"></line><line x1="6" y1="30.5" x2="22" y2="30.5" stroke="#94a3b8" stroke-width="1.6"></line></svg></span><span class="win-text"><span class="win-name" data-wt="5">Floor-to-ceiling window</span><small class="win-size">2,4 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','floor',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-floor">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','floor',1)">+</button></div></div><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="1" y="10" width="30" height="12" rx="1.5" fill="#eff6ff" stroke="#2563eb" stroke-width="2"></rect><line x1="8.5" y1="10" x2="8.5" y2="22" stroke="#2563eb" stroke-width="1.2"></line><line x1="16" y1="10" x2="16" y2="22" stroke="#2563eb" stroke-width="1.2"></line><line x1="23.5" y1="10" x2="23.5" y2="22" stroke="#2563eb" stroke-width="1.2"></line></svg></span><span class="win-text"><span class="win-name" data-wt="6">Patio / panoramic window</span><small class="win-size">4,5 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','patio',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-patio">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','patio',1)">+</button></div></div><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><polygon points="9,3 25,7 23,25 7,21" fill="#eff6ff" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"></polygon><line x1="8" y1="12" x2="24" y2="16" stroke="#64748b" stroke-width="1.6"></line></svg></span><span class="win-text"><span class="win-name" data-wt="7">Roof window (Velux)</span><small class="win-size">0,9 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','roof',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-roof">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','roof',1)">+</button></div></div><div class="win-row"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="1" y="6" width="30" height="20" rx="1" fill="#eff6ff" stroke="#2563eb" stroke-width="2.2"></rect><line x1="16" y1="6" x2="16" y2="26" stroke="#2563eb" stroke-width="1.4"></line><line x1="1" y1="16" x2="31" y2="16" stroke="#2563eb" stroke-width="1.4"></line></svg></span><span class="win-text"><span class="win-name" data-wt="8">Shop window (1 section)</span><small class="win-size">3,0 m²/pc</small></span></div><div class="win-stepper"><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','shop',-1)">−</button><span class="win-qty" id="wpq-wl1-mieszkan-shop">0</span><button type="button" class="win-btn" onclick="event.stopPropagation();wpStep('wl1-mieszkan','shop',1)">+</button></div></div><div class="win-row win-row-custom"><div class="win-info"><span class="win-ico"><svg viewBox="0 0 32 32" width="26" height="26"><rect x="3" y="12" width="26" height="8" rx="1.5" fill="#eff6ff" stroke="#2563eb" stroke-width="2"></rect><line x1="8" y1="12" x2="8" y2="16" stroke="#2563eb" stroke-width="1.4"></line><line x1="13" y1="12" x2="13" y2="16" stroke="#2563eb" stroke-width="1.4"></line><line x1="18" y1="12" x2="18" y2="16" stroke="#2563eb" stroke-width="1.4"></line><line x1="23" y1="12" x2="23" y2="16" stroke="#2563eb" stroke-width="1.4"></line></svg></span><span class="win-text"><span class="win-custom-name">Exact area / non-standard</span><small class="win-custom-hint-text">enter exact m²</small></span></div><div class="win-custom-inp"><input type="number" min="0" step="0.1" class="win-custom-field" id="wpc-wl1-mieszkan" placeholder="0" onclick="event.stopPropagation()" oninput="wpCustomInput('wl1-mieszkan')"><span class="win-custom-unit">m²</span></div></div><p class="win-disclaimer">❗ Window sizes are approximate, based on standard manufacturer dimensions. The exact price will be confirmed after on-site measurement — before the cleaning starts or during a preliminary visit.</p></div></li>
           <li onclick="toggleAdd(this)" data-name-id="wl2" data-price="20"><div class="add-check">✓</div><span class="ai-n">Balustrades</span><span class="ai-p" data-pl="20 zł">20 zł</span><div class="qty-wrap"><button class="qty-btn" onclick="qtyChange(event,this,-1)">−</button><span class="qty-val">1</span><button class="qty-btn" onclick="qtyChange(event,this,1)">+</button><span class="qty-unit" data-pl="szt">pc</span></div></li>
         </ul>
-        <p id="win-info-txt" style="font-size:11px;color:var(--gray);margin-top:8px">☀️ Season (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Winter (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Min: <strong>199 zł</strong> &nbsp;|&nbsp; Price per m² incl. frame</p>
+        <p id="win-info-txt" style="font-size:11px;color:var(--gray);margin-top:8px">☀️ Season (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Winter (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Price per m² incl. frame</p>
       </div>
       <!-- POKOJE -->
       <div class="add-col">
@@ -3940,9 +3941,10 @@ function toggleAddWindow(li, instanceKey) {
 }
 function initWindowPicker() {
   wpBuild('wl1-mieszkan', 'wp-wl1-mieszkan');
+  VCWindowTariffs.syncAddonRow(document.querySelector('li[data-name-id="wl1"]'), 'plain');
   wpOnChange('wl1-mieszkan', function(m2){
     var li = document.querySelector('li[data-name-id="wl1"]');
-    if (li) winAddonSync(li, 'wl1', 25, m2);
+    if (li) winAddonSync(li, 'wl1', VCWindowTariffs.rate('plain'), m2);
   });
 }
 
@@ -4284,6 +4286,7 @@ function submitOrder() {
     areaRange: areaRangeTxt,
     area: areaTxt,
     serviceLines: structuredServiceLines,
+    windows: (function(){ var w = addons.filter(function(a){ return a.nameId === 'wl1' && a.price > 0; })[0]; return w ? { kind: 'plain', m2: w.qty, standalone: false, total: w.price, key: 'ms:wl1' } : null; })(),
     price: totalAmt
   };
   bk_renderOrder();
@@ -4325,7 +4328,7 @@ function addonsToForm() {
 <script src="/assets/js/nav.js?v=20261029i"></script>
 <script src="/assets/js/site-texts-sync.js?v=20261029a" defer=""></script>
 <script src="/assets/js/analytics.js?v=1"></script>
-<script src="/assets/js/booking.js?v=20261029i"></script>
+<script src="/assets/js/booking.js?v=20261104w"></script>
 <script src="/assets/js/quote-prefill.js?v=1"></script>
 <script src="/assets/js/mobile-order.js?v=1"></script>
 <script src="/assets/js/window-picker.js?v=2"></script>

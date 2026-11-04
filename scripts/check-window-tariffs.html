@@ -1,0 +1,98 @@
+<!doctype html><meta charset="utf-8"><title>window tariffs tests</title><pre id="out">running…</pre>
+<script>window.addEventListener("error",function(e){document.getElementById("out").textContent="ERR "+e.message});</script>
+<script type="module">
+const realFetch = globalThis.fetch.bind(globalThis);
+const twSrc = await (await realFetch('/api/_window_tariffs.js')).text();
+const twUrl = URL.createObjectURL(new Blob([twSrc], {type:'text/javascript'}));
+const TW = await import(twUrl);
+let subSrc = await (await realFetch('/api/submit.js')).text();
+subSrc = subSrc.replace('import { randomUUID, createHash } from "node:crypto";',
+  'const randomUUID=()=>crypto.randomUUID(); const createHash=()=>{let s="";return {update(x){s+=x;return this},digest(){const u=new Uint8Array(32);for(let i=0;i<s.length;i++)u[i%32]=(u[i%32]*31+s.charCodeAt(i))&255;return u}}};')
+  .replace('from "./_window_tariffs.js"', 'from "' + twUrl + '"');
+globalThis.Buffer = { from: (u) => { const b = Uint8Array.from(u); b.toString = () => [...b].map(x => x.toString(16).padStart(2, '0')).join(''); return b; } };
+const SUB = await import(URL.createObjectURL(new Blob([subSrc], {type:'text/javascript'})));
+const handler = SUB.default;
+let calls = [];
+globalThis.process = { env: { supabase_url: 'https://sb.test', Supabase_anon_key: 'k', Resend_api_key: 'r', to_email: 'team@test.invalid' } };
+const IDS = { 'ms:wl1':'w1','wp:okna':'w2','pr:wl1':'w3','ms:kl3':'k3','ok:balustrady-winter':'b1','ok:balustrady-season':'b2' };
+globalThis.fetch = async (url, o) => {
+  o = o || {}; const body = o.body ? JSON.parse(o.body) : null; calls.push({ url: String(url), method: o.method || 'GET', body });
+  const j = (v) => ({ ok: true, status: 200, json: async () => v, text: async () => JSON.stringify(v) });
+  const u = String(url);
+  if (u.includes('resolve_addon_service_ids')) return j(body.p_keys.filter(k => IDS[k]).map(k => ({ site_key: k, addon_service_id: IDS[k] })));
+  if (u.includes('/rest/v1/requests')) return { ok: true, status: 201, json: async () => ({}), text: async () => '' };
+  if (u.includes('/services?')) return j([{ id: 'svc' }]);
+  return { ok: true, status: 200, json: async () => ({}), text: async () => '' };
+};
+const out = []; let fails = 0;
+const T = (n, c, x) => { if (!c) fails++; out.push((c ? 'PASS ' : 'FAIL ') + n + (!c && x !== undefined ? ' → ' + JSON.stringify(x) : '')); };
+const C = TW.checkWindowPricing;
+const add = (key, qty, price) => ({ key, qty, price });
+
+// ---- data parity with the client file ----
+const cl = await (await realFetch('/assets/js/window-tariffs.js')).text();
+const blk = (s) => s.split('// ---- DATA')[1].split('// ---- END DATA ----')[0].replace(/^[^\n]*\n/, '').replace(/^\s*(var|const)\s+/, '').replace(/\s+/g, '');
+T('P1 client and server data blocks are identical', blk(cl) === blk(twSrc), [blk(cl), blk(twSrc)]);
+
+// ---- season boundaries ----
+for (const [d, s] of [['2026-10-15','season'],['2026-10-16','winter'],['2027-03-31','winter'],['2027-04-01','season'],['2026-07-01','season'],['2026-12-31','winter'],['2027-01-01','winter']]) T('S ' + d + ' → ' + s, TW.seasonFor(d) === s);
+T('S bad date → null', TW.seasonFor('x') === null && TW.seasonFor('') === null && TW.seasonFor(undefined) === null);
+T('R rates', TW.windowRate('plain','2026-07-01')===25 && TW.windowRate('plain','2026-11-05')===40 && TW.windowRate('renovation','2026-07-01')===33 && TW.windowRate('renovation','2026-11-05')===50);
+
+// ---- add-on rows ----
+let r = C({ scheduledDate: '2026-11-05', addons: [add('ms:wl1', 10, 250)] });
+T('A1 winter date, stale 25 → mismatch, expected 400, delta +150', r && !r.ok && r.lines[0].price === 400 && r.baseDelta === 150, r);
+r = C({ scheduledDate: '2026-11-05', addons: [add('ms:wl1', 10, 400)] }); T('A2 winter date, 40 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-10-15', addons: [add('ms:wl1', 10, 250)] }); T('A3 15.10 (last season day) 25 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-10-15', addons: [add('ms:wl1', 10, 400)] }); T('A4 15.10 with winter price → mismatch -150', r && !r.ok && r.baseDelta === -150);
+r = C({ scheduledDate: '2026-10-16', addons: [add('ms:wl1', 10, 250)] }); T('A5 16.10 25 → mismatch', r && !r.ok);
+r = C({ scheduledDate: '2027-03-31', addons: [add('wp:okna', 16.4, 656)] }); T('A6 31.03 move-out windows 16.4 m2 → 656 ok', r && r.ok);
+r = C({ scheduledDate: '2027-04-01', addons: [add('wp:okna', 16.4, 656)] }); T('A7 01.04 same price → mismatch (410)', r && !r.ok && r.lines[0].price === 410);
+r = C({ scheduledDate: '2026-11-05', addons: [add('pr:wl1', 10, 330)] }); T('A8 after-renovation winter stale 33 → expected 500', r && !r.ok && r.lines[0].price === 500);
+r = C({ scheduledDate: '2026-11-05', addons: [add('pr:wl1', 10, 500)] }); T('A9 after-renovation winter 50 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-07-05', addons: [add('pr:wl1', 10, 330)] }); T('A10 after-renovation season 33 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-11-05', addons: [add('ms:wl1', 10, 0)] }); T('A11 forged price 0 → mismatch', r && !r.ok);
+r = C({ scheduledDate: '2026-11-05', addons: [{ key: 'ms:wl1', price: 400 }] }); T('A12 missing qty → not ok', r && !r.ok);
+r = C({ scheduledDate: '2026-11-05', addons: [add('ms:kl3', 1, 30)] }); T('A13 no window line → null (not touched)', r === null);
+r = C({ scheduledDate: '2026-11-05', addons: [] }); T('A14 no addons → null', r === null);
+r = C({ scheduledDate: '2026-11-05', addons: [add('ms:wl1', 10, 400), add('ms:kl3', 1, 30)] }); T('A15 window ok + other add-on ignored', r && r.ok && r.lines.length === 1);
+r = C({ addons: [add('ms:wl1', 10, 250)] }); T('A16 no date → null (contact form)', r === null);
+// ---- stand-alone ----
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 10, windows: { total: 400 }, addons: [] }); T('B1 stand-alone winter 10 m2 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Sezon', areaM2: 10, windows: { total: 250 }, addons: [] }); T('B2 stand-alone label season but winter date → mismatch → 400', r && !r.ok && r.lines[0].price === 400 && r.baseDelta === 150);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 3, windows: { total: 199 }, addons: [] }); T('B3 stand-alone min 199 applies (3 m2 → 199)', r && r.ok);
+r = C({ scheduledDate: '2026-07-05', service: 'Mycie okien — Sezon', areaM2: 3, windows: { total: 199 }, addons: [] }); T('B4 stand-alone season min 199 (75 → 199)', r && r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien po remoncie — Zima', areaM2: 10, windows: { total: 500 }, addons: [] }); T('B5 stand-alone renovation winter 50 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-07-05', service: 'Mycie okien po remoncie — Sezon', areaM2: 10, windows: { total: 330 }, addons: [] }); T('B6 stand-alone renovation season 33 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 10, windows: { total: 250 }, addons: [] }); T('B7 stand-alone stale 25 → mismatch', r && !r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 10, price: 400, addons: [] }); T('B8 legacy (no windows) final 400 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 10, price: 800, addons: [] }); T('B9 legacy night x2 → ok', r && r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 10, price: 250, addons: [] }); T('B10 legacy stale 250 → mismatch', r && !r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 10, price: 360, promoDiscountAmount: 40, addons: [] }); T('B11 legacy with promo added back → ok', r && r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Sprzątanie generalne', areaM2: 50, addons: [] }); T('B12 other services → null', r === null);
+// balustrades (price PER PIECE)
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 10, windows: { total: 400 }, addons: [add('ok:balustrady-winter', 2, 50)] }); T('C1 balustrades winter 2×50 ok', r && r.ok);
+r = C({ scheduledDate: '2026-11-05', service: 'Mycie okien — Zima', areaM2: 10, windows: { total: 400 }, addons: [add('ok:balustrady-season', 2, 20)] }); T('C2 balustrades season key in winter → mismatch, key winter, +60', r && !r.ok && r.baseDelta === 60 && r.lines.find(l => l.kind === 'balustrade').key === 'ok:balustrady-winter', r);
+// ---- full handler (stubbed network) ----
+const body = (o) => Object.assign({ name: 'Test Test', phone: '600 100 200', service: 'Sprzątanie generalne', comment: 'REZERWACJA\nData: x\nAdres: Testowa 1, 30-001 Kraków\n', clientNote: '', scheduledDate: '2026-11-05', scheduledTime: '10:00', address: 'Testowa 1, 30-001 Kraków', price: 900, addons: [], paymentMethod: 'cash', postalCode: '30-001', requestId: crypto.randomUUID(), serviceLines: [{ slug: 'sprzatanie-mieszkan-generalne', price: 500, qty: 1, m2: 60 }] }, o);
+async function post(b) { calls = []; let status = 0, json = null; const res = { status(s) { status = s; return this; }, json(v) { json = v; return this; }, setHeader() {} }; await handler({ method: 'POST', body: b }, res); return { status, json, saved: calls.filter(c => c.url.includes('/rest/v1/requests') || c.url.includes('request_addons')).length, mail: calls.filter(c => c.url.includes('resend')).length, tg: calls.filter(c => /telegram|tg|notify/i.test(c.url)).length, calls }; }
+let p = await post(body({ addons: [add('ms:wl1', 10, 250)], price: 900 }));
+T('H1 stale winter window price → 409 price_changed, nothing saved, no e-mail', p.status === 409 && p.json.code === 'price_changed' && p.json.success === false && p.calls.every(c => !/rest\/v1\/request|resend/.test(c.url)), { s: p.status, j: p.json, urls: p.calls.map(c => c.url) });
+T('H2 409 carries recalculated lines (400) and delta (+150)', p.json.lines[0].price === 400 && p.json.baseDelta === 150 && p.json.lines[0].claimed === 250);
+p = await post(body({ addons: [add('ms:wl1', 10, 400)], price: 1050 }));
+T('H3 corrected order accepted: success true, saved with price 400', p.status === 200 && p.json.success === true && p.calls.some(c => c.url.includes('/rest/v1/requests')) && p.calls.some(c => c.url.includes('request_addons') && JSON.stringify(c.body).includes('400')), { s: p.status, j: p.json });
+p = await post(body({ addons: [add('ms:kl3', 1, 30)], price: 530 }));
+T('H4 ordinary order without windows unchanged (200, saved)', p.status === 200 && p.json.success === true);
+p = await post(body({ scheduledDate: undefined, scheduledTime: undefined, address: undefined, comment: 'Prosze o wycene okien', service: 'Kontakt', price: undefined, addons: [add('ms:wl1', 10, 250)], requestId: undefined, serviceLines: undefined, paymentMethod: undefined, postalCode: undefined }));
+T('H5 contact form (no date) is not price-checked', p.status !== 409, p.status);
+p = await post(body({ scheduledDate: '2027-07-07', addons: [add('ms:wl1', 10, 250)], price: 750 }));
+T('H6 season date with 25 → accepted', p.status === 200 && p.json.success === true);
+p = await post(body({ scheduledDate: '2026-11-05', addons: [add('ms:wl1', 10, 400)], price: 1050, regularPlan: null }));
+T('H7 order date in winter but "placed in summer" is irrelevant (service date decides) → ok', p.status === 200);
+p = await post(body({ service: 'Mycie okien — Zima', areaM2: 10, windows: { kind: 'plain', m2: 10, standalone: true, total: 250 }, price: 250, serviceLines: undefined, addons: [] }));
+T('H8 stand-alone stale 250 in winter → 409 with 400', p.status === 409 && p.json.lines[0].price === 400 && p.json.lines[0].standalone === true, p.json);
+p = await post(body({ service: 'Mycie okien — Zima', areaM2: 10, windows: { kind: 'plain', m2: 10, standalone: true, total: 400 }, price: 400, serviceLines: undefined, addons: [] }));
+T('H9 stand-alone 400 accepted', p.status === 200 && p.json.success === true, p.json);
+document.getElementById('out').textContent = (fails ? 'FAILS: ' + fails : 'ALL PASS') + '  (' + out.length + ' checks)\n' + out.join('\n');
+window.__fails = fails;
+</script>

@@ -2,6 +2,7 @@
 <html lang="pl">
 <head>
 <script src="assets/js/cookie-consent.js?v=20261029i"></script>
+<script src="assets/js/window-tariffs.js?v=1"></script>
 <meta charset="UTF-8">
 <script>try{localStorage.setItem('vc_lang','pl')}catch(e){}</script>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
@@ -1330,18 +1331,19 @@ function winAddonSync(li, id, basePrice, m2) {
   updateSidebar();
 }
 function toggleAddWindow(li, instanceKey) {
-  toggleAddon(li, 'okna', 25, 'm²', 0);
+  toggleAddon(li, 'okna', VCWindowTariffs.rate('plain'), 'm²', 0);
   if (li.classList.contains('selected')) {
-    winAddonSync(li, 'okna', 25, wpTotalM2(instanceKey));
+    winAddonSync(li, 'okna', VCWindowTariffs.rate('plain'), wpTotalM2(instanceKey));
   } else {
     wpClear(instanceKey);
   }
 }
 function initWindowPicker() {
   wpBuild('okna-wyprowadzce', 'wp-okna-wyprowadzce');
+  try { var _wl = document.getElementById('extra1'); VCWindowTariffs.syncAddonRow(_wl && _wl.closest('li'), 'plain'); } catch(e) {}
   wpOnChange('okna-wyprowadzce', function(m2){
     var li = document.getElementById('extra1') ? document.getElementById('extra1').closest('li') : null;
-    if (li) winAddonSync(li, 'okna', 25, m2);
+    if (li) winAddonSync(li, 'okna', VCWindowTariffs.rate('plain'), m2);
   });
 }
 function toggleSbForm(){
@@ -1410,6 +1412,7 @@ function submitOrder(){
       slug: (SEL.cat === 'bezmeb') ? 'wyprowadzka-bez-mebli' : 'sprzatanie-po-wyprowadzce',
       m2: SEL.m2 || 0, price: SEL.price, qty: 1
     }] : null,
+    windows: (function(){ var w = selectedAddons.filter(function(a){ return a.id === 'okna' && a.price > 0; })[0]; return w ? { kind: 'plain', m2: w.qty, standalone: false, total: w.price, key: 'wp:okna' } : null; })(),
     price: total
   };
   bk_renderOrder();
@@ -1669,7 +1672,7 @@ window.addEventListener('load', function(){
 <script src="assets/js/nav.js?v=20261029i"></script>
 <script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
-<script src="assets/js/booking.js?v=20261029i"></script>
+<script src="assets/js/booking.js?v=20261104w"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>

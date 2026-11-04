@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="uk"><head>
 <script src="/assets/js/cookie-consent.js?v=20261029i"></script>
+<script src="/assets/js/window-tariffs.js?v=1"></script>
 <script>window.VC_HAS_PIXEL = true;</script>
 <meta charset="UTF-8"><script>try{localStorage.setItem('vc_lang','uk')}catch(e){}</script>
 <script>try{localStorage.setItem('vc_lang','pl')}catch(e){}</script>
@@ -1917,7 +1918,7 @@ var CALC_RATES = {
   'szczegółowe':   [{max:45,rate:13.71,min:275},{max:60,rate:13.45,min:617},{max:75,rate:13.99,min:807},{max:90,rate:13.19,min:1049},{max:999,rate:13.50,min:1187}],
   'po remoncie':   [{max:45,rate:21.00,min:949},{max:60,rate:18.81,min:1129},{max:75,rate:17.45,min:1309},{max:90,rate:16.54,min:1489},{max:999,rate:16.00,min:1440}],
   'po wyjeździe':  [{max:45,rate:17.49,min:787},{max:60,rate:14.35,min:861},{max:75,rate:13.71,min:1028},{max:90,rate:13.00,min:1170},{max:999,rate:12.00,min:1080}],
-  'mycie okien':   [{max:999,rate:25,min:199}]
+  'mycie okien':   [{max:999,get rate(){ return window.VCWindowTariffs ? VCWindowTariffs.rate('plain') : 25; },min:199}]
 };
 
 var EXTRAS_PRICES = {okna:0,piekarnik:70,lodówka:60,balkon:45,szafy:50};

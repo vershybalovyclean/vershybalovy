@@ -100,6 +100,10 @@
       errTooLong:'Jedno z pól jest za długie. Skróć tekst i spróbuj ponownie.',
       errNotAccepted:'Zamówienie NIE zostało przyjęte.',
       errWa:'Wyślij zamówienie samodzielnie przez WhatsApp',
+      winRow:'Mycie okien ({season}): {m2} m² × {rate} zł = {total} zł',
+      priceChanged:'Cena mycia okien zależy od terminu wykonania usługi. Dla wybranego terminu została przeliczona (zmiana: {delta} zł). Zamówienie NIE zostało jeszcze przyjęte — sprawdź podsumowanie powyżej i potwierdź nową cenę.',
+      priceConfirm:'Potwierdzam nową cenę i wysyłam zamówienie',
+      priceStale:'Cennik na tej stronie jest nieaktualny. Zamówienie NIE zostało przyjęte. Odśwież stronę (Ctrl+F5) i złóż zamówienie ponownie albo skontaktuj się z nami.',
       savedAddrLabel:'Adres',manualAddrOpt:'✏️ Inny adres (wpisz ręcznie)',
       promoEmpty:'⚠️ Wpisz kod promocyjny',promoInvalid:'❌ Nieprawidłowy lub wygasły kod',
       promoMin:'❌ Kod wymaga zamówienia od {min} zł',promoApplied:'✅ Kod zastosowany: ',
@@ -150,6 +154,10 @@
       errTooLong:'Одне з полів задовге. Скоротіть текст і спробуйте ще раз.',
       errNotAccepted:'Замовлення НЕ прийнято.',
       errWa:'Надішліть замовлення самостійно у WhatsApp',
+      winRow:'Миття вікон ({season}): {m2} m² × {rate} zł = {total} zł',
+      priceChanged:'Ціна миття вікон залежить від дати виконання послуги. Для обраної дати її перераховано (зміна: {delta} zł). Замовлення ЩЕ НЕ прийнято — перевірте підсумок вище та підтвердьте нову ціну.',
+      priceConfirm:'Підтверджую нову ціну та надсилаю замовлення',
+      priceStale:'Ціни на цій сторінці застаріли. Замовлення НЕ прийнято. Оновіть сторінку (Ctrl+F5) і оформіть замовлення ще раз або зв’яжіться з нами.',
       savedAddrLabel:'Адреса',manualAddrOpt:'✏️ Інша адреса (ввести вручну)',
       promoEmpty:'⚠️ Введіть промокод',promoInvalid:'❌ Недійсний або прострочений код',
       promoMin:'❌ Код діє для замовлення від {min} zł',promoApplied:'✅ Код застосовано: ',
@@ -200,6 +208,10 @@
       errTooLong:'Одно из полей слишком длинное. Сократите текст и попробуйте снова.',
       errNotAccepted:'Заказ НЕ принят.',
       errWa:'Отправьте заказ самостоятельно в WhatsApp',
+      winRow:'Мытьё окон ({season}): {m2} m² × {rate} zł = {total} zł',
+      priceChanged:'Цена мытья окон зависит от даты выполнения услуги. Для выбранной даты она пересчитана (изменение: {delta} zł). Заказ ЕЩЁ НЕ принят — проверьте итог выше и подтвердите новую цену.',
+      priceConfirm:'Подтверждаю новую цену и отправляю заказ',
+      priceStale:'Цены на этой странице устарели. Заказ НЕ принят. Обновите страницу (Ctrl+F5) и оформите заказ снова или свяжитесь с нами.',
       savedAddrLabel:'Адрес',manualAddrOpt:'✏️ Другой адрес (ввести вручную)',
       promoEmpty:'⚠️ Введите промокод',promoInvalid:'❌ Недействительный или просроченный код',
       promoMin:'❌ Код действует для заказа от {min} zł',promoApplied:'✅ Код применён: ',
@@ -250,6 +262,10 @@
       errTooLong:'One of the fields is too long. Shorten the text and try again.',
       errNotAccepted:'Your order has NOT been accepted.',
       errWa:'Send the order yourself via WhatsApp',
+      winRow:'Window cleaning ({season}): {m2} m² × {rate} zł = {total} zł',
+      priceChanged:'The window cleaning price depends on the service date. It has been recalculated for the chosen date (change: {delta} zł). Your order has NOT been placed yet — check the summary above and confirm the new price.',
+      priceConfirm:'I confirm the new price and place the order',
+      priceStale:'The prices on this page are out of date. Your order has NOT been accepted. Please refresh the page (Ctrl+F5) and place the order again, or contact us.',
       savedAddrLabel:'Address',manualAddrOpt:'✏️ Another address (enter manually)',
       promoEmpty:'⚠️ Enter a promo code',promoInvalid:'❌ Invalid or expired code',
       promoMin:'❌ This code requires an order of at least {min} zł',promoApplied:'✅ Code applied: ',
@@ -422,9 +438,16 @@
     var d = window.bk_orderData;
     if(!d) return;
     bk_ensureSummary();
+    // Window cleaning: the rate follows the SERVICE date (assets/js/window-tariffs.js) — re-priced whenever the date changes.
+    var winIso = bk_selectedDate ? bk_isoDate(bk_selectedDate) : null;
+    if(d.windows && window.VCWindowTariffs) window.VCWindowTariffs.repriceOrder(d, winIso);
     var rows = [];
     if(d.service) { d.service.split('|').forEach(function(l){ rows.push([bk_t('ordService'), l.trim()]); }); }
     if(d.extras) rows.push([bk_t('ordExtras'), d.extras]);
+    if(d.windows && window.VCWindowTariffs){
+      var wt = window.VCWindowTariffs, wl = typeof lang!=='undefined'?lang:'pl';
+      rows.push(['🪟', bk_t('winRow').replace('{season}', wt.word(winIso, wl)).replace('{m2}', d.windows.m2).replace('{rate}', wt.rate(d.windows.kind, winIso)).replace('{total}', d.windows.total)]);
+    }
     if(d.freq) rows.push([bk_t('ordFreq'), d.freq]);
     if(typeof window.bk_halloweenGiftLine === 'function'){
       var hwLine = window.bk_halloweenGiftLine(window.bk_hwEligibleNow());
@@ -489,7 +512,9 @@
     bk_updateBonus();
   }
 
+  var bk_priceAck = true; // false while the client still has to confirm a price the server recalculated (409 price_changed)
   window.bk_pickDay = function(y,m,d){
+    bk_priceAck = true; var pn = document.getElementById('bk-price-note'); if(pn) pn.remove();
     bk_selectedDate = new Date(y,m,d);
     bk_selectedSlot = null;
     bk_renderCal();
@@ -919,6 +944,32 @@
     var h = Array.prototype.map.call(b, function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
     return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
   }
+  // Price-change confirmation (window cleaning, see the 409 handling in bk_submit): a note with the new price and an
+  // explicit confirm button, shown above the error line. Nothing the client typed is cleared.
+  var bk_lastPriceDelta = 0;
+  function bk_showPriceNote(d, delta){
+    if(typeof delta === 'number') bk_lastPriceDelta = delta;
+    var anchor = document.getElementById('bk-formError');
+    if(!anchor) return;
+    var note = document.getElementById('bk-price-note');
+    if(!note){
+      note = document.createElement('div');
+      note.id = 'bk-price-note';
+      note.setAttribute('role', 'alert');
+      note.style.cssText = 'margin:10px 0;padding:12px 14px;border:2px solid #f59e0b;background:#fffbeb;border-radius:10px;font-size:14px;line-height:1.45;color:#78350f';
+      anchor.parentNode.insertBefore(note, anchor);
+    }
+    var sign = bk_lastPriceDelta > 0 ? '+' : '';
+    note.innerHTML = '';
+    var p = document.createElement('p'); p.style.margin = '0 0 10px';
+    p.textContent = bk_t('priceChanged').replace('{delta}', sign + bk_lastPriceDelta) + ' ' + bk_t('ordTotal') + ': ' + bk_finalPrice(d.price) + ' zł.';
+    var b = document.createElement('button'); b.type = 'button'; b.id = 'bk-price-confirm';
+    b.style.cssText = 'display:block;width:100%;min-height:44px;padding:10px 14px;border:0;border-radius:8px;background:#2563eb;color:#fff;font-weight:700;font-size:15px;line-height:1.3;cursor:pointer;white-space:normal';
+    b.textContent = bk_t('priceConfirm');
+    b.onclick = function(){ bk_priceAck = true; var n = document.getElementById('bk-price-note'); if(n) n.remove(); window.bk_submit(); };
+    note.appendChild(p); note.appendChild(b);
+    note.scrollIntoView({behavior:'smooth', block:'center'});
+  }
   window.bk_submit = function(){
     if(bk_submitting) return;
     if(!bk_validateAndHighlight()) return;
@@ -929,6 +980,9 @@
     var slotDisplay = slotObj?bk_slotDisplayLabel(slotObj):''; // visitor's language — recap
     var dateLabel = bk_selectedDate.toLocaleDateString(locale,{weekday:'long',day:'numeric',month:'long'});
     var d = window.bk_orderData||{};
+    if(d.windows && window.VCWindowTariffs) window.VCWindowTariffs.repriceOrder(d, bk_isoDate(bk_selectedDate));
+    // The server recalculated the window price and the client has not confirmed it yet: show the note again, send nothing.
+    if(!bk_priceAck){ bk_showPriceNote(d, null); return; }
     var hwEligible = bk_isHalloweenEligible(bk_isoDate(bk_selectedDate));
     if(typeof window.bk_applyHalloweenGiftToAddons === 'function'){
       // Returning false means the page found a required gift choice missing
@@ -1016,6 +1070,8 @@
         email:email||'', address:fullAddress,
         scheduledDate:bk_isoDate(bk_selectedDate), scheduledTime:(slotObj?slotObj.start:''),
         price:d.price?bk_finalPrice(d.price):null,
+        // Window cleaning snapshot (kind / m² / line total) so the server can check the tariff for the service date.
+        windows: d.windows ? { kind:d.windows.kind, m2:d.windows.m2, standalone:!!d.windows.standalone, total:d.windows.total } : null,
         clientToken:bk_clientToken||'', propertyId:bk_savedPropertyId||'',
         clientLanguage: (typeof localStorage!=='undefined' && localStorage.getItem('vc_lang')) || bk_lang || 'pl',
         // Structured booking-time snapshot — raw values the page already computed
@@ -1041,7 +1097,7 @@
     .then(function(r){
       if(!r.ok){
         return r.json().catch(function(){ return null; }).then(function(j){
-          var e = new Error('submit failed'); e.status = r.status; e.code = j && j.code; throw e;
+          var e = new Error('submit failed'); e.status = r.status; e.code = j && j.code; e.body = j; throw e;
         });
       }
       return r.json();
@@ -1093,6 +1149,18 @@
       document.getElementById('bk-successView').scrollIntoView({behavior:'smooth',block:'start'});
     })
     .catch(function(err){
+      // 409 price_changed: nothing was created. Apply the server's recalculated window lines, keep every field the client
+      // filled in, and wait for an explicit confirmation of the new price (bk_showPriceNote → bk_priceConfirmClick).
+      var priceDelta = (err && err.code === 'price_changed' && err.body && window.VCWindowTariffs) ? window.VCWindowTariffs.applyServerLines(d, err.body.lines, bk_isoDate(bk_selectedDate)) : 0;
+      if(priceDelta !== 0){
+        bk_priceAck = false;
+        bk_submitting = false;
+        btn.disabled = false;
+        document.getElementById('bk-submit-txt').textContent = bk_t('submitTxt');
+        bk_renderOrder();
+        bk_showPriceNote(d, priceDelta);
+        return;
+      }
       var errEl = document.getElementById('bk-formError');
       // The server re-validates every field (api/submit.js) and answers 400 with a
       // machine-readable `code`; show the matching message in the visitor's language
@@ -1103,7 +1171,8 @@
       errEl.style.whiteSpace = 'pre-line';
       // Validation problem -> its own message. Anything else (network, database down):
       // say plainly that the order was NOT accepted, then the generic "try again / call".
-      errEl.textContent = keyByCode[code] ? bk_t(keyByCode[code]) : bk_t('errNotAccepted') + '\n' + bk_t('errMsg');
+      // 409 price_changed whose recalculation the page already agrees with = this page's tariffs are stale (old tab): say so plainly.
+      errEl.textContent = keyByCode[code] ? bk_t(keyByCode[code]) : (code === 'price_changed' ? bk_t('priceStale') : bk_t('errNotAccepted') + '\n' + bk_t('errMsg'));
       errEl.style.display='block';
       // Not a validation problem (network down, server/database unavailable): the order was
       // NOT confirmed. Besides "try again / call", offer a second reliable channel — the

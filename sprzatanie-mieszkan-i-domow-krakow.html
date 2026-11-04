@@ -2,6 +2,7 @@
 <html lang="pl">
 <head>
 <script src="assets/js/cookie-consent.js?v=20261029i"></script>
+<script src="assets/js/window-tariffs.js?v=1"></script>
 <meta charset="UTF-8">
 <script>try{localStorage.setItem('vc_lang','pl')}catch(e){}</script>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
@@ -1123,7 +1124,7 @@ photo_cta_title:"Nie wiesz, którą usługę wybrać?",
   mob_total:"Łącznie:", mob_cta:"Złóż zamówienie →",
   /* WINDOWS */
   win_season:"sezonowe", win_winter:"zimowe",
-  win_info:"☀️ Sezon (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Zima (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Min: <strong>199 zł</strong> &nbsp;|&nbsp; Cena za m² okna z ramą",
+  win_info:"☀️ Sezon (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Zima (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Cena za m² okna z ramą",
   /* FOOTER */
   ft_copy:"© 2026 Vershy Property Care · Kraków i Małopolska · Ceny końcowe",
   hngMenuTitle:"Menu", hng1:"O nas", hng2:"Opinie", hng3:"Kontakt", hng4:"Mycie okien", hng5:"Sprzątanie mieszkań i domów",
@@ -1211,7 +1212,7 @@ photo_cta_title:"Не знаєте, яку послугу обрати?",
   sb_wa:"💬 Написати у WhatsApp",
   mob_total:"Разом від:", mob_cta:"Оформити замовлення →",
   win_season:"сезонне", win_winter:"зимове",
-  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Мін: <strong>199 zł</strong> &nbsp;|&nbsp; Ціна за м² вікна з рамою",
+  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Ціна за м² вікна з рамою",
   ft_copy:"© 2026 Vershy Property Care · Краків і Малопольща · Кінцеві ціни",
   hngMenuTitle:"Меню", hng1:"Про нас", hng2:"Відгуки", hng3:"Контакти", hng4:"Миття вікон", hng5:"Прибирання квартир і будинків",
   hng6:"Після ремонту", hng7:"Після виїзду", hng8:"Складні випадки", hng9:"Наші роботи", hng10:"Часті питання",
@@ -1298,7 +1299,7 @@ photo_cta_title:"Не знаете, какую услугу выбрать?",
   sb_wa:"💬 Написать в WhatsApp",
   mob_total:"Итого от:", mob_cta:"Оформить заказ →",
   win_season:"сезонное", win_winter:"зимнее",
-  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Мин: <strong>199 zł</strong> &nbsp;|&nbsp; Цена за м² окна с рамой",
+  win_info:"☀️ Сезон (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Зима (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Цена за м² окна с рамой",
   ft_copy:"© 2026 Vershy Property Care · Краков и Малопольша · Итоговые цены",
   hngMenuTitle:"Меню", hng1:"О нас", hng2:"Отзывы", hng3:"Контакты", hng4:"Мытьё окон", hng5:"Уборка квартир и домов",
   hng6:"После ремонта", hng7:"После выезда", hng8:"Сложные случаи", hng9:"Наши работы", hng10:"Частые вопросы",
@@ -1385,7 +1386,7 @@ photo_cta_title:"Not sure which service to pick?",
   sb_wa:"💬 Write on WhatsApp",
   mob_total:"Total from:", mob_cta:"Place order →",
   win_season:"seasonal", win_winter:"winter",
-  win_info:"☀️ Season (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Winter (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Min: <strong>199 zł</strong> &nbsp;|&nbsp; Price per m² incl. frame",
+  win_info:"☀️ Season (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Winter (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Price per m² incl. frame",
   ft_copy:"© 2026 Vershy Property Care · Kraków & Małopolska · Final prices",
   hngMenuTitle:"Menu", hng1:"About us", hng2:"Reviews", hng3:"Contact", hng4:"Window cleaning", hng5:"Apartment & house cleaning",
   hng6:"Post-renovation", hng7:"Move-out", hng8:"Difficult cases", hng9:"Our work", hng10:"FAQ",
@@ -3046,7 +3047,7 @@ document.addEventListener('DOMContentLoaded', function(){
           <li onclick="toggleAddWindow(this,'wl1-mieszkan')" data-name-id="wl1" data-price="25"><div class="add-check">✓</div><span class="ai-n">Mycie okien (sezonowe)</span><span class="ai-p">25 zł/m²</span><div class="win-picker-wrap" id="wp-wl1-mieszkan" onclick="event.stopPropagation()"></div></li>
           <li onclick="toggleAdd(this)" data-name-id="wl2" data-price="20"><div class="add-check">✓</div><span class="ai-n">Balustrady</span><span class="ai-p">20 zł</span><div class="qty-wrap"><button class="qty-btn" onclick="qtyChange(event,this,-1)">−</button><span class="qty-val">1</span><button class="qty-btn" onclick="qtyChange(event,this,1)">+</button><span class="qty-unit">szt</span></div></li>
         </ul>
-        <p id="win-info-txt" style="font-size:11px;color:var(--gray);margin-top:8px">☀️ Sezon (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Zima (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Min: <strong>199 zł</strong> &nbsp;|&nbsp; Cena za m² okna z ramą</p>
+        <p id="win-info-txt" style="font-size:11px;color:var(--gray);margin-top:8px">☀️ Sezon (01.04–15.10): <strong>25 zł/m²</strong> &nbsp;|&nbsp; ❄️ Zima (16.10–31.03): <strong>40 zł/m²</strong> &nbsp;|&nbsp; Cena za m² okna z ramą</p>
       </div>
       <!-- POKOJE -->
       <div class="add-col">
@@ -3885,9 +3886,10 @@ function toggleAddWindow(li, instanceKey) {
 }
 function initWindowPicker() {
   wpBuild('wl1-mieszkan', 'wp-wl1-mieszkan');
+  VCWindowTariffs.syncAddonRow(document.querySelector('li[data-name-id="wl1"]'), 'plain');
   wpOnChange('wl1-mieszkan', function(m2){
     var li = document.querySelector('li[data-name-id="wl1"]');
-    if (li) winAddonSync(li, 'wl1', 25, m2);
+    if (li) winAddonSync(li, 'wl1', VCWindowTariffs.rate('plain'), m2);
   });
 }
 
@@ -4229,6 +4231,7 @@ function submitOrder() {
     areaRange: areaRangeTxt,
     area: areaTxt,
     serviceLines: structuredServiceLines,
+    windows: (function(){ var w = addons.filter(function(a){ return a.nameId === 'wl1' && a.price > 0; })[0]; return w ? { kind: 'plain', m2: w.qty, standalone: false, total: w.price, key: 'ms:wl1' } : null; })(),
     price: totalAmt
   };
   bk_renderOrder();
@@ -4270,7 +4273,7 @@ function addonsToForm() {
 <script src="assets/js/nav.js?v=20261029i"></script>
 <script src="assets/js/site-texts-sync.js?v=20261029a" defer></script>
 <script src="assets/js/analytics.js?v=1"></script>
-<script src="assets/js/booking.js?v=20261029i"></script>
+<script src="assets/js/booking.js?v=20261104w"></script>
 <script src="assets/js/quote-prefill.js?v=1"></script>
 <script src="assets/js/mobile-order.js?v=1"></script>
 <script src="assets/js/window-picker.js?v=2"></script>

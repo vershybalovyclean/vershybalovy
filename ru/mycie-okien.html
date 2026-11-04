@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru"><head>
 <script src="/assets/js/cookie-consent.js?v=20261029i"></script>
+<script src="/assets/js/window-tariffs.js?v=1"></script>
 <meta charset="UTF-8"><script>try{localStorage.setItem('vc_lang','ru')}catch(e){}</script>
 <script>try{localStorage.setItem('vc_lang','pl')}catch(e){}</script>
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
@@ -814,6 +815,8 @@ function submitOrder(){
     // above), so the key itself picks the matching catalog row.
     addons: balustradyTotal>0 ? [{ key: SEL.idx===1 ? 'ok:balustrady-winter' : 'ok:balustrady-season', qty: balQty, price: balPrice }] : [],
     areaM2: SEL.m2 || null,
+    windows: { kind: SEL.cat === 'remont' ? 'renovation' : 'plain', m2: SEL.m2, standalone: true, total: SEL.price, labels: (SEL.cat === 'remont' ? { season: 'Mycie okien po remoncie — Sezon', winter: 'Mycie okien po remoncie — Zima' } : { season: 'Mycie okien — Sezon', winter: 'Mycie okien — Zima' }) },
+    balustrade: balQty > 0 ? { qty: balQty, total: balustradyTotal } : null,
     price: (SEL.price || 0) + balustradyTotal
   };
   bk_renderOrder();
@@ -825,16 +828,7 @@ function submitOrder(){
 }
 
 // ── SEASON GATE ──────────────────────────────────────────────────────────────
-function getCurrentSeasonIdx(){
-  var d = new Date();
-  var m = d.getMonth()+1, day = d.getDate();
-  // Sezon (lato): 01.04 – 15.10  → idx 0
-  // Zima:        16.10 – 31.03  → idx 1
-  if (m > 4 && m < 10) return 0;
-  if (m === 4) return 0;
-  if (m === 10) return day <= 15 ? 0 : 1;
-  return 1;
-}
+function getCurrentSeasonIdx(){ return VCWindowTariffs.seasonFor() === 'season' ? 0 : 1; } // Warsaw calendar date, indicative until a service date is chosen
 function applySeasonGate(){
   var active = getCurrentSeasonIdx();
   var inactive = active === 0 ? 1 : 0;
@@ -1029,7 +1023,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <script src="/assets/js/nav.js?v=20261029i"></script>
 <script src="/assets/js/site-texts-sync.js?v=20261029a" defer=""></script>
 <script src="/assets/js/analytics.js?v=1"></script>
-<script src="/assets/js/booking.js?v=20261029i"></script>
+<script src="/assets/js/booking.js?v=20261104w"></script>
 <script src="/assets/js/mobile-order.js?v=1"></script>
 
 <!-- FLOATING CTA -->
