@@ -2174,45 +2174,6 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   </div>
 </div>
 
-<!-- HALLOWEEN PROMO — generalne + szczegółowe, own assets/CSS in mieszkan.css.
-     10.03 v3: the baked-in bright-green strips are too short for this much
-     copy, so each offer now gets its OWN HTML/CSS rounded green panel
-     (.mies-hwp-gen-card/.mies-hwp-szc-card) that deliberately covers the
-     drawn strip — sized off the actual asset's photo-bottom/panel-bottom
-     pixels (not the drawn strip's own bounds) so it only ever overlaps
-     free space, never the 4 appliance photos. No general CTA — existing
-     tabs/calculator below are the booking path. Gated by the shared
-     SEASONAL_CAMPAIGN.halloweenLogo flag (nav.js loads at the bottom of
-     this page, so the check waits for DOMContentLoaded). -->
-<section class="mies-promo" id="mies-promo">
-  <div class="mies-hwp-stage">
-    <div class="mies-hwp-gen-card">
-      <div class="mies-hwp-card-title" id="mies-promo-gen-title2">Уборка генеральная</div>
-      <div class="mies-hwp-card-accent" id="mies-promo-gen-accent">ВЫБЕРИ 1 УСЛУГУ БЕСПЛАТНО</div>
-      <div class="mies-hwp-card-sub" id="mies-promo-gen-sub">микроволновка • чайник • кофемашина • посудомойка</div>
-    </div>
-    <div class="mies-hwp-szc-card">
-      <div class="mies-hwp-card-title" id="mies-promo-szc-title2">Уборка детальная</div>
-      <div class="mies-hwp-card-accent" id="mies-promo-szc-accent">HALLOWEEN KITCHEN PACK БЕСПЛАТНО</div>
-      <div class="mies-hwp-card-sub" id="mies-promo-szc-sub1">вытяжка + 1 шкафчик</div>
-      <div class="mies-hwp-card-sub" id="mies-promo-szc-sub2">+ микроволновка или чайник</div>
-    </div>
-  </div>
-  <div class="mies-hwp-m-stage">
-    <div class="mies-hwp-m-gen-card">
-      <div class="mies-hwp-card-title" id="mies-promo-gen-title2-m">Уборка генеральная</div>
-      <div class="mies-hwp-card-accent" id="mies-promo-gen-accent-m">ВЫБЕРИ 1 УСЛУГУ БЕСПЛАТНО</div>
-      <div class="mies-hwp-card-sub" id="mies-promo-gen-sub-m">микроволновка • чайник • кофемашина • посудомойка</div>
-    </div>
-    <div class="mies-hwp-m-szc-card">
-      <div class="mies-hwp-card-title" id="mies-promo-szc-title2-m">Уборка детальная</div>
-      <div class="mies-hwp-card-accent" id="mies-promo-szc-accent-m">HALLOWEEN KITCHEN PACK БЕСПЛАТНО</div>
-      <div class="mies-hwp-card-sub" id="mies-promo-szc-sub1-m">вытяжка + 1 шкафчик</div>
-      <div class="mies-hwp-card-sub" id="mies-promo-szc-sub2-m">+ микроволновка или чайник</div>
-    </div>
-  </div>
-  <div class="mies-hwp-period" id="mies-promo-period">🎃 Для дат <strong>26.10–07.11</strong></div>
-</section>
 <script>
   document.addEventListener('DOMContentLoaded', function(){
     if (typeof SEASONAL_CAMPAIGN !== 'undefined' && !SEASONAL_CAMPAIGN.halloweenLogo) {

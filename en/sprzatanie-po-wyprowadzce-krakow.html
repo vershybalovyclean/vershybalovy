@@ -311,31 +311,6 @@ window.addEventListener('load',function(){ if(!location.hash){ window.scrollTo(0
   </div>
 </div>
 
-<!-- HALLOWEEN PROMO — Sprzątanie po wyprowadzce only (own assets/CSS in
-     wyprowadzce.css, same technique as the homepage promo: aspect-ratio-
-     locked stage + cqw-sized text overlay + 601px breakpoint swapping
-     desktop/mobile Owner assets). No CTA — user is already on this
-     service's page, existing #cennik calculator below is the one path to
-     book. Gated by the shared SEASONAL_CAMPAIGN.halloweenLogo flag so it
-     turns off with the rest of the Halloween campaign automatically. */ -->
-<section class="wyp-promo" id="wyp-promo">
-  <div class="wyp-hwp-stage">
-    <div class="wyp-hwp-text">
-      <h2 id="wyp-promo-h1">Moving out without the scare. <span>We'll take care of the rest.</span></h2>
-      <p class="wyp-hwp-bonus"><span id="wyp-promo-bonus">Halloween Bonus</span> <span class="wyp-hwp-gratis" id="wyp-promo-gratis">FREE</span></p>
-      <p class="wyp-hwp-gift" id="wyp-promo-gift">Free hallway floor grout cleaning</p>
-      <p class="wyp-hwp-period" id="wyp-promo-period">🎃 For dates <strong>26.10–07.11</strong></p>
-    </div>
-  </div>
-  <div class="wyp-hwp-m-stage">
-    <div class="wyp-hwp-m-text">
-      <h2 id="wyp-promo-h1-m">Moving out without the scare. <span>We'll take care of the rest.</span></h2>
-      <p class="wyp-hwp-m-bonus"><span id="wyp-promo-bonus-m">Halloween Bonus</span> <span class="wyp-hwp-m-gratis" id="wyp-promo-gratis-m">FREE</span></p>
-      <p class="wyp-hwp-m-gift" id="wyp-promo-gift-m">Free hallway floor grout cleaning</p>
-      <p class="wyp-hwp-m-period" id="wyp-promo-period-m">🎃 For dates <strong>26.10–07.11</strong></p>
-    </div>
-  </div>
-</section>
 <script>
   // nav.js (which defines SEASONAL_CAMPAIGN) loads at the bottom of this
   // page, after this inline block — wait for DOMContentLoaded so the flag
