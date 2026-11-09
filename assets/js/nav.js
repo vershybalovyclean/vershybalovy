@@ -28,7 +28,7 @@ var SEASONAL_CAMPAIGN = { halloweenLogo: true };
         a.classList.add('halloween-campaign');
         a.classList.remove('classic-logo');
       } else {
-        if (img) img.src = '/assets/img/logo-classic-full.webp';
+        if (img) img.src = '/assets/img/logo-classic.webp';
         a.classList.add('classic-logo');
         a.classList.remove('halloween-campaign');
       }
