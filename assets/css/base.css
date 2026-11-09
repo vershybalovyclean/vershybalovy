@@ -1546,3 +1546,11 @@ footer.ft2{background:#0d1526;color:#94a3b8;padding:56px 24px 24px}
 .hw-off #mies-promo,
 .hw-off #wyp-promo,
 .hw-off .hw-gift-box{display:none!important}
+
+/* CTA under the before/after photos on the home page (09.11.2026): light text block + the regular .btn-prim. */
+.ba-cta{text-align:center;max-width:560px;margin:40px auto 0}
+.ba-cta-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--text);line-height:1.3;margin:0 0 8px}
+.ba-cta-sub{font-size:14px;line-height:1.65;color:var(--gray);margin:0 0 18px}
+.ba-cta-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.2;text-decoration:none;max-width:100%}
+.ba-cta-ico{width:19px;height:19px;flex:0 0 19px;margin:-3px 0;color:#86efac}
+@media(max-width:600px){.ba-cta{margin-top:32px}.ba-cta-title{font-size:18px}}
