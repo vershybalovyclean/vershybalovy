@@ -133,6 +133,16 @@ header{
      106px(на 1280px)->92px(на 1600px+) — тут размер УМЕНЬШАЕТСЯ с шириной. */
   width:clamp(92px, calc(106px + (100vw - 1280px) * -14 / 320), 106px)!important;}
 .hdr-logo.classic-logo .hdr-brand{display:none}
+/* Classic logo on desktop (>=1280px): same visual size and seat as the former Halloween logo — its visible
+   artwork was ~85px tall (196px wide for this file's 2.309 ratio) at 1280px, hanging up into the topbar so the
+   56px header does not change. Width scales 196->204px up to 1600px like the Halloween one did; height follows
+   from the ratio (auto), bottom edge kept where the Halloween artwork ended. Tablet/mobile rules unchanged. */
+@media(min-width:1280px){
+  .hdr-logo.classic-logo{align-self:flex-start!important;
+    margin-top:clamp(-31px, calc(-31px + (100vw - 1280px) * 5 / 320), -26px)!important}
+  .hdr-logo.classic-logo img{
+    width:clamp(196px, calc(196px + (100vw - 1280px) * 8 / 320), 204px)!important;}
+}
 .logo-svg{width:64px;height:64px;flex-shrink:0}
 .hdr-brand{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:900;
   color:var(--blue);line-height:1.2;white-space:nowrap}
