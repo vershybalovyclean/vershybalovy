@@ -127,6 +127,26 @@
   function dropStoredTouch(){
     try { localStorage.removeItem(ATTR_KEY); } catch(e) {}
   }
+  // AI search / assistant referrers (hostname → canonical source). Read from document.referrer only: no request,
+  // no cookie and no storage of its own — the result joins the same first-touch record as the UTM values above, so
+  // it is kept in memory and written to localStorage only under the same "Reklamowe pliki cookie" consent.
+  var AI_REFERRERS = [
+    ['chatgpt.com','chatgpt.com'], ['chat.openai.com','chatgpt.com'], ['perplexity.ai','perplexity.ai'],
+    ['gemini.google.com','gemini.google.com'], ['copilot.microsoft.com','copilot.microsoft.com'],
+    ['claude.ai','claude.ai'], ['chat.deepseek.com','deepseek.com'], ['grok.com','grok.com'],
+    ['meta.ai','meta.ai'], ['you.com','you.com'], ['poe.com','poe.com'], ['phind.com','phind.com'], ['duck.ai','duck.ai']
+  ];
+  function aiReferrerSource(){
+    try {
+      if(!document.referrer) return null;
+      var h = new URL(document.referrer).hostname.toLowerCase();
+      for(var i = 0; i < AI_REFERRERS.length; i++){
+        var d = AI_REFERRERS[i][0];
+        if(h === d || h.slice(-(d.length + 1)) === '.' + d) return AI_REFERRERS[i][1];
+      }
+    } catch(e) {}
+    return null;
+  }
   (function captureFirstTouch(){
     try {
       var params = new URLSearchParams(window.location.search);
@@ -136,6 +156,18 @@
         var v = params.get(k);
         if(v){ found[k] = v; hasAny = true; }
       });
+      // An AI assistant / AI search that sent no UTM tags (Perplexity, Gemini, Copilot…): the referrer is the source.
+      // UTM values of the URL (ChatGPT adds utm_source=chatgpt.com) and ad click ids always win.
+      // 'ai_referral' marks an organic recommendation and is set only when the link carries no campaign tags of its own:
+      // a paid placement is recognised solely by its explicit utm_medium / utm_campaign, never inferred from the referrer.
+      if(!found.utm_source && !found.gclid && !found.gbraid && !found.wbraid){
+        var ai = aiReferrerSource();
+        if(ai){
+          found.utm_source = ai;
+          if(!found.utm_medium && !found.utm_campaign) found.utm_medium = 'ai_referral';
+          hasAny = true;
+        }
+      }
       if(!hasAny) return;
       found.landing_page = window.location.pathname;
       found.first_visit_at = new Date().toISOString();
