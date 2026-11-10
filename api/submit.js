@@ -761,6 +761,7 @@ async function insertSupabaseRequest(data) {
         marketing_photo_consent: typeof data.marketingPhotoConsent === "boolean" ? data.marketingPhotoConsent : null,
         promo_code: data.promoCode || null,
         promo_discount_amount: (typeof data.promoDiscountAmount === "number") ? data.promoDiscountAmount : 0,
+        ...turnkeyLevelNote(data),
         ...attribution
     };
 
@@ -812,6 +813,26 @@ async function insertSupabaseRequest(data) {
         });
       } else {
         console.error("create_series_parent failed", r.status, seriesErr.slice(0, 300));
+        return false;
+      }
+    }
+    // internal_notes (turnkey soiling level) is the only staff-only column the website path writes. If the database refuses
+    // exactly that column (privilege / schema difference), save the order without it rather than lose the booking: the level
+    // still reaches the team in the Telegram / e-mail text ("Poziom zabrudzenia").
+    // Retried ONLY on a definite 4xx rejection (nothing was written) whose message names the internal_notes column; a timeout / 5xx /
+    // 409 / any other error text is never retried here and goes through the normal handling below (no second write, nothing masked).
+    if (!r.ok && !seriesBody && rowBody.internal_notes && (r.status === 400 || r.status === 401 || r.status === 403)) {
+      const noteErr = await r.text().catch(() => "");
+      if (/internal_notes/i.test(noteErr)) {
+        console.error("insert refused with internal_notes, retrying without it", r.status, noteErr.slice(0, 200));
+        delete rowBody.internal_notes;
+        r = await fetchT(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/requests", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Prefer": "return=minimal" },
+          body: JSON.stringify(rowBody)
+        });
+      } else {
+        console.error("insertSupabaseRequest failed", r.status, noteErr);
         return false;
       }
     }
@@ -895,6 +916,20 @@ async function insertSupabaseRequest(data) {
   }
 }
 
+// Turnkey post-renovation cleaning (sprzatanie-po-remoncie): the soiling level travels as a separate, validated parameter.
+// It is stored in the existing staff-only requests.internal_notes (no new column); nothing is recalculated from it -
+// the discount / surcharge are agreed with the client and entered by the Owner.
+const CLEANING_LEVEL_NOTE_PL = {
+  light: "Pod klucz — poziom zabrudzenia: lekki (light). Cena wstępna; po ocenie możliwy rabat do 5%.",
+  standard: "Pod klucz — poziom zabrudzenia: standardowy (standard). Cena wstępna do potwierdzenia przed rozpoczęciem prac.",
+  heavy: "Pod klucz — poziom zabrudzenia: silny (heavy). Cena wstępna; możliwa indywidualna dopłata do 25% po konsultacji."
+};
+function turnkeyLevelNote(data) {
+  if (data.serviceSlug !== "sprzatanie-po-remoncie") return {};
+  const note = Object.prototype.hasOwnProperty.call(CLEANING_LEVEL_NOTE_PL, data.cleaningLevel) ? CLEANING_LEVEL_NOTE_PL[data.cleaningLevel] : null;
+  return note ? { internal_notes: note } : {};
+}
+
 // Limits for the "[POWTÓRKA]" retry notice. Kept in memory of the running function
 // instance (no extra storage needed): best-effort across cold starts, but it bounds any
 // burst that reaches a warm instance — which is exactly what a replay loop does.
@@ -948,7 +983,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Nieprawidłowe żądanie", code: "invalid_request" });
   }
 
-  let { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, regularPlan } = req.body;
+  let { name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, cleaningLevel, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, regularPlan } = req.body;
 
   // Format/length validation of the contact fields (name, phone, e-mail, postal code,
   // and for calendar bookings date/time/address/payment). Same rules as the browser.
@@ -1039,7 +1074,7 @@ export default async function handler(req, res) {
   let inserted = null; // true | "partial" | "duplicate" | false (hasBooking only)
   const seriesOut = {}; // filled by insertSupabaseRequest when a monthly series was created
   if (hasBooking) {
-    inserted = await insertSupabaseRequest({ regularPlan, seriesOut, name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
+    inserted = await insertSupabaseRequest({ regularPlan, seriesOut, name, phone, service, comment, clientNote, partnerCode, promoCode, serviceSlug, email, address, scheduledDate, scheduledTime, price, clientToken, propertyId, clientLanguage, addons, areaM2, cleaningLevel, freqTimes, serviceLines, paymentMethod, invoiceRequested, marketingPhotoConsent, promoDiscountAmount, gclid, gbraid, wbraid, utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, first_visit_at, id: requestId });
   }
 
   // Confirmed duplicate = this exact order is already saved. The client gets success and

@@ -485,3 +485,21 @@
 }
 .order-form-grid input,.order-card textarea{border:1.5px solid var(--brd);border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;width:100%;transition:.2s}
 .order-card textarea{resize:vertical;min-height:64px;margin-bottom:12px;display:block}
+
+/* ===== Pod klucz (remont-pod-klucz.js) ===== */
+.pk-lbl{font-size:12px;font-weight:700;color:var(--text2);display:block;margin-bottom:6px}
+.pk-lbl-lvl{margin:14px 0 6px}
+.pk-area{width:140px}
+.pk-lvl{margin-bottom:8px}
+.pk-lvl .calc-lbl small{display:block;font-size:11px;font-weight:500;color:var(--gray);margin-top:2px;line-height:1.35}
+.pk-res-detail{font-weight:500;font-size:12px}
+.pk-large{margin-top:10px}
+.pk-note{font-size:11px;color:var(--gray);font-weight:500}
+.pk-points{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:20px 0 28px}
+.pk-point{display:flex;flex-direction:column;gap:4px;background:#fff;border:1.5px solid var(--brd);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--text2);line-height:1.45}
+.pk-point strong{font-size:14px;color:var(--text)}
+.pk-ico{font-size:20px;line-height:1}
+.pk-h3{font-size:15px;font-weight:800;margin:22px 0 10px;color:var(--text)}
+.pk-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:8px 24px;max-width:1100px;margin-bottom:0}
+.pk-excl li::before{content:'!';color:#b45309}
+@media(max-width:480px){.pk-list{grid-template-columns:1fr}.pk-points{grid-template-columns:1fr}}

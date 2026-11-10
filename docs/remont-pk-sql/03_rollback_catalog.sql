@@ -1,0 +1,14 @@
+-- 03 ROLLBACK (PRODUCTION): restores sprzatanie-po-remoncie to the values backed up in C:/Firma/backups/2026-11-10/prod_services_remont_before.json (generated from that file).
+-- Guard: applies only to the post-switch row (price_per_m2 = 55). Orders already created keep their stored prices.
+update services set
+  name = 'Sprzątanie po remoncie — bez mebli', name_pl = 'Sprzątanie po remoncie — bez mebli', name_uk = 'Прибирання після ремонту — без меблів', name_ru = 'Уборка после ремонта — без мебели', name_en = 'Post-renovation cleaning — without furniture',
+  pricing_mode = 'per_area', base_price = 690, price_per_m2 = 15,
+  area_tiers = '[{"from":0,"price":690,"to":35},{"from":35,"price":790,"to":45},{"from":45,"price":990,"to":60},{"from":60,"price":1190,"to":75},{"from":75,"price":1390,"to":90},{"from":90,"price":1390,"to":null}]'::jsonb,
+  description = '4–8 часов. Счёт без НДС, фотофиксация, средства включены в цену. Свыше 90 м²: 1390 zł + 15 zł/м² за каждый м² сверху — доплату вносить вручную в цену заказа. Новую мебель/технику (неиспользованную) моем в цене снаружи и внутри; б/у — индивидуальная оценка за мытьё изнутри.',
+  included = '["Обеспыливание стен","Сухая чистка пола от строительной пыли","Предварительное мытьё полов","Удаление локальных строительных загрязнений с пола","Механическая чистка и мытьё керамической плитки от остатков затирки, чистка швов","Чистка и мытьё плинтусов","Чистка и мытьё розеток и выключателей","Мытьё и полировка светильников, ламп","Чистка и мытьё датчиков и других навесных элементов","Мытьё котла, счётчиков, труб","Чистка и мытьё электрощитков и водных узлов","Мытьё и полировка столешниц, раковин, кухонных смесителей","Распаковка и внешнее обеспыливание бытовой техники","Чистка и мытьё мебельной фурнитуры","Мытьё снаружи и внутри, полировка кухонных шкафов","Мытьё снаружи и внутри, полировка мебели в комнатах","Мытьё и полировка фасадов мебели","Мытьё рам и планок кроватей, сухая чистка мягких частей","Мытьё и полировка зеркал и стеклянных поверхностей","Мытьё и полировка дверей, наличников, фурнитуры","Чистка радиаторов изнутри и снаружи","Чистка и мытьё стен в ванной от пыли, затирки, остатков строительных загрязнений","Полировка стен в ванной по всей высоте","Чистка и дезинфекция унитазов, раковин и другой сантехники","Финальное мытьё и полировка полов"]'::jsonb,
+  excluded = '["Вывоз строительного мусора и материалов (остатки должны быть вывезены до визита)"]'::jsonb,
+  updated_at = now()
+where slug = 'sprzatanie-po-remoncie' and price_per_m2 = 55;
+-- expected result: UPDATE 1
+select slug, name, price_per_m2, base_price, jsonb_array_length(area_tiers) as tiers, is_active from services where slug = 'sprzatanie-po-remoncie';
+-- and, if 04 was applied: update services set is_active = true where slug = 'remont-z-meblami';

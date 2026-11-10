@@ -455,6 +455,7 @@
     if(d.windows && window.VCWindowTariffs) window.VCWindowTariffs.repriceOrder(d, winIso);
     var rows = [];
     if(d.service) { d.service.split('|').forEach(function(l){ rows.push([bk_t('ordService'), l.trim()]); }); }
+    if(Array.isArray(d.serviceNotes)) d.serviceNotes.forEach(function(l){ if(l) rows.push([bk_t('ordService'), String(l)]); }); // separate characteristics (e.g. soiling level), not part of the service name
     if(d.extras) rows.push([bk_t('ordExtras'), d.extras]);
     if(d.windows && window.VCWindowTariffs){
       var wt = window.VCWindowTariffs, wl = typeof lang!=='undefined'?lang:'pl';
@@ -1040,6 +1041,7 @@
     if(d.areaRange) comment+='Zakres metrażu: '+d.areaRange+'\n';
     else if(d.area) comment+='Powierzchnia: '+d.area+'\n';
     else if(typeof d.areaM2 === 'number' && d.areaM2 > 0) comment+='Powierzchnia: '+d.areaM2+' m²\n';
+    if(d.cleaningLevel) comment+='Poziom zabrudzenia: '+({light:'lekki (rabat do 5% po ocenie)',standard:'standardowy',heavy:'silny (możliwa dopłata do 25%)'}[d.cleaningLevel]||d.cleaningLevel)+'\n';
     if(d.extras) comment+='Dodatki: '+d.extras+'\n';
     if(d.freq) comment+='Częstotliwość: '+d.freq+'\n';
     var nightOn = bk_isNightSlot();
@@ -1110,6 +1112,8 @@
         // Not stored by api/submit yet — it already reaches the team via the
         // service label and the "Zakres metrażu" line of the order text.
         areaRange: d.areaRange || null,
+        // Soiling level of the turnkey post-renovation service: light | standard | heavy (the server validates it).
+        cleaningLevel: d.cleaningLevel || null,
         freqTimes: (typeof d.freqTimes === 'number' && d.freqTimes > 0) ? d.freqTimes : 1,
         // Monthly plan of a regular order (amounts already computed by the calculator); the server only splits the monthly total across visits.
         regularPlan: d.regularPlan || null,
