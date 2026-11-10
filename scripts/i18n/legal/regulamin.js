@@ -2,11 +2,11 @@
 // (.legal-hero + .legal-wrap, см. genLegal в prerender.html). Структура, нумерация, суммы, сроки — как в польском оригинале; юридические условия не менялись.
 // plHash фиксирует версию польского исходника: если польский текст изменился, генератор сообщает «ПЕРЕВОД УСТАРЕЛ».
 (window.LEGAL = window.LEGAL || {}).regulamin = {
-  plHash: '79104dd9',
+  plHash: '977e99c2',
   uk: [
 /*0*/ '📜 Юридичний документ',
 /*1*/ 'Правила надання послуг із прибирання',
-/*2*/ 'Редакція від 31.01.2026',
+/*2*/ 'Редакція від 10.11.2026',
 /*3*/ 'I. Визначення',
 /*4*/ '<strong>Виконавець</strong> – Олена Вершибалова, яка провадить господарську діяльність під фірмою Olena Vershybalova, внесена до CEIDG, NIP: 6793355668, REGON: 543849999, адреса: Краків, e-mail: vershybalovy@gmail.com, телефон: <span class="vc-fixed-phone">+48514<span>363</span>538</span>.',
 /*5*/ '<strong>Клієнт</strong> – фізична особа (старше 18 років), юридична особа або організаційна одиниця, яка замовляє послугу прибирання.',
@@ -107,7 +107,7 @@
   ru: [
 /*0*/ '📜 Юридический документ',
 /*1*/ 'Правила оказания услуг по уборке',
-/*2*/ 'Редакция от 31.01.2026',
+/*2*/ 'Редакция от 10.11.2026',
 /*3*/ 'I. Определения',
 /*4*/ '<strong>Исполнитель</strong> – Олена Вершибалова, осуществляющая хозяйственную деятельность под фирмой Olena Vershybalova, внесённая в CEIDG, NIP: 6793355668, REGON: 543849999, адрес: Краков, e-mail: vershybalovy@gmail.com, телефон: <span class="vc-fixed-phone">+48514<span>363</span>538</span>.',
 /*5*/ '<strong>Клиент</strong> – физическое лицо (старше 18 лет), юридическое лицо или организационная единица, заказывающая услугу уборки.',
@@ -208,7 +208,7 @@
   en: [
 /*0*/ '📜 Legal document',
 /*1*/ 'Terms of Cleaning Services',
-/*2*/ 'Version of 31.01.2026',
+/*2*/ 'Version of 10.11.2026',
 /*3*/ 'I. Definitions',
 /*4*/ '<strong>Service Provider</strong> – Olena Vershybalova, conducting business activity under the name Olena Vershybalova, entered in CEIDG, NIP: 6793355668, REGON: 543849999, address: Kraków, e-mail: vershybalovy@gmail.com, telephone: <span class="vc-fixed-phone">+48514<span>363</span>538</span>.',
 /*5*/ '<strong>Client</strong> – a natural person (over 18 years of age), a legal person or an organisational unit that orders a cleaning service.',
