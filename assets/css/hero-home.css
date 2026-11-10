@@ -1,0 +1,44 @@
+/* Home hero: photo banner (a Vershy cleaner mopping a modern living room). Scoped to .hero.hero-home - the .hero of the other pages is untouched.
+   Desktop (>=861px): full-bleed photo, text column on the left, the cleaner stays visible on the right.
+   Phone / tablet (<=860px): the photo is a clean band at the top (face and mop visible), the text sits below on the dark brand colour. */
+.hero.hero-home{--hh-band:96vw}
+.hero.hero-home .hero-bg{object-fit:cover;object-position:68% 28%}
+.hero.hero-home::before{background:linear-gradient(90deg,rgba(10,18,36,.86) 0%,rgba(10,18,36,.80) 32%,rgba(10,18,36,.50) 50%,rgba(10,18,36,.08) 68%,rgba(10,18,36,0) 100%)}
+
+@media (min-width:861px){
+  .hero.hero-home{min-height:clamp(560px,44vw,820px)}
+  .hero.hero-home .hero-inner{margin:0 0 0 max(0px,calc(4vw - 28px));max-width:none;width:min(600px,52%);text-align:left}
+  .hero.hero-home .hero-sub-tight{margin-left:0;margin-right:0}
+  .hero.hero-home .hero-calc{margin-left:0;margin-right:0;max-width:560px}
+  .hero.hero-home .hero-calc .qsv-head{text-align:left}
+}
+
+@media (max-width:860px){
+  /* The photo is the hero background (its height = --hh-band, the rest of the hero fades into the brand navy); the text sits ON the photo.
+     Only the top ~27% of the band (the cleaner's head) stays free of text, so the content starts right under the face, not under a full-screen photo. */
+  .hero.hero-home{min-height:0;align-items:flex-start;padding-top:calc(var(--hh-band) * .27)}
+  .hero.hero-home .hero-bg{inset:0 0 auto 0;height:var(--hh-band);object-position:50% 20%}
+  .hero.hero-home::before{background:linear-gradient(180deg,rgba(15,23,42,0) 0,rgba(15,23,42,0) calc(var(--hh-band) * .2),rgba(15,23,42,.55) calc(var(--hh-band) * .4),rgba(15,23,42,.80) calc(var(--hh-band) * .7),#0f172a calc(var(--hh-band) * 1.02),#0f172a 100%)}
+}
+@media (min-width:601px) and (max-width:860px){
+  .hero.hero-home{--hh-band:50vw}
+}
+
+/* USP block: brand name in green + one bold white line, thin green rule on the left, no card/background. */
+.hero.hero-home .hero-utp{display:block;width:fit-content;max-width:100%;margin:12px auto 12px;padding:1px 0 1px 14px;border-left:3px solid #4ADE80;text-align:left}
+.hero.hero-home .hero-utp-name{display:block;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;letter-spacing:.3px;line-height:1.25;color:#4ADE80;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+.hero.hero-home .hero-utp-line{display:block;margin-top:3px;font-size:clamp(15px,1.45vw,17px);font-weight:700;line-height:1.35;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.6),0 1px 2px rgba(0,0,0,.5)}
+@media (min-width:861px){
+  .hero.hero-home .hero-utp{margin-left:0;margin-right:0;margin-top:14px;margin-bottom:14px}
+}
+@media (max-width:360px){
+  .hero.hero-home h1{font-size:19.5px}
+  .hero.hero-home .hero-utp-line{font-size:14px}
+  .hero.hero-home .hero-utp-name{font-size:14px}
+}
+
+/* Home, phone/tablet: the floating call button stays hidden while the hero is on screen (page JS marks it .hidden near the top and next to the
+   contact block; mobile-tabbar.css forces .hidden buttons visible, which put it on top of the calculator cards). The tab bar keeps "Zadzwoń". */
+@media (max-width:860px){
+  body #float-cta.hidden{opacity:0!important;pointer-events:none!important}
+}
